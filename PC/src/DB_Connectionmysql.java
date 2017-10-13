@@ -33,7 +33,7 @@ public class DB_Connectionmysql {
 
     String inSql = null;
 
-    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,long sensor_Num,long machine_id,long welder_id,long code,long year,long month,long day,long hour,long minute,long second,int status)
+    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,Timestamp timesql)
 
     {
 
@@ -86,7 +86,7 @@ public class DB_Connectionmysql {
 
         // if(state ==1)
 
-             inSql = "insert into tb_data(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status,Dtime) values('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+             inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fmachine_id,fwelder_id,fjunction_id,fstatus,FUploadDateTime,FWeldTime) values('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + goodsC_date + "','" + timesql + "')";
 
        /*  else {
 

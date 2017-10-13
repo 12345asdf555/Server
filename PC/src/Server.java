@@ -16,10 +16,16 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.websocket.Session;
+
+import javafx.scene.chart.PieChart.Data;
 
 
 public class Server implements Runnable {  
@@ -56,9 +62,10 @@ public class Server implements Runnable {
             	
 				ServerSocket serverSocket = new ServerSocket(SERVERPORT);
 				
+				
 				while (true) {  
 					
-					 synchronized(this) {  
+					synchronized(this) {  
 					
 	                Socket client = serverSocket.accept();  
 	  
@@ -133,9 +140,9 @@ public class Server implements Runnable {
 				
 				while(sqlwritetype==1){
 					
-		            if (str != null ) {  
+		            if (str.length() == 108) {  
 		
-		       	     //校验第一位是否为FA末位是否为F5
+		            //校验第一位是否为FA末位是否为F5
 		       	     String check1 =str.substring(0,2);
 		       	     String check11=str.substring(106,108);
 		       	     if(check1.equals("FA") && check11.equals("F5")){
@@ -158,7 +165,62 @@ public class Server implements Runnable {
 		               	        				
 		               	    	 for(int i=0;i<78;i+=26){
 		               	    		 
+		               	    		 
 		               	    		 BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
+		                             BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(30+i, 34+i).toString(),16));
+		                             long sensor_Num1 = Integer.valueOf(str.subSequence(34+i, 38+i).toString(),16);
+		                             String sensor_Num = String.valueOf(sensor_Num1);
+		                             if(sensor_Num.length()<4){
+		                            	 int num=4-sensor_Num.length();
+		                            	 for(int i1=0;i1<num;i1++){
+		                            		 sensor_Num="0"+sensor_Num;
+		                            	 }
+		                             }
+		                             long machine_id1 = Integer.valueOf(str.subSequence(10, 14).toString(),16);
+		                             String machine_id = String.valueOf(machine_id1);
+		                             if(machine_id.length()<4){
+		                            	 int num=4-machine_id.length();
+		                            	 for(int i1=0;i1<num;i1++){
+		                            		 machine_id="0"+machine_id;
+		                            	 }
+		                             }
+		                             long welder_id1 = Integer.valueOf(str.subSequence(14, 18).toString(),16);
+		                             String welder_id = String.valueOf(welder_id1);
+		                             if(welder_id.length()<4){
+		                            	 int num=4-welder_id.length();
+		                            	 for(int i1=0;i1<num;i1++){
+		                            		 welder_id="0"+welder_id;
+		                            	 }
+		                             }
+		                             long code1 = Integer.valueOf(str.subSequence(18, 26).toString(),16);
+		                             String code = String.valueOf(code1);
+		                             if(code.length()<8){
+		                            	 int num=8-code.length();
+		                            	 for(int i1=0;i1<num;i1++){
+		                            		 code="0"+code;
+		                            	 }
+		                             }
+		                             long year = Integer.valueOf(str.subSequence(40+i, 42+i).toString(),16);
+		                             String yearstr = String.valueOf(year);
+		                             long month = Integer.valueOf(str.subSequence(42+i, 44+i).toString(),16);
+		                             String monthstr = String.valueOf(month);
+		                             long day = Integer.valueOf(str.subSequence(44+i, 46+i).toString(),16);
+		                             String daystr = String.valueOf(day);
+		                             long hour = Integer.valueOf(str.subSequence(46+i, 48+i).toString(),16);
+		                             String hourstr = String.valueOf(hour);
+		                             long minute = Integer.valueOf(str.subSequence(48+i, 50+i).toString(),16);
+		                             String minutestr = String.valueOf(minute);
+		                             long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
+		                             String secondstr = String.valueOf(second);
+		                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());
+		               	    		 
+		                             String timestr = yearstr+"-"+monthstr+"-"+daystr+" "+hourstr+":"+minutestr+":"+secondstr;
+		                             SimpleDateFormat timeshow = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+		                             try {
+		                            	java.util.Date time = timeshow.parse(timestr);
+										Timestamp timesql = new Timestamp(time.getTime());
+
+		               	    		 /*BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
 		                             BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(30+i, 34+i).toString(),16));
 		                             long sensor_Num = Integer.valueOf(str.subSequence(34+i, 38+i).toString(),16);
 		                             long machine_id = Integer.valueOf(str.subSequence(10, 14).toString(),16);
@@ -170,10 +232,14 @@ public class Server implements Runnable {
 		                             long hour = Integer.valueOf(str.subSequence(46+i, 48+i).toString(),16);
 		                             long minute = Integer.valueOf(str.subSequence(48+i, 50+i).toString(),16);
 		                             long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
-		                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());
+		                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
 		                                	        	
-		                             DB_Connectionmysql a =new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status);
+		                             DB_Connectionmysql a =new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,timesql);
 		                             System.out.println(str);
+									} catch (ParseException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 		
 		               	    	 }
 		                   	    sqlwritetype=0;
@@ -182,7 +248,7 @@ public class Server implements Runnable {
 		               	     else{
 		               	        //校验位错误
 		               	    	 System.out.print("数据接收校验位错误");
-		               	    	 break;
+		               	    	 sqlwritetype=0;
 		               	     }
 		                               
 		           	     }
@@ -190,17 +256,18 @@ public class Server implements Runnable {
 		           	     else{
 		           	        //长度错误
 		           	    	 System.out.print("数据接收长度错误");
-		           	    	 break;
+		           	    	 sqlwritetype=0;
 		           	     }
 		       	        		
 		   	        	}
 		   	        	else{
 		   	        		//首位不是FE
 		   	        		System.out.print("数据接收首末位错误");
-		   	        		break;
+		   	        		sqlwritetype=0;
 		   	        	}
-		        	
+		       	     
 		           } else {
+		        	   sqlwritetype=0;
 		               System.out.println("Not receiver anything from client!");  
 		           } 
 			}
@@ -234,8 +301,9 @@ public class Server implements Runnable {
 					
 					websocketlink = serverSocket.accept();
 
-	                //开启线程，接收不同的socket请求  
-	                Handler handler = new Handler(websocketlink,str);  
+	                int i=0;
+					//开启线程，接收不同的socket请求  
+	                Handler handler = new Handler(websocketlink,str,handlers,i);  
 	                handlers.add(handler);  
 	                workThread = new Thread(handler);  
 	                workThread.start();  
@@ -318,7 +386,7 @@ public class Server implements Runnable {
 				    	
 				    	Handler web = handlers.get(i);
 				    	
-				    	Handler handler = new Handler(web.websocketlink,str);
+				    	Handler handler = new Handler(web.websocketlink,str,handlers,i);
 				    	workThread = new Thread(handler); 
 				    	workThread.start();
 				    	
@@ -347,10 +415,14 @@ public class Server implements Runnable {
 	    public Socket websocketlink;
 		public String str;
 	    Server server;
+		private List<Handler> handlers;
+		private int i;
 	    
-	    public Handler(Socket socket,String str) {  
+	    public Handler(Socket socket,String str,List<Handler> handlers,int i) {  
 	        this.websocketlink = socket; 
 	        this.str = str;
+	        this.handlers = handlers;
+	        this.i = i;
 	    }  
 	    
 	    public void run() {
@@ -529,6 +601,7 @@ public class Server implements Runnable {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} 
+				handlers.remove(i);
 				System.out.println("实时数据发送失败");
 				e.printStackTrace();
 			}
