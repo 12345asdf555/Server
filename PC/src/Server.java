@@ -35,12 +35,15 @@ public class Server implements Runnable {
     public static final int SERVERPORT = 5555;
     public static final int SERVERPORTWEB = 5554;
     public String str = "";
-    private Socket socket=null;
+    public Socket socket=null;
     public Socket websocketlink=null;
     public ServerSocket serverSocket = null;
     public boolean webtype = false;
     public int sqlwritetype=0;
     public int websendtype=0;
+    public static String connet = "jdbc:mysql://121.196.222.216:3306/Weld?"
+			+ "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+
     
     public void run() {
     	
@@ -235,8 +238,9 @@ public class Server implements Runnable {
 		                             long minute = Integer.valueOf(str.subSequence(48+i, 50+i).toString(),16);
 		                             long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
 		                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
-		                                	        	
-		                             DB_Connectionmysql a =new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,timesql);
+		                                	
+									 
+		                             DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,timesql);
 		                             System.out.println(str);
 									} catch (ParseException e) {
 										sqlwritetype=0;
@@ -410,11 +414,11 @@ public class Server implements Runnable {
 		}
  	};
  
-	 public static void main(String [] args ) { 
+	 public static void main(String [] args) 
+	 { 
 	     Thread desktopServerThread = new Thread(new Server());  
 	     desktopServerThread.start();  
-	
-	 }  
+	 }
  
 }
 
@@ -423,6 +427,7 @@ public class Server implements Runnable {
 
 	class Handler implements Runnable {
 		
+		public DB_Connectionmysql db_connection;
 	    public Socket websocketlink;
 		public String str;
 	    Server server;
@@ -669,11 +674,12 @@ public class Server implements Runnable {
 					 }
 					 
 					 
-	                 DB_Connectionweb a =new DB_Connectionweb();
-	                 DB_Connectioncode b =new DB_Connectioncode(code);
-	                 	
-	                 String dbdata = a.getId();
-	                 String limit = b.getId();
+                     DB_Connectionweb b =new DB_Connectionweb();
+                     DB_Connectioncode c =new DB_Connectioncode(code);
+                   
+                    
+	                 String dbdata = b.getId();
+	                 String limit = c.getId();
 	                 
 	                 for(int i=0;i<dbdata.length();i+=12){
 	                	 String status=dbdata.substring(0+i,2+i);

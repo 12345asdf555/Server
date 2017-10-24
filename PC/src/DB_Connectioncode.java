@@ -22,9 +22,12 @@ public class DB_Connectioncode {
 	public void setId(String datasend) {
 		this.datasend = datasend;
 	}
-    
+    public Server server;
+    public String connet = "jdbc:mysql://121.196.222.216:3306/Weld?"
+    + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8";
+    public String inSql = "";
 
-	String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
+	/*String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
 
             "user=root&password=123456&characterEncoding=UTF8";
 
@@ -38,13 +41,14 @@ public class DB_Connectioncode {
 
              + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8";
 
-    String inSql = null;
+    String inSql = null;*/
 
 	private String code;
 
     public DB_Connectioncode(String code)
 
     {
+    	String inSql;
     	
     	this.code = code;
     	
@@ -69,7 +73,7 @@ public class DB_Connectioncode {
 
          try {
 
-             conn = DriverManager.getConnection(connet);
+             conn = DriverManager.getConnection(server.connet);
 
              //锟斤拷取锟斤拷锟绞�
 

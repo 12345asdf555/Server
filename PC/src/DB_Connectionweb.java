@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DB_Connectionweb {
+	public String inSql;
 	public  String datasend="";
 	
 	public String getId() {
@@ -22,9 +23,9 @@ public class DB_Connectionweb {
 	public void setId(String datasend) {
 		this.datasend = datasend;
 	}
-    
+    public Server server;
 
-	String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
+	/*String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
 
             "user=root&password=123456&characterEncoding=UTF8";
 
@@ -38,7 +39,7 @@ public class DB_Connectionweb {
 
              + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8";
 
-    String inSql = null;
+    String inSql = null;*/
 
     public DB_Connectionweb()
 
@@ -65,7 +66,7 @@ public class DB_Connectionweb {
 
          try {
 
-             conn = DriverManager.getConnection(connet);
+             conn = DriverManager.getConnection(server.connet);
 
              //锟斤拷取锟斤拷锟绞�
 
