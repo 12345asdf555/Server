@@ -46,7 +46,7 @@ public class DB_Connectionmysql {
     
     private String code;
 
-    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,Timestamp timesql)
+    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,Timestamp timesql,String connet)
 
     {
 
@@ -71,7 +71,7 @@ public class DB_Connectionmysql {
 
          try {
 
-             conn = DriverManager.getConnection(server.connet);
+             conn = DriverManager.getConnection(connet);
 
              //锟斤拷取锟斤拷锟绞�
 

@@ -45,7 +45,7 @@ public class DB_Connectioncode {
 
 	private String code;
 
-    public DB_Connectioncode(String code)
+    public DB_Connectioncode(String code,String connet)
 
     {
     	String inSql;
@@ -73,7 +73,7 @@ public class DB_Connectioncode {
 
          try {
 
-             conn = DriverManager.getConnection(server.connet);
+             conn = DriverManager.getConnection(connet);
 
              //锟斤拷取锟斤拷锟绞�
 

@@ -3,6 +3,7 @@
 
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +14,10 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 
-public class DB_Connectionweb {
+
+
+public class DB_Connectionandroid {
+	
 	public String inSql;
 	public  String datasend="";
 	
@@ -23,8 +27,8 @@ public class DB_Connectionweb {
 	public void setId(String datasend) {
 		this.datasend = datasend;
 	}
-    public Server server;
 
+	public Server server;
 	/*String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
 
             "user=root&password=123456&characterEncoding=UTF8";
@@ -40,11 +44,13 @@ public class DB_Connectionweb {
              + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8";
 
     String inSql = null;*/
+    
+    private String code;
 
-    public DB_Connectionweb(String connet)
+    public DB_Connectionandroid(BigDecimal electricity,BigDecimal voltage,BigInteger sensor_Num,String machine_id,String welder_id,String code,BigInteger year,BigInteger month,BigInteger day, BigInteger hour,BigInteger minute,BigInteger second,int status,String connet)
 
     {
-    	
+
         java.sql.Connection conn = null;
 
         java.sql.Statement stmt =null;
@@ -94,7 +100,7 @@ public class DB_Connectionweb {
 
         // if(state ==1)
 
-             inSql = "select fequipment_no, fstatus_id, fposition, finsframework_id from tb_welding_machine";
+             inSql = "insert into tb_data(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status,Dtime) values('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
 
        /*  else {
 
@@ -104,16 +110,7 @@ public class DB_Connectionweb {
 
          try {
 
-        	ResultSet rs =stmt.executeQuery(inSql);
-            
-            while (rs.next()) {
-            	String fequipment_no = rs.getString("fequipment_no");
-            	String fstatus_id = rs.getString("fstatus_id");
-            	String fposition = rs.getString("fposition");
-            	String finsframework_id = rs.getString("finsframework_id");
-            	datasend+=fstatus_id+finsframework_id+fequipment_no+fposition;
-            	
-            }
+            stmt.executeUpdate(inSql);
 
         } catch (SQLException e) {
 
@@ -139,11 +136,11 @@ public class DB_Connectionweb {
 
         }  
 
-         return; 
+
 
 
 
     }
-
+    
     
 }

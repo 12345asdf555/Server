@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;  
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;  
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.ServerSocket;  
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -18,10 +20,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.websocket.Session;
 
@@ -41,12 +45,39 @@ public class Server implements Runnable {
     public boolean webtype = false;
     public int sqlwritetype=0;
     public int websendtype=0;
-    public static String connet = "jdbc:mysql://121.196.222.216:3306/Weld?"
-			+ "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String ip;
+    public String connet1 = "jdbc:mysql://";
+    public String connet2 = ":3306/Weld?"+ "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet;
+    public byte b[];
+
 
     
     public void run() {
-    	
+		try {
+	    	File f = new File("android.txt");   
+	        InputStream ing;
+			ing = new FileInputStream(f);
+	        b = new byte[1024];   
+	        int len = 0;   
+	        int temp=0;          //所有读取的内容都使用temp接收   
+	        try {
+				while((temp=ing.read())!=-1){    //当没有读取完时，继续读取   
+				    b[len]=(byte)temp;   
+				    len++;   
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+	        ip=new String(b,0,len);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		connet=connet1+ip+connet2;
+		
     	new Thread(reciver).start();
     	new Thread(mysql).start();
     	new Thread(websocketstart).start();
@@ -83,33 +114,49 @@ public class Server implements Runnable {
 	                      
 	                    int zeroc=0;
 	                    int i1=0;
+	                    int zerocount=0;
+	                    int linecount=0;
 	                    str = "";
-	                    byte[] datas1 = new byte[54]; 
+	                    byte[] datas1 = new byte[262144]; 
 	                    client.getInputStream().read(datas1);
 	                    for(i1=0;i1<datas1.length;i1++){
-			                    	//判断为数字还是字母，若为字母+256取正数
-			                    	if(datas1[i1]<0){
-			                    		String r = Integer.toHexString(datas1[i1]+256);
-			                    		String rr=r.toUpperCase();
-			                        	//数字补为两位数
-			                        	if(rr.length()==1){
-			                    			rr='0'+rr;
-			                        	}
-			                        	//strdata为总接收数据
-			                    		str += rr;
-			                    	}
-			                    	else{
-			                    		String r = Integer.toHexString(datas1[i1]);
-
-			                        	if(r.length()==1)
-			                    			r='0'+r;
-			                        	r=r.toUpperCase();
-			                    		str+=r;	
-			                    	}
+	                    	//判断为数字还是字母，若为字母+256取正数
+	                    	if(datas1[i1]<0){
+	                    		String r = Integer.toHexString(datas1[i1]+256);
+	                    		String rr=r.toUpperCase();
+	                        	//数字补为两位数
+	                        	if(rr.length()==1){
+	                    			rr='0'+rr;
+	                        	}
+	                        	//strdata为总接收数据
+	                    		str += rr;
 	                    	}
+	                    	else{
+	                    		String r = Integer.toHexString(datas1[i1]);
+
+	                        	if(r.length()==1)
+	                    			r='0'+r;
+	                        	r=r.toUpperCase();
+	                    		str+=r;	
+	                    	}
+	                    	linecount+=2;
+	                    	
+	                    	//去掉后面的0
+	                    	if(datas1[i1]==0){
+	                    		zerocount++;
+	                    		if(zerocount>25){
+	                    			str=str.substring(0, linecount-52);
+	                    			break;
+	                    		}	
+	                    	}else{
+                    			zerocount=0;
+                    		}
+	                    }
 	                    
 	                    sqlwritetype=1;
-	                    websendtype=1;
+	                    if(str.substring(0, 2).equals("FA")){
+		                    websendtype=1;
+	                    }
 	                    
 	                    //System.out.println(str);
 	                	//new Thread(mysql).start();
@@ -139,7 +186,7 @@ public class Server implements Runnable {
 		public void run() {
 			while(true){
 				
-				 synchronized(this) {  
+				synchronized(this) {  
 				
 				while(sqlwritetype==1){
 					
@@ -220,9 +267,10 @@ public class Server implements Runnable {
 		                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());
 		               	    		 
 		                             String timestr = yearstr+"-"+monthstr+"-"+daystr+" "+hourstr+":"+minutestr+":"+secondstr;
-		                             SimpleDateFormat timeshow = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+		                             SimpleDateFormat timeshow = new SimpleDateFormat("yy-MM-dd HH:mm:ss",Locale.CHINA);
 		                             try {
-		                            	java.util.Date time = timeshow.parse(timestr);
+			                            Date time = DateTools.parse("yy-MM-dd HH:mm:ss",timestr);
+		                            	//java.util.Date time1 = timeshow.parse(timestr);
 										Timestamp timesql = new Timestamp(time.getTime());
 
 		               	    		 /*BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
@@ -240,9 +288,9 @@ public class Server implements Runnable {
 		                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
 		                                	
 									 
-		                             DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,timesql);
+		                             DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,timesql,connet);
 		                             System.out.println(str);
-									} catch (ParseException e) {
+									} catch (Exception e) {
 										sqlwritetype=0;
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -273,10 +321,59 @@ public class Server implements Runnable {
 		   	        		sqlwritetype=0;
 		   	        	}
 		       	     
-		           } else {
-		        	   sqlwritetype=0;
-		               System.out.println("Not receiver anything from client!");  
-		           }
+		           }else if(str.length()>=108){
+		        	
+		       	    	String [] stringArr = str.split("FD");
+		       	    	
+                        for(int i =0;i < stringArr.length;i++)
+        		        {
+			        	     //校验第一位是否为FA末位是否为F5
+				       	     String check1 =stringArr[i].substring(0,2);
+				       	     if(check1.equals("FE")){
+				       	    	 
+				       	    	 //校验长度
+				           	     int check2=stringArr[i].length();
+				           	     if(check2==54){
+				           	    	 
+		                        	 if(stringArr[i].length()>30){
+		                        		 
+		                        		BigDecimal electricity = new BigDecimal(Integer.valueOf(stringArr[i].subSequence(4, 8).toString(),16));
+		                                BigDecimal voltage = new BigDecimal(Integer.valueOf(stringArr[i].subSequence(8, 12).toString(),16));
+		                                BigInteger sensor_Num = new BigInteger(stringArr[i].subSequence(12, 16).toString());
+		                                String machine_id = stringArr[i].subSequence(16, 20).toString();
+		                                String welder_id = stringArr[i].subSequence(20, 24).toString();
+		                                String code = stringArr[i].subSequence(24, 32).toString();
+		                                BigInteger year = new BigInteger(Integer.valueOf(stringArr[i].subSequence(32, 34).toString(),16).toString());
+		                                BigInteger month = new BigInteger(Integer.valueOf(stringArr[i].subSequence(34, 36).toString(),16).toString());
+		                                BigInteger day = new BigInteger(Integer.valueOf(stringArr[i].subSequence(36, 38).toString(),16).toString());
+		                                BigInteger hour = new BigInteger(Integer.valueOf(stringArr[i].subSequence(38, 40).toString(),16).toString());
+		                                BigInteger minute = new BigInteger(Integer.valueOf(stringArr[i].subSequence(40, 42).toString(),16).toString());
+		                                BigInteger second = new BigInteger(Integer.valueOf(stringArr[i].subSequence(42, 44).toString(),16).toString());
+		                                Integer status = Integer.valueOf(stringArr[i].subSequence(44, 46).toString());
+		                        	
+		                                DB_Connectionandroid a=new DB_Connectionandroid(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status,connet); 
+		                                sqlwritetype=0;
+		                                
+		                        	 } 
+				           	     
+				           	     }   
+				           	     else{
+				           	    //长度错误
+				           	    	 System.out.print("数据接收长度错误");
+				           	    	 sqlwritetype=0;
+				           	     }
+			       	         }
+				       	     else{
+				       	    	 //首位不是FE
+				   	        	 System.out.print("数据接收首末位错误");
+				   	        	 sqlwritetype=0;
+				       	     }
+			       	     }
+		        	   
+			           }else {
+			        	   sqlwritetype=0;
+			               System.out.println("Not receiver anything from client!");  
+			           }
 		            
 				} catch (Exception e) {
 					sqlwritetype=0;
@@ -318,7 +415,7 @@ public class Server implements Runnable {
 
 	                int i=0;
 					//开启线程，接收不同的socket请求  
-	                Handler handler = new Handler(websocketlink,str,handlers,i,websendtype);  
+	                Handler handler = new Handler(websocketlink,str,handlers,i,websendtype,connet);  
 	                handlers.add(handler);  
 	                workThread = new Thread(handler);  
 	                workThread.start();  
@@ -401,7 +498,7 @@ public class Server implements Runnable {
 				    	
 				    	Handler web = handlers.get(i);
 				    	
-				    	Handler handler = new Handler(web.websocketlink,str,handlers,i,websendtype);
+				    	Handler handler = new Handler(web.websocketlink,str,handlers,i,websendtype,connet);
 				    	workThread = new Thread(handler); 
 				    	workThread.start();
 				    	
@@ -435,13 +532,15 @@ public class Server implements Runnable {
 		private int i;
 		private int websendtype;
 		private boolean datawritetype = false;
+		private String connet;
 	    
-	    public Handler(Socket socket,String str,List<Handler> handlers,int i,int websendtype) {  
+	    public Handler(Socket socket,String str,List<Handler> handlers,int i,int websendtype,String connet) {  
 	        this.websocketlink = socket; 
 	        this.str = str;
 	        this.handlers = handlers;
 	        this.i = i;
 	        this.websendtype = websendtype;
+	        this.connet = connet;
 	    }  
 	    
 	    public void run() {
@@ -666,7 +765,8 @@ public class Server implements Runnable {
                      String timestr3 = yearstr3+"-"+monthstr3+"-"+daystr3+" "+hourstr3+":"+minutestr3+":"+secondstr3;
                      SimpleDateFormat timeshow3 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
                      try {
-                    	java.util.Date time3 = timeshow3.parse(timestr3);
+                    	Date time3 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr3);
+                    	//java.util.Date time4 = timeshow3.parse(timestr3);
 						timesql3 = new Timestamp(time3.getTime());
 					 } catch (ParseException e) {
 						// TODO Auto-generated catch block
@@ -674,8 +774,8 @@ public class Server implements Runnable {
 					 }
 					 
 					 
-                     DB_Connectionweb b =new DB_Connectionweb();
-                     DB_Connectioncode c =new DB_Connectioncode(code);
+                     DB_Connectionweb b =new DB_Connectionweb(connet);
+                     DB_Connectioncode c =new DB_Connectioncode(code,connet);
                    
                     
 	                 String dbdata = b.getId();
