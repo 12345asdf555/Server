@@ -45,9 +45,11 @@ public class Server implements Runnable {
     public boolean webtype = false;
     public int sqlwritetype=0;
     public int websendtype=0;
+    public int sockettype=0;
     public String ip;
+    public String ip1;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/Weld?"+ "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/Weld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
 
@@ -55,7 +57,24 @@ public class Server implements Runnable {
     
     public void run() {
 		try {
-	    	File f = new File("android.txt");   
+			FileInputStream in = new FileInputStream("IPconfig.txt");  
+            InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
+            BufferedReader bufReader = new BufferedReader(inReader);  
+            String line = null; 
+            int writetime=0;
+			
+		    while((line = bufReader.readLine()) != null){ 
+		    	if(writetime==0){
+	                ip=line;
+	                writetime++;
+		    	}
+		    	else{
+		    		ip1=line;
+		    		writetime=0;
+		    	}
+            }  
+
+	    	/*File f = new File("IPconfig.txt");   
 	        InputStream ing;
 			ing = new FileInputStream(f);
 	        b = new byte[1024];   
@@ -70,8 +89,11 @@ public class Server implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-	        ip=new String(b,0,len);
+	        ip=new String(b,0,len);*/
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
@@ -82,6 +104,7 @@ public class Server implements Runnable {
     	new Thread(mysql).start();
     	new Thread(websocketstart).start();
     	new Thread(websocketsend).start();
+    	//new Thread(socketsend).start();
     	
     }  
       
@@ -90,8 +113,6 @@ public class Server implements Runnable {
 			
 			System.out.println("S: Connecting...");  
 			  
-
-			
             try {
             	
 				ServerSocket serverSocket = new ServerSocket(SERVERPORT);
@@ -154,6 +175,7 @@ public class Server implements Runnable {
 	                    }
 	                    
 	                    sqlwritetype=1;
+	                    sockettype=1;
 	                    if(str.substring(0, 2).equals("FA")){
 		                    websendtype=1;
 	                    }
@@ -387,6 +409,157 @@ public class Server implements Runnable {
 			
 		}
     };
+    
+    
+    public Runnable socketsend = new Runnable() {
+
+ 		public void run() {
+ 			while(true){
+ 				
+ 				synchronized(this) {  
+ 				
+ 				while(sockettype==1){
+ 					
+ 					try{
+ 					
+ 		            if (str.length() == 108) {  
+ 		
+ 		            //校验第一位是否为FA末位是否为F5
+ 		       	     String check1 =str.substring(0,2);
+ 		       	     String check11=str.substring(106,108);
+ 		       	     if(check1.equals("FA") && check11.equals("F5")){
+ 			        		
+ 		           	     //校验长度
+ 		           	     int check2=str.length();
+ 		           	     if(check2==108){
+ 		           	        			
+ 		               	     //校验位校验
+ 		               	     String check3=str.substring(2,104);
+ 		               	     int check4=0;
+ 		               	     for (int i11 = 0; i11 < check3.length()/2; i11++)
+ 		               	     {
+ 		               	    	String tstr1=check3.substring(i11*2, i11*2+2);
+ 		               	    	check4+=Integer.valueOf(tstr1,16);
+ 		               	     }
+ 		               	     String check5 = ((Integer.toHexString(check4)).toUpperCase()).substring(1,3);
+ 		               	     String check6 = str.substring(104,106);
+ 		               	     if(check5.equals(check6)){
+ 		               	    	 
+ 		               	        OutputStream outputStream;
+ 		               	    	 
+ 		               	    	byte[] data=new byte[str.length()/2];
+
+ 								for (int i = 0; i < data.length; i++)
+ 								{
+ 									String tstr1=str.substring(i*2, i*2+2);
+ 									Integer k=Integer.valueOf(tstr1, 16);
+ 									data[i]=(byte)k.byteValue();
+ 								}
+ 		               	    	 
+ 		               	    	String strdata = "";
+								for(int i=0;i<data.length;i++){
+ 		                         	
+ 		                         	//判断为数字还是字母，若为字母+256取正数
+ 		                         	if(data[i]<0){
+ 		                         		String r = Integer.toHexString(data[i]+256);
+ 		                         		String rr=r.toUpperCase();
+ 		                             	//数字补为两位数
+ 		                             	if(rr.length()==1){
+ 		                         			rr='0'+rr;
+ 		                             	}
+ 		                             	//strdata为总接收数据
+ 		                         		strdata += rr;
+ 		                         		
+ 		                         	}
+ 		                         	else{
+ 		                         		String r = Integer.toHexString(data[i]);
+ 		                             	if(r.length()==1)
+ 		                         			r='0'+r;
+ 		                             	r=r.toUpperCase();
+ 		                         		strdata+=r;	
+ 		                         		
+ 		                         	}
+ 		                         }
+ 
+ 		                         
+ 		                        byte[] bb3=new byte[strdata.length()/2];
+ 		     					for (int i1 = 0; i1 < bb3.length; i1++)
+ 		     					{
+ 		     						String tstr1=strdata.substring(i1*2, i1*2+2);
+ 		     						Integer k=Integer.valueOf(tstr1, 16);
+ 		     						bb3[i1]=(byte)k.byteValue();
+ 		     					}
+ 		     					
+ 		     					try {
+ 									socket = new Socket(ip1, 5555);
+ 								} catch (IOException e1) {
+ 									sockettype=0;
+ 									e1.printStackTrace();
+ 								}
+ 		                        
+ 							
+	 		                    try {
+	 		                    	//发送消息
+	 		                        // 步骤1：从Socket 获得输出流对象OutputStream
+	 		                        // 该对象作用：发送数据
+	 		                        outputStream = socket.getOutputStream();
+	 		
+	 		                        // 步骤2：写入需要发送的数据到输出流对象中
+	 		                        outputStream.write(bb3);
+	 		                        // 特别注意：数据的结尾加上换行符才可让服务器端的readline()停止阻塞
+	 		
+	 		                        // 步骤3：发送数据到服务端
+	 		                        outputStream.flush();
+	 		
+	 		                        socket.close();
+	 		                        
+	 		                        sockettype=0;
+	 		     		           
+	 		                    } catch (IOException e1) {
+	 		                    	sockettype=0;
+	 		                        e1.printStackTrace();
+	 		                    }
+ 		               	    	 
+ 		               	     }
+ 		               	     else{
+ 		               	        //校验位错误
+ 		               	    	 System.out.print("数据接收校验位错误");
+ 		               	    	 sockettype=0;
+ 		               	     }
+ 		                               
+ 		           	     }
+ 		           	        		
+ 		           	     else{
+ 		           	        //长度错误
+ 		           	    	 System.out.print("数据接收长度错误");
+ 		           	    	 sockettype=0;
+ 		           	     }
+ 		       	        		
+ 		   	        	}
+ 		   	        	else{
+ 		   	        		//首位不是FE
+ 		   	        		System.out.print("数据接收首末位错误");
+ 		   	        		sockettype=0;
+ 		   	        	}
+ 		       	     
+ 		           }else {
+ 			        	   sockettype=0;
+ 			               System.out.println("Not receiver anything from client!");  
+ 			           }
+ 		            
+ 				} catch (Exception e) {
+ 					sockettype=0;
+ 		            System.out.println("S: Error 2");  
+ 		            e.printStackTrace();  
+ 		        }  
+ 		            
+ 			}
+ 				 }
+ 		}
+ 			
+ 		}
+     };
+    
     
     public Runnable websocketstart = new Runnable() {  
         private PrintWriter getWriter(Socket socket) throws IOException {  
@@ -719,9 +892,9 @@ public class Server implements Runnable {
 					 String voltage3=strdata.substring(82,86);
 					 String status3=strdata.substring(90,92);
 					 
-					 long year3 = Integer.valueOf(str.subSequence(40, 42).toString(),16);
+					 long year3 = Integer.valueOf(str.subSequence(92, 94).toString(),16);
                      String yearstr3 = String.valueOf(year3);
-                     long month3 = Integer.valueOf(str.subSequence(42, 44).toString(),16);
+                     long month3 = Integer.valueOf(str.subSequence(94, 96).toString(),16);
                      String monthstr3 = String.valueOf(month3);
                      if(monthstr3.length()!=2){
                     	 int lenth=2-monthstr3.length();
@@ -729,7 +902,7 @@ public class Server implements Runnable {
                     		 monthstr3="0"+monthstr3;
                     	 }
                      }
-                     long day3 = Integer.valueOf(str.subSequence(44, 46).toString(),16);
+                     long day3 = Integer.valueOf(str.subSequence(96, 98).toString(),16);
                      String daystr3 = String.valueOf(day3);
                      if(daystr3.length()!=2){
                     	 int lenth=2-daystr3.length();
@@ -737,7 +910,7 @@ public class Server implements Runnable {
                     		 daystr3="0"+daystr3;
                     	 }
                      }
-                     long hour3 = Integer.valueOf(str.subSequence(46, 48).toString(),16);
+                     long hour3 = Integer.valueOf(str.subSequence(98, 100).toString(),16);
                      String hourstr3 = String.valueOf(hour3);
                      if(hourstr3.length()!=2){
                     	 int lenth=2-hourstr3.length();
@@ -745,7 +918,7 @@ public class Server implements Runnable {
                     		 hourstr3="0"+hourstr3;
                     	 }
                      }
-                     long minute3 = Integer.valueOf(str.subSequence(48, 50).toString(),16);
+                     long minute3 = Integer.valueOf(str.subSequence(100, 102).toString(),16);
                      String minutestr3 = String.valueOf(minute3);
                      if(minutestr3.length()!=2){
                     	 int lenth=2-minutestr3.length();
@@ -753,7 +926,7 @@ public class Server implements Runnable {
                     		 minutestr3="0"+minutestr3;
                     	 }
                      }
-                     long second3 = Integer.valueOf(str.subSequence(50, 52).toString(),16);
+                     long second3 = Integer.valueOf(str.subSequence(102, 104).toString(),16);
                      String secondstr3 = String.valueOf(second3);
                      if(secondstr3.length()!=2){
                     	 int lenth=2-secondstr3.length();
@@ -773,30 +946,36 @@ public class Server implements Runnable {
 						e.printStackTrace();
 					 }
 					 
-					 
-                     DB_Connectionweb b =new DB_Connectionweb(connet);
-                     DB_Connectioncode c =new DB_Connectioncode(code,connet);
-                   
-                    
-	                 String dbdata = b.getId();
-	                 String limit = c.getId();
-	                 
-	                 for(int i=0;i<dbdata.length();i+=12){
-	                	 String status=dbdata.substring(0+i,2+i);
-	                	 String framework=dbdata.substring(2+i,4+i);
-	                     String weld=dbdata.substring(4+i,8+i); 
-	                     String position=dbdata.substring(8+i,12+i);
-	                     if(weldname.equals(weld)){
-	                    	 strsend+=status1+framework+weld+position+welder+electricity1+voltage1+timesql1+limit
-	                    			 +status2+framework+weld+position+welder+electricity2+voltage2+timesql2+limit
-	                    			 +status3+framework+weld+position+welder+electricity3+voltage3+timesql3+limit;
-	                     }
-	                     else{
-	                    	 strsend+=status+framework+weld+position+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-	                    			 +status+framework+weld+position+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-	                    			 +status+framework+weld+position+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
-	                     }
-	                 }
+                     try{
+	                     DB_Connectionweb b =new DB_Connectionweb(connet);
+	                     DB_Connectioncode c =new DB_Connectioncode(code,connet);
+	                   
+	                    
+		                 String dbdata = b.getId();
+		                 String limit = c.getId();
+		                 
+		                 for(int i=0;i<dbdata.length();i+=13){
+		                	 String status=dbdata.substring(0+i,2+i);
+		                	 String framework=dbdata.substring(2+i,4+i);
+		                     String weld=dbdata.substring(4+i,8+i); 
+		                     String position=dbdata.substring(8+i,13+i);
+		                     if(weldname.equals(weld)){
+		                    	 strsend+=status1+framework+weld+position+welder+electricity1+voltage1+timesql1+limit
+		                    			 +status2+framework+weld+position+welder+electricity2+voltage2+timesql2+limit
+		                    			 +status3+framework+weld+position+welder+electricity3+voltage3+timesql3+limit;
+		                     }
+		                     else{
+		                    	 strsend+=status+framework+weld+position+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+		                    			 +status+framework+weld+position+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+		                    			 +status+framework+weld+position+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
+		                     }
+		                 }
+                     }catch (Exception e) {
+ 						// TODO Auto-generated catch block
+                    	 System.out.println("数据库读取数据错误");
+                    	 e.printStackTrace();
+                    	 websendtype=0;
+ 					 }
 	    
 	                 datawritetype = true;
 	                 
