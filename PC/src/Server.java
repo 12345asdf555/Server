@@ -26,10 +26,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
-import javax.websocket.Session;
-
-import javafx.scene.chart.PieChart.Data;
 
 
 public class Server implements Runnable {  
@@ -49,9 +48,13 @@ public class Server implements Runnable {
     public String ip;
     public String ip1;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/Weld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/Weld?" + "user=brucestifler&password=?bhq1130hdn?&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
+    public DB_Connectioncode check;
+    public ArrayList<String> listarray1 = new ArrayList<String>();
+    public ArrayList<String> listarray2 = new ArrayList<String>();
+    public ArrayList<String> listarray3 = new ArrayList<String>();
 
 
     
@@ -98,10 +101,34 @@ public class Server implements Runnable {
 			e.printStackTrace();
 		} 
 		
+		
 		connet=connet1+ip+connet2;
 		
+		
+		Timer tExit = null; 
+		tExit = new Timer();  
+        tExit.schedule(new TimerTask() {  
+            @Override  
+            public void run() {
+  		
+        		DB_Connectioncode check = new DB_Connectioncode(connet);
+        		
+        		listarray1 = check.getId1();
+        		System.out.println(listarray1);
+        		listarray2 = check.getId2();
+        		System.out.println(listarray2);
+        		listarray3 = check.getId3();
+        		System.out.println(listarray3);
+	
+            }  
+        }, 0,600000); 
+
+	
+		
+		
+		
     	new Thread(reciver).start();
-    	new Thread(mysql).start();
+    	/*new Thread(mysql).start();*/
     	new Thread(websocketstart).start();
     	new Thread(websocketsend).start();
     	//new Thread(socketsend).start();
@@ -110,8 +137,6 @@ public class Server implements Runnable {
       
     public Runnable reciver = new Runnable() {
 		public void run() {
-			
-			System.out.println("S: Connecting...");  
 			  
             try {
             	
@@ -122,9 +147,7 @@ public class Server implements Runnable {
 					
 					synchronized(this) {  
 					
-	                Socket client = serverSocket.accept();  
-	  
-	                System.out.println("S: Receiving...");  
+	                Socket client = serverSocket.accept();    
 	                  
 	                try {  
 	                    BufferedReader in = new BufferedReader(  
@@ -173,6 +196,7 @@ public class Server implements Runnable {
                     			zerocount=0;
                     		}
 	                    }
+	                   
 	                    
 	                    sqlwritetype=1;
 	                    sockettype=1;
@@ -187,9 +211,6 @@ public class Server implements Runnable {
 	                } catch (Exception e) {  
 	                    System.out.println("S: Error "+e.getMessage());  
 	                    e.printStackTrace();  
-	                } finally {  
-	                    client.close();  
-	                    System.out.println("S: Done.");  
 	                } 
 	                
 				}
@@ -210,7 +231,7 @@ public class Server implements Runnable {
 				
 				synchronized(this) {  
 				
-				while(sqlwritetype==1){
+				while(sqlwritetype==1 && str!=""){
 					
 					try{
 					
@@ -227,18 +248,22 @@ public class Server implements Runnable {
 		           	        			
 		               	     //校验位校验
 		               	     String check3=str.substring(2,104);
+		               	     String check5="";
 		               	     int check4=0;
 		               	     for (int i11 = 0; i11 < check3.length()/2; i11++)
 		               	     {
 		               	    	String tstr1=check3.substring(i11*2, i11*2+2);
 		               	    	check4+=Integer.valueOf(tstr1,16);
 		               	     }
-		               	     String check5 = ((Integer.toHexString(check4)).toUpperCase()).substring(1,3);
+		               	     if((Integer.toHexString(check4)).toUpperCase().length()==2){
+		               	    	check5 = ((Integer.toHexString(check4)).toUpperCase());
+		               	     }else{
+		               	    	check5 = ((Integer.toHexString(check4)).toUpperCase()).substring(1,3);
+		               	     }
 		               	     String check6 = str.substring(104,106);
 		               	     if(check5.equals(check6)){
 		               	        				
 		               	    	 for(int i=0;i<78;i+=26){
-		               	    		 
 		               	    		 
 		               	    		 BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
 		                             BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(30+i, 34+i).toString(),16));
@@ -310,22 +335,25 @@ public class Server implements Runnable {
 		                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
 		                                	
 									 
-		                             DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,timesql,connet);
-		                             System.out.println(str);
+		                             DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,timesql,connet,listarray1);
 									} catch (Exception e) {
 										sqlwritetype=0;
+										str="";
 										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
 		
 		               	    	 }
+		 	                    //System.out.println(str);
 		                   	    sqlwritetype=0;
+		                   	    str="";
 		               	     }
 		               	        			
 		               	     else{
 		               	        //校验位错误
 		               	    	 System.out.print("数据接收校验位错误");
 		               	    	 sqlwritetype=0;
+		               	    	 str="";
 		               	     }
 		                               
 		           	     }
@@ -334,6 +362,7 @@ public class Server implements Runnable {
 		           	        //长度错误
 		           	    	 System.out.print("数据接收长度错误");
 		           	    	 sqlwritetype=0;
+		           	    	 str="";
 		           	     }
 		       	        		
 		   	        	}
@@ -341,9 +370,10 @@ public class Server implements Runnable {
 		   	        		//首位不是FE
 		   	        		System.out.print("数据接收首末位错误");
 		   	        		sqlwritetype=0;
+		   	        		str="";
 		   	        	}
 		       	     
-		           }else if(str.length()>=108){
+		           }else if(str.length()>=108 && str.length()!= 118){
 		        	
 		       	    	String [] stringArr = str.split("FD");
 		       	    	
@@ -375,6 +405,7 @@ public class Server implements Runnable {
 		                        	
 		                                DB_Connectionandroid a=new DB_Connectionandroid(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status,connet); 
 		                                sqlwritetype=0;
+		                                str="";
 		                                
 		                        	 } 
 				           	     
@@ -383,22 +414,33 @@ public class Server implements Runnable {
 				           	    //长度错误
 				           	    	 System.out.print("数据接收长度错误");
 				           	    	 sqlwritetype=0;
+				           	    	 str="";
 				           	     }
 			       	         }
 				       	     else{
 				       	    	 //首位不是FE
 				   	        	 System.out.print("数据接收首末位错误");
 				   	        	 sqlwritetype=0;
+				   	        	 str="";
 				       	     }
 			       	     }
 		        	   
+			           }else if(str.length() == 118){
+			        	   
+			        	   sqlwritetype=0;
+			        	   str="";
+			        	   
 			           }else {
+			        	   
+			        	   str="";
 			        	   sqlwritetype=0;
 			               System.out.println("Not receiver anything from client!");  
+			               
 			           }
 		            
 				} catch (Exception e) {
 					sqlwritetype=0;
+					str="";
 		            System.out.println("S: Error 2");  
 		            e.printStackTrace();  
 		        }  
@@ -435,13 +477,18 @@ public class Server implements Runnable {
  		           	        			
  		               	     //校验位校验
  		               	     String check3=str.substring(2,104);
+ 		               	     String check5="";
  		               	     int check4=0;
  		               	     for (int i11 = 0; i11 < check3.length()/2; i11++)
  		               	     {
  		               	    	String tstr1=check3.substring(i11*2, i11*2+2);
  		               	    	check4+=Integer.valueOf(tstr1,16);
  		               	     }
- 		               	     String check5 = ((Integer.toHexString(check4)).toUpperCase()).substring(1,3);
+	 		               	 if((Integer.toHexString(check4)).toUpperCase().length()==2){
+		               	    	check5 = ((Integer.toHexString(check4)).toUpperCase());
+		               	     }else{
+		               	    	check5 = ((Integer.toHexString(check4)).toUpperCase()).substring(1,3);
+		               	     }
  		               	     String check6 = str.substring(104,106);
  		               	     if(check5.equals(check6)){
  		               	    	 
@@ -514,9 +561,11 @@ public class Server implements Runnable {
 	 		                        socket.close();
 	 		                        
 	 		                        sockettype=0;
+	 		                        str="";
 	 		     		           
 	 		                    } catch (IOException e1) {
 	 		                    	sockettype=0;
+	 		                    	str="";
 	 		                        e1.printStackTrace();
 	 		                    }
  		               	    	 
@@ -525,6 +574,7 @@ public class Server implements Runnable {
  		               	        //校验位错误
  		               	    	 System.out.print("数据接收校验位错误");
  		               	    	 sockettype=0;
+ 		               	    	 str="";
  		               	     }
  		                               
  		           	     }
@@ -533,6 +583,7 @@ public class Server implements Runnable {
  		           	        //长度错误
  		           	    	 System.out.print("数据接收长度错误");
  		           	    	 sockettype=0;
+ 		           	    	 str="";
  		           	     }
  		       	        		
  		   	        	}
@@ -540,15 +591,18 @@ public class Server implements Runnable {
  		   	        		//首位不是FE
  		   	        		System.out.print("数据接收首末位错误");
  		   	        		sockettype=0;
+ 		   	        		str="";
  		   	        	}
  		       	     
  		           }else {
  			        	   sockettype=0;
+ 			        	   str="";
  			               System.out.println("Not receiver anything from client!");  
  			           }
  		            
  				} catch (Exception e) {
  					sockettype=0;
+ 					str="";
  		            System.out.println("S: Error 2");  
  		            e.printStackTrace();  
  		        }  
@@ -575,8 +629,6 @@ public class Server implements Runnable {
 				try {
 				
 				    boolean hasHandshake = false;
-				
-				    System.out.println("S: Connecting..."); 
 					
 					if(serverSocket==null){
 						
@@ -587,13 +639,12 @@ public class Server implements Runnable {
 					websocketlink = serverSocket.accept();
 
 	                int i=0;
+	                
 					//开启线程，接收不同的socket请求  
-	                Handler handler = new Handler(websocketlink,str,handlers,i,websendtype,connet);  
+	                Handler handler = new Handler(websocketlink,str,handlers,i,websendtype,connet,listarray2,listarray3);  
 	                handlers.add(handler);  
 	                workThread = new Thread(handler);  
 	                workThread.start();  
-					  
-					System.out.println("S: Receiving...");  
 	
 					
 					//获取socket输入流信息  
@@ -671,7 +722,7 @@ public class Server implements Runnable {
 				    	
 				    	Handler web = handlers.get(i);
 				    	
-				    	Handler handler = new Handler(web.websocketlink,str,handlers,i,websendtype,connet);
+				    	Handler handler = new Handler(web.websocketlink,str,handlers,i,websendtype,connet,listarray2,listarray3);
 				    	workThread = new Thread(handler); 
 				    	workThread.start();
 				    	
@@ -706,14 +757,20 @@ public class Server implements Runnable {
 		private int websendtype;
 		private boolean datawritetype = false;
 		private String connet;
+		public ArrayList<String> listarray2 = new ArrayList<String>();
+		public ArrayList<String> listarray3 = new ArrayList<String>();
+		public String limit;
 	    
-	    public Handler(Socket socket,String str,List<Handler> handlers,int i,int websendtype,String connet) {  
+	    public Handler(Socket socket,String str,List<Handler> handlers,int i,int websendtype,String connet,ArrayList<String> listarray2,ArrayList<String> listarray3) {  
 	        this.websocketlink = socket; 
 	        this.str = str;
 	        this.handlers = handlers;
 	        this.i = i;
 	        this.websendtype = websendtype;
 	        this.connet = connet;
+	        this.listarray2 = listarray2;
+	        this.listarray3 = listarray3;
+	        
 	    }  
 	    
 	    public void run() {
@@ -724,13 +781,13 @@ public class Server implements Runnable {
 			Timestamp timesql3 = null;
 			try {
 						
-				if(str==null){
+				if(str==""){
 					
 				}
 				else
 				{	
 					
-					byte[] str1=new byte[str.length()/2];
+					/*byte[] str1=new byte[str.length()/2];
 	
 					for (int i = 0; i < str1.length; i++)
 					{
@@ -760,8 +817,9 @@ public class Server implements Runnable {
 	                     	r=r.toUpperCase();
 	                 		strdata+=r;	
 	                 	}
-	                 }
+	                 }*/
 	                     
+					 strdata=str;
 					 String weldname = strdata.substring(10,14);
 					 String welder=strdata.substring(14,18);
 					 long code1 = Integer.valueOf(strdata.subSequence(18, 26).toString(),16);
@@ -822,8 +880,11 @@ public class Server implements Runnable {
                      String timestr1 = yearstr1+"-"+monthstr1+"-"+daystr1+" "+hourstr1+":"+minutestr1+":"+secondstr1;
                      SimpleDateFormat timeshow1 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
                      try {
-                    	java.util.Date time1 = timeshow1.parse(timestr1);
+						
+						Date time1 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr1);
+                    	//java.util.Date time4 = timeshow3.parse(timestr3);
 						timesql1 = new Timestamp(time1.getTime());
+						
 					 } catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -880,8 +941,11 @@ public class Server implements Runnable {
                      String timestr2 = yearstr2+"-"+monthstr2+"-"+daystr2+" "+hourstr2+":"+minutestr2+":"+secondstr2;
                      SimpleDateFormat timeshow2 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
                      try {
-                    	java.util.Date time2 = timeshow2.parse(timestr2);
+
+						Date time2 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr2);
+                    	//java.util.Date time4 = timeshow3.parse(timestr3);
 						timesql2 = new Timestamp(time2.getTime());
+						
 					 } catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -947,34 +1011,64 @@ public class Server implements Runnable {
 					 }
 					 
                      try{
-	                     DB_Connectionweb b =new DB_Connectionweb(connet);
+                    	 
+	                     /*DB_Connectionweb b =new DB_Connectionweb(connet);
 	                     DB_Connectioncode c =new DB_Connectioncode(code,connet);
-	                   
-	                    
+	                     DB_Connectioncode c =new DB_Connectioncode();
 		                 String dbdata = b.getId();
-		                 String limit = c.getId();
-		                 
-		                 for(int i=0;i<dbdata.length();i+=13){
+		                 String limit = c.getId();*/
+                    	 
+                    	 for(int i=0;i<listarray3.size();i+=5){
+                    		 String weldjunction = listarray3.get(i);
+                    		 if(weldjunction.equals(code)){
+                    			 String maxe = listarray3.get(i+1);
+                    			 String mixe = listarray3.get(i+2);
+                    			 String maxv = listarray3.get(i+3);
+                    			 String mixv = listarray3.get(i+4);
+                    			 limit = maxe + mixe + maxv + mixv;
+                    			 
+                    		 }
+                    	 }
+                    	 
+                    	 
+                    	 for(int i=0;i<listarray2.size();i+=4){
+                    		 String status = listarray2.get(i);
+                    		 String framework = listarray2.get(i+1);
+                    		 String weld = listarray2.get(i+2);
+                    		 if(weldname.equals(weld)){
+		                    	 strsend+=status1+framework+weld+welder+electricity1+voltage1+timesql1+limit
+		                    			 +status2+framework+weld+welder+electricity2+voltage2+timesql2+limit
+		                    			 +status3+framework+weld+welder+electricity3+voltage3+timesql3+limit;
+		                     }
+		                     else{
+		                    	 strsend+="09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+		                    			 +"09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+		                    			 +"09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
+		                     }
+                    	 }
+
+                    	 
+		                 /*for(int i=0;i<dbdata.length();i+=13){
 		                	 String status=dbdata.substring(0+i,2+i);
 		                	 String framework=dbdata.substring(2+i,4+i);
 		                     String weld=dbdata.substring(4+i,8+i); 
-		                     String position=dbdata.substring(8+i,13+i);
 		                     if(weldname.equals(weld)){
-		                    	 strsend+=status1+framework+weld+position+welder+electricity1+voltage1+timesql1+limit
-		                    			 +status2+framework+weld+position+welder+electricity2+voltage2+timesql2+limit
-		                    			 +status3+framework+weld+position+welder+electricity3+voltage3+timesql3+limit;
+		                    	 strsend+=status1+framework+weld+welder+electricity1+voltage1+timesql1
+		                    			 +status2+framework+weld+welder+electricity2+voltage2+timesql2
+		                    			 +status3+framework+weld+welder+electricity3+voltage3+timesql3;
 		                     }
 		                     else{
-		                    	 strsend+=status+framework+weld+position+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-		                    			 +status+framework+weld+position+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-		                    			 +status+framework+weld+position+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
+		                    	 strsend+="09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+		                    			 +"09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+		                    			 +"09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
 		                     }
-		                 }
+		                 }*/
                      }catch (Exception e) {
  						// TODO Auto-generated catch block
                     	 System.out.println("数据库读取数据错误");
                     	 e.printStackTrace();
                     	 websendtype=0;
+                    	 str="";
  					 }
 	    
 	                 datawritetype = true;
@@ -990,34 +1084,27 @@ public class Server implements Runnable {
 						
 					}
 					
-					
 					byteBuf.flip();
 					
-	                
 	                //将内容返回给客户端  
 	                responseClient(byteBuf, true, websocketlink); 
 	                
-	                System.out.println("实时数据已发送");
-						
 				}
 				
 			} catch (IOException e) {
 				
-				if(datawritetype = false){
-					
-					websendtype=0;
-					
-				}
+				websendtype=0;
 				
-				else{
+				if(datawritetype = true){
 					
-				// TODO Auto-generated catch block
 					try {
 						websendtype=0; 
 						websocketlink.close();
-						handlers.remove(i);
-						System.out.println("实时数据发送失败");
-						e.printStackTrace();
+						for(int j=0;j<handlers.size();j++){
+							if(handlers.get(j).websocketlink == websocketlink){
+								handlers.remove(j);
+							}
+						}
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
