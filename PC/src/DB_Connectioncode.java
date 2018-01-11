@@ -120,21 +120,19 @@ public class DB_Connectioncode {
          
        //查焊机
          
-         inSql = "select fequipment_no, fstatus_id, fposition, finsframework_id from tb_welding_machine";
+         inSql = "select tb_welding_machine.fequipment_no,tb_gather.fgather_no,tb_welding_machine.finsframework_id from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
          
          try {
 
          	ResultSet rs =stmt.executeQuery(inSql);
              
              while (rs.next()) {
-            	String fstatus_id = rs.getString("fstatus_id");
-             	String fequipment_no = rs.getString("fequipment_no");
-             	String fposition = rs.getString("fposition");
+            	String fequipment_no = rs.getString("fequipment_no");
+             	String fgather_no = rs.getString("fgather_no");
              	String finsframework_id = rs.getString("finsframework_id");
-             	listarray2.add(fstatus_id);
-             	listarray2.add(finsframework_id);
              	listarray2.add(fequipment_no);
-             	listarray2.add(fposition);
+             	listarray2.add(fgather_no);
+             	listarray2.add(finsframework_id);
              	
              }
              	

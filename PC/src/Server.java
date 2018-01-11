@@ -128,7 +128,7 @@ public class Server implements Runnable {
 		
 		
     	new Thread(reciver).start();
-    	/*new Thread(mysql).start();*/
+    	new Thread(mysql).start();
     	new Thread(websocketstart).start();
     	new Thread(websocketsend).start();
     	//new Thread(socketsend).start();
@@ -1031,19 +1031,19 @@ public class Server implements Runnable {
                     	 }
                     	 
                     	 
-                    	 for(int i=0;i<listarray2.size();i+=4){
-                    		 String status = listarray2.get(i);
-                    		 String framework = listarray2.get(i+1);
-                    		 String weld = listarray2.get(i+2);
-                    		 if(weldname.equals(weld)){
-		                    	 strsend+=status1+framework+weld+welder+electricity1+voltage1+timesql1+limit
-		                    			 +status2+framework+weld+welder+electricity2+voltage2+timesql2+limit
-		                    			 +status3+framework+weld+welder+electricity3+voltage3+timesql3+limit;
+                    	 for(int i=0;i<listarray2.size();i+=3){
+                    		 String fequipment_no = listarray2.get(i);
+                    		 String fgather_no = listarray2.get(i+1);
+                    		 String finsframework_id = listarray2.get(i+2);
+                    		 if(weldname.equals(fgather_no)){
+		                    	 strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit
+		                    			 +status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit
+		                    			 +status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit;
 		                     }
 		                     else{
-		                    	 strsend+="09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-		                    			 +"09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-		                    			 +"09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
+		                    	 strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+		                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+		                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
 		                     }
                     	 }
 

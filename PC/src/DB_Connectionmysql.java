@@ -245,7 +245,7 @@ public class DB_Connectionmysql {
 
         // if(state ==1)
          	
-	         for(int i=0;i<=listarray1.size()/2;i+=2){
+	         for(int i=0;i<=listarray1.size();i+=2){
 	        	 if(machine_id.equals(listarray1.get(i))){
 	        		 fmachine = listarray1.get(i+1);
 	        		 break;
@@ -266,6 +266,8 @@ public class DB_Connectionmysql {
 
         } catch (SQLException e) {
 
+        	System.out.println(machine_id);
+        	
             System.out.println("Broken insert");
 
             e.printStackTrace();
