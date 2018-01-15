@@ -13,6 +13,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.InetAddress;
 import java.net.ServerSocket;  
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -24,15 +25,21 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 
-public class Server implements Runnable {  
+public class Server extends Thread {  
 	
+	
+	public int clientfirst=0;
  	private List<Handler> handlers = new ArrayList<Handler>();  
     public static final String SERVERIP = "121.196.222.216"; 
     public static final int SERVERPORT = 5555;
@@ -40,7 +47,7 @@ public class Server implements Runnable {
     public String str = "";
     public Socket socket=null;
     public Socket websocketlink=null;
-    public ServerSocket serverSocket = null;
+    public ServerSocket serverSocket=null;
     public boolean webtype = false;
     public int sqlwritetype=0;
     public int websendtype=0;
@@ -48,13 +55,26 @@ public class Server implements Runnable {
     public String ip;
     public String ip1;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/Weld?" + "user=brucestifler&password=?bhq1130hdn?&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/Weld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
+	public Socket client;
+    public HashMap<String, Socket> clientList = new HashMap<>();
+
+
+    
+    public Server(Socket s,HashMap<String, Socket> List,ServerSocket web)throws IOException {
+    	clientList=List;
+    	client = s;   
+    	serverSocket = web;
+    	
+        start();
+    }
+
 
 
     
@@ -124,45 +144,40 @@ public class Server implements Runnable {
         }, 0,600000); 
 
 	
-		
-		
-		
     	new Thread(reciver).start();
-    	new Thread(mysql).start();
-    	new Thread(websocketstart).start();
-    	new Thread(websocketsend).start();
-    	//new Thread(socketsend).start();
-    	
+    	String aaa = client.getInetAddress().getHostAddress();
+    	if(!aaa.equals("192.168.8.103")){
+    		new Thread(mysql).start();
+        	new Thread(websocketstart).start();
+        	new Thread(websocketsend).start();
+        	//new Thread(socketsend).start();
+    	} 	
     }  
       
+    
     public Runnable reciver = new Runnable() {
 		public void run() {
 			  
             try {
-            	
-				ServerSocket serverSocket = new ServerSocket(SERVERPORT);
-				
-				
+	
 				while (true) {  
 					
 					synchronized(this) {  
-					
-	                Socket client = serverSocket.accept();    
-	                  
-	                try {  
-	                    BufferedReader in = new BufferedReader(  
-	                            new InputStreamReader(client.getInputStream()));  
+
+					try {  
 	                      
-	                    PrintWriter out = new PrintWriter(new BufferedWriter(  
-	                            new OutputStreamWriter(client.getOutputStream())),true);  
-	                      
-	                    int zeroc=0;
 	                    int i1=0;
 	                    int zerocount=0;
 	                    int linecount=0;
-	                    str = "";
-	                    byte[] datas1 = new byte[262144]; 
+	                    byte[] datas1 = new byte[2048]; 
+	                    
+	                    System.out.println("1");
+	                    
 	                    client.getInputStream().read(datas1);
+	                    
+	                    System.out.println("2");
+	                    
+	                    str = "";
 	                    for(i1=0;i1<datas1.length;i1++){
 	                    	//判断为数字还是字母，若为字母+256取正数
 	                    	if(datas1[i1]<0){
@@ -196,20 +211,47 @@ public class Server implements Runnable {
                     			zerocount=0;
                     		}
 	                    }
-	                   
 	                    
-	                    sqlwritetype=1;
-	                    sockettype=1;
-	                    if(str.substring(0, 2).equals("FA")){
-		                    websendtype=1;
+	                    if(str.substring(0, 2).equals("7E")){
+	                    	for (Entry<String, Socket> entry : clientList.entrySet()) {  
+	                    		  
+	                    	    System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); 
+	                    	    
+	                    	    Socket a = entry.getValue();
+	                    	    
+	                    	    byte[] te = new byte[str.length()/2];
+	                            for (int i = 0; i < str.length()/2; i++)
+	                            {
+	                              String tstr1=str.substring(i*2, i*2+2);
+	                              Integer k=Integer.valueOf(tstr1,16);
+	                              te[i]=(byte)k.byteValue();
+	                            }
+	                    	    
+	                    	    OutputStream outputStream = a.getOutputStream();
+	                    	    
+	                    	    outputStream.write(te);
+	                    	    
+	                    	    outputStream.flush();
+	                    	  
+	                    	} 
+	                    }else{
+	                    	
+	                    	sqlwritetype=1;
+		                    sockettype=1;
+		                    if(str.substring(0, 2).equals("FA")){
+			                    websendtype=1;
+		                    }
+	                    	
 	                    }
+	                    
 	                    
 	                    //System.out.println(str);
 	                	//new Thread(mysql).start();
 	                    //new Thread(websocketstart).start();
 	                    
 	                } catch (Exception e) {  
-	                    System.out.println("S: Error "+e.getMessage());  
+	                    System.out.println("S: Error "+e.getMessage());
+	                    client.close();
 	                    e.printStackTrace();  
 	                } 
 	                
@@ -237,6 +279,8 @@ public class Server implements Runnable {
 					
 		            if (str.length() == 108) {  
 		
+		            System.out.println("3");
+		            	
 		            //校验第一位是否为FA末位是否为F5
 		       	     String check1 =str.substring(0,2);
 		       	     String check11=str.substring(106,108);
@@ -346,7 +390,6 @@ public class Server implements Runnable {
 		               	    	 }
 		 	                    //System.out.println(str);
 		                   	    sqlwritetype=0;
-		                   	    str="";
 		               	     }
 		               	        			
 		               	     else{
@@ -630,14 +673,19 @@ public class Server implements Runnable {
 				
 				    boolean hasHandshake = false;
 					
-					if(serverSocket==null){
+					/*if(clientfirst==0){
 						
 						serverSocket = new ServerSocket(SERVERPORTWEB);
 						
-	                }  
+						clientfirst++;
+	                } */ 
 					
+				    System.out.println("4");
+				    
 					websocketlink = serverSocket.accept();
 
+					System.out.println("5");
+					
 	                int i=0;
 	                
 					//开启线程，接收不同的socket请求  
@@ -717,6 +765,8 @@ public class Server implements Runnable {
 				synchronized(this) {  
 				
 				while(websendtype==1){
+					
+					System.out.println("6");
 				
 					for (int i=0;i<handlers.size();i++) {  
 				    	
@@ -737,8 +787,24 @@ public class Server implements Runnable {
  
 	 public static void main(String [] args) 
 	 { 
-	     Thread desktopServerThread = new Thread(new Server());  
-	     desktopServerThread.start();  
+		 HashMap<String, Socket> socketList = new HashMap<>();
+	     try {
+	    	 	int count=0;
+	            ServerSocket socketserver =  new ServerSocket(SERVERPORT);
+	            ServerSocket webSocket = new ServerSocket(SERVERPORTWEB);
+	            while(true){//不断循环随时等待新的客户端接入服务器
+	                Socket client = socketserver.accept();
+	                count++;
+	                String countclient = Integer.toString(count);
+	                socketList.put(countclient,client); 
+
+		            new Server(client,socketList,webSocket);
+
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	     
 	 }
  
 }
@@ -818,9 +884,18 @@ public class Server implements Runnable {
 	                 		strdata+=r;	
 	                 	}
 	                 }*/
-	                     
+	                    
+					System.out.println("7");
+					
 					 strdata=str;
-					 String weldname = strdata.substring(10,14);
+					 Integer weldname1 = Integer.valueOf(strdata.substring(10,14).toString(),16);
+					 String weldname = String.valueOf(weldname1);
+                     if(weldname.length()!=4){
+                    	 int lenth=4-weldname.length();
+                    	 for(int i=0;i<lenth;i++){
+                    		 weldname="0"+weldname;
+                    	 }
+                     }
 					 String welder=strdata.substring(14,18);
 					 long code1 = Integer.valueOf(strdata.subSequence(18, 26).toString(),16);
                      String code = String.valueOf(code1);
