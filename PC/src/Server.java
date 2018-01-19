@@ -58,19 +58,30 @@ public class Server implements Runnable {
     public String ip;
     public String ip1;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/JH?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/Weld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
+    public HashMap<String, Socket> websocket = new HashMap<>();
     public HashMap<String, SocketChannel> clientList = new HashMap<>();
+    public int websocketcount=0;
     public int clientcount=0;
+    public Selector selector = null;
+    public ServerSocketChannel ssc = null;
 
-
+    public String getconnet(){
+    	return connet;
+    }
+    
+    public ArrayList<String> getlistarray1(){
+    	return listarray1;
+    }
     
     public void run() {
+    	
 		try {
 			FileInputStream in = new FileInputStream("IPconfig.txt");  
             InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
@@ -89,22 +100,6 @@ public class Server implements Runnable {
 		    	}
             }  
 
-	    	/*File f = new File("IPconfig.txt");   
-	        InputStream ing;
-			ing = new FileInputStream(f);
-	        b = new byte[1024];   
-	        int len = 0;   
-	        int temp=0;          //所有读取的内容都使用temp接收   
-	        try {
-				while((temp=ing.read())!=-1){    //当没有读取完时，继续读取   
-				    b[len]=(byte)temp;   
-				    len++;   
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} 
-	        ip=new String(b,0,len);*/
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -135,8 +130,24 @@ public class Server implements Runnable {
             }  
         }, 0,600000); 
 
-	
-         new Thread(mysql).start();
+		 try {
+			selector = Selector.open();
+			ssc = ServerSocketChannel.open();
+			ssc.socket().bind(new InetSocketAddress("192.168.21.130", 5555));
+		 } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		 }
+			 
+        
+        new Thread(websocketstart).start();
+        new Thread(websocketsend).start();
+        
+        Reciver reciver=new Reciver();
+        reciver.setCallback(new Mysql(),new Websocket(),new Socketsend(),connet,listarray1,listarray2,listarray3,websocket,ip1,ssc,selector,true);
+        reciver.reciver();
+         
+         /*new Thread(mysql).start();
          new Thread(websocketstart).start();
      	 new Thread(websocketsend).start();
          
@@ -182,7 +193,7 @@ public class Server implements Runnable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} 
-	     }
+	     }*/
 		
     	/*new Thread(reciver).start();
     	new Thread(mysql).start();
@@ -194,7 +205,7 @@ public class Server implements Runnable {
       
     
 
-	private void startWRThread(Selector selector) {
+	/*private void startWRThread(Selector selector) {
 		// TODO Auto-generated method stub
 		new Thread(new Runnable() {
 			@Override  
@@ -210,12 +221,12 @@ public class Server implements Runnable {
 	                            if(readyKey.isReadable()){  
 	                                SocketChannel sc = (SocketChannel) readyKey.channel();  
 	                                str = SendAndReceiveUtil.receiveData(sc);    
-	                                /* if(msg != null && !msg.equals("")) {  
+	                                 if(msg != null && !msg.equals("")) {  
 	                                	 
 	                                         System.out.println(msg);  
 	                                         SendAndReceiveUtil.sendData(sc,msg);  
 	                                         sc.shutdownOutput(); 
-	                                 }  */
+	                                 }  
 	                                
 	                                if(str.subSequence(6, 8).equals("52")){
 	                                    	
@@ -255,11 +266,11 @@ public class Server implements Runnable {
                 }   
 			}
 		}).start(); 
-	}
+	}*/
 
   
     
-    public Runnable reciver = new Runnable() {
+    /*public Runnable reciver = new Runnable() {
 		public void run() {
 			  
             try {
@@ -347,9 +358,9 @@ public class Server implements Runnable {
             
             
 		}
-    };
+    };*/
     
-    public Runnable mysql = new Runnable() {
+    /*public Runnable mysql = new Runnable() {
 		public void run() {
 			while(true){
 				
@@ -444,7 +455,7 @@ public class Server implements Runnable {
 		                            	//java.util.Date time1 = timeshow.parse(timestr);
 										Timestamp timesql = new Timestamp(time.getTime());
 
-		               	    		 /*BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
+		               	    		 BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
 		                             BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(30+i, 34+i).toString(),16));
 		                             long sensor_Num = Integer.valueOf(str.subSequence(34+i, 38+i).toString(),16);
 		                             long machine_id = Integer.valueOf(str.subSequence(10, 14).toString(),16);
@@ -456,7 +467,7 @@ public class Server implements Runnable {
 		                             long hour = Integer.valueOf(str.subSequence(46+i, 48+i).toString(),16);
 		                             long minute = Integer.valueOf(str.subSequence(48+i, 50+i).toString(),16);
 		                             long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
-		                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
+		                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());
 		                                	
 									 
 		                             DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,timesql,connet,listarray1);
@@ -574,10 +585,10 @@ public class Server implements Runnable {
 		}
 			
 		}
-    };
+    };*/
     
     
-    public Runnable socketsend = new Runnable() {
+    /*public Runnable socketsend = new Runnable() {
 
  		public void run() {
  			while(true){
@@ -736,7 +747,7 @@ public class Server implements Runnable {
  		}
  			
  		}
-     };
+     };*/
     
     
     public Runnable websocketstart = new Runnable() {  
@@ -762,15 +773,14 @@ public class Server implements Runnable {
 					
 					websocketlink = serverSocket.accept();
 
-	                int i=0;
+					websocketcount++;
 	                
-					//开启线程，接收不同的socket请求  
+					/*//开启线程，接收不同的socket请求  
 	                Handler handler = new Handler(websocketlink,str,handlers,i,websendtype,connet,listarray2,listarray3);  
 	                handlers.add(handler);  
 	                workThread = new Thread(handler);  
-	                workThread.start();  
-	
-					
+	                workThread.start();  */
+		
 					//获取socket输入流信息  
 	                InputStream in = websocketlink.getInputStream(); 
 	                
@@ -818,9 +828,19 @@ public class Server implements Runnable {
 	                    pw.flush();  
 	                    //将握手标志更新，只握一次  
 	                    hasHandshake = true;  
-	    				
+	
 	                }
 
+	                websocket.put(Integer.toString(websocketcount),websocketlink);
+	                
+	                
+	                websendtype=1;
+	                
+	                
+	                /*Reciver reciver=new Reciver();
+	                reciver.setCallback(new Mysql(),new Websocket(),new Socketsend(),connet,listarray1,listarray2,listarray3,websocket,ip1,ssc,selector,false);
+	                reciver.reciver();*/
+	                
 	                
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -842,16 +862,9 @@ public class Server implements Runnable {
 				
 				while(websendtype==1){
 				
-					for (int i=0;i<handlers.size();i++) {  
-				    	
-				    	Handler web = handlers.get(i);
-				    	
-				    	Handler handler = new Handler(web.websocketlink,str,handlers,i,websendtype,connet,listarray2,listarray3);
-				    	workThread = new Thread(handler); 
-				    	workThread.start();
-				    	
-	                }
-					websendtype=0;
+					Reciver reciver=new Reciver();
+	                reciver.setCallback(new Mysql(),new Websocket(),new Socketsend(),connet,listarray1,listarray2,listarray3,websocket,ip1,ssc,selector,false);
+	                reciver.reciver();
 				}
 				
 				}
