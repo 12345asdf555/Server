@@ -13,9 +13,15 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;  
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
@@ -24,8 +30,12 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -48,13 +58,15 @@ public class Server implements Runnable {
     public String ip;
     public String ip1;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/Weld?" + "user=brucestifler&password=?bhq1130hdn?&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/JH?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
+    public HashMap<String, SocketChannel> clientList = new HashMap<>();
+    public int clientcount=0;
 
 
     
@@ -124,17 +136,129 @@ public class Server implements Runnable {
         }, 0,600000); 
 
 	
+         new Thread(mysql).start();
+         new Thread(websocketstart).start();
+     	 new Thread(websocketsend).start();
+         
+         
+	     Selector selector = null;
+	     ServerSocketChannel ssc = null;
+		 try {
+			 
+			 selector = Selector.open();
+			 ssc = ServerSocketChannel.open();
+	
+			 InetAddress aasdf = InetAddress.getLocalHost();
+			 ssc.socket().bind(new InetSocketAddress("172.16.188.99", 5555)); 
+			 
+			 startWRThread(selector);  
+			 
+			 while(true){  // will block the thread  
+	             
+	             SocketChannel sc;
+				try {
+				 sc = ssc.accept();
+	             //Get the server socket and set to non blocking mode 
+	             clientcount++;
+	             String countclient = Integer.toString(clientcount);
+	             clientList.put(countclient,sc); 
+	             sc.configureBlocking(false);  
+	             sc.register(selector, SelectionKey.OP_READ);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  
+	         }  
+		 
+					 
+		 } catch (IOException e) {
+			 // TODO Auto-generated catch block
+			 e.printStackTrace();
+		 } finally{  
+	            try {
+					selector.close(); 
+					ssc.close();
+	            } catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+	     }
 		
-		
-		
-    	new Thread(reciver).start();
+    	/*new Thread(reciver).start();
     	new Thread(mysql).start();
     	new Thread(websocketstart).start();
-    	new Thread(websocketsend).start();
+    	new Thread(websocketsend).start();*/
     	//new Thread(socketsend).start();
     	
     }  
       
+    
+
+	private void startWRThread(Selector selector) {
+		// TODO Auto-generated method stub
+		new Thread(new Runnable() {
+			@Override  
+            public void run() {   
+                while(true){
+                	try {
+	                    while(selector.selectNow() > 0){  
+	
+	                        Iterator<SelectionKey> it = selector.selectedKeys().iterator();  
+	                        //// Walk through the ready keys collection and process date requests.  
+	                        while(it.hasNext()){  
+	                            SelectionKey readyKey = it.next();  
+	                            if(readyKey.isReadable()){  
+	                                SocketChannel sc = (SocketChannel) readyKey.channel();  
+	                                str = SendAndReceiveUtil.receiveData(sc);    
+	                                /* if(msg != null && !msg.equals("")) {  
+	                                	 
+	                                         System.out.println(msg);  
+	                                         SendAndReceiveUtil.sendData(sc,msg);  
+	                                         sc.shutdownOutput(); 
+	                                 }  */
+	                                
+	                                if(str.subSequence(6, 8).equals("52")){
+	                                    	
+	  
+	                                    // 依次处理selector上的每个已选择的SelectionKey  
+	                                	for (Entry<String, SocketChannel> entry : clientList.entrySet()) {
+	                                		sc=entry.getValue();
+	                                		String clientadd = sc.getRemoteAddress().toString().replace("/", "");
+	                                		String[] clientdetail = clientadd.split(":");
+	                                		String clientip = clientdetail[0];
+	                                		if(!clientip.equals("121.196.222.216")){
+	                                			
+	                                			SendAndReceiveUtil.sendData(sc,str);
+	                                			
+	                                		}
+	                                	}
+	
+	                                	
+	                                }else{
+	                                	sqlwritetype=1;
+	                                    sockettype=1;
+	                                    if(str.substring(0, 2).equals("FA")){
+	                		                    websendtype=1;
+	                	                    }
+	                                    }
+	                                    
+	                                    it.remove();   
+	                                }  
+	  
+	                                //execute((ServerSocketChannel) readyKey.channel());  
+	                        }  
+	                    }  
+	                } catch (IOException e) {  
+	                    // TODO Auto-generated catch block  
+	                    e.printStackTrace();  
+	                }
+                }   
+			}
+		}).start(); 
+	}
+
+  
+    
     public Runnable reciver = new Runnable() {
 		public void run() {
 			  
@@ -735,17 +859,38 @@ public class Server implements Runnable {
 		}
  	};
  
-	 public static void main(String [] args) 
+ 	
+	 public static void main(String [] args) throws IOException 
 	 { 
+		 
+		 /*final Selector selector = Selector.open();; 
+		 
+		 ServerSocketChannel ssc = ServerSocketChannel.open();  
+		 
+		 try{
+			 ssc.socket().bind(new InetSocketAddress("192.168.8.107", 5555));  
+			 
+			 startWRThread(selector);  
+			 
+			 while(true){  // will block the thread  
+	             
+	             SocketChannel sc = ssc.accept();  
+	             //Get the server socket and set to non blocking mode    
+	             sc.configureBlocking(false);  
+	             sc.register(selector, SelectionKey.OP_READ);  
+	         }  
+		 
+		 }finally{  
+	            selector.close();  
+	            ssc.close();  
+	     }*/  
+
 	     Thread desktopServerThread = new Thread(new Server());  
 	     desktopServerThread.start();  
 	 }
- 
-}
 
-
-
-
+	 
+	 
 	class Handler implements Runnable {
 		
 		public DB_Connectionmysql db_connection;
@@ -820,7 +965,14 @@ public class Server implements Runnable {
 	                 }*/
 	                     
 					 strdata=str;
-					 String weldname = strdata.substring(10,14);
+					 int weldname1 = Integer.valueOf(strdata.subSequence(10, 14).toString(),16);
+					 String weldname = String.valueOf(weldname1);
+					 if(weldname.length()!=4){
+                    	 int lenth=4-weldname.length();
+                    	 for(int i=0;i<lenth;i++){
+                    		 weldname="0"+weldname;
+                    	 }
+                     }
 					 String welder=strdata.substring(14,18);
 					 long code1 = Integer.valueOf(strdata.subSequence(18, 26).toString(),16);
                      String code = String.valueOf(code1);
@@ -1151,3 +1303,4 @@ public class Server implements Runnable {
 	    }  
 	    
 	}
+}
