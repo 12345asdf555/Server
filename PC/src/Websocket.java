@@ -293,7 +293,6 @@ public class Websocket implements Callback {
                 		 }
                 	 }
                 	 
-                	 
                 	 for(int i=0;i<listarray2.size();i+=3){
                 		 String fequipment_no = listarray2.get(i);
                 		 String fgather_no = listarray2.get(i+1);

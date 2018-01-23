@@ -25,16 +25,16 @@ public class Mysql implements Callback{
 		
 		try{
 			
-            if (str.length() == 108) {  
+            if (str.length() == 110) {  
 
             //校验第一位是否为FA末位是否为F5
        	     String check1 =str.substring(0,2);
-       	     String check11=str.substring(106,108);
+       	     String check11=str.substring(108,110);
        	     if(check1.equals("FA") && check11.equals("F5")){
 	        		
            	     //校验长度
            	     int check2=str.length();
-           	     if(check2==108){
+           	     if(check2==110){
            	        			
                	     //校验位校验
                	     String check3=str.substring(2,104);
@@ -123,8 +123,9 @@ public class Mysql implements Callback{
                              long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
                              int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
                                 	
+								String fitemid = str.substring(106, 108);
 							 
-							DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,timesql,connet,listarray1);
+							DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,connet,listarray1);
 							} catch (Exception e) {
 								str="";
 								// TODO Auto-generated catch block
