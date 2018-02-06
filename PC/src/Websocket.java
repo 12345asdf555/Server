@@ -360,7 +360,8 @@ public class Websocket implements Callback {
 			
 			if(datawritetype = true){
 				
-				websocket.remove(websocketfail); 
+				websocket.remove(websocketfail);
+				datawritetype=false;
 				
 			}
 		}

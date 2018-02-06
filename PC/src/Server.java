@@ -58,7 +58,7 @@ public class Server implements Runnable {
     public String ip;
     public String ip1;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/Weld?" + "user=brucestifler&password=?bhq1130hdn?&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/THWeld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
@@ -112,7 +112,7 @@ public class Server implements Runnable {
 		connet=connet1+ip+connet2;
 		
 		
-		Timer tExit = null; 
+		/*Timer tExit = null; 
 		tExit = new Timer();  
         tExit.schedule(new TimerTask() {  
             @Override  
@@ -128,12 +128,23 @@ public class Server implements Runnable {
         		System.out.println(listarray3);
 	
             }  
-        }, 0,600000); 
+        }, 0,600000);*/ 
+		
+		
+		DB_Connectioncode check = new DB_Connectioncode(connet);
+		
+		listarray1 = check.getId1();
+		System.out.println(listarray1);
+		listarray2 = check.getId2();
+		System.out.println(listarray2);
+		listarray3 = check.getId3();
+		System.out.println(listarray3);
+		
 
 		 try {
 			selector = Selector.open();
 			ssc = ServerSocketChannel.open();
-			ssc.socket().bind(new InetSocketAddress("192.168.21.129", 5555));
+			ssc.socket().bind(new InetSocketAddress(ip1, 5555));
 		 } catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

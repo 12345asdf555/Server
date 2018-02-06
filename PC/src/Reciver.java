@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import org.omg.CORBA.portable.UnknownException;
+
 public class Reciver {
 
 	private Selector selector;
@@ -48,15 +50,16 @@ public class Reciver {
 	
 	public void reciver(){
 
-		 try {
-
-			 startWRThread(selector);  
+		 try {  
 			 
 			 while(true){  // will block the thread  
 	             
 	             SocketChannel sc;
 				try {
 				 sc = ssc.accept();
+				 
+				 startWRThread(selector);
+				 
 	             //Get the server socket and set to non blocking mode 
 	             clientcount++;
 	             String countclient = Integer.toString(clientcount);
@@ -87,6 +90,10 @@ public class Reciver {
 		// TODO Auto-generated method stub
 		new Thread(new Runnable() {
 
+			SelectionKey readyKey;
+			SocketChannel sc;
+			String str;
+			
 			@Override  
             public void run() {   
                 while(true){
@@ -96,10 +103,13 @@ public class Reciver {
 	                        Iterator<SelectionKey> it = selector.selectedKeys().iterator();  
 	                        //// Walk through the ready keys collection and process date requests.  
 	                        while(it.hasNext()){  
-	                            SelectionKey readyKey = it.next();  
+	                            readyKey = it.next();  
 	                            if(readyKey.isReadable()){  
-	                                SocketChannel sc = (SocketChannel) readyKey.channel();  
-	                                String str = SendAndReceiveUtil.receiveData(sc);    
+	                            	try{
+	                            		sc = (SocketChannel) readyKey.channel();  
+	                                	str = SendAndReceiveUtil.receiveData(sc);
+	                                
+	                                    
 	                                /* if(msg != null && !msg.equals("")) {  
 	                                	 
 	                                         System.out.println(msg);  
@@ -122,8 +132,18 @@ public class Reciver {
 	                                			
 	                                		}
 	                                	}
-	                                	
-	                                }/*else{
+	                                }
+	                                }catch(Exception e){  
+	                                	readyKey.cancel();
+	            	                	try {
+	            							sc.socket().close();
+	            							sc.close();
+	            	                	} catch (IOException e1) {
+	            							// TODO Auto-generated catch block
+	            							e1.printStackTrace();
+	            						}
+	            	                	return;
+	                                } /*else{
 	                                	sqlwritetype=1;
 	                                    sockettype=1;
 	                                    if(str.substring(0, 2).equals("FA")){
@@ -133,20 +153,26 @@ public class Reciver {
 	                                	callback1.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
 	                                	callback2.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
 	                                	//callback3.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
-	                                    it.remove();   
+	                                	try{
+	                                		it.remove(); 
+	                                	}catch (Exception e) {  
+	                	                    // TODO Auto-generated catch block 
+	                	                    e.printStackTrace();  
+	                	                } 
 	                                }  
 	  
 	                                //execute((ServerSocketChannel) readyKey.channel());  
 	                        }  
 	                    }  
 	                } catch (IOException e) {  
-	                    // TODO Auto-generated catch block  
+	                    // TODO Auto-generated catch block 
 	                    e.printStackTrace();  
-	                }
+	                } 
                 }   
 			}
 		}).start(); 
 	}
+	
 	
 	
 }
