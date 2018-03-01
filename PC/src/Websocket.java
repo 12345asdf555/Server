@@ -17,13 +17,16 @@ public class Websocket implements Callback {
 	Timestamp timesql3;
 	private String limit;
 	private String connet;
-	private String strsend;
+	private String strsend="";
 	private String strdata;
+	private boolean first=true;
 	private String websocketfail;
 	private ArrayList<String> listarray2;
 	private ArrayList<String> listarray3;
 	private boolean datawritetype = false;
 	private HashMap<String, Socket> websocket;
+	private ArrayList<String> dbdata = new ArrayList<String>();
+	
 
 	@Override
 	public void taskResult(String str,String connet,ArrayList<String> listarray1,ArrayList<String> listarray2,ArrayList<String> listarray3,HashMap<String, Socket> websocket,String ip1) {
@@ -37,7 +40,7 @@ public class Websocket implements Callback {
         
         try {
 			
-			if(str==""){
+			if(websocket.isEmpty()){
 				
 			}
 			else
@@ -275,8 +278,13 @@ public class Websocket implements Callback {
 				 
                  try{
                 	 
-                     /*DB_Connectionweb b =new DB_Connectionweb(connet);
-                     DB_Connectioncode c =new DB_Connectioncode(code,connet);
+                	 if(first){
+                		 DB_Connectionweb b =new DB_Connectionweb(connet);
+                		 dbdata = b.getId();
+                		 first=false;
+                	 }
+                     
+                     /*DB_Connectioncode c =new DB_Connectioncode(code,connet);
                      DB_Connectioncode c =new DB_Connectioncode();
 	                 String dbdata = b.getId();
 	                 String limit = c.getId();*/
@@ -289,26 +297,92 @@ public class Websocket implements Callback {
                 			 String maxv = listarray3.get(i+3);
                 			 String mixv = listarray3.get(i+4);
                 			 limit = maxe + mixe + maxv + mixv;
-                			 
                 		 }
                 	 }
-                	 
+
+                	 String worktime = "";
+                	 String totaltime = "";
+                	 String worktime1 = "";
+                	 String totaltime1 = "";
+                	 String workhour1,workminute1,worksecond1;
+                	 String workhour2,workminute2,worksecond2;
                 	 for(int i=0;i<listarray2.size();i+=3){
                 		 String fequipment_no = listarray2.get(i);
                 		 String fgather_no = listarray2.get(i+1);
                 		 String finsframework_id = listarray2.get(i+2);
+
                 		 if(weldname.equals(fgather_no)){
-	                    	 strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit
-	                    			 +status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit
-	                    			 +status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit;
+                			 
+                			 for(int j=0;j<dbdata.size();j+=3){
+                    			 if(dbdata.get(j).equals(fequipment_no)){
+                    				 if(status1.equals("00")){
+                    					 worktime=Integer.toString(Integer.valueOf(dbdata.get(j+1)));
+                    					 totaltime=Integer.toString(Integer.valueOf(dbdata.get(j+2))+3);
+                    					 dbdata.set(j+2, totaltime);
+                    				 }else{
+                    					 worktime=Integer.toString(Integer.valueOf(dbdata.get(j+1))+3);
+                    					 totaltime=Integer.toString(Integer.valueOf(dbdata.get(j+2))+3);
+
+                    					 dbdata.set(j+1, worktime);
+                    					 dbdata.set(j+2, totaltime);
+                    				 }
+                    				 break;
+                    			 }
+                    		 }
+      
+                			long hour = (long)Integer.valueOf(worktime)/3600;
+              		        if(hour<10){
+              		        	workhour1 = "0" + String.valueOf(hour) + ":";
+              		        }else{
+              		        	workhour1 = String.valueOf(hour) + ":";
+              		        }
+              		        long last = (long)Integer.valueOf(worktime)%3600;
+              		        long minute = last/60;
+              		        if(minute<10){
+              		        	workminute1 = "0" + String.valueOf(minute) + ":";
+              		        }else{
+              		        	workminute1 = String.valueOf(minute) + ":";
+              		        }
+              		        long second = last%60;
+              		        if(second<10){
+              		        	worksecond1 = "0" + String.valueOf(second);
+              		        }else{
+              		        	worksecond1 = String.valueOf(second);
+              		        }
+              		        worktime1 = workhour1 + workminute1 + worksecond1;
+         					
+            		        long hour4 = (long)Integer.valueOf(totaltime)/3600;
+            		        if(hour4<10){
+            		        	workhour2 = "0" + String.valueOf(hour4) + ":";
+            		        }else{
+            		        	workhour2 = String.valueOf(hour4) + ":";
+            		        }
+            		        long last4 = (long)Integer.valueOf(totaltime)%3600;
+            		        long minute4 = last4/60;
+            		        if(minute4<10){
+            		        	workminute2 = "0" + String.valueOf(minute4) + ":";
+            		        }else{
+            		        	workminute2 = String.valueOf(minute4) + ":";
+            		        }
+            		        long second4 = last4%60;
+            		        if(second4<10){
+            		        	worksecond2 = "0" + String.valueOf(second4);
+            		        }else{
+            		        	worksecond2 = String.valueOf(second4);
+            		        }
+            		         totaltime1 = workhour2 + workminute2 + worksecond2;
+
+	                    	 strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit+worktime1 + totaltime1
+	                    			 +status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+worktime1 + totaltime1
+	                    			 +status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+worktime1 + totaltime1;
 	                     }
 	                     else{
-	                    	 strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-	                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-	                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
+	                    	 strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
+	                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
+	                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00";
 	                     }
                 	 }
-
+                	 
                 	 
 	                 /*for(int i=0;i<dbdata.length();i+=13){
 	                	 String status=dbdata.substring(0+i,2+i);
