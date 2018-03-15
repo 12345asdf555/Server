@@ -68,15 +68,18 @@ public class Reciver {
 	             sc.register(selector, SelectionKey.OP_READ);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
+					System.out.println("1");
 					e.printStackTrace();
 				}  
 	         }  
 		 } finally{  
 	            try {
+	            	System.out.println("2");
 					selector.close(); 
 					ssc.close();
 	            } catch (IOException e) {
 					// TODO Auto-generated catch block
+	            	System.out.println("2");
 					e.printStackTrace();
 				} 
 	     }
@@ -134,14 +137,16 @@ public class Reciver {
 	                                	}
 	                                }
 	                                }catch(Exception e){  
+	                                	System.out.println("4");
 	                                	readyKey.cancel();
-	            	                	try {
+	            	                	/*try {
 	            							sc.socket().close();
 	            							sc.close();
 	            	                	} catch (IOException e1) {
 	            							// TODO Auto-generated catch block
+	            	                		System.out.println("5");
 	            							e1.printStackTrace();
-	            						}
+	            						}*/
 	            	                	return;
 	                                } /*else{
 	                                	sqlwritetype=1;
@@ -156,7 +161,8 @@ public class Reciver {
 	                                	try{
 	                                		it.remove(); 
 	                                	}catch (Exception e) {  
-	                	                    // TODO Auto-generated catch block 
+	                	                    // TODO Auto-generated catch block
+	                                		System.out.println("6");
 	                	                    e.printStackTrace();  
 	                	                } 
 	                                }  
@@ -166,6 +172,7 @@ public class Reciver {
 	                    }  
 	                } catch (IOException e) {  
 	                    // TODO Auto-generated catch block 
+	                	System.out.println("3");
 	                    e.printStackTrace();  
 	                } 
                 }   

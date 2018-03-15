@@ -58,7 +58,7 @@ public class Server implements Runnable {
     public String ip;
     public String ip1;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/THWeld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/XMWeld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
@@ -144,7 +144,7 @@ public class Server implements Runnable {
 		 try {
 			selector = Selector.open();
 			ssc = ServerSocketChannel.open();
-			ssc.socket().bind(new InetSocketAddress(ip1, 5555));
+			ssc.socket().bind(new InetSocketAddress("172.16.188.99", 5555));
 		 } catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

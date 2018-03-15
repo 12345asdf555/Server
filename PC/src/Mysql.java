@@ -211,11 +211,6 @@ public class Mysql implements Callback{
 	        	   
 	        	   str="";
 	        	   
-	           }else {
-	        	   
-	        	   str="";
-	               System.out.println("Not receiver anything from client!");  
-	               
 	           }
             
 		} catch (Exception e) {
