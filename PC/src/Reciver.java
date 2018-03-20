@@ -120,7 +120,8 @@ public class Reciver {
 	                                         sc.shutdownOutput(); 
 	                                 }  */
 	                                
-	                                if(str.subSequence(6, 8).equals("52")){
+	                                //下发曲线
+	                                if(str.subSequence(0, 2).equals("FA") || str.subSequence(6, 8).equals("52")){
 	                                    	
 	  
 	                                    // 依次处理selector上的每个已选择的SelectionKey  
@@ -155,19 +156,25 @@ public class Reciver {
 	                		                    websendtype=1;
 	                	                    }
 	                                    }*/
-	                                	callback1.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
-	                                	callback2.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
-	                                	//callback3.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
-	                                	try{
-	                                		it.remove(); 
-	                                	}catch (Exception e) {  
-	                	                    // TODO Auto-generated catch block
-	                                		System.out.println("6");
-	                	                    e.printStackTrace();  
-	                	                } 
-	                                }  
-	  
-	                                //execute((ServerSocketChannel) readyKey.channel());  
+	                            	if(str.subSequence(0, 2).equals("FE")){
+	                            		callback1.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
+	                            	}
+	                            	else{
+	                            		callback1.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
+	                            		callback2.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
+	                            	}
+                                	
+                                	//callback3.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
+                                	try{
+                                		it.remove(); 
+                                	}catch (Exception e) {  
+                	                    // TODO Auto-generated catch block
+                                		System.out.println("6");
+                	                    e.printStackTrace();  
+                	                } 
+                                }  
+  
+                                //execute((ServerSocketChannel) readyKey.channel());  
 	                        }  
 	                    }  
 	                } catch (IOException e) {  

@@ -58,7 +58,7 @@ public class Server implements Runnable {
     public String ip;
     public String ip1;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/XMWeld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/AL_DB?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;

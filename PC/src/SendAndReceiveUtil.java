@@ -8,7 +8,7 @@ public class SendAndReceiveUtil {
     public static String receiveData(SocketChannel channel) {  
         // TODO Auto-generated method stub  
         // TODO Auto-generated method stub  
-        ByteBuffer bb = ByteBuffer.allocate(1024);  
+        ByteBuffer bb = ByteBuffer.allocate(65536);  
         StringBuilder msg = new StringBuilder();  
         Charset charset = Charset.forName("UTF-8");    
         CharsetDecoder decoder = charset.newDecoder();  

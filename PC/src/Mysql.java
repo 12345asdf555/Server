@@ -164,7 +164,7 @@ public class Mysql implements Callback{
        	    	
                 for(int i =0;i < stringArr.length;i++)
 		        {
-	        	     //校验第一位是否为FA末位是否为F5
+	        	     //校验第一位是否为FE
 		       	     String check1 =stringArr[i].substring(0,2);
 		       	     if(check1.equals("FE")){
 		       	    	 
