@@ -11,11 +11,12 @@ public class SendAndReceiveUtil {
         ByteBuffer bb = ByteBuffer.allocate(65536);  
         StringBuilder msg = new StringBuilder();  
         Charset charset = Charset.forName("UTF-8");    
-        CharsetDecoder decoder = charset.newDecoder();  
+        //CharsetDecoder decoder = charset.newDecoder();  
         try {  
             while( (channel.read(bb) ) > 0 ){  
                 bb.flip();        
-                msg.append(decoder.decode(bb).toString());  
+                msg.append(charset.decode(bb).toString()); 
+                //msg.append(decoder.decode(bb).toString());  
                 //System.out.println(msg.toString());  
       
                 bb.clear();  
@@ -23,6 +24,7 @@ public class SendAndReceiveUtil {
             return msg.toString();  
         } catch (IOException e) {  
             // TODO Auto-generated catch block  
+        	System.out.println("5-÷ÿ∆Ù");
             e.printStackTrace();  
         }  
         return null;  

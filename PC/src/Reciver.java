@@ -53,33 +53,34 @@ public class Reciver {
 		 try {  
 			 
 			 while(true){  // will block the thread  
-	             
-	             SocketChannel sc;
-				try {
-				 sc = ssc.accept();
-				 
-				 startWRThread(selector);
-				 
-	             //Get the server socket and set to non blocking mode 
-	             clientcount++;
-	             String countclient = Integer.toString(clientcount);
-	             clientList.put(countclient,sc); 
-	             sc.configureBlocking(false);  
-	             sc.register(selector, SelectionKey.OP_READ);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.out.println("1");
-					e.printStackTrace();
-				}  
-	         }  
+				 synchronized(this) {
+		             SocketChannel sc;
+					try {
+					 sc = ssc.accept();
+					 
+					 startWRThread(selector);
+					 
+		             //Get the server socket and set to non blocking mode 
+		             clientcount++;
+		             String countclient = Integer.toString(clientcount);
+		             clientList.put(countclient,sc); 
+		             sc.configureBlocking(false);  
+		             sc.register(selector, SelectionKey.OP_READ);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						System.out.println("1-连接");
+						e.printStackTrace();
+					}  
+		         } 
+			 }
 		 } finally{  
 	            try {
-	            	System.out.println("2");
+	            	System.out.println("2-连接");
 					selector.close(); 
 					ssc.close();
 	            } catch (IOException e) {
 					// TODO Auto-generated catch block
-	            	System.out.println("2");
+	            	System.out.println("2-连接");
 					e.printStackTrace();
 				} 
 	     }
@@ -100,88 +101,92 @@ public class Reciver {
 			@Override  
             public void run() {   
                 while(true){
-                	try {
-	                    while(selector.selectNow() > 0){  
-	
-	                        Iterator<SelectionKey> it = selector.selectedKeys().iterator();  
-	                        //// Walk through the ready keys collection and process date requests.  
-	                        while(it.hasNext()){  
-	                            readyKey = it.next();  
-	                            if(readyKey.isReadable()){  
-	                            	try{
-	                            		sc = (SocketChannel) readyKey.channel();  
-	                                	str = SendAndReceiveUtil.receiveData(sc);
-	                                
-	                                    
-	                                /* if(msg != null && !msg.equals("")) {  
-	                                	 
-	                                         System.out.println(msg);  
-	                                         SendAndReceiveUtil.sendData(sc,msg);  
-	                                         sc.shutdownOutput(); 
-	                                 }  */
-	                                
-	                                //下发曲线
-	                                if(str.subSequence(0, 2).equals("FA") || str.subSequence(6, 8).equals("52")){
-	                                    	
+                	synchronized(this) {
+	                	try {
+		                    while(selector.selectNow() > 0){  
+		
+		                        Iterator<SelectionKey> it = selector.selectedKeys().iterator();  
+		                        //// Walk through the ready keys collection and process date requests.  
+		                        while(it.hasNext()){  
+		                            readyKey = it.next();  
+		                            if(readyKey.isReadable()){  
+		                            	try{
+		                            		sc = (SocketChannel) readyKey.channel();  
+		                                	str = SendAndReceiveUtil.receiveData(sc);
+		                                
+		                                    
+		                                /* if(msg != null && !msg.equals("")) {  
+		                                	 
+		                                         System.out.println(msg);  
+		                                         SendAndReceiveUtil.sendData(sc,msg);  
+		                                         sc.shutdownOutput(); 
+		                                 }  */
+		                                
+		                                //下发曲线
+		                                if(str.subSequence(0, 2).equals("FA") && str.subSequence(6, 8).equals("52")){
+		                                    	
+		  
+		                                    // 依次处理selector上的每个已选择的SelectionKey  
+		                                	for (Entry<String, SocketChannel> entry : clientList.entrySet()) {
+		                                		sc=entry.getValue();
+		                                		String clientadd = sc.getRemoteAddress().toString().replace("/", "");
+		                                		String[] clientdetail = clientadd.split(":");
+		                                		String clientip = clientdetail[0];
+		                                		if(!clientip.equals("121.196.222.216")){
+		                                			
+		                                			SendAndReceiveUtil.sendData(sc,str);
+		                                			
+		                                		}
+		                                	}
+		                                }
+		                                }catch(Exception e){  
+		                                	System.out.println("4-处理");
+		                                	e.printStackTrace();  
+		                                	readyKey.cancel();
+		                                	/*try {
+		            							sc.socket().close();
+		            							sc.close();
+		            	                	} catch (IOException e1) {
+		            							// TODO Auto-generated catch block
+		            	                		System.out.println("5");
+		            							e1.printStackTrace();
+		            						}*/
+		            	                	return;
+		                                } /*else{
+		                                	sqlwritetype=1;
+		                                    sockettype=1;
+		                                    if(str.substring(0, 2).equals("FA")){
+		                		                    websendtype=1;
+		                	                    }
+		                                    }*/
+		                            	if(str.subSequence(0, 2).equals("FE")){
+		                            		callback1.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
+		                            	}
+		                            	else{
+		                            		callback1.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
+		                            		callback2.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
+		                            	}
+	                                	
+	                                	//callback3.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
+	                                	try{
+	                                		it.remove(); 
+	                                	}catch (Exception e) {  
+	                	                    // TODO Auto-generated catch block
+	                                		System.out.println("6-处理");
+	                	                    e.printStackTrace();  
+	                	                } 
+	                                }  
 	  
-	                                    // 依次处理selector上的每个已选择的SelectionKey  
-	                                	for (Entry<String, SocketChannel> entry : clientList.entrySet()) {
-	                                		sc=entry.getValue();
-	                                		String clientadd = sc.getRemoteAddress().toString().replace("/", "");
-	                                		String[] clientdetail = clientadd.split(":");
-	                                		String clientip = clientdetail[0];
-	                                		if(!clientip.equals("121.196.222.216")){
-	                                			
-	                                			SendAndReceiveUtil.sendData(sc,str);
-	                                			
-	                                		}
-	                                	}
-	                                }
-	                                }catch(Exception e){  
-	                                	System.out.println("4");
-	                                	readyKey.cancel();
-	            	                	/*try {
-	            							sc.socket().close();
-	            							sc.close();
-	            	                	} catch (IOException e1) {
-	            							// TODO Auto-generated catch block
-	            	                		System.out.println("5");
-	            							e1.printStackTrace();
-	            						}*/
-	            	                	return;
-	                                } /*else{
-	                                	sqlwritetype=1;
-	                                    sockettype=1;
-	                                    if(str.substring(0, 2).equals("FA")){
-	                		                    websendtype=1;
-	                	                    }
-	                                    }*/
-	                            	if(str.subSequence(0, 2).equals("FE")){
-	                            		callback1.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
-	                            	}
-	                            	else{
-	                            		callback1.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
-	                            		callback2.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
-	                            	}
-                                	
-                                	//callback3.taskResult(str, connet,listarray1,listarray2,listarray3,websocket,ip1);
-                                	try{
-                                		it.remove(); 
-                                	}catch (Exception e) {  
-                	                    // TODO Auto-generated catch block
-                                		System.out.println("6");
-                	                    e.printStackTrace();  
-                	                } 
-                                }  
-  
-                                //execute((ServerSocketChannel) readyKey.channel());  
-	                        }  
-	                    }  
-	                } catch (IOException e) {  
-	                    // TODO Auto-generated catch block 
-	                	System.out.println("3");
-	                    e.printStackTrace();  
-	                } 
+	                                //execute((ServerSocketChannel) readyKey.channel());  
+		                        }  
+		                    }  
+		                } catch (IOException e) {  
+		                    // TODO Auto-generated catch block 
+		                	System.out.println("3-处理");
+		                	readyKey.cancel();
+		                	//e.printStackTrace();  
+		                } 
+                	}
                 }   
 			}
 		}).start(); 

@@ -245,38 +245,41 @@ public class DB_Connectionmysql {
 
         // if(state ==1)
          	
-	         for(int i=0;i<=listarray1.size();i+=2){
+	         for(int i=0;i<listarray1.size();i+=2){
 	        	 if(machine_id.equals(listarray1.get(i))){
 	        		 fmachine = listarray1.get(i+1);
 	        		 break;
 	        	 }
 	         }
 
-	         BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+	         if(fmachine != null){
+	        	 
+	        	 BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+		         
+	             inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+	        	 
+	             try {
+
+	                 stmt.executeUpdate(inSql);
+
+	             } catch (SQLException e) {
+
+	             	System.out.println(machine_id);
+	             	
+	                 System.out.println("Broken insert");
+
+	                 e.printStackTrace();
+
+	             } 
+	             
+	         }
 	         
-             inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
 
        /*  else {
 
              inSql = "insert into sj(id,bed_Number,state,Dtime) values('"+ id +"','" + bedNumber + "','leave','" + goodsC_date + "')";
 
         }*/
-
-         try {
-
-            stmt.executeUpdate(inSql);
-
-        } catch (SQLException e) {
-
-        	System.out.println(machine_id);
-        	
-            System.out.println("Broken insert");
-
-            e.printStackTrace();
-
-        } 
-
-
 
         try {
 

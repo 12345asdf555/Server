@@ -153,12 +153,13 @@ public class Mysql implements Callback{
        	        		
    	        	}
    	        	else{
-   	        		//首位不是FE
+   	        		//首位不是FA
+   	        		System.out.println("11");
    	        		System.out.print("数据接收首末位错误");
    	        		str="";
    	        	}
        	     
-           }else if(str.length()>=108 && str.length()!= 118){
+           }/*else if(str.length()>=300 && str.length()!= 118){
         	
        	    	String [] stringArr = str.split("FD");
        	    	
@@ -202,6 +203,7 @@ public class Mysql implements Callback{
 	       	         }
 		       	     else{
 		       	    	 //首位不是FE
+		       	    	System.out.println("12");
 		   	        	 System.out.print("数据接收首末位错误");
 		   	        	 str="";
 		       	     }
@@ -211,7 +213,7 @@ public class Mysql implements Callback{
 	        	   
 	        	   str="";
 	        	   
-	           }
+	           }*/
             
 		} catch (Exception e) {
 			str="";
