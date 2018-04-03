@@ -69,13 +69,9 @@ public class DB_Connectioncode {
 
         }  
 
-        //锟斤拷锟斤拷锟斤拷锟斤拷
-
          try {
 
              conn = DriverManager.getConnection(connet);
-
-             //锟斤拷取锟斤拷锟绞�
 
              stmt= conn.createStatement();
 

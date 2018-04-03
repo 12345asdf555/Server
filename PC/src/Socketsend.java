@@ -1,12 +1,183 @@
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Socketsend implements Callback{
 
+	private String str;
+	private String ip1;
 	private Socket socket;
+	private SocketChannel socketChannel = null;
+	
+	public Socketsend(String str, String ip1) {
+		// TODO Auto-generated constructor stub
+		
+		this.str = str;
+		this.ip1 = ip1;
+		
+		try{
+			
+			if(ip1 == "null"){
+				
+				if (str.length() == 110) {  
+
+		             //æ ¡éªŒç¬¬ä¸€ä½æ˜¯å¦ä¸ºFAæœ«ä½æ˜¯å¦ä¸ºF5
+		       	     String check1 =str.substring(0,2);
+		       	     String check11=str.substring(108,110);
+		       	     if(check1.equals("FA") && check11.equals("F5")){
+			        		
+		       	    	 //æ ¡éªŒé•¿åº¦
+		           	     int check2=str.length();
+		           	     if(check2==110){
+		           	        			
+		           	    	 //æ ¡éªŒä½æ ¡éªŒ
+		               	     String check3=str.substring(2,104);
+		               	     String check5="";
+		               	     int check4=0;
+		               	     for (int i11 = 0; i11 < check3.length()/2; i11++)
+		               	     {
+		               	    	String tstr1=check3.substring(i11*2, i11*2+2);
+		               	    	check4+=Integer.valueOf(tstr1,16);
+		               	     }
+			               	 if((Integer.toHexString(check4)).toUpperCase().length()==2){
+			               		 check5 = ((Integer.toHexString(check4)).toUpperCase());
+			           	     }else{
+			           	    	check5 = ((Integer.toHexString(check4)).toUpperCase()).substring(1,3);
+			           	     }
+		               	     String check6 = str.substring(104,106);
+		               	     if(check5.equals(check6)){
+		               	    	 
+		               	    	 
+		               	    	try {    
+		     		            	if(socketChannel==null){
+		     		            		socketChannel = SocketChannel.open(); 
+			     		                SocketAddress socketAddress = new InetSocketAddress(ip1, 5555);    
+			     		                socketChannel.connect(socketAddress);
+		     		            	}
+		     		            	
+		     		                SendAndReceiveUtil.sendData(socketChannel, str); 
+
+		     		            } catch (Exception ex) {    
+		     		                System.out.println("è½¬å‘è¿‡ç¨‹ä¸­æœåŠ¡å™¨è¿æ¥å¤±è´¥");  
+		     		            }
+		               	    	 
+		               	    	 
+		               	        /*OutputStream outputStream;
+		               	    	 
+		               	    	byte[] data=new byte[str.length()/2];
+
+								for (int i = 0; i < data.length; i++)
+								{
+									String tstr1=str.substring(i*2, i*2+2);
+									Integer k=Integer.valueOf(tstr1, 16);
+									data[i]=(byte)k.byteValue();
+								}
+		               	    	 
+		               	    	String strdata = "";
+		               	    	for(int i=0;i<data.length;i++){
+		                         	
+									//åˆ¤æ–­ä¸ºæ•°å­—è¿˜æ˜¯å­—æ¯ï¼Œè‹¥ä¸ºå­—æ¯+256å–æ­£æ•°
+		                         	if(data[i]<0){
+		                         		String r = Integer.toHexString(data[i]+256);
+		                         		String rr=r.toUpperCase();
+		                         		//æ•°å­—è¡¥ä¸ºä¸¤ä½æ•°
+		                             	if(rr.length()==1){
+		                         			rr='0'+rr;
+		                             	}
+		                             	//strdataä¸ºæ€»æ¥æ”¶æ•°æ®
+		                         		strdata += rr;
+		                         		
+		                         	}
+		                         	else{
+		                         		String r = Integer.toHexString(data[i]);
+		                             	if(r.length()==1)
+		                         			r='0'+r;
+		                             	r=r.toUpperCase();
+		                         		strdata+=r;	
+		                         		
+		                         	}
+		                         }
+
+		                         
+		                        byte[] bb3=new byte[strdata.length()/2];
+		     					for (int i1 = 0; i1 < bb3.length; i1++)
+		     					{
+		     						String tstr1=strdata.substring(i1*2, i1*2+2);
+		     						Integer k=Integer.valueOf(tstr1, 16);
+		     						bb3[i1]=(byte)k.byteValue();
+		     					}
+		     					
+		     					try {
+									socket = new Socket(ip1, 5555);
+								} catch (IOException e1) {
+									e1.printStackTrace();
+								}
+		                        
+							
+			                    try {
+			                    	//å‘é€æ¶ˆæ¯
+			                        // æ­¥éª¤1ï¼šä»Socket è·å¾—è¾“å‡ºæµå¯¹è±¡OutputStream
+			                        // è¯¥å¯¹è±¡ä½œç”¨ï¼šå‘é€æ•°æ®
+			                        outputStream = socket.getOutputStream();
+			
+			                        // æ­¥éª¤2ï¼šå†™å…¥éœ€è¦å‘é€çš„æ•°æ®åˆ°è¾“å‡ºæµå¯¹è±¡ä¸­
+			                        outputStream.write(bb3);
+			                        // ç‰¹åˆ«æ³¨æ„ï¼šæ•°æ®çš„ç»“å°¾åŠ ä¸Šæ¢è¡Œç¬¦æ‰å¯è®©æœåŠ¡å™¨ç«¯çš„readline()åœæ­¢é˜»å¡
+			                    	
+			                        // æ­¥éª¤3ï¼šå‘é€æ•°æ®åˆ°æœåŠ¡ç«¯
+			                        outputStream.flush();
+			
+			                        socket.close();
+			                        
+			                        str="";
+			     		           
+			                    } catch (IOException e1) {
+			                    	str="";
+			                        e1.printStackTrace();
+			                    }*/
+		               	    	 
+		               	     }
+		               	     else{
+		               	    	 //æ ¡éªŒä½é”™è¯¯
+		               	    	 System.out.print("æ•°æ®æ¥æ”¶æ ¡éªŒä½é”™è¯¯");
+		               	    	 str="";
+		               	     }
+		                               
+		           	     }
+		           	        		
+		           	     else{
+		           	    	 //é•¿åº¦é”™è¯¯
+		           	    	 System.out.print("æ•°æ®æ¥æ”¶é•¿åº¦é”™è¯¯");
+		           	    	 str="";
+		           	     }
+		       	        		
+		   	        	}
+		   	        	else{
+		   	        		//é¦–ä½ä¸æ˜¯FE
+		   	        		System.out.print("æ•°æ®æ¥æ”¶é¦–æœ«ä½é”™è¯¯");
+		   	        		str="";
+		   	        	}
+		       	     
+		           }
+				else {
+	        	   str="";
+	               System.out.println("Not receiver anything from client!");  
+	           }
+				
+			}
+			
+		} catch (Exception e) {
+			str="";
+            System.out.println("S: Error 2");  
+            e.printStackTrace();  
+        }  
+		
+	}
 
 	@Override
 	public void taskResult(String str,String connet,ArrayList<String> listarray1,ArrayList<String> listarray2,ArrayList<String> listarray3,HashMap<String, Socket> websocket,String ip1) {
@@ -16,16 +187,16 @@ public class Socketsend implements Callback{
 				
             if (str.length() == 108) {  
 
-            //Ğ£ÑéµÚÒ»Î»ÊÇ·ñÎªFAÄ©Î»ÊÇ·ñÎªF5
+             //æ ¡éªŒç¬¬ä¸€ä½æ˜¯å¦ä¸ºFAæœ«ä½æ˜¯å¦ä¸ºF5
        	     String check1 =str.substring(0,2);
        	     String check11=str.substring(106,108);
        	     if(check1.equals("FA") && check11.equals("F5")){
 	        		
-           	     //Ğ£Ñé³¤¶È
+       	    	 //æ ¡éªŒé•¿åº¦
            	     int check2=str.length();
            	     if(check2==108){
            	        			
-               	     //Ğ£ÑéÎ»Ğ£Ñé
+           	    	 //æ ¡éªŒä½æ ¡éªŒ
                	     String check3=str.substring(2,104);
                	     String check5="";
                	     int check4=0;
@@ -56,15 +227,15 @@ public class Socketsend implements Callback{
                	    	String strdata = "";
 					for(int i=0;i<data.length;i++){
                          	
-                         	//ÅĞ¶ÏÎªÊı×Ö»¹ÊÇ×ÖÄ¸£¬ÈôÎª×ÖÄ¸+256È¡ÕıÊı
+							//åˆ¤æ–­ä¸ºæ•°å­—è¿˜æ˜¯å­—æ¯ï¼Œè‹¥ä¸ºå­—æ¯+256å–æ­£æ•°
                          	if(data[i]<0){
                          		String r = Integer.toHexString(data[i]+256);
                          		String rr=r.toUpperCase();
-                             	//Êı×Ö²¹ÎªÁ½Î»Êı
+                         		//æ•°å­—è¡¥ä¸ºä¸¤ä½æ•°
                              	if(rr.length()==1){
                          			rr='0'+rr;
                              	}
-                             	//strdataÎª×Ü½ÓÊÕÊı¾İ
+                             	//strdataä¸ºæ€»æ¥æ”¶æ•°æ®
                          		strdata += rr;
                          		
                          	}
@@ -95,16 +266,16 @@ public class Socketsend implements Callback{
                         
 					
 	                    try {
-	                    	//·¢ËÍÏûÏ¢
-	                        // ²½Öè1£º´ÓSocket »ñµÃÊä³öÁ÷¶ÔÏóOutputStream
-	                        // ¸Ã¶ÔÏó×÷ÓÃ£º·¢ËÍÊı¾İ
+	                    	//å‘é€æ¶ˆæ¯
+	                        // æ­¥éª¤1ï¼šä»Socket è·å¾—è¾“å‡ºæµå¯¹è±¡OutputStream
+	                        // è¯¥å¯¹è±¡ä½œç”¨ï¼šå‘é€æ•°æ®
 	                        outputStream = socket.getOutputStream();
 	
-	                        // ²½Öè2£ºĞ´ÈëĞèÒª·¢ËÍµÄÊı¾İµ½Êä³öÁ÷¶ÔÏóÖĞ
+	                        // æ­¥éª¤2ï¼šå†™å…¥éœ€è¦å‘é€çš„æ•°æ®åˆ°è¾“å‡ºæµå¯¹è±¡ä¸­
 	                        outputStream.write(bb3);
-	                        // ÌØ±ğ×¢Òâ£ºÊı¾İµÄ½áÎ²¼ÓÉÏ»»ĞĞ·û²Å¿ÉÈÃ·şÎñÆ÷¶ËµÄreadline()Í£Ö¹×èÈû
-	
-	                        // ²½Öè3£º·¢ËÍÊı¾İµ½·şÎñ¶Ë
+	                        // ç‰¹åˆ«æ³¨æ„ï¼šæ•°æ®çš„ç»“å°¾åŠ ä¸Šæ¢è¡Œç¬¦æ‰å¯è®©æœåŠ¡å™¨ç«¯çš„readline()åœæ­¢é˜»å¡
+	                    	
+	                        // æ­¥éª¤3ï¼šå‘é€æ•°æ®åˆ°æœåŠ¡ç«¯
 	                        outputStream.flush();
 	
 	                        socket.close();
@@ -118,23 +289,23 @@ public class Socketsend implements Callback{
                	    	 
                	     }
                	     else{
-               	        //Ğ£ÑéÎ»´íÎó
-               	    	 System.out.print("Êı¾İ½ÓÊÕĞ£ÑéÎ»´íÎó");
+               	    	 //æ ¡éªŒä½é”™è¯¯
+               	    	 System.out.print("æ•°æ®æ¥æ”¶æ ¡éªŒä½é”™è¯¯");
                	    	 str="";
                	     }
                                
            	     }
            	        		
            	     else{
-           	        //³¤¶È´íÎó
-           	    	 System.out.print("Êı¾İ½ÓÊÕ³¤¶È´íÎó");
+           	    	 //é•¿åº¦é”™è¯¯
+           	    	 System.out.print("æ•°æ®æ¥æ”¶é•¿åº¦é”™è¯¯");
            	    	 str="";
            	     }
        	        		
    	        	}
    	        	else{
-   	        		//Ê×Î»²»ÊÇFE
-   	        		System.out.print("Êı¾İ½ÓÊÕÊ×Ä©Î»´íÎó");
+   	        		//é¦–ä½ä¸æ˜¯FE
+   	        		System.out.print("æ•°æ®æ¥æ”¶é¦–æœ«ä½é”™è¯¯");
    	        		str="";
    	        	}
        	     

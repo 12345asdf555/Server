@@ -70,13 +70,9 @@ public class DB_Connectionmysql {
 
         }  
 
-        //锟斤拷锟斤拷锟斤拷锟斤拷
-
          try {
 
              conn = DriverManager.getConnection(connet);
-
-             //锟斤拷取锟斤拷锟绞�
 
              stmt= conn.createStatement();
 
@@ -92,11 +88,11 @@ public class DB_Connectionmysql {
 
 
 
-         Date date = new Date();//锟斤拷锟较低呈憋拷锟�.
+         Date date = new Date();
 
-         String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);//锟斤拷时锟斤拷锟绞阶拷锟斤拷煞锟斤拷锟絋imestamp要锟斤拷母锟绞�.
+         String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
 
-         Timestamp goodsC_date = Timestamp.valueOf(nowTime);//锟斤拷时锟斤拷转锟斤拷
+         Timestamp goodsC_date = Timestamp.valueOf(nowTime);
 
          
          //查焊机和采集设备号
