@@ -37,12 +37,11 @@ public class Websocket implements Callback {
 		
         try {
 			
-			if(websocket==null){
+			if(websocket==null || websocket.isEmpty()){
 				
 			}
 			else
 			{	
-				
 				if (str.length() == 110) { 
 				
 				 //校验第一位是否为FA末位是否为F5
@@ -270,7 +269,7 @@ public class Websocket implements Callback {
 		       				 }
 		       				 
 		                        try{
-		                       	 
+		                        	
 		                       	 for(int i=0;i<listarray3.size();i+=5){
 		                       		 String weldjunction = listarray3.get(i);
 		                       		 if(weldjunction.equals(code)){
@@ -299,7 +298,7 @@ public class Websocket implements Callback {
 		       	                     }
 		                       	 }
 	
-		                       	 System.out.println(strsend);
+		                       	 //System.out.println(strsend);
 		                       	 
 		                        }catch (Exception e) {
 		       						// TODO Auto-generated catch block

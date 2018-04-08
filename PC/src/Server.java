@@ -23,6 +23,9 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -46,6 +49,11 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
 
 
 
@@ -66,7 +74,7 @@ public class Server implements Runnable {
     public String ip;
     public String ip1;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/AL_DB?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/XMWeld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
@@ -80,6 +88,8 @@ public class Server implements Runnable {
     public Selector selector = null;
     public ServerSocketChannel ssc = null;
     private NettyServerHandler NS = new NettyServerHandler();
+	private Connection c;
+	private Statement stmt;
     
     public String getconnet(){
     	return connet;
@@ -125,61 +135,98 @@ public class Server implements Runnable {
 	    NS.ip1 = this.ip1;
 	    NS.connet = this.connet;
 		
-		/*Timer tExit = null; 
+	    DB_Connectioncode check = new DB_Connectioncode(connet);
+		
+		listarray1 = check.getId1();
+		listarray2 = check.getId2();
+		listarray3 = check.getId3();
+		
+		NS.listarray1 = this.listarray1;
+		NS.listarray2 = this.listarray2;
+		NS.listarray3 = this.listarray3;
+	    
+		Timer tExit = null; 
 		tExit = new Timer();  
         tExit.schedule(new TimerTask() {  
             @Override  
-            public void run() {*/
+            public void run() {
   		
         		DB_Connectioncode check = new DB_Connectioncode(connet);
         		
         		listarray1 = check.getId1();
-        		System.out.println(listarray1);
         		listarray2 = check.getId2();
-        		System.out.println(listarray2);
         		listarray3 = check.getId3();
-        		System.out.println(listarray3);
 	
-            /*}  
-        }, 0,600000);*/
-
-		NS.listarray1 = this.listarray1;
-		NS.listarray2 = this.listarray2;
-		NS.listarray3 = this.listarray3;
+        		NS.listarray1 = listarray1;
+        		NS.listarray2 = listarray2;
+        		NS.listarray3 = listarray3;
+            }  
+        }, 0,60000);
 		
+        try {
+	            Class.forName("org.sqlite.JDBC");
+	            c = DriverManager.getConnection("jdbc:sqlite:test1.db");
+	            System.out.println("Opened database successfully");
+	
+	            stmt = c.createStatement();
+	            
+	            String sqlA = "create table dataA (" + "electricity DECIMAL(10,2), " + "voltage DECIMAL(10,2), " +
+	            		"sensor_Num VARCHAR(20), " + "machine_id VARCHAR(20), " + "welder_id VARCHAR(20), " +
+	            		"code VARCHAR(20), " + "time TEXT, " + "status int, "+ "max_ele DECIMAL(10,2)," +
+	            		"min_ele DECIMAL(10,2)," + "max_vol DECIMAL(10,2)," + "min_vol DECIMAL(10,2))"; 
+	            stmt.executeUpdate(sqlA);
+	            
+	            String sqlB = "create table dataB (" + "electricity DECIMAL(10,2), " + "voltage DECIMAL(10,2), " +
+	            		"sensor_Num VARCHAR(20), " + "machine_id VARCHAR(20), " + "welder_id VARCHAR(20), " +
+	            		"code VARCHAR(20), " + "time TEXT, " + "status int, "+ "max_ele DECIMAL(10,2)," +
+	            		"min_ele DECIMAL(10,2)," + "max_vol DECIMAL(10,2)," + "min_vol DECIMAL(10,2))"; 
+	            stmt.executeUpdate(sqlB);
+	            
+	            /*String sqlstate = "INSERT INTO data (electricity,voltage,sensor_Num,machine_id,welder_id,code,time,status,max_ele,min_ele,max_vol,min_vol) " +
+	                     "VALUES (123.00,64.00, 30, 0007, 1111, 00000100 ,'2017-09-06 12:53:00',03,150.00,100.00,80.00,50.00);"; 
+	            stmt.executeUpdate(sqlstate);*/
+	            
+	/*            ResultSet rs = stmt.executeQuery( "SELECT * FROM data;" );
+	            while ( rs.next() ) {
+	               long electricity = rs.getInt("electricity");
+	               long voltage = rs.getInt("voltage");
+	               String  sensor_Num = rs.getString("sensor_Num");
+	               String  machine_id = rs.getString("machine_id");
+	               String  welder_id = rs.getString("welder_id");
+	               String  code = rs.getString("code");
+	               String  time = rs.getString("time");
+	               int status = rs.getInt("status");
+	               long max_ele = rs.getInt("max_ele");
+	               long min_ele = rs.getInt("min_ele");
+	               long max_vol = rs.getInt("max_vol");
+	               long min_vol = rs.getInt("min_vol");
+	               System.out.println( "electricity = " + electricity );
+	               System.out.println( "voltage = " + voltage );
+	               System.out.println( "sensor_Num = " + sensor_Num );
+	               System.out.println( "machine_id = " + machine_id );
+	               System.out.println( "welder_id = " + welder_id );
+	               System.out.println( "code = " + code );
+	               System.out.println( "time = " + time );
+	               System.out.println( "status = " + status );
+	               System.out.println( "max_ele = " + max_ele );
+	               System.out.println( "min_ele = " + min_ele );
+	               System.out.println( "max_vol = " + max_vol );
+	               System.out.println( "min_vol = " + min_vol );
+	               System.out.println();
+	            }
+	            rs.close();*/
+	            stmt.close();
+	            c.close();
+	            System.out.println("Table created successfully");
+          }catch ( Exception e ) {
+        	  System.out.println("The table has exist");
+          }
+        
+        new Thread(socketstart).start();
 		new Thread(websocketstart).start();
 		
-		EventLoopGroup bossGroup = new NioEventLoopGroup(); 
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        try{  
-            ServerBootstrap b=new ServerBootstrap();  
-            b.group(bossGroup,workerGroup)
-            	.channel(NioServerSocketChannel.class)
-            	.option(ChannelOption.SO_BACKLOG,1024)
-            	.childHandler(NS);  
-            
-          
-            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
-                @Override
-                public void initChannel(SocketChannel ch) throws Exception {
-                   ch.pipeline().addLast(NS);
-                }
-            });
-            
-            //绑定端口，等待同步成功  
-            ChannelFuture f;
-			f = b.bind(5555).sync();
-            //等待服务端关闭监听端口  
-            f.channel().closeFuture().sync(); 
-        } catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}  finally {  
-            //释放线程池资源  
-            bossGroup.shutdownGracefully();  
-            workerGroup.shutdownGracefully();  
-        }  
-			 
+		
+		
         /*new Thread(websocketstart).start();
         new Thread(websocketsend).start();
    
@@ -199,6 +246,51 @@ public class Server implements Runnable {
     }  
     
 
+    public Runnable socketstart = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			EventLoopGroup bossGroup = new NioEventLoopGroup(); 
+	        EventLoopGroup workerGroup = new NioEventLoopGroup();
+	        try{  
+	            ServerBootstrap b=new ServerBootstrap();  
+	            b.group(bossGroup,workerGroup)
+	            	.channel(NioServerSocketChannel.class)
+	            	.option(ChannelOption.SO_BACKLOG,1024)
+	            	.childHandler(NS);  
+	            
+	          
+	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
+	                @Override
+	                public void initChannel(SocketChannel ch) throws Exception {
+	                   //ch.pipeline().addLast(NS);
+	                   ch.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 2, 0, 0));    
+	                   ch.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
+	                   ch.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
+	                   ch.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
+	                   ch.pipeline().addLast(NS); 
+	                }
+	            });
+	            
+	            //绑定端口，等待同步成功  
+	            ChannelFuture f;
+				f = b.bind(5555).sync();
+	            //等待服务端关闭监听端口  
+	            f.channel().closeFuture().sync(); 
+	        } catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  finally {  
+	            //释放线程池资源  
+	            bossGroup.shutdownGracefully();  
+	            workerGroup.shutdownGracefully();  
+	        }  
+		}  
+    	
+    };
+    
+    
     
     public Runnable websocketstart = new Runnable() {  
         private PrintWriter getWriter(Socket socket) throws IOException {  

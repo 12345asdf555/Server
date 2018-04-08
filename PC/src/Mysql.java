@@ -121,10 +121,11 @@ public class Mysql implements Callback{
                              long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
                              int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
                                 	
-								String fitemid = str.substring(106, 108);
+							 String fitemid = str.substring(106, 108);
 							 
-							DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,connet,listarray1);
-							} catch (Exception e) {
+							 DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,connet,listarray1);
+							
+                             } catch (Exception e) {
 								str="";
 								// TODO Auto-generated catch block
 								e.printStackTrace();
