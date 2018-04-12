@@ -12,6 +12,8 @@ import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 @Sharable 
 public class NettyServerHandler extends ChannelHandlerAdapter{
 	
@@ -23,6 +25,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
+    public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
 	
     public int a=0;
     
@@ -30,13 +33,18 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		 
 		 try{
-			 
+			 /*String str = (String) msg;
+			 Workspace ws = new Workspace(str);
+	         workThread = new Thread(ws);  
+	         workThread.start(); */
+	         
 			 ByteBuf buf=(ByteBuf)msg; 
 			 byte[] req=new byte[buf.readableBytes()];  
 		     buf.readBytes(req);
-			 Workspace ws = new Workspace(req);
+		     Workspace ws = new Workspace(req);
 	         workThread = new Thread(ws);  
-	         workThread.start();      
+	         workThread.start();
+			      
 	         
 		 }finally{
 			 
@@ -48,8 +56,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	 
 	 public class Workspace implements Runnable{
 
-		private byte[] req;
 		private String str="";
+		public byte[] req;
 
 		public Workspace(byte[] req) {
 			// TODO Auto-generated constructor stub
@@ -61,8 +69,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-	         
-	        for(int i=0;i<req.length;i++){
+			//try {
+				for(int i=0;i<req.length;i++){
 	             
 	            //判断为数字还是字母，若为字母+256取正数
 	            if(req[i]<0){
@@ -84,8 +92,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	              str+=r;  
 	            }
 	        }
-	        
-	        System.out.println(str);
+				
+			//System.out.println(str);
 	        
 	        String[] strlist =str.split("F5");
 	        for(int i=0;i<strlist.length;i++){
@@ -95,11 +103,41 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	
 	        	new Mysql(str,connet,listarray1);
 		        new Socketsend(str,ip1);
-		        new Websocket(str,connet,websocket,listarray2,listarray3);
-		        //new Sqlite(str);
+		        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);
 		        
 	        }
-
+					
+			/*} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+		        //new Websocket(str,connet,websocket,listarray2,listarray3);
+		        //new Sqlite(str);
+		    
+			
+	        /*for(int i=0;i<req.length;i++){
+	             
+	            //判断为数字还是字母，若为字母+256取正数
+	            if(req[i]<0){
+	              String r = Integer.toHexString(req[i]+256);
+	              String rr=r.toUpperCase();
+	                //数字补为两位数
+	                if(rr.length()==1){
+	                	rr='0'+rr;
+	                }
+	                //strdata为总接收数据
+	                str += rr;
+	               
+	            }
+	            else{
+	              String r = Integer.toHexString(req[i]);
+	              if(r.length()==1)
+	              r='0'+r;
+	              r=r.toUpperCase();
+	              str+=r;  
+	            }
+	        }*/
+			
 		}
  
 	 }

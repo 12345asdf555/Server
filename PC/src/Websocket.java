@@ -9,7 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
+
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
 public class Websocket implements Callback {
 
@@ -20,13 +24,15 @@ public class Websocket implements Callback {
 	private String connet;
 	private String strsend="";
 	private String strdata;
+	private SocketChannel chweb;
 	private String websocketfail;
 	private ArrayList<String> listarray2;
 	private ArrayList<String> listarray3;
 	private boolean datawritetype = false;
 	private HashMap<String, Socket> websocket;
+	private HashMap<String, SocketChannel> websocketlist = null;
 
-	public Websocket(String str, String connet, HashMap<String, Socket> websocket, ArrayList<String> listarray2,ArrayList<String> listarray3) {
+	public Websocket(String str, String connet, HashMap<String, Socket> websocket, ArrayList<String> listarray2,ArrayList<String> listarray3, HashMap<String, SocketChannel> websocketlist) {
 		// TODO Auto-generated constructor stub
 
         this.strdata = str;
@@ -34,10 +40,11 @@ public class Websocket implements Callback {
         this.connet = connet;
         this.listarray2 = listarray2;
         this.listarray3 = listarray3;
+        this.websocketlist = websocketlist;
 		
         try {
 			
-			if(websocket==null || websocket.isEmpty()){
+			if(websocketlist==null || websocketlist.isEmpty()){
 				
 			}
 			else
@@ -71,15 +78,16 @@ public class Websocket implements Callback {
 	               	     if(check5.equals(check6)){
 	             
 		               	     strdata=str;
-		       				 int weldname1 = Integer.valueOf(strdata.subSequence(10, 14).toString(),16);
-		       				 String weldname = String.valueOf(weldname1);
-		       				 if(weldname.length()!=4){
+		               	     String weldname = strdata.substring(10,14);
+		       				 //int weldname1 = Integer.valueOf(strdata.subSequence(10, 14).toString(),16);
+		       				 /*if(weldname.length()!=4){
 		                       	 int lenth=4-weldname.length();
 		                       	 for(int i=0;i<lenth;i++){
 		                       		 weldname="0"+weldname;
 		                       	 }
-		                        }
-		       				 String welder=strdata.substring(14,18);
+		                     }*/
+		       				 String welder = strdata.substring(14,18);
+		       				 //String code = strdata.substring(18,26);
 		       				 long code1 = Integer.valueOf(strdata.subSequence(18, 26).toString(),16);
 		                        String code = String.valueOf(code1);
 		                        if(code.length()!=8){
@@ -87,248 +95,282 @@ public class Websocket implements Callback {
 		                       	 for(int i=0;i<lenth;i++){
 		                       		 code="0"+code;
 		                       	 }
-		                        }
+		                     }
 		       				 String electricity1=strdata.substring(26,30);
 		       				 String voltage1=strdata.substring(30,34);
 		       				 String status1=strdata.substring(38,40);
 		       				 
-		       				 long year1 = Integer.valueOf(str.subSequence(40, 42).toString(),16);
-		                        String yearstr1 = String.valueOf(year1);
-		                        long month1 = Integer.valueOf(str.subSequence(42, 44).toString(),16);
-		                        String monthstr1 = String.valueOf(month1);
-		                        if(monthstr1.length()!=2){
-		                       	 int lenth=2-monthstr1.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 monthstr1="0"+monthstr1;
-		                       	 }
-		                        }
-		                        long day1 = Integer.valueOf(str.subSequence(44, 46).toString(),16);
-		                        String daystr1 = String.valueOf(day1);
-		                        if(daystr1.length()!=2){
-		                       	 int lenth=2-daystr1.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 daystr1="0"+daystr1;
-		                       	 }
-		                        }
-		                        long hour1 = Integer.valueOf(str.subSequence(46, 48).toString(),16);
-		                        String hourstr1 = String.valueOf(hour1);
-		                        if(hourstr1.length()!=2){
-		                       	 int lenth=2-hourstr1.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 hourstr1="0"+hourstr1;
-		                       	 }
-		                        }
-		                        long minute1 = Integer.valueOf(str.subSequence(48, 50).toString(),16);
-		                        String minutestr1 = String.valueOf(minute1);
-		                        if(minutestr1.length()!=2){
-		                       	 int lenth=2-minutestr1.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 minutestr1="0"+minutestr1;
-		                       	 }
-		                        }
-		                        long second1 = Integer.valueOf(str.subSequence(50, 52).toString(),16);
-		                        String secondstr1 = String.valueOf(second1);
-		                        if(secondstr1.length()!=2){
-		                       	 int lenth=2-secondstr1.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 secondstr1="0"+secondstr1;
-		                       	 }
-		                        }
-		          	    		 
-		                        String timestr1 = yearstr1+"-"+monthstr1+"-"+daystr1+" "+hourstr1+":"+minutestr1+":"+secondstr1;
-		                        SimpleDateFormat timeshow1 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-		                        try {
-		       					
-		       					Date time1 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr1);
-		                       	//java.util.Date time4 = timeshow3.parse(timestr3);
-		       					timesql1 = new Timestamp(time1.getTime());
-		       					
-		       				 } catch (ParseException e) {
-		       					// TODO Auto-generated catch block
-		       					e.printStackTrace();
-		       				 }
-		                        
+		       				long year1 = Integer.valueOf(str.subSequence(40, 42).toString(),16);
+	                        String yearstr1 = String.valueOf(year1);
+	                        long month1 = Integer.valueOf(str.subSequence(42, 44).toString(),16);
+	                        String monthstr1 = String.valueOf(month1);
+	                        if(monthstr1.length()!=2){
+	                       	 int lenth=2-monthstr1.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 monthstr1="0"+monthstr1;
+	                       	 }
+	                        }
+	                        long day1 = Integer.valueOf(str.subSequence(44, 46).toString(),16);
+	                        String daystr1 = String.valueOf(day1);
+	                        if(daystr1.length()!=2){
+	                       	 int lenth=2-daystr1.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 daystr1="0"+daystr1;
+	                       	 }
+	                        }
+	                        long hour1 = Integer.valueOf(str.subSequence(46, 48).toString(),16);
+	                        String hourstr1 = String.valueOf(hour1);
+	                        if(hourstr1.length()!=2){
+	                       	 int lenth=2-hourstr1.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 hourstr1="0"+hourstr1;
+	                       	 }
+	                        }
+	                        long minute1 = Integer.valueOf(str.subSequence(48, 50).toString(),16);
+	                        String minutestr1 = String.valueOf(minute1);
+	                        if(minutestr1.length()!=2){
+	                       	 int lenth=2-minutestr1.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 minutestr1="0"+minutestr1;
+	                       	 }
+	                        }
+	                        long second1 = Integer.valueOf(str.subSequence(50, 52).toString(),16);
+	                        String secondstr1 = String.valueOf(second1);
+	                        if(secondstr1.length()!=2){
+	                       	 int lenth=2-secondstr1.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 secondstr1="0"+secondstr1;
+	                       	 }
+	                        }
+	          	    		 
+	                        String timestr1 = yearstr1+"-"+monthstr1+"-"+daystr1+" "+hourstr1+":"+minutestr1+":"+secondstr1;
+	                        SimpleDateFormat timeshow1 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+	                        try {
+	       					
+	       					Date time1 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr1);
+	                       	//java.util.Date time4 = timeshow3.parse(timestr3);
+	       					timesql1 = new Timestamp(time1.getTime());
+	       					
+	       				 } catch (ParseException e) {
+	       					// TODO Auto-generated catch block
+	       					e.printStackTrace();
+	       				 }
+	                        
+	       				 
+	       				 String electricity2=strdata.substring(52,56);
+	       				 String voltage2=strdata.substring(56,60);
+	       				 String status2=strdata.substring(64,66);
+	       				 
+	       				 long year2 = Integer.valueOf(str.subSequence(66, 68).toString(),16);
+	                        String yearstr2 = String.valueOf(year2);
+	                        long month2 = Integer.valueOf(str.subSequence(68, 70).toString(),16);
+	                        String monthstr2 = String.valueOf(month2);
+	                        if(monthstr2.length()!=2){
+	                       	 int lenth=2-monthstr2.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 monthstr2="0"+monthstr2;
+	                       	 }
+	                        }
+	                        long day2 = Integer.valueOf(str.subSequence(70, 72).toString(),16);
+	                        String daystr2 = String.valueOf(day2);
+	                        if(daystr2.length()!=2){
+	                       	 int lenth=2-daystr2.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 daystr2="0"+daystr2;
+	                       	 }
+	                        }
+	                        long hour2 = Integer.valueOf(str.subSequence(72, 74).toString(),16);
+	                        String hourstr2 = String.valueOf(hour2);
+	                        if(hourstr2.length()!=2){
+	                       	 int lenth=2-hourstr2.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 hourstr2="0"+hourstr2;
+	                       	 }
+	                        }
+	                        long minute2 = Integer.valueOf(str.subSequence(74, 76).toString(),16);
+	                        String minutestr2 = String.valueOf(minute2);
+	                        if(minutestr2.length()!=2){
+	                       	 int lenth=2-minutestr2.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 minutestr2="0"+minutestr2;
+	                       	 }
+	                        }
+	                        long second2 = Integer.valueOf(str.subSequence(76, 78).toString(),16);
+	                        String secondstr2 = String.valueOf(second2);
+	                        if(secondstr2.length()!=2){
+	                       	 int lenth=2-secondstr2.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 secondstr2="0"+secondstr2;
+	                       	 }
+	                        }
+	          	    		 
+	                        String timestr2 = yearstr2+"-"+monthstr2+"-"+daystr2+" "+hourstr2+":"+minutestr2+":"+secondstr2;
+	                        SimpleDateFormat timeshow2 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+	                        try {
+
+	       					Date time2 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr2);
+	                       	//java.util.Date time4 = timeshow3.parse(timestr3);
+	       					timesql2 = new Timestamp(time2.getTime());
+	       					
+	       				 } catch (ParseException e) {
+	       					// TODO Auto-generated catch block
+	       					e.printStackTrace();
+	       				 }
 		       				 
-		       				 String electricity2=strdata.substring(52,56);
-		       				 String voltage2=strdata.substring(56,60);
-		       				 String status2=strdata.substring(64,66);
+	       				 
+	       				 String electricity3=strdata.substring(78,82);
+	       				 String voltage3=strdata.substring(82,86);
+	       				 String status3=strdata.substring(90,92);
+	       				 
+	       				 long year3 = Integer.valueOf(str.subSequence(92, 94).toString(),16);
+	                        String yearstr3 = String.valueOf(year3);
+	                        long month3 = Integer.valueOf(str.subSequence(94, 96).toString(),16);
+	                        String monthstr3 = String.valueOf(month3);
+	                        if(monthstr3.length()!=2){
+	                       	 int lenth=2-monthstr3.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 monthstr3="0"+monthstr3;
+	                       	 }
+	                        }
+	                        long day3 = Integer.valueOf(str.subSequence(96, 98).toString(),16);
+	                        String daystr3 = String.valueOf(day3);
+	                        if(daystr3.length()!=2){
+	                       	 int lenth=2-daystr3.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 daystr3="0"+daystr3;
+	                       	 }
+	                        }
+	                        long hour3 = Integer.valueOf(str.subSequence(98, 100).toString(),16);
+	                        String hourstr3 = String.valueOf(hour3);
+	                        if(hourstr3.length()!=2){
+	                       	 int lenth=2-hourstr3.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 hourstr3="0"+hourstr3;
+	                       	 }
+	                        }
+	                        long minute3 = Integer.valueOf(str.subSequence(100, 102).toString(),16);
+	                        String minutestr3 = String.valueOf(minute3);
+	                        if(minutestr3.length()!=2){
+	                       	 int lenth=2-minutestr3.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 minutestr3="0"+minutestr3;
+	                       	 }
+	                        }
+	                        long second3 = Integer.valueOf(str.subSequence(102, 104).toString(),16);
+	                        String secondstr3 = String.valueOf(second3);
+	                        if(secondstr3.length()!=2){
+	                       	 int lenth=2-secondstr3.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		 secondstr3="0"+secondstr3;
+	                       	 }
+	                        }
+	          	    		 
+	                        String timestr3 = yearstr3+"-"+monthstr3+"-"+daystr3+" "+hourstr3+":"+minutestr3+":"+secondstr3;
+	                        SimpleDateFormat timeshow3 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
+	                        try {
+	                       	Date time3 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr3);
+	                       	//java.util.Date time4 = timeshow3.parse(timestr3);
+	       					timesql3 = new Timestamp(time3.getTime());
+	       				 } catch (ParseException e) {
+	       					// TODO Auto-generated catch block
+	       					e.printStackTrace();
+	       				 }
 		       				 
-		       				 long year2 = Integer.valueOf(str.subSequence(66, 68).toString(),16);
-		                        String yearstr2 = String.valueOf(year2);
-		                        long month2 = Integer.valueOf(str.subSequence(68, 70).toString(),16);
-		                        String monthstr2 = String.valueOf(month2);
-		                        if(monthstr2.length()!=2){
-		                       	 int lenth=2-monthstr2.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 monthstr2="0"+monthstr2;
-		                       	 }
-		                        }
-		                        long day2 = Integer.valueOf(str.subSequence(70, 72).toString(),16);
-		                        String daystr2 = String.valueOf(day2);
-		                        if(daystr2.length()!=2){
-		                       	 int lenth=2-daystr2.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 daystr2="0"+daystr2;
-		                       	 }
-		                        }
-		                        long hour2 = Integer.valueOf(str.subSequence(72, 74).toString(),16);
-		                        String hourstr2 = String.valueOf(hour2);
-		                        if(hourstr2.length()!=2){
-		                       	 int lenth=2-hourstr2.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 hourstr2="0"+hourstr2;
-		                       	 }
-		                        }
-		                        long minute2 = Integer.valueOf(str.subSequence(74, 76).toString(),16);
-		                        String minutestr2 = String.valueOf(minute2);
-		                        if(minutestr2.length()!=2){
-		                       	 int lenth=2-minutestr2.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 minutestr2="0"+minutestr2;
-		                       	 }
-		                        }
-		                        long second2 = Integer.valueOf(str.subSequence(76, 78).toString(),16);
-		                        String secondstr2 = String.valueOf(second2);
-		                        if(secondstr2.length()!=2){
-		                       	 int lenth=2-secondstr2.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 secondstr2="0"+secondstr2;
-		                       	 }
-		                        }
-		          	    		 
-		                        String timestr2 = yearstr2+"-"+monthstr2+"-"+daystr2+" "+hourstr2+":"+minutestr2+":"+secondstr2;
-		                        SimpleDateFormat timeshow2 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-		                        try {
-	
-		       					Date time2 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr2);
-		                       	//java.util.Date time4 = timeshow3.parse(timestr3);
-		       					timesql2 = new Timestamp(time2.getTime());
-		       					
-		       				 } catch (ParseException e) {
-		       					// TODO Auto-generated catch block
-		       					e.printStackTrace();
-		       				 }
-		       				 
-		       				 
-		       				 String electricity3=strdata.substring(78,82);
-		       				 String voltage3=strdata.substring(82,86);
-		       				 String status3=strdata.substring(90,92);
-		       				 
-		       				 long year3 = Integer.valueOf(str.subSequence(92, 94).toString(),16);
-		                        String yearstr3 = String.valueOf(year3);
-		                        long month3 = Integer.valueOf(str.subSequence(94, 96).toString(),16);
-		                        String monthstr3 = String.valueOf(month3);
-		                        if(monthstr3.length()!=2){
-		                       	 int lenth=2-monthstr3.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 monthstr3="0"+monthstr3;
-		                       	 }
-		                        }
-		                        long day3 = Integer.valueOf(str.subSequence(96, 98).toString(),16);
-		                        String daystr3 = String.valueOf(day3);
-		                        if(daystr3.length()!=2){
-		                       	 int lenth=2-daystr3.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 daystr3="0"+daystr3;
-		                       	 }
-		                        }
-		                        long hour3 = Integer.valueOf(str.subSequence(98, 100).toString(),16);
-		                        String hourstr3 = String.valueOf(hour3);
-		                        if(hourstr3.length()!=2){
-		                       	 int lenth=2-hourstr3.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 hourstr3="0"+hourstr3;
-		                       	 }
-		                        }
-		                        long minute3 = Integer.valueOf(str.subSequence(100, 102).toString(),16);
-		                        String minutestr3 = String.valueOf(minute3);
-		                        if(minutestr3.length()!=2){
-		                       	 int lenth=2-minutestr3.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 minutestr3="0"+minutestr3;
-		                       	 }
-		                        }
-		                        long second3 = Integer.valueOf(str.subSequence(102, 104).toString(),16);
-		                        String secondstr3 = String.valueOf(second3);
-		                        if(secondstr3.length()!=2){
-		                       	 int lenth=2-secondstr3.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		 secondstr3="0"+secondstr3;
-		                       	 }
-		                        }
-		          	    		 
-		                        String timestr3 = yearstr3+"-"+monthstr3+"-"+daystr3+" "+hourstr3+":"+minutestr3+":"+secondstr3;
-		                        SimpleDateFormat timeshow3 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
-		                        try {
-		                       	Date time3 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr3);
-		                       	//java.util.Date time4 = timeshow3.parse(timestr3);
-		       					timesql3 = new Timestamp(time3.getTime());
-		       				 } catch (ParseException e) {
-		       					// TODO Auto-generated catch block
-		       					e.printStackTrace();
-		       				 }
-		       				 
-		                        try{
-		                        	
-		                       	 for(int i=0;i<listarray3.size();i+=5){
-		                       		 String weldjunction = listarray3.get(i);
-		                       		 if(weldjunction.equals(code)){
-		                       			 String maxe = listarray3.get(i+1);
-		                       			 String mixe = listarray3.get(i+2);
-		                       			 String maxv = listarray3.get(i+3);
-		                       			 String mixv = listarray3.get(i+4);
-		                       			 limit = maxe + mixe + maxv + mixv;
-		                       			 
-		                       		 }
-		                       	 }
-		                       	 
-		                       	 for(int i=0;i<listarray2.size();i+=3){
-		                       		 String fequipment_no = listarray2.get(i);
-		                       		 String fgather_no = listarray2.get(i+1);
-		                       		 String finsframework_id = listarray2.get(i+2);
-		                       		 if(weldname.equals(fgather_no)){
-		       	                    	 strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit
-		       	                    			 +status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit
-		       	                    			 +status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit;
-		       	                     }
-		       	                     else{
-		       	                    	 strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-		       	                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
-		       	                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
-		       	                     }
-		                       	 }
-	
-		                       	 //System.out.println(strsend);
-		                       	 
-		                        }catch (Exception e) {
-		       						// TODO Auto-generated catch block
-		                       	 System.out.println("数据库读取数据错误");
-		                       	 e.printStackTrace();
-		       					 }
-		           
-		                        datawritetype = true;
-		                        
-		                       //数据发送
-		                    byte[] bb3=strsend.getBytes();
-		                         
-		       				ByteBuffer byteBuf = ByteBuffer.allocate(bb3.length);
-		       				
-		       				for(int j=0;j<bb3.length;j++){
-		       					
-		       					byteBuf.put(bb3[j]);
-		       					
-		       				}
-		       				
-		       				byteBuf.flip();
-		       				
-		       				strsend="";
-		       				
-		       				for (Entry<String, Socket> entry : websocket.entrySet()) {
-		       					//将内容返回给客户端
+                        try{
+                        	
+	                       	 for(int i=0;i<listarray3.size();i+=5){
+	                       		 String weldjunction = listarray3.get(i);
+	                       		 if(weldjunction.equals(code)){
+	                       			 String maxe = listarray3.get(i+1);
+	                       			 String mixe = listarray3.get(i+2);
+	                       			 String maxv = listarray3.get(i+3);
+	                       			 String mixv = listarray3.get(i+4);
+	                       			 limit = maxe + mixe + maxv + mixv;
+	                       			 
+	                       		 }
+	                       	 }
+	                       	 
+	                       	 for(int i=0;i<listarray2.size();i+=3){
+	                       		 String fequipment_no = listarray2.get(i);
+	                       		 String fgather_no = listarray2.get(i+1);
+	                       		 String finsframework_id = listarray2.get(i+2);
+	                       		 if(weldname.equals(fgather_no)){
+	       	                    	 strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit
+	       	                    			 +status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit
+	       	                    			 +status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit;
+	       	                     }
+	       	                     else{
+	       	                    	 strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+	       	                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
+	       	                    			 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
+	       	                     }
+	                       	 }
+
+	                       	 //System.out.println(strsend);
+                       	 
+                        }catch (Exception e) {
+       						// TODO Auto-generated catch block
+	                       	System.out.println("数据库读取数据错误");
+	                        e.printStackTrace();
+       					}
+           
+                        datawritetype = true;
+		                     
+                        /*if(chweb!=null){
+    			        	
+    			        	try {
+    							chweb.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+    						} catch (InterruptedException e) {
+    							// TODO Auto-generated catch block
+    							e.printStackTrace();
+    						}
+    			        	
+    			        }*/
+	                        
+	                    /*   //数据发送
+	                    byte[] bb3=strsend.getBytes();
+	                         
+	       				ByteBuffer byteBuf = ByteBuffer.allocate(bb3.length);
+	       				
+	       				for(int j=0;j<bb3.length;j++){
+	       					
+	       					byteBuf.put(bb3[j]);
+	       					
+	       				}
+	       				
+	       				byteBuf.flip();*/
+	                        
+                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
+                        while(webiter.hasNext()){
+                        	try{
+	                        	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+	                        	websocketfail = entry.getKey();
+	                        	SocketChannel websocketcon = entry.getValue();
+	                        	websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+                        	}catch (Exception e) {
+	       						if(datawritetype = true){
+	       							websocketlist.remove(websocketfail);
+	       							webiter = websocketlist.entrySet().iterator();
+	       							datawritetype=false;
+	       						 }
+	       					 }
+                        }
+                        
+                        strsend="";
+                        
+	       				/*for (Entry<String, SocketChannel> entry : websocketlist.entrySet()) {
+	       					//将内容返回给客户端
+	       					try{
 		       					websocketfail=entry.getKey();
-		       	                responseClient(byteBuf, true, entry.getValue());
-		       				} 
-	               	    	 
+		       					entry.getValue().writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+	       					}catch (Exception e) {
+	       						if(datawritetype = true){
+	       							websocketlist.remove(websocketfail);
+	       							datawritetype=false;
+	       						 }
+	       					 }
+	       				 } */
+                        
 	               	     }	
 	               	     else{
 	               	    	 //校验位错误
@@ -357,10 +399,11 @@ public class Websocket implements Callback {
         	   
         	   str=""; 
                
-		    }}}catch (IOException e) {
+		    }}}catch (Exception e) {
 			
 			if(datawritetype = true){
 				
+				chweb = null;
 				websocket.remove(websocketfail);
 				datawritetype=false;
 				
@@ -651,7 +694,18 @@ public class Websocket implements Callback {
 		           
 		                        datawritetype = true;
 		                        
-		                       //数据发送
+		                        if(chweb!=null){
+		    			        	
+		    			        	try {
+		    							chweb.writeAndFlush(new TextWebSocketFrame(str)).sync();
+		    						} catch (InterruptedException e) {
+		    							// TODO Auto-generated catch block
+		    							e.printStackTrace();
+		    						}
+		    			        	
+		    			        }
+		                        
+		                     /*  //数据发送
 		                       byte[] bb3=strsend.getBytes();
 		                         
 		       				ByteBuffer byteBuf = ByteBuffer.allocate(bb3.length);
@@ -670,7 +724,7 @@ public class Websocket implements Callback {
 		       					//将内容返回给客户端
 		       					websocketfail=entry.getKey();
 		       	                responseClient(byteBuf, true, entry.getValue());
-		       				} 
+		       				} */
 	               	    	 
 	               	     }	
 	               	     else{
@@ -700,7 +754,7 @@ public class Websocket implements Callback {
         	   
         	   str=""; 
                
-		    }}}catch (IOException e) {
+		    }}}catch (Exception e) {
 			
 			if(datawritetype = true){
 				
