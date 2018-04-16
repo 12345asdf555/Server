@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerAdapter;
@@ -21,6 +23,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public String ip1;
     public String connet;
     public Thread workThread;
+    public SocketChannel socketchannel = null;
     public HashMap<String, Socket> websocket;
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
@@ -33,17 +36,17 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		 
 		 try{
-			 /*String str = (String) msg;
+			 String str = (String) msg;
 			 Workspace ws = new Workspace(str);
 	         workThread = new Thread(ws);  
-	         workThread.start(); */
+	         workThread.start(); 
 	         
-			 ByteBuf buf=(ByteBuf)msg; 
+			 /*ByteBuf buf=(ByteBuf)msg; 
 			 byte[] req=new byte[buf.readableBytes()];  
 		     buf.readBytes(req);
 		     Workspace ws = new Workspace(req);
 	         workThread = new Thread(ws);  
-	         workThread.start();
+	         workThread.start();*/
 			      
 	         
 		 }finally{
@@ -58,11 +61,12 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 
 		private String str="";
 		public byte[] req;
+		private String socketfail;
 
-		public Workspace(byte[] req) {
+		public Workspace(String str) {
 			// TODO Auto-generated constructor stub
 			
-			this.req=req;
+			this.str=str;
 			
 		}
 
@@ -70,7 +74,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		public void run() {
 			// TODO Auto-generated method stub
 			//try {
-				for(int i=0;i<req.length;i++){
+				/*for(int i=0;i<req.length;i++){
 	             
 	            //判断为数字还是字母，若为字母+256取正数
 	            if(req[i]<0){
@@ -91,10 +95,14 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	              r=r.toUpperCase();
 	              str+=r;  
 	            }
-	        }
+	        }*/
 				
 			//System.out.println(str);
-	        
+			/*new Mysql(str,connet,listarray1);
+	        new Socketsend(str,ip1);
+	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
+			
+			
 	        String[] strlist =str.split("F5");
 	        for(int i=0;i<strlist.length;i++){
 	        	
@@ -103,8 +111,15 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	
 	        	new Mysql(str,connet,listarray1);
 		        new Socketsend(str,ip1);
-		        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);
-		        
+		        if(socketchannel!=null){
+			        try {
+						socketchannel.writeAndFlush(str).sync();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		        //new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);
 	        }
 					
 			/*} catch (InterruptedException e) {

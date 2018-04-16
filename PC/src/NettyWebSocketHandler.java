@@ -1,5 +1,8 @@
 import java.net.SocketAddress;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,6 +18,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaders;
@@ -33,9 +37,11 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 @Sharable
 public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 	
+	public HashMap<String, SocketChannel> socketlist = new HashMap<>();
 	public ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 	private static final Logger logger = Logger.getLogger(WebSocketServerHandshaker.class.getName());
 	private WebSocketServerHandshaker handsharker;
+	private String socketfail;
 	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -125,20 +131,34 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
                 String.format("%s frame type not supported", frame.getClass().getName()));
         }
 
+        String str = ((TextWebSocketFrame) frame).text();
 
-        String request = ((TextWebSocketFrame) frame).text();
-
-
-        logger.info(String.format("%s received %s", ctx.channel(), request));
-        System.out.println(String.format("%s received %s", ctx.channel(), request));
-
-
+        if(str.substring(0,8).equals("7E7C2052")){
+			Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
+            while(webiter.hasNext()){
+            	try{
+                	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+                	socketfail = entry.getKey();
+                	SocketChannel socketcon = entry.getValue();
+                	String[] socketip1 = socketcon.toString().split("/");
+                	String[] socketip2 = socketip1[1].split(":");
+                	String socketip = socketip2[0];
+                	//if(!socketip.equals("192.168.1.101")){
+                	if(!socketip.equals("121.196.222.216")){
+                		socketcon.writeAndFlush(str).sync();
+                	}
+                	
+            	}catch (Exception e) {
+					socketlist.remove(socketfail);
+					webiter = socketlist.entrySet().iterator();
+			    }
+            }
+			System.out.println(str);
+		}
+        
         // ctx.channel().write(new TextWebSocketFrame(request + " , 欢迎使用netty
         // websocket 服务,现在时刻是: ")
         // + new java.util.Date().toString());
-        ctx.channel().writeAndFlush(new TextWebSocketFrame("欢迎使用netty websocket 服务,现在时刻是: "));
-
-
     }
 	
 	/**

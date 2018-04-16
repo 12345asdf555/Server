@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
+
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -44,6 +45,7 @@ import java.util.TimerTask;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -64,7 +66,7 @@ import io.netty.util.CharsetUtil;
 
 public class Server implements Runnable {  
 	
- 	private List<Handler> handlers = new ArrayList<Handler>();  
+ 	//private List<Handler> handlers = new ArrayList<Handler>();  
     public static final String SERVERIP = "121.196.222.216"; 
     public static final int SERVERPORT = 5555;
     public static final int SERVERPORTWEB = 5554;
@@ -76,23 +78,26 @@ public class Server implements Runnable {
     public int sqlwritetype=0;
     public int websendtype=0;
     public int sockettype=0;
-    public String ip;
-    public String ip1;
+    public String ip=null;
+    public String ip1=null;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/AL_DB?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/Weld?" + "user=brucestifler&password=?bhq1130hdn?&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
+    public HashMap<String, SocketChannel> socketlist = new HashMap<>();
     public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
     public HashMap<String, SocketChannel> clientList = new HashMap<>();
+    public int socketcount=0;
     public int websocketcount=0;
     public int clientcount=0;
     public Selector selector = null;
     public ServerSocketChannel ssc = null;
-    private NettyServerHandler NS = new NettyServerHandler();
+    public Client client = new Client(this);
+    public NettyServerHandler NS = new NettyServerHandler();
     private NettyWebSocketHandler NWS = new NettyWebSocketHandler();
 	private Connection c;
 	private Statement stmt;
@@ -162,7 +167,7 @@ public class Server implements Runnable {
         		listarray1 = check.getId1();
         		listarray2 = check.getId2();
         		listarray3 = check.getId3();
-	
+        		
         		System.out.println(listarray1);
         		System.out.println(listarray2);
         		System.out.println(listarray3);
@@ -175,6 +180,7 @@ public class Server implements Runnable {
         
         new Thread(socketstart).start();
 		new Thread(websocketstart).start();
+		new Thread(sockettran).start();
 		
         /*new Thread(websocketstart).start();
         new Thread(websocketsend).start();
@@ -213,11 +219,14 @@ public class Server implements Runnable {
 	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
 	                @Override
 	                public void initChannel(SocketChannel chsoc) throws Exception {
-	                	/*chsoc.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
+	                	chsoc.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
 	                	chsoc.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
 	                	chsoc.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
-	                	chsoc.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8));*/ 
+	                	chsoc.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
 	                	chsoc.pipeline().addLast(NS);
+	                	socketcount++;
+						socketlist.put(Integer.toString(socketcount),chsoc);
+						NWS.socketlist = socketlist;
 	                }
 	            });
 	            
@@ -256,10 +265,11 @@ public class Server implements Runnable {
 						@Override
 						protected void initChannel(SocketChannel chweb) throws Exception {
 							// TODO Auto-generated method stub
+
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("/ws://192.168.9.136:5554/SerialPortDemo/ws/张三"));
+							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://192.168.1.107:5554/SerialPortDemo/ws/张三"));
 							chweb.pipeline().addLast("myWebSocketHandler", NWS);
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);
@@ -280,10 +290,26 @@ public class Server implements Runnable {
 	            bossGroup.shutdownGracefully();
 	            workerGroup.shutdownGracefully();
 	        }
-			
 		}
-    	
     };
+    
+    public Runnable sockettran = new Runnable() {
+
+		@Override
+		public void run() {
+			if(ip1!=null){
+				client.run();
+			}
+		}
+    };
+
+	 public static void main(String [] args) throws IOException 
+	 {  
+	     Thread desktopServerThread = new Thread(new Server());  
+	     desktopServerThread.start();  
+	 }
+
+}
     
     /*public Runnable websocketstart = new Runnable() {  
         private PrintWriter getWriter(Socket socket) throws IOException {  
@@ -320,7 +346,7 @@ public class Server implements Runnable {
 	                //读入缓存(定义一个1M的缓存区)  
 	                byte[] buf = new byte[1024]; 
 	                
-	                //读到字节（读取输入流数据到缓存）  
+l	                //读到字节（读取输入流数据到缓存）  
 	                int len = in.read(buf, 0, 1024);
 	                
 	                //读到字节数组（定义一个容纳数据大小合适缓存区）  
@@ -395,17 +421,9 @@ public class Server implements Runnable {
 			}
 		}
  	};*/
- 
- 	
-	 public static void main(String [] args) throws IOException 
-	 {  
-	     Thread desktopServerThread = new Thread(new Server());  
-	     desktopServerThread.start();  
-	 }
 
 	 
-	 
-	class Handler implements Runnable {
+	/*class Handler implements Runnable {
 		
 		public DB_Connectionmysql db_connection;
 	    public Socket websocketlink;
@@ -446,7 +464,7 @@ public class Server implements Runnable {
 				else
 				{	
 					
-					/*byte[] str1=new byte[str.length()/2];
+					byte[] str1=new byte[str.length()/2];
 	
 					for (int i = 0; i < str1.length; i++)
 					{
@@ -476,7 +494,7 @@ public class Server implements Runnable {
 	                     	r=r.toUpperCase();
 	                 		strdata+=r;	
 	                 	}
-	                 }*/
+	                 }
 	                     
 					 strdata=str;
 					 int weldname1 = Integer.valueOf(strdata.subSequence(10, 14).toString(),16);
@@ -678,11 +696,11 @@ public class Server implements Runnable {
 					 
                      try{
                     	 
-	                     /*DB_Connectionweb b =new DB_Connectionweb(connet);
+	                     DB_Connectionweb b =new DB_Connectionweb(connet);
 	                     DB_Connectioncode c =new DB_Connectioncode(code,connet);
 	                     DB_Connectioncode c =new DB_Connectioncode();
 		                 String dbdata = b.getId();
-		                 String limit = c.getId();*/
+		                 String limit = c.getId();
                     	 
                     	 for(int i=0;i<listarray3.size();i+=5){
                     		 String weldjunction = listarray3.get(i);
@@ -714,7 +732,7 @@ public class Server implements Runnable {
                     	 }
 
                     	 
-		                 /*for(int i=0;i<dbdata.length();i+=13){
+		                 for(int i=0;i<dbdata.length();i+=13){
 		                	 String status=dbdata.substring(0+i,2+i);
 		                	 String framework=dbdata.substring(2+i,4+i);
 		                     String weld=dbdata.substring(4+i,8+i); 
@@ -728,7 +746,7 @@ public class Server implements Runnable {
 		                    			 +"09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"
 		                    			 +"09"+framework+weld+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
 		                     }
-		                 }*/
+		                 }
                      }catch (Exception e) {
  						// TODO Auto-generated catch block
                     	 System.out.println("数据库读取数据错误");
@@ -816,5 +834,5 @@ public class Server implements Runnable {
 	            out.flush();  
 	    }  
 	    
-	}
-}
+	}*/
+
