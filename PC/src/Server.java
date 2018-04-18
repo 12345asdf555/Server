@@ -25,12 +25,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -81,7 +84,7 @@ public class Server implements Runnable {
     public String ip=null;
     public String ip1=null;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/Weld?" + "user=brucestifler&password=?bhq1130hdn?&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/XMWeld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
@@ -100,7 +103,9 @@ public class Server implements Runnable {
     public NettyServerHandler NS = new NettyServerHandler();
     private NettyWebSocketHandler NWS = new NettyWebSocketHandler();
 	private Connection c;
-	private Statement stmt;
+	public java.sql.Connection conn = null;
+    public java.sql.Statement stmt =null;
+	private Date time;
     
     public String getconnet(){
     	return connet;
@@ -146,6 +151,137 @@ public class Server implements Runnable {
 	    NS.ip1 = this.ip1;
 	    NS.connet = this.connet;
 		
+	    
+	   try {  
+
+            Class.forName("com.mysql.jdbc.Driver");  
+            conn = DriverManager.getConnection(connet);
+            stmt= conn.createStatement();
+            NS.stmt = this.stmt;
+
+        } catch (ClassNotFoundException e) {  
+            System.out.println("Broken driver");
+            e.printStackTrace();  
+        } catch (SQLException e) {
+            System.out.println("Broken conn");
+            e.printStackTrace();
+        }  
+            
+	    Date date = new Date();
+        String nowtime = DateTools.format("HH:mm:ss",date);
+        String[] timesplit = nowtime.split(":");
+        String hour = timesplit[0];
+       
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)); // 控制时
+        calendar.set(Calendar.MINUTE, 59);    // 控制分
+        calendar.set(Calendar.SECOND, 59);    // 控制秒
+        time = calendar.getTime(); 
+	   
+	    Timer tExit1 = null; 
+		tExit1 = new Timer();  
+        tExit1.schedule(new TimerTask() {  
+            private Connection conn1;
+			private Statement stmt1;
+
+			@Override  
+            public void run() {
+  		
+            	try {  
+
+                    Class.forName("com.mysql.jdbc.Driver");  
+                    conn = DriverManager.getConnection(connet);
+                    stmt= conn.createStatement();
+                    NS.stmt = stmt;
+                    
+                    Class.forName("com.mysql.jdbc.Driver");  
+                    conn1 = DriverManager.getConnection(connet);
+                    stmt1= conn1.createStatement();
+                    
+                    //if(ifsqlfirst){
+                    	
+                	Date date = new Date();
+                    String nowtimefor = DateTools.format("yyyy-MM-dd",date);
+                    String nowtime = DateTools.format("HH:mm:ss",date);
+                    String[] timesplit = nowtime.split(":");
+                    String hour = timesplit[0];
+                    String time2=nowtimefor+" "+hour+":59:59";
+                	
+                	String time1 = null;
+                	String sqlfirst = "SELECT tb_work.fUploadDataTime FROM tb_work LIMIT 0,1";
+                	ResultSet rs =stmt.executeQuery(sqlfirst);
+                	while (rs.next()) {
+                		time1 = rs.getString("fUploadDataTime");
+                	}
+                	
+                    String sqlstandby = "INSERT INTO tb_standby(tb_standby.fstandbytime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
+                    		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
+                    
+                    String sqlwork = "INSERT INTO tb_work(tb_work.fworktime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
+                    		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";;
+                    
+                    String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.falarmtime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
+                    		+ "LEFT JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
+                    		+ "WHERE fstatus= '3' and (fvoltage > fmax_valtage OR felectricity > fmax_electricity "
+                    		+ "OR fvoltage < fmin_valtage OR felectricity < fmin_electricity)"
+                    		+ " AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
+                    
+                    try {
+                        stmt1.executeUpdate(sqlstandby);
+                        stmt1.executeUpdate(sqlwork);
+                        stmt1.executeUpdate(sqlalarm);
+                    } catch (SQLException e) {
+                        System.out.println("Broken insert");
+                        e.printStackTrace();
+                    } 
+                        
+                        /*ifsqlfirst = false;
+                        
+                    }else{
+                    	
+                    	Date date = new Date();
+                        String nowtimefor = DateTools.format("yyyy-MM-dd",date);
+                        String nowtime = DateTools.format("HH:mm:ss",date);
+                        String[] timesplit = nowtime.split(":");
+                        String hour = timesplit[0];
+                        String time1=nowtimefor+" "+hour+":00:00";
+                        String time2=nowtimefor+" "+hour+":59:59";
+                        
+                        String sqlstandby = "INSERT INTO tb_standby(tb_standby.fstandbytime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
+                        		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
+                        
+                        String sqlwork = "INSERT INTO tb_work(tb_work.fworktime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
+                        		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";;
+                        
+                        String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.falarmtime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
+                        		+ "LEFT JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
+                        		+ "WHERE fstatus= '3' and (fvoltage > fmax_valtage OR felectricity > fmax_electricity "
+                        		+ "OR fvoltage < fmin_valtage OR felectricity < fmin_electricity)"
+                        		+ " AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
+                        
+                        try {
+                            stmt.executeUpdate(sqlstandby);
+                            stmt.executeUpdate(sqlwork);
+                            stmt.executeUpdate(sqlalarm);
+                        } catch (SQLException e) {
+                            System.out.println("Broken insert");
+                            e.printStackTrace();
+                        } 
+                    	
+                    }*/
+                    
+                } catch (ClassNotFoundException e) {  
+                    System.out.println("Broken driver");
+                    e.printStackTrace();  
+                } catch (SQLException e) {
+                    System.out.println("Broken conn");
+                    e.printStackTrace();
+                }  
+            	
+            }  
+        }, time , 1000*60*60);
+	    
+	    
 	    DB_Connectioncode check = new DB_Connectioncode(connet);
 		
 		listarray1 = check.getId1();
@@ -156,9 +292,9 @@ public class Server implements Runnable {
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
 	    
-		Timer tExit = null; 
-		tExit = new Timer();  
-        tExit.schedule(new TimerTask() {  
+		Timer tExit2 = null; 
+		tExit2 = new Timer();  
+        tExit2.schedule(new TimerTask() {  
             @Override  
             public void run() {
   		
@@ -232,7 +368,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5555).sync();
+				f = b.bind(5551).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -278,11 +414,11 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5554).sync().channel();
+	            Channel ch = serverBootstrap.bind(5550).sync().channel();
 	            ch.closeFuture().sync();
 	            
-	            ChannelFuture channelFuture = serverBootstrap.bind(5554).sync();
-	            channelFuture.channel().closeFuture().sync();
+	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
+	            channelFuture.channel().closeFuture().sync();*/
 	            
 	        } catch (Exception ex) { 
 	 			 ex.printStackTrace();

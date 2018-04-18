@@ -23,6 +23,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public String ip1;
     public String connet;
     public Thread workThread;
+    public java.sql.Statement stmt =null;
     public SocketChannel socketchannel = null;
     public HashMap<String, Socket> websocket;
     public ArrayList<String> listarray1 = new ArrayList<String>();
@@ -109,8 +110,10 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	str = strlist[i];
 	        	str = str + "F5";
 	        	
-	        	new Mysql(str,connet,listarray1);
-		        new Socketsend(str,ip1);
+	        	new Mysql(str,stmt,listarray1);
+		        new Websocket(str,stmt,websocket,listarray2,listarray3,websocketlist);
+		        //System.out.println("1");
+		        //new Socketsend(str,ip1);
 		        if(socketchannel!=null){
 			        try {
 						socketchannel.writeAndFlush(str).sync();
@@ -119,7 +122,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						e.printStackTrace();
 					}
 		        }
-		        //new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);
 	        }
 					
 			/*} catch (InterruptedException e) {

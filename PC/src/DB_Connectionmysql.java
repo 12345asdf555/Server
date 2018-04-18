@@ -32,6 +32,8 @@ public class DB_Connectionmysql {
 	}
 
 	public Server server;
+	
+	public java.sql.Statement stmt =null;
 	/*String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
 
             "user=root&password=123456&characterEncoding=UTF8";
@@ -49,13 +51,50 @@ public class DB_Connectionmysql {
     String inSql = null;*/
 
 
-    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,String connet,ArrayList<String> listarray1)
+    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,java.sql.Statement stmt,ArrayList<String> listarray1)
 
     {
 
-        java.sql.Connection conn = null;
+    	
+    	Date date = new Date();
 
-        java.sql.Statement stmt =null;
+        String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+
+        Timestamp goodsC_date = Timestamp.valueOf(nowTime);
+
+        for(int i=0;i<listarray1.size();i+=2){
+       	 if(machine_id.equals(listarray1.get(i))){
+       		 fmachine = listarray1.get(i+1);
+       		 break;
+       	 }
+        }
+
+        if(fmachine != null){
+       	 
+       	 BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+	         
+            inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+       	 
+            try {
+
+                stmt.executeUpdate(inSql);
+
+            } catch (SQLException e) {
+
+            	System.out.println(machine_id);
+            	
+                System.out.println("Broken insert");
+
+                e.printStackTrace();
+
+            } 
+            
+        }
+    	
+    	
+        /*java.sql.Connection conn = null;
+
+        java.sql.Statement stmt
 
 
         try {  
@@ -84,17 +123,8 @@ public class DB_Connectionmysql {
 
             e.printStackTrace();
 
-        }
-
-
-
-         Date date = new Date();
-
-         String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-
-         Timestamp goodsC_date = Timestamp.valueOf(nowTime);
-
-         
+        }*/
+    	
          //查焊机和采集设备号
          /*select = "select tb_welding_machine.fid,tb_gather.fgather_no from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
          
@@ -241,43 +271,13 @@ public class DB_Connectionmysql {
 
         // if(state ==1)
          	
-	         for(int i=0;i<listarray1.size();i+=2){
-	        	 if(machine_id.equals(listarray1.get(i))){
-	        		 fmachine = listarray1.get(i+1);
-	        		 break;
-	        	 }
-	         }
-
-	         if(fmachine != null){
-	        	 
-	        	 BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
-		         
-	             inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
-	        	 
-	             try {
-
-	                 stmt.executeUpdate(inSql);
-
-	             } catch (SQLException e) {
-
-	             	System.out.println(machine_id);
-	             	
-	                 System.out.println("Broken insert");
-
-	                 e.printStackTrace();
-
-	             } 
-	             
-	         }
-	         
-
        /*  else {
 
              inSql = "insert into sj(id,bed_Number,state,Dtime) values('"+ id +"','" + bedNumber + "','leave','" + goodsC_date + "')";
 
         }*/
 
-        try {
+        /*try {
 
             stmt.close();
 
@@ -289,7 +289,7 @@ public class DB_Connectionmysql {
 
             e.printStackTrace();
 
-        }  
+        }  */
 
 
 

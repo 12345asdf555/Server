@@ -15,7 +15,7 @@ public class Mysql implements Callback{
 	private ArrayList<String> listarray1;
 	
 	
-	public Mysql(String str, String connet,ArrayList<String> listarray1) {
+	public Mysql(String str,java.sql.Statement stmt,ArrayList<String> listarray1) {
 		// TODO Auto-generated constructor stub
 		this.str = str;
 		this.connet = connet;
@@ -123,8 +123,8 @@ public class Mysql implements Callback{
                                 	
 								String fitemid = str.substring(106, 108);
 							 
-								DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,connet,listarray1);
-							
+								DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,stmt,listarray1);
+								//System.out.println(str);
                              } catch (Exception e) {
 								str="";
 								// TODO Auto-generated catch block
@@ -334,7 +334,7 @@ public class Mysql implements Callback{
                                 	
 								String fitemid = str.substring(106, 108);
 							 
-							DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,connet,listarray1);
+							//DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,connet,listarray1);
 							} catch (Exception e) {
 								str="";
 								// TODO Auto-generated catch block
