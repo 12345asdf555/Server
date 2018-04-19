@@ -177,7 +177,7 @@ public class Server implements Runnable {
         calendar.set(Calendar.MINUTE, 59);    // 控制分
         calendar.set(Calendar.SECOND, 59);    // 控制秒
         time = calendar.getTime(); 
-	   
+        
 	    Timer tExit1 = null; 
 		tExit1 = new Timer();  
         tExit1.schedule(new TimerTask() {  
@@ -208,7 +208,7 @@ public class Server implements Runnable {
                     String time2=nowtimefor+" "+hour+":59:59";
                 	
                 	String time1 = null;
-                	String sqlfirst = "SELECT tb_work.fUploadDataTime FROM tb_work LIMIT 0,1";
+                	String sqlfirst = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
                 	ResultSet rs =stmt.executeQuery(sqlfirst);
                 	while (rs.next()) {
                 		time1 = rs.getString("fUploadDataTime");
@@ -218,7 +218,7 @@ public class Server implements Runnable {
                     		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
                     
                     String sqlwork = "INSERT INTO tb_work(tb_work.fworktime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
-                    		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";;
+                    		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
                     
                     String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.falarmtime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
                     		+ "LEFT JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
