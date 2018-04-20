@@ -1,0 +1,157 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 1048576 bytes for AllocateHeap
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   In 32 bit mode, the process size limit was hit
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Use 64 bit Java on a 64 bit OS
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (memory/allocation.inline.hpp:61), pid=5944, tid=0x0000000000001890
+#
+# JRE version:  (8.0_112-b15) (build )
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.112-b15 mixed mode windows-amd64 compressed oops)
+# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000000000455e800):  JavaThread "Unknown thread" [_thread_in_vm, id=6288, stack(0x0000000004560000,0x0000000004660000)]
+
+Stack: [0x0000000004560000,0x0000000004660000]
+[error occurred during error reporting (printing stack bounds), id 0xc0000005]
+
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+
+Other Threads:
+
+=>0x000000000455e800 (exited) JavaThread "Unknown thread" [_thread_in_vm, id=6288, stack(0x0000000004560000,0x0000000004660000)]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 38400K, used 665K [0x00000000d5f80000, 0x00000000d8a00000, 0x0000000100000000)
+  eden space 33280K, 2% used [0x00000000d5f80000,0x00000000d6026670,0x00000000d8000000)
+  from space 5120K, 0% used [0x00000000d8500000,0x00000000d8500000,0x00000000d8a00000)
+  to   space 5120K, 0% used [0x00000000d8000000,0x00000000d8000000,0x00000000d8500000)
+ ParOldGen       total 87552K, used 0K [0x0000000081e00000, 0x0000000087380000, 0x00000000d5f80000)
+  object space 87552K, 0% used [0x0000000081e00000,0x0000000081e00000,0x0000000087380000)
+ Metaspace       used 791K, capacity 1156K, committed 1408K, reserved 1060864K
+  class space    used 75K, capacity 384K, committed 384K, reserved 1048576K
+
+Card table byte_map: [0x0000000013b20000,0x0000000013f20000] byte_map_base: 0x0000000013711000
+
+Marking Bits: (ParMarkBitMap*) 0x000000005296a6d0
+ Begin Bits: [0x00000000145d0000, 0x0000000016558000)
+ End Bits:   [0x0000000016558000, 0x00000000184e0000)
+
+Polling page: 0x00000000001f0000
+
+CodeCache: size=245760Kb used=328Kb max_used=328Kb free=245431Kb
+ bounds [0x0000000004760000, 0x00000000049d0000, 0x0000000013760000]
+ total_blobs=58 nmethods=0 adapters=38
+ compilation: enabled
+
+Compilation events (0 events):
+No events
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+Events (10 events):
+Event: 0.273 loading class java/lang/Short
+Event: 0.273 loading class java/lang/Short done
+Event: 0.273 loading class java/lang/Integer
+Event: 0.273 loading class java/lang/Integer done
+Event: 0.273 loading class java/lang/Long
+Event: 0.274 loading class java/lang/Long done
+Event: 0.274 loading class java/lang/NullPointerException
+Event: 0.274 loading class java/lang/NullPointerException done
+Event: 0.274 loading class java/lang/ArithmeticException
+Event: 0.274 loading class java/lang/ArithmeticException done
+
+
+Dynamic libraries:
+0x00007ff76d260000 - 0x00007ff76d297000 	D:\work\myeclipse\binary\com.sun.java.jdk8.win32.x86_64_1.8.0.v112\bin\javaw.exe
+0x00007ff9736c0000 - 0x00007ff9738a0000 	C:\WINDOWS\SYSTEM32\ntdll.dll
+0x00007ff971000000 - 0x00007ff9710ae000 	C:\WINDOWS\System32\KERNEL32.DLL
+0x00007ff96fac0000 - 0x00007ff96fd26000 	C:\WINDOWS\System32\KERNELBASE.dll
+0x00007ff971590000 - 0x00007ff971631000 	C:\WINDOWS\System32\ADVAPI32.dll
+0x00007ff9714f0000 - 0x00007ff97158d000 	C:\WINDOWS\System32\msvcrt.dll
+0x00007ff971c00000 - 0x00007ff971c5b000 	C:\WINDOWS\System32\sechost.dll
+0x00007ff973300000 - 0x00007ff97341f000 	C:\WINDOWS\System32\RPCRT4.dll
+0x00007ff973420000 - 0x00007ff9735af000 	C:\WINDOWS\System32\USER32.dll
+0x00007ff96ffd0000 - 0x00007ff96fff0000 	C:\WINDOWS\System32\win32u.dll
+0x00007ff9714c0000 - 0x00007ff9714e8000 	C:\WINDOWS\System32\GDI32.dll
+0x00007ff96fe30000 - 0x00007ff96ffc3000 	C:\WINDOWS\System32\gdi32full.dll
+0x00007ff970040000 - 0x00007ff9700db000 	C:\WINDOWS\System32\msvcp_win.dll
+0x00007ff96fd30000 - 0x00007ff96fe26000 	C:\WINDOWS\System32\ucrtbase.dll
+0x00007ff961390000 - 0x00007ff9615f9000 	C:\WINDOWS\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.16299.309_none_15cfd4c4935e6b11\COMCTL32.dll
+0x00007ff9716a0000 - 0x00007ff9719a8000 	C:\WINDOWS\System32\combase.dll
+0x00007ff9700e0000 - 0x00007ff970152000 	C:\WINDOWS\System32\bcryptPrimitives.dll
+0x00007ff9735b0000 - 0x00007ff9735dd000 	C:\WINDOWS\System32\IMM32.DLL
+0x0000000056740000 - 0x0000000056812000 	D:\work\myeclipse\binary\com.sun.java.jdk8.win32.x86_64_1.8.0.v112\jre\bin\msvcr100.dll
+0x0000000052150000 - 0x00000000529ea000 	D:\work\myeclipse\binary\com.sun.java.jdk8.win32.x86_64_1.8.0.v112\jre\bin\server\jvm.dll
+0x00007ff971b20000 - 0x00007ff971b28000 	C:\WINDOWS\System32\PSAPI.DLL
+0x00007ff96dd30000 - 0x00007ff96dd53000 	C:\WINDOWS\SYSTEM32\WINMM.dll
+0x00007ff96be10000 - 0x00007ff96be19000 	C:\WINDOWS\SYSTEM32\WSOCK32.dll
+0x00007ff967a00000 - 0x00007ff967a0a000 	C:\WINDOWS\SYSTEM32\VERSION.dll
+0x00007ff971b90000 - 0x00007ff971bfc000 	C:\WINDOWS\System32\WS2_32.dll
+0x00007ff96dc10000 - 0x00007ff96dc3a000 	C:\WINDOWS\SYSTEM32\WINMMBASE.dll
+0x00007ff96fff0000 - 0x00007ff97003a000 	C:\WINDOWS\System32\cfgmgr32.dll
+0x0000000057670000 - 0x000000005767f000 	D:\work\myeclipse\binary\com.sun.java.jdk8.win32.x86_64_1.8.0.v112\jre\bin\verify.dll
+0x0000000056bf0000 - 0x0000000056c19000 	D:\work\myeclipse\binary\com.sun.java.jdk8.win32.x86_64_1.8.0.v112\jre\bin\java.dll
+0x0000000053b80000 - 0x0000000053bb5000 	D:\work\myeclipse\binary\com.sun.java.jdk8.win32.x86_64_1.8.0.v112\jre\bin\jdwp.dll
+0x0000000056070000 - 0x0000000056078000 	D:\work\myeclipse\binary\com.sun.java.jdk8.win32.x86_64_1.8.0.v112\jre\bin\npt.dll
+0x0000000056720000 - 0x0000000056736000 	D:\work\myeclipse\binary\com.sun.java.jdk8.win32.x86_64_1.8.0.v112\jre\bin\zip.dll
+
+VM Arguments:
+jvm_args: -agentlib:jdwp=transport=dt_socket,suspend=y,address=localhost:51725 -Dfile.encoding=UTF-8 
+java_command: Server
+java_class_path (initial): D:\myeclipse\git\Server\PC\bin;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\annotations-api.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\catalina-ant.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\catalina-ha.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\catalina-storeconfig.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\catalina-tribes.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\catalina.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\ecj-4.5.1.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\el-api.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\jasper-el.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\jasper.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\jaspic-api.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\jsp-api.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\servlet-api.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\tomcat-api.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server.embedded.tomcat.core_13.0.0.me201612211440\tomcat85\lib\tomcat-coyote.jar;D:\work\myeclipse\plugins\com.genuitec.eclipse.server
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=D:\work\jdk
+CLASSPATH=.;D:\work\jdk\lib\dt.jar;D:\work\jdk\lib\tools.jar; 
+PATH=D:\work\myeclipse\binary\com.sun.java.jdk8.win32.x86_64_1.8.0.v112\jre\bin;C:\ProgramData\Oracle\Java\javapath;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;D:\work\jdk\bin;D:\work\jdk\jre\bin;;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Users\81513\AppData\Local\Microsoft\WindowsApps;
+USERNAME=Persea
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 158 Stepping 9, GenuineIntel
+
+
+
+---------------  S Y S T E M  ---------------
+
+OS: Windows 10.0 , 64 bit Build 16299 (10.0.16299.15)
+
+CPU:total 4 (4 cores per cpu, 1 threads per core) family 6 model 158 stepping 9, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, avx2, aes, clmul, erms, 3dnowpref, lzcnt, tsc, tscinvbit, bmi1, bmi2, adx
+
+Memory: 4k page, physical 8263100k(986100k free), swap 8263100k(5932k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.112-b15) for windows-amd64 JRE (1.8.0_112-b15), built on Sep 22 2016 21:31:56 by "java_re" with MS VC++ 10.0 (VS2010)
+
+time: Thu Apr 19 19:26:21 2018
+elapsed time: 0 seconds (0d 0h 0m 0s)
+

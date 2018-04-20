@@ -26,6 +26,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public java.sql.Statement stmt =null;
     public SocketChannel socketchannel = null;
     public HashMap<String, Socket> websocket;
+    public ArrayList<String> dbdata = new ArrayList<String>();
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
@@ -111,7 +112,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	str = str + "F5";
 	        	
 	        	new Mysql(str,stmt,listarray1);
-		        new Websocket(str,stmt,websocket,listarray2,listarray3,websocketlist);
+		        new Websocket(str,stmt,websocket,listarray2,listarray3,websocketlist,dbdata);
 		        //System.out.println("1");
 		        //new Socketsend(str,ip1);
 		        if(socketchannel!=null){
