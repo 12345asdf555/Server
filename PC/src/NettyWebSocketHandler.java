@@ -133,7 +133,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
         String str = ((TextWebSocketFrame) frame).text();
 
-        if(str.substring(0,8).equals("7E7C2052")){
+        if(str.substring(0,2).equals("7E")){
 			Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
             while(webiter.hasNext()){
             	try{

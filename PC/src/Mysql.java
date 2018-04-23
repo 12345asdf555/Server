@@ -12,14 +12,14 @@ public class Mysql implements Callback{
 
 	private String str;
     private String connet;
-	private ArrayList<String> listarray1;
+	private ArrayList<String> listarray2;
 	
 	
-	public Mysql(String str,java.sql.Statement stmt,ArrayList<String> listarray1) {
+	public Mysql(String str,java.sql.Statement stmt,ArrayList<String> listarray2) {
 		// TODO Auto-generated constructor stub
 		this.str = str;
 		this.connet = connet;
-		this.listarray1 = listarray1;
+		this.listarray2 = listarray2;
 		
 		try{
 			
@@ -123,7 +123,7 @@ public class Mysql implements Callback{
                                 	
 								String fitemid = str.substring(106, 108);
 							 
-								DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,stmt,listarray1);
+								DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,stmt,listarray2);
 								//System.out.println(str);
                              } catch (Exception e) {
 								str="";
@@ -230,7 +230,7 @@ public class Mysql implements Callback{
 		
 		this.str=str;
         this.connet=connet;
-        this.listarray1=listarray1;
+        //this.listarray1=listarray1;
 		
 		try{
 			

@@ -63,6 +63,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		private String str="";
 		public byte[] req;
 		private String socketfail;
+		private String websocketfail;
 
 		public Workspace(String str) {
 			// TODO Auto-generated constructor stub
@@ -103,25 +104,41 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        new Socketsend(str,ip1);
 	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
-			
-	        String[] strlist =str.split("F5");
-	        for(int i=0;i<strlist.length;i++){
-	        	
-	        	str = strlist[i];
-	        	str = str + "F5";
-	        	
-	        	new Mysql(str,stmt,listarray1);
-		        new Websocket(str,stmt,websocket,listarray2,listarray3,websocketlist);
-		        //System.out.println("1");
-		        //new Socketsend(str,ip1);
-		        if(socketchannel!=null){
-			        try {
-						socketchannel.writeAndFlush(str).sync();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			if(str.substring(0,2).equals("FA")){
+				
+				String[] strlist =str.split("F5");
+		        for(int i=0;i<strlist.length;i++){
+		        	
+		        	str = strlist[i];
+		        	str = str + "F5";
+		        	
+		        	new Mysql(str,stmt,listarray2);
+			        new Websocket(str,stmt,websocket,listarray2,listarray3,websocketlist);
+			        //System.out.println("1");
+			        //new Socketsend(str,ip1);
+			        if(socketchannel!=null){
+				        try {
+							socketchannel.writeAndFlush(str).sync();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+			        }
 		        }
+	        
+	        }else{
+	        	Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
+                while(webiter.hasNext()){
+                	try{
+                    	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+                    	websocketfail = entry.getKey();
+                    	SocketChannel websocketcon = entry.getValue();
+                    	websocketcon.writeAndFlush(new TextWebSocketFrame(str)).sync();
+                	}catch (Exception e) {
+						websocketlist.remove(websocketfail);
+						webiter = websocketlist.entrySet().iterator();
+   					 }
+                }
 	        }
 					
 			/*} catch (InterruptedException e) {

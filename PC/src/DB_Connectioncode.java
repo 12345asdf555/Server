@@ -85,7 +85,7 @@ public class DB_Connectioncode {
 
          //查焊机和采集设备号
          
-         select = "select tb_welding_machine.fid,tb_gather.fgather_no from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
+         /*select = "select tb_welding_machine.fid,tb_gather.fgather_no from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
          
          try {
 
@@ -104,7 +104,7 @@ public class DB_Connectioncode {
 
               e.printStackTrace();
 
-          } 
+          } */
          
      /*    for(int i=0;i<=listarray1.size()/2;i+=2){
         	 if(machine_id.equals(listarray1.get(i))){
@@ -143,7 +143,7 @@ public class DB_Connectioncode {
          
          
        //查最大最小电流
-         inSql = "select fwelded_junction_no,fmax_electricity, fmin_electricity, fmax_valtage, fmin_valtage from tb_welded_junction ";
+         inSql = "select fwelded_junction_no,fmax_electricity, fmin_electricity, fmax_valtage, fmin_valtage from tb_welded_junction";
 
          try {
 
@@ -211,7 +211,7 @@ public class DB_Connectioncode {
          
          
 
-        /*try {
+        try {
 
             stmt.close();
 
@@ -223,7 +223,7 @@ public class DB_Connectioncode {
 
             e.printStackTrace();
 
-        }*/
+        }
 
          return; 
 

@@ -116,7 +116,7 @@ public class Server implements Runnable {
     }
     
     public void run() {
-    	
+    
 		try {
 			FileInputStream in = new FileInputStream("IPconfig.txt");  
             InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
@@ -173,9 +173,9 @@ public class Server implements Runnable {
         String hour = timesplit[0];
        
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)); // 控制时
-        calendar.set(Calendar.MINUTE, 59);    // 控制分
-        calendar.set(Calendar.SECOND, 59);    // 控制秒
+        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)+1); // 控制时
+        calendar.set(Calendar.MINUTE, 00);    // 控制分
+        calendar.set(Calendar.SECOND, 00);    // 控制秒
         time = calendar.getTime(); 
         
 	    Timer tExit1 = null; 
@@ -197,34 +197,56 @@ public class Server implements Runnable {
                     Class.forName("com.mysql.jdbc.Driver");  
                     conn1 = DriverManager.getConnection(connet);
                     stmt1= conn1.createStatement();
-                    
-                    //if(ifsqlfirst){
                     	
                 	Date date = new Date();
                     String nowtimefor = DateTools.format("yyyy-MM-dd",date);
                     String nowtime = DateTools.format("HH:mm:ss",date);
                     String[] timesplit = nowtime.split(":");
                     String hour = timesplit[0];
-                    String time2=nowtimefor+" "+hour+":59:59";
+                    String time2=nowtimefor+" "+hour+":00:00";
                 	
-                	String time1 = null;
-                	String sqlfirst = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
-                	ResultSet rs =stmt.executeQuery(sqlfirst);
-                	while (rs.next()) {
-                		time1 = rs.getString("fUploadDataTime");
+                    String timework = null;
+                	String timestandby = null;
+                	String timealarm = null;
+                	String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
+                	String sqlfirststandby = "SELECT tb_standby.fUploadDataTime FROM tb_standby ORDER BY tb_standby.fUploadDataTime DESC LIMIT 0,1";
+                	String sqlfirstalarm = "SELECT tb_alarm.fUploadDataTime FROM tb_alarm ORDER BY tb_alarm.fUploadDataTime DESC LIMIT 0,1";
+                	ResultSet rs1 =stmt1.executeQuery(sqlfirstwork);
+                	while (rs1.next()) {
+                		timework = rs1.getString("fUploadDataTime");
+                	}
+                	ResultSet rs2 =stmt1.executeQuery(sqlfirststandby);
+                	while (rs2.next()) {
+                		timestandby = rs2.getString("fUploadDataTime");
+                	}
+                	ResultSet rs3 =stmt1.executeQuery(sqlfirstalarm);
+                	while (rs3.next()) {
+                		timealarm = rs3.getString("fUploadDataTime");
                 	}
                 	
-                    String sqlstandby = "INSERT INTO tb_standby(tb_standby.fstandbytime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
-                    		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
+                    String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
+                    		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "
+                    		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
+                    		+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + timestandby + "','" + time2 + "' FROM tb_live_data "
+                    		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime BETWEEN '" + timestandby + "' AND '" + time2 + "' "
+                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     
-                    String sqlwork = "INSERT INTO tb_work(tb_work.fworktime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
-                    		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
+                    String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
+                    		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime) SELECT tb_live_data.fwelder_id,"
+                    		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
+                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + timework + "','" + time2 + "' FROM tb_live_data "
+                    		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + timework + "' AND '" + time2 + "' "
+                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     
-                    String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.falarmtime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
-                    		+ "LEFT JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
-                    		+ "WHERE fstatus= '3' and (fvoltage > fmax_valtage OR felectricity > fmax_electricity "
-                    		+ "OR fvoltage < fmin_valtage OR felectricity < fmin_electricity)"
-                    		+ " AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
+                    String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
+                    		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) SELECT tb_live_data.fwelder_id,"
+                    		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
+                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + timealarm + "','" + time2 + "' FROM tb_live_data "
+                    		+ "INNER JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
+                    		+ "WHERE fstatus= '3' and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
+                    		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
+                    		+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
+                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     
                     try {
                         stmt1.executeUpdate(sqlstandby);
@@ -234,41 +256,6 @@ public class Server implements Runnable {
                         System.out.println("Broken insert");
                         e.printStackTrace();
                     } 
-                        
-                        /*ifsqlfirst = false;
-                        
-                    }else{
-                    	
-                    	Date date = new Date();
-                        String nowtimefor = DateTools.format("yyyy-MM-dd",date);
-                        String nowtime = DateTools.format("HH:mm:ss",date);
-                        String[] timesplit = nowtime.split(":");
-                        String hour = timesplit[0];
-                        String time1=nowtimefor+" "+hour+":00:00";
-                        String time2=nowtimefor+" "+hour+":59:59";
-                        
-                        String sqlstandby = "INSERT INTO tb_standby(tb_standby.fstandbytime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
-                        		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
-                        
-                        String sqlwork = "INSERT INTO tb_work(tb_work.fworktime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
-                        		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";;
-                        
-                        String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.falarmtime) SELECT COUNT(tb_live_data.fid) FROM tb_live_data "
-                        		+ "LEFT JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
-                        		+ "WHERE fstatus= '3' and (fvoltage > fmax_valtage OR felectricity > fmax_electricity "
-                        		+ "OR fvoltage < fmin_valtage OR felectricity < fmin_electricity)"
-                        		+ " AND tb_live_data.FWeldTime > '" + time1 + "' AND tb_live_data.FWeldTime < '" + time2 + "'";
-                        
-                        try {
-                            stmt.executeUpdate(sqlstandby);
-                            stmt.executeUpdate(sqlwork);
-                            stmt.executeUpdate(sqlalarm);
-                        } catch (SQLException e) {
-                            System.out.println("Broken insert");
-                            e.printStackTrace();
-                        } 
-                    	
-                    }*/
                     
                 } catch (ClassNotFoundException e) {  
                     System.out.println("Broken driver");
@@ -284,11 +271,11 @@ public class Server implements Runnable {
 	    
 	    DB_Connectioncode check = new DB_Connectioncode(connet);
 		
-		listarray1 = check.getId1();
+		//listarray1 = check.getId1();
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
 		
-		NS.listarray1 = this.listarray1;
+		//NS.listarray1 = this.listarray1;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
 	    
@@ -300,15 +287,15 @@ public class Server implements Runnable {
   		
         		DB_Connectioncode check = new DB_Connectioncode(connet);
         		
-        		listarray1 = check.getId1();
+        		//listarray1 = check.getId1();
         		listarray2 = check.getId2();
         		listarray3 = check.getId3();
         		
-        		System.out.println(listarray1);
+        		//System.out.println(listarray1);
         		System.out.println(listarray2);
         		System.out.println(listarray3);
         		
-        		NS.listarray1 = listarray1;
+        		//NS.listarray1 = listarray1;
         		NS.listarray2 = listarray2;
         		NS.listarray3 = listarray3;
             }  
@@ -318,22 +305,121 @@ public class Server implements Runnable {
 		new Thread(websocketstart).start();
 		new Thread(sockettran).start();
 		
-        /*new Thread(websocketstart).start();
-        new Thread(websocketsend).start();
-   
-        try {
-		selector = Selector.open();
-		ssc = ServerSocketChannel.open();
-		ssc.socket().bind(new InetSocketAddress("172.16.188.99", 5555));
-	 } catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	 }*/
-        
-        /*Reciver reciver=new Reciver();
-        reciver.setCallback(new Mysql(),new Websocket(),new Socketsend(),connet,listarray1,listarray2,listarray3,websocket,ip1,ssc,selector,true);
-        reciver.reciver();*/
-
+	
+    	
+    	//更新优化报表
+    	/*String timework1 = null;
+    	String timework2 = null;
+    	String time1 = null;
+    	
+    	try {
+    		
+    		FileInputStream in = new FileInputStream("IPconfig.txt");  
+            InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
+            BufferedReader bufReader = new BufferedReader(inReader);  
+            String line = null; 
+            int writetime=0;
+			
+		    while((line = bufReader.readLine()) != null){ 
+		    	if(writetime==0){
+	                ip=line;
+	                writetime++;
+		    	}
+		    	else{
+		    		ip1=line;
+		    		writetime=0;
+		    	}
+            }  
+    		
+		    connet=connet1+ip+connet2;
+		    
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(connet);
+	        stmt= conn.createStatement();
+	        
+	        String sqlfirstwork1 = "SELECT tb_live_data.fWeldTime FROM tb_live_data ORDER BY tb_live_data.fWeldTime ASC LIMIT 0,1";
+	        ResultSet rs1 =stmt.executeQuery(sqlfirstwork1);
+        	while (rs1.next()) {
+        		timework1 = rs1.getString("fWeldTime");
+        	}
+        	
+        	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss","2017-07-01 01:00:00").getTime();
+	        System.out.println(datetime1);
+	        
+	        
+	        String sqlfirstwork2 = "SELECT tb_live_data.fWeldTime FROM tb_live_data ORDER BY tb_live_data.fWeldTime DESC LIMIT 0,1";
+	        ResultSet rs2 =stmt.executeQuery(sqlfirstwork2);
+        	while (rs2.next()) {
+        		timework2 = rs2.getString("fWeldTime");
+        	}
+        	
+        	long datetime2 = DateTools.parse("yy-MM-dd HH:mm:ss","2018-04-23 11:00:00").getTime();
+	        System.out.println(datetime2);
+        	
+	        for(long i=datetime1;i<=datetime2;i+=3600000){
+	        	
+	        	Date d1 = new Date(i);
+	        	String t1 = DateTools.format("yy-MM-dd HH:mm:ss", d1);
+	        	Date d2 = new Date(i+3600000);
+	        	String t2 = DateTools.format("yy-MM-dd HH:mm:ss", d2);
+	        	System.out.println(t1);
+	        	System.out.println(t2);
+	        	
+	        	String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
+                		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "
+                		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
+                		+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + t1 + "','" + t2 + "' FROM tb_live_data "
+                		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
+                		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
+                
+                String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
+                		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime) SELECT tb_live_data.fwelder_id,"
+                		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
+                		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + t1 + "','" + t2 + "' FROM tb_live_data "
+                		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
+                		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
+                
+                String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
+                		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) SELECT tb_live_data.fwelder_id,"
+                		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
+                		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + t1 + "','" + t2 + "' FROM tb_live_data "
+                		+ "LEFT JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
+                		+ "WHERE fstatus= '3' and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
+                		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
+                		+ " AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
+                		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
+                
+                stmt.executeUpdate(sqlstandby);
+                stmt.executeUpdate(sqlwork);
+                stmt.executeUpdate(sqlalarm);
+                
+				Thread.sleep(50);
+					
+	        }
+	        
+	        System.out.println("Done");
+	        
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+    	
+    
     }  
     
 
