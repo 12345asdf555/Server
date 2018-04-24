@@ -209,7 +209,7 @@ public class Server implements Runnable {
                 	String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
                 	String sqlfirststandby = "SELECT tb_standby.fUploadDataTime FROM tb_standby ORDER BY tb_standby.fUploadDataTime DESC LIMIT 0,1";
                 	String sqlfirstalarm = "SELECT tb_alarm.fUploadDataTime FROM tb_alarm ORDER BY tb_alarm.fUploadDataTime DESC LIMIT 0,1";
-                	ResultSet rs1 =stmt.executeQuery(sqlfirstwork);
+                	ResultSet rs1 =stmt1.executeQuery(sqlfirstwork);
                 	while (rs1.next()) {
                 		timework = rs1.getString("fUploadDataTime");
                 	}
@@ -240,7 +240,7 @@ public class Server implements Runnable {
                     		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) SELECT tb_live_data.fwelder_id,"
                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
                     		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + timealarm + "','" + time2 + "' FROM tb_live_data "
-                    		+ "LEFT JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
+                    		+ "INNER JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
                     		+ "WHERE fstatus= '3' and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
                     		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
                     		+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
@@ -272,11 +272,11 @@ public class Server implements Runnable {
   		dbdata = b.getId();
 		NS.dbdata = this.dbdata;
   		
-		listarray1 = check.getId1();
+		//listarray1 = check.getId1();
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
 		
-		NS.listarray1 = this.listarray1;
+		//NS.listarray1 = this.listarray1;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
 	    
@@ -288,15 +288,15 @@ public class Server implements Runnable {
   		
         		DB_Connectioncode check = new DB_Connectioncode(connet);
         		
-        		listarray1 = check.getId1();
+        		//listarray1 = check.getId1();
         		listarray2 = check.getId2();
         		listarray3 = check.getId3();
         		
-        		System.out.println(listarray1);
+        		//System.out.println(listarray1);
         		System.out.println(listarray2);
         		System.out.println(listarray3);
         		
-        		NS.listarray1 = listarray1;
+        		//NS.listarray1 = listarray1;
         		NS.listarray2 = listarray2;
         		NS.listarray3 = listarray3;
             }  

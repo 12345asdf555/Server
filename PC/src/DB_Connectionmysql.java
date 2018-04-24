@@ -51,7 +51,7 @@ public class DB_Connectionmysql {
     String inSql = null;*/
 
 
-    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,java.sql.Statement stmt,ArrayList<String> listarray1)
+    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,java.sql.Statement stmt,ArrayList<String> listarray2)
 
     {
 
@@ -62,16 +62,16 @@ public class DB_Connectionmysql {
 
         Timestamp goodsC_date = Timestamp.valueOf(nowTime);
 
-        for(int i=0;i<listarray1.size();i+=2){
-       	 if(machine_id.equals(listarray1.get(i))){
-       		 fmachine = listarray1.get(i+1);
+        for(int i=0;i<listarray2.size();i+=3){
+       	 if(machine_id.equals(listarray2.get(i+1))){
+       		 fmachine = listarray2.get(i);
        		 break;
        	 }
         }
 
         if(fmachine != null){
        	 
-       	 BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+       	 	BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
 	         
             inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
        	 
