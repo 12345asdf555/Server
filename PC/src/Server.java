@@ -154,6 +154,7 @@ public class Server implements Runnable {
 
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
+            
             stmt= conn.createStatement();
             NS.stmt = this.stmt;
 
@@ -179,22 +180,22 @@ public class Server implements Runnable {
 	    Timer tExit1 = null; 
 		tExit1 = new Timer();  
         tExit1.schedule(new TimerTask() {  
-            private Connection conn1;
-			private Statement stmt1;
+            private Connection conn;
+			private Statement stmt;
 
 			@Override  
             public void run() {
   		
             	try {  
 
+                    /*Class.forName("com.mysql.jdbc.Driver");  
+                    conn = DriverManager.getConnection(connet);
+                    stmt= conn.createStatement();
+                    NS.stmt = stmt;*/
+                    
                     Class.forName("com.mysql.jdbc.Driver");  
                     conn = DriverManager.getConnection(connet);
                     stmt= conn.createStatement();
-                    NS.stmt = stmt;
-                    
-                    Class.forName("com.mysql.jdbc.Driver");  
-                    conn1 = DriverManager.getConnection(connet);
-                    stmt1= conn1.createStatement();
                     	
                 	Date date = new Date();
                     String nowtimefor = DateTools.format("yyyy-MM-dd",date);
@@ -209,7 +210,7 @@ public class Server implements Runnable {
                 	String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
                 	String sqlfirststandby = "SELECT tb_standby.fUploadDataTime FROM tb_standby ORDER BY tb_standby.fUploadDataTime DESC LIMIT 0,1";
                 	String sqlfirstalarm = "SELECT tb_alarm.fUploadDataTime FROM tb_alarm ORDER BY tb_alarm.fUploadDataTime DESC LIMIT 0,1";
-                	ResultSet rs1 =stmt1.executeQuery(sqlfirstwork);
+                	ResultSet rs1 =stmt.executeQuery(sqlfirstwork);
                 	while (rs1.next()) {
                 		timework = rs1.getString("fUploadDataTime");
                 	}
@@ -247,9 +248,12 @@ public class Server implements Runnable {
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     
                     try {
-                        stmt1.executeUpdate(sqlstandby);
-                        stmt1.executeUpdate(sqlwork);
-                        stmt1.executeUpdate(sqlalarm);
+                    	stmt.executeUpdate(sqlstandby);
+                    	stmt.executeUpdate(sqlwork);
+                    	stmt.executeUpdate(sqlalarm);
+                        
+                    	stmt.close();
+                        conn.close();
                     } catch (SQLException e) {
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -419,24 +423,6 @@ public class Server implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-    	
-    	
-    	
-        /*new Thread(websocketstart).start();
-        new Thread(websocketsend).start();
-   
-        try {
-		selector = Selector.open();
-		ssc = ServerSocketChannel.open();
-		ssc.socket().bind(new InetSocketAddress("172.16.188.99", 5555));
-	 } catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	 }*/
-        
-        /*Reciver reciver=new Reciver();
-        reciver.setCallback(new Mysql(),new Websocket(),new Socketsend(),connet,listarray1,listarray2,listarray3,websocket,ip1,ssc,selector,true);
-        reciver.reciver();*/
 
     }  
     
@@ -455,6 +441,7 @@ public class Server implements Runnable {
 	            	.option(ChannelOption.SO_BACKLOG,1024)
 	            	.childHandler(NS);  
 	            
+	            
 	          
 	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
 	                @Override
@@ -467,6 +454,7 @@ public class Server implements Runnable {
 	                	socketcount++;
 						socketlist.put(Integer.toString(socketcount),chsoc);
 						NWS.socketlist = socketlist;
+						
 	                }
 	            });
 	            
