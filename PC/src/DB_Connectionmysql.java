@@ -62,8 +62,8 @@ public class DB_Connectionmysql {
 
         Timestamp goodsC_date = Timestamp.valueOf(nowTime);
 
-        for(int i=0;i<listarray2.size();i+=3){
-       	 if(machine_id.equals(listarray2.get(i+1))){
+        for(int i=0;i<listarray2.size();i+=4){
+       	 if(machine_id.equals(listarray2.get(i+2))){
        		 fmachine = listarray2.get(i);
        		 break;
        	 }
@@ -71,13 +71,14 @@ public class DB_Connectionmysql {
 
         if(fmachine != null){
        	 
-       	 	BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+       	 	//BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
 	         
-            inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+            inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
        	 
             try {
-
+            	//System.out.println(fmachine);
                 stmt.executeUpdate(inSql);
+                //System.out.println("1");
 
             } catch (SQLException e) {
 

@@ -122,7 +122,7 @@ public class Mysql implements Callback{
                              int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
                                 	
 								String fitemid = str.substring(106, 108);
-							 
+								//System.out.println("2:"+str);
 								DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,stmt,listarray2);
 								//System.out.println(str);
                              } catch (Exception e) {

@@ -84,7 +84,7 @@ public class Server implements Runnable {
     public String ip=null;
     public String ip1=null;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/XMWeld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/Weld?" + "user=brucestifler&password=?bhq1130hdn?&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
@@ -181,22 +181,22 @@ public class Server implements Runnable {
 	    Timer tExit1 = null; 
 		tExit1 = new Timer();  
         tExit1.schedule(new TimerTask() {  
-            private Connection conn1;
-			private Statement stmt1;
+            private Connection conn;
+			private Statement stmt;
 
 			@Override  
             public void run() {
   		
             	try {  
 
+                    /*Class.forName("com.mysql.jdbc.Driver");  
+                    conn = DriverManager.getConnection(connet);
+                    stmt= conn.createStatement();
+                    NS.stmt = stmt;*/
+                    
                     Class.forName("com.mysql.jdbc.Driver");  
                     conn = DriverManager.getConnection(connet);
                     stmt= conn.createStatement();
-                    NS.stmt = stmt;
-                    
-                    Class.forName("com.mysql.jdbc.Driver");  
-                    conn1 = DriverManager.getConnection(connet);
-                    stmt1= conn1.createStatement();
                     	
                 	Date date = new Date();
                     String nowtimefor = DateTools.format("yyyy-MM-dd",date);
@@ -211,15 +211,15 @@ public class Server implements Runnable {
                 	String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
                 	String sqlfirststandby = "SELECT tb_standby.fUploadDataTime FROM tb_standby ORDER BY tb_standby.fUploadDataTime DESC LIMIT 0,1";
                 	String sqlfirstalarm = "SELECT tb_alarm.fUploadDataTime FROM tb_alarm ORDER BY tb_alarm.fUploadDataTime DESC LIMIT 0,1";
-                	ResultSet rs1 =stmt1.executeQuery(sqlfirstwork);
+                	ResultSet rs1 =stmt.executeQuery(sqlfirstwork);
                 	while (rs1.next()) {
                 		timework = rs1.getString("fUploadDataTime");
                 	}
-                	ResultSet rs2 =stmt1.executeQuery(sqlfirststandby);
+                	ResultSet rs2 =stmt.executeQuery(sqlfirststandby);
                 	while (rs2.next()) {
                 		timestandby = rs2.getString("fUploadDataTime");
                 	}
-                	ResultSet rs3 =stmt1.executeQuery(sqlfirstalarm);
+                	ResultSet rs3 =stmt.executeQuery(sqlfirstalarm);
                 	while (rs3.next()) {
                 		timealarm = rs3.getString("fUploadDataTime");
                 	}
@@ -249,9 +249,9 @@ public class Server implements Runnable {
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     
                     try {
-                        stmt1.executeUpdate(sqlstandby);
-                        stmt1.executeUpdate(sqlwork);
-                        stmt1.executeUpdate(sqlalarm);
+                        stmt.executeUpdate(sqlstandby);
+                        stmt.executeUpdate(sqlwork);
+                        stmt.executeUpdate(sqlalarm);
                     } catch (SQLException e) {
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -292,8 +292,8 @@ public class Server implements Runnable {
         		listarray3 = check.getId3();
         		
         		//System.out.println(listarray1);
-        		System.out.println(listarray2);
-        		System.out.println(listarray3);
+        		//System.out.println(listarray2);
+        		//System.out.println(listarray3);
         		
         		//NS.listarray1 = listarray1;
         		NS.listarray2 = listarray2;
@@ -454,7 +454,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5555).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -500,7 +500,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5550).sync().channel();
+	            Channel ch = serverBootstrap.bind(5554).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();

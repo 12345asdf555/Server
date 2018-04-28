@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -75,46 +77,40 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			//try {
-				/*for(int i=0;i<req.length;i++){
-	             
-	            //判断为数字还是字母，若为字母+256取正数
-	            if(req[i]<0){
-	              String r = Integer.toHexString(req[i]+256);
-	              String rr=r.toUpperCase();
-	                //数字补为两位数
-	                if(rr.length()==1){
-	                	rr='0'+rr;
-	                }
-	                //strdata为总接收数据
-	                str += rr;
-	               
-	            }
-	            else{
-	              String r = Integer.toHexString(req[i]);
-	              if(r.length()==1)
-	              r='0'+r;
-	              r=r.toUpperCase();
-	              str+=r;  
-	            }
-	        }*/
-				
-			//System.out.println(str);
-			/*new Mysql(str,connet,listarray1);
-	        new Socketsend(str,ip1);
-	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
 			if(str.substring(0,2).equals("FA")){
 				
 				String[] strlist =str.split("F5");
 		        for(int i=0;i<strlist.length;i++){
 		        	
+		        	try{
+		        		if(stmt==null || stmt.isClosed()==true)
+			        	{
+			        		try {
+								Class.forName("com.mysql.jdbc.Driver");
+								stmt = DriverManager.getConnection(connet).createStatement();
+			        	    } catch (ClassNotFoundException e) {  
+			                    System.out.println("Broken driver");
+			                    e.printStackTrace();
+			                    return;
+			                } catch (SQLException e) {
+			                    System.out.println("Broken conn");
+			                    e.printStackTrace();
+			                    return;
+			                }  
+			        	}
+		        	}catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return;
+					}
+		        	
 		        	str = strlist[i];
 		        	str = str + "F5";
 		        	
 		        	new Mysql(str,stmt,listarray2);
 			        new Websocket(str,stmt,websocket,listarray2,listarray3,websocketlist);
-			        //System.out.println("1");
+			        //System.out.println("1:"+str);
 			        //new Socketsend(str,ip1);
 			        if(socketchannel!=null){
 				        try {
