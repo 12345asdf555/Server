@@ -62,11 +62,11 @@ public class DB_Connectionmysql {
 
         Timestamp goodsC_date = Timestamp.valueOf(nowTime);
 
-        for(int i=0;i<listarray2.size();i+=3){
-       	 if(machine_id.equals(listarray2.get(i+1))){
-       		 fmachine = listarray2.get(i);
-       		 break;
-       	 }
+        for(int i=0;i<listarray2.size();i+=4){
+          	 if(machine_id.equals(listarray2.get(i+2))){
+          		 fmachine = listarray2.get(i);
+          		 break;
+          	 }
         }
 
         if(fmachine != null){

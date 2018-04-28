@@ -353,10 +353,10 @@ public class Websocket implements Callback {
 		                   	 String totaltime1 = "";
 		                   	 String workhour1,workminute1,worksecond1;
 		                   	 String workhour2,workminute2,worksecond2;
-		                   	 for(int i=0;i<listarray2.size();i+=3){
-		                   		 String fequipment_no = listarray2.get(i);
-		                   		 String fgather_no = listarray2.get(i+1);
-		                   		 String finsframework_id = listarray2.get(i+2);
+		                   	 for(int i=0;i<listarray2.size();i+=4){
+		                   		 String fequipment_no = listarray2.get(i+1);
+		                   		 String fgather_no = listarray2.get(i+2);
+		                   		 String finsframework_id = listarray2.get(i+3);
 	
 		                   		 if(weldname.equals(fgather_no)){
 		                   			 

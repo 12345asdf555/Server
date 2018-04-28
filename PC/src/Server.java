@@ -280,6 +280,10 @@ public class Server implements Runnable {
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
 		
+		//System.out.println(listarray1);
+		System.out.println(listarray2);
+		System.out.println(listarray3);
+		
 		//NS.listarray1 = this.listarray1;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
