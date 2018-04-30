@@ -65,8 +65,6 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.CharsetUtil;
 
-
-
 public class Server implements Runnable {  
 	
  	//private List<Handler> handlers = new ArrayList<Handler>();  
@@ -84,7 +82,10 @@ public class Server implements Runnable {
     public String ip=null;
     public String ip1=null;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/Weld?" + "user=brucestifler&password=?bhq1130hdn?&useUnicode=true&characterEncoding=UTF8"; 
+    public String connet2 = ":3306/"; 
+    public String connet3 = "?user="; 
+    public String connet4 = "&password=";
+    public String connet5 = "&useUnicode=true&characterEncoding=UTF8";
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
@@ -143,8 +144,9 @@ public class Server implements Runnable {
 			e.printStackTrace();
 		} 
 		
+		String[] values = ip.split(",");
 		
-		connet=connet1+ip+connet2;
+		connet=connet1+values[0]+connet2+values[1]+connet3+values[2]+connet4+values[3]+connet5;
 		
 
 	    NS.ip = this.ip;
