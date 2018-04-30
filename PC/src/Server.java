@@ -65,6 +65,8 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.CharsetUtil;
 
+
+
 public class Server implements Runnable {  
 	
  	//private List<Handler> handlers = new ArrayList<Handler>();  
@@ -82,10 +84,7 @@ public class Server implements Runnable {
     public String ip=null;
     public String ip1=null;
     public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/"; 
-    public String connet3 = "?user="; 
-    public String connet4 = "&password=";
-    public String connet5 = "&useUnicode=true&characterEncoding=UTF8";
+    public String connet2 = ":3306/XMWeld?" + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8"; 
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
@@ -107,6 +106,7 @@ public class Server implements Runnable {
 	public java.sql.Connection conn = null;
     public java.sql.Statement stmt =null;
 	private Date time;
+	private ArrayList<String> dbdata;
     
     public String getconnet(){
     	return connet;
@@ -117,7 +117,7 @@ public class Server implements Runnable {
     }
     
     public void run() {
-    
+    	
 		try {
 			FileInputStream in = new FileInputStream("IPconfig.txt");  
             InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
@@ -144,20 +144,17 @@ public class Server implements Runnable {
 			e.printStackTrace();
 		} 
 		
-		String[] values = ip.split(",");
+		connet=connet1+ip+connet2;
 		
-		connet=connet1+values[0]+connet2+values[1]+connet3+values[2]+connet4+values[3]+connet5;
-		
-
 	    NS.ip = this.ip;
 	    NS.ip1 = this.ip1;
 	    NS.connet = this.connet;
 		
-	    
-	   try {  
+	    try {  
 
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
+            
             stmt= conn.createStatement();
             NS.stmt = this.stmt;
 
@@ -207,7 +204,7 @@ public class Server implements Runnable {
                     String hour = timesplit[0];
                     String time2=nowtimefor+" "+hour+":00:00";
                 	
-                    String timework = null;
+                	String timework = null;
                 	String timestandby = null;
                 	String timealarm = null;
                 	String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
@@ -251,14 +248,17 @@ public class Server implements Runnable {
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     
                     try {
-                        stmt.executeUpdate(sqlstandby);
-                        stmt.executeUpdate(sqlwork);
-                        stmt.executeUpdate(sqlalarm);
+                    	stmt.executeUpdate(sqlstandby);
+                    	stmt.executeUpdate(sqlwork);
+                    	stmt.executeUpdate(sqlalarm);
+                        
+                    	stmt.close();
+                        conn.close();
                     } catch (SQLException e) {
                         System.out.println("Broken insert");
                         e.printStackTrace();
                     } 
-                    
+                        
                 } catch (ClassNotFoundException e) {  
                     System.out.println("Broken driver");
                     e.printStackTrace();  
@@ -272,10 +272,17 @@ public class Server implements Runnable {
 	    
 	    
 	    DB_Connectioncode check = new DB_Connectioncode(connet);
-		
+	    DB_Connectionweb b =new DB_Connectionweb(stmt);
+  		dbdata = b.getId();
+		NS.dbdata = this.dbdata;
+  		
 		//listarray1 = check.getId1();
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
+		
+		//System.out.println(listarray1);
+		System.out.println(listarray2);
+		System.out.println(listarray3);
 		
 		//NS.listarray1 = this.listarray1;
 		NS.listarray2 = this.listarray2;
@@ -294,8 +301,8 @@ public class Server implements Runnable {
         		listarray3 = check.getId3();
         		
         		//System.out.println(listarray1);
-        		//System.out.println(listarray2);
-        		//System.out.println(listarray3);
+        		System.out.println(listarray2);
+        		System.out.println(listarray3);
         		
         		//NS.listarray1 = listarray1;
         		NS.listarray2 = listarray2;
@@ -307,9 +314,9 @@ public class Server implements Runnable {
 		new Thread(websocketstart).start();
 		new Thread(sockettran).start();
 		
-	
     	
-    	//更新优化报表
+    	
+		//更新优化报表
     	/*String timework1 = null;
     	String timework2 = null;
     	String time1 = null;
@@ -345,7 +352,7 @@ public class Server implements Runnable {
         		timework1 = rs1.getString("fWeldTime");
         	}
         	
-        	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss","2017-07-01 01:00:00").getTime();
+        	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss","2017-10-13 15:00:00").getTime();
 	        System.out.println(datetime1);
 	        
 	        
@@ -355,7 +362,7 @@ public class Server implements Runnable {
         		timework2 = rs2.getString("fWeldTime");
         	}
         	
-        	long datetime2 = DateTools.parse("yy-MM-dd HH:mm:ss","2018-04-23 11:00:00").getTime();
+        	long datetime2 = DateTools.parse("yy-MM-dd HH:mm:ss","2018-04-13 14:00:00").getTime();
 	        System.out.println(datetime2);
         	
 	        for(long i=datetime1;i<=datetime2;i+=3600000){
@@ -420,8 +427,7 @@ public class Server implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-    	
-    
+
     }  
     
 
@@ -439,6 +445,7 @@ public class Server implements Runnable {
 	            	.option(ChannelOption.SO_BACKLOG,1024)
 	            	.childHandler(NS);  
 	            
+	            
 	          
 	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
 	                @Override
@@ -451,12 +458,13 @@ public class Server implements Runnable {
 	                	socketcount++;
 						socketlist.put(Integer.toString(socketcount),chsoc);
 						NWS.socketlist = socketlist;
+						
 	                }
 	            });
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5555).sync();
+				f = b.bind(5551).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -502,7 +510,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5554).sync().channel();
+	            Channel ch = serverBootstrap.bind(5550).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
