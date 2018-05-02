@@ -108,7 +108,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		        	str = strlist[i];
 		        	str = str + "F5";
 		        	
-		        	new Mysql(str,stmt,listarray2);
+		        	//new Mysql(str,stmt,listarray2);
 			        new Websocket(str,stmt,websocket,listarray2,listarray3,websocketlist);
 			        //System.out.println("1:"+str);
 			        //new Socketsend(str,ip1);

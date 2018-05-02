@@ -260,23 +260,24 @@ public class Websocket implements Callback {
 	       				 }
 		       				 
 	       				 
-	                        int electricity33 = Integer.valueOf(strdata.subSequence(52,56).toString(),16);
-		       				 String electricity3=String.valueOf(electricity33);
-		       				 if(electricity3.length()!=4){
-		                       	 int lenth=4-electricity3.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		electricity3="0"+electricity3;
-		                       	 }
-		                     }
-		       				
-		       				 int voltage33 = Integer.valueOf(strdata.subSequence(56,60).toString(),16);
-		       				 String voltage3=String.valueOf(voltage33);
-		       				 if(voltage3.length()!=4){
-		                       	 int lenth=4-voltage3.length();
-		                       	 for(int i=0;i<lenth;i++){
-		                       		voltage3="0"+voltage3;
-		                       	 }
-		                     }
+                        int electricity33 = Integer.valueOf(strdata.subSequence(52,56).toString(),16);
+	       				 String electricity3=String.valueOf(electricity33);
+	       				 if(electricity3.length()!=4){
+	                       	 int lenth=4-electricity3.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		electricity3="0"+electricity3;
+	                       	 }
+	                     }
+	       				
+	       				 int voltage33 = Integer.valueOf(strdata.subSequence(56,60).toString(),16);
+	       				 String voltage3=String.valueOf(voltage33);
+	       				 if(voltage3.length()!=4){
+	                       	 int lenth=4-voltage3.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		voltage3="0"+voltage3;
+	                       	 }
+	                     }
+		       				 
 	       				 String status3=strdata.substring(90,92);
 	       				 
 	       				 long year3 = Integer.valueOf(str.subSequence(92, 94).toString(),16);
@@ -346,7 +347,13 @@ public class Websocket implements Callback {
 	                       		 }
 	                       	 }
 	                       	 
-	                       	 for(int i=0;i<listarray2.size();i+=4){
+	                       	String fequipment_no = "0001";
+                       		String finsframework_id = "17";
+               				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit+"00:00:00"+"00:00:00"
+   	                    			 +status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+"00:00:00"+"00:00:00"
+   	                    			 +status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+"00:00:00"+"00:00:00";
+	                       	 
+	                       	 /*for(int i=0;i<listarray2.size();i+=4){
 	                       		 String fequipment_no = listarray2.get(i+1);
 	                       		 String fgather_no = listarray2.get(i+2);
 	                       		 String finsframework_id = listarray2.get(i+3);
@@ -375,7 +382,7 @@ public class Websocket implements Callback {
 	       	                    	}
 	       	                     }
 	                       		 //System.out.println("2");
-	                       	 }
+	                       	 }*/
 
 	                       	 //System.out.println(strsend);
                        	 
