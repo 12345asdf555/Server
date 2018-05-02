@@ -146,7 +146,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				        try {
 							socketchannel.writeAndFlush(str).sync();
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
+							socketchannel = null;
 							e.printStackTrace();
 						}
 			        }
