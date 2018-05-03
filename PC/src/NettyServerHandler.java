@@ -25,9 +25,9 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public String ip1;
     public String connet;
     public Thread workThread;
-    public java.sql.Statement stmt =null;
+    //public java.sql.Statement stmt =null;
     public SocketChannel socketchannel = null;
-    public HashMap<String, Socket> websocket;
+    public ArrayList<String> dbdata = new ArrayList<String>();
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
@@ -35,7 +35,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	
     public int a=0;
     
-	 @Override  
+	@Override  
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		 
 		 try{
@@ -77,51 +77,49 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
+		
+			Mysql mysql = new Mysql(connet,listarray2);
+			Websocket websocket = new Websocket(str,listarray2,listarray3,websocketlist);
 			
 			if(str.substring(0,2).equals("FA")){
-				
-				String[] strlist =str.split("F5");
-		        for(int i=0;i<strlist.length;i++){
-		        	
-		        	try{
-		        		if(stmt==null || stmt.isClosed()==true)
-			        	{
-			        		try {
-								Class.forName("com.mysql.jdbc.Driver");
-								stmt = DriverManager.getConnection(connet).createStatement();
-			        	    } catch (ClassNotFoundException e) {  
-			                    System.out.println("Broken driver");
-			                    e.printStackTrace();
-			                    return;
-			                } catch (SQLException e) {
-			                    System.out.println("Broken conn");
-			                    e.printStackTrace();
-			                    return;
-			                }  
-			        	}
-		        	}catch (Exception e) {
-						// TODO Auto-generated catch block
+			
+	        	mysql.Mysqlrun(str);
+		        websocket.Websocketrun(str);
+	        	
+		        //System.out.println("1");
+		        //new Socketsend(str,ip1);
+		        if(socketchannel!=null){
+			        try {
+						socketchannel.writeAndFlush(str).sync();
+					} catch (InterruptedException e) {
+						socketchannel = null;
 						e.printStackTrace();
-						return;
 					}
-		        	
-		        	str = strlist[i];
-		        	str = str + "F5";
-		        	
-		        	//new Mysql(str,stmt,listarray2);
-			        new Websocket(str,stmt,websocket,listarray2,listarray3,websocketlist);
-			        //System.out.println("1:"+str);
-			        //new Socketsend(str,ip1);
-			        if(socketchannel!=null){
-				        try {
-							socketchannel.writeAndFlush(str).sync();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-			        }
 		        }
 	        
+		    	
+	        	/*try{
+	        		if(stmt==null || stmt.isClosed()==true)
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							stmt = DriverManager.getConnection(connet).createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+	        	}catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return;
+				}*/
+		        
 	        }else{
 	        	Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
                 while(webiter.hasNext()){

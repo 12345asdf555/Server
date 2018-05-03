@@ -33,27 +33,32 @@ public class DB_Connectionmysql {
 
 	public Server server;
 	
+	public java.sql.Connection conn = null;
 	public java.sql.Statement stmt =null;
-	/*String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
-
-            "user=root&password=123456&characterEncoding=UTF8";
-
-    String uri = "jdbc:mysql://121.196.222.216:3306/Weld?";
-
-    String user = "user=root&password=123456&characterEncoding=UTF8";
 
 
+	public DB_Connectionmysql(String connet){
+		try {
 
-     String connet = "jdbc:mysql://121.196.222.216:3306/Weld?"
+			Class.forName("com.mysql.jdbc.Driver");  
+            conn = DriverManager.getConnection(connet);
+            stmt= conn.createStatement();
 
-             + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8";
+       } catch (SQLException e) {
 
-    String inSql = null;*/
+           System.out.println("Broken conn");
+           e.printStackTrace();
 
+       } catch (ClassNotFoundException e) {  
 
-    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,java.sql.Statement stmt,ArrayList<String> listarray2)
+           System.out.println("Broken driver");
+           e.printStackTrace();  
 
-    {
+       } 
+	}
+
+    public void DB_Connectionmysqlrun(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,ArrayList<String> listarray2){
+
 
     	
     	Date date = new Date();
@@ -291,12 +296,18 @@ public class DB_Connectionmysql {
             e.printStackTrace();
 
         }  */
-
-
-
-
-
     }
+    
+	
+	protected void finalize( ){
+		try {
+			conn.close();
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
     
     
 }

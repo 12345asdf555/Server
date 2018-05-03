@@ -65,8 +65,6 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.CharsetUtil;
 
-
-
 public class Server implements Runnable {  
 	
  	//private List<Handler> handlers = new ArrayList<Handler>();  
@@ -155,7 +153,7 @@ public class Server implements Runnable {
 	    NS.ip1 = this.ip1;
 	    NS.connet = this.connet;
 		
-	    try {  
+	    /*try {  
 
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
@@ -169,7 +167,7 @@ public class Server implements Runnable {
         } catch (SQLException e) {
             System.out.println("Broken conn");
             e.printStackTrace();
-        }  
+        }  */
             
 	    Date date = new Date();
         String nowtime = DateTools.format("HH:mm:ss",date);
@@ -466,7 +464,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5555).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -512,7 +510,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5550).sync().channel();
+	            Channel ch = serverBootstrap.bind(5554).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();

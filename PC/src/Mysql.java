@@ -8,18 +8,24 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class Mysql implements Callback{
+public class Mysql {
 
 	private String str;
     private String connet;
 	private ArrayList<String> listarray2;
+	private DB_Connectionmysql db;
 	
-	
-	public Mysql(String str,java.sql.Statement stmt,ArrayList<String> listarray2) {
-		// TODO Auto-generated constructor stub
-		this.str = str;
+	public Mysql(String connet,ArrayList<String> listarray2) {
 		this.connet = connet;
 		this.listarray2 = listarray2;
+		db = new DB_Connectionmysql(connet);
+	}
+    
+	
+	
+	public void Mysqlrun(String str) {
+		// TODO Auto-generated constructor stub
+		this.str = str;
 		
 		try{
 			
@@ -103,28 +109,28 @@ public class Mysql implements Callback{
                	    		 
                              String timestr = yearstr+"-"+monthstr+"-"+daystr+" "+hourstr+":"+minutestr+":"+secondstr;
                              try {
-	                            Date time = DateTools.parse("yy-MM-dd HH:mm:ss",timestr);
-                            	//java.util.Date time1 = timeshow.parse(timestr);
-								Timestamp timesql = new Timestamp(time.getTime());
-
-               	    		 /*BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
-                             BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(30+i, 34+i).toString(),16));
-                             long sensor_Num = Integer.valueOf(str.subSequence(34+i, 38+i).toString(),16);
-                             long machine_id = Integer.valueOf(str.subSequence(10, 14).toString(),16);
-                             long welder_id = Integer.valueOf(str.subSequence(14, 18).toString(),16);
-                             long code = Integer.valueOf(str.subSequence(18, 26).toString(),16);
-                             long year = Integer.valueOf(str.subSequence(40+i, 42+i).toString(),16);
-                             long month = Integer.valueOf(str.subSequence(42+i, 44+i).toString(),16);
-                             long day = Integer.valueOf(str.subSequence(44+i, 46+i).toString(),16);
-                             long hour = Integer.valueOf(str.subSequence(46+i, 48+i).toString(),16);
-                             long minute = Integer.valueOf(str.subSequence(48+i, 50+i).toString(),16);
-                             long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
-                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
-                                	
-								String fitemid = str.substring(106, 108);
+	                             Date time = DateTools.parse("yy-MM-dd HH:mm:ss",timestr);
+                            	 //java.util.Date time1 = timeshow.parse(timestr);
+								 Timestamp timesql = new Timestamp(time.getTime());
+	
+	               	    		 /*BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
+	                             BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(30+i, 34+i).toString(),16));
+	                             long sensor_Num = Integer.valueOf(str.subSequence(34+i, 38+i).toString(),16);
+	                             long machine_id = Integer.valueOf(str.subSequence(10, 14).toString(),16);
+	                             long welder_id = Integer.valueOf(str.subSequence(14, 18).toString(),16);
+	                             long code = Integer.valueOf(str.subSequence(18, 26).toString(),16);
+	                             long year = Integer.valueOf(str.subSequence(40+i, 42+i).toString(),16);
+	                             long month = Integer.valueOf(str.subSequence(42+i, 44+i).toString(),16);
+	                             long day = Integer.valueOf(str.subSequence(44+i, 46+i).toString(),16);
+	                             long hour = Integer.valueOf(str.subSequence(46+i, 48+i).toString(),16);
+	                             long minute = Integer.valueOf(str.subSequence(48+i, 50+i).toString(),16);
+	                             long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
+	                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
+	                                	
+								 String fitemid = str.substring(106, 108);
 							 
-								DB_Connectionmysql a = new DB_Connectionmysql(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,stmt,listarray2);
-								//System.out.println(str);
+								 db.DB_Connectionmysqlrun(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,listarray2);
+								 //System.out.println(str);
                              } catch (Exception e) {
 								str="";
 								// TODO Auto-generated catch block
@@ -133,7 +139,9 @@ public class Mysql implements Callback{
 
                	    	 }
  	                    //System.out.println(str);
-                   	    str="";
+               	    	 db=null;
+               	    	 System.gc();
+                   	     str="";
                	     }
                	        			
                	     else{
@@ -224,7 +232,7 @@ public class Mysql implements Callback{
 		
 
 
-	@Override
+	/*@Override
 	public void taskResult(String str,String connet,ArrayList<String> listarray1,ArrayList<String> listarray2,ArrayList<String> listarray3,HashMap<String, Socket> websocket,String ip1) {
 		// TODO Auto-generated method stub
 		
@@ -318,7 +326,7 @@ public class Mysql implements Callback{
                             	//java.util.Date time1 = timeshow.parse(timestr);
 								Timestamp timesql = new Timestamp(time.getTime());
 
-               	    		 /*BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
+               	    		 BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(26+i, 30+i).toString(),16));
                              BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(30+i, 34+i).toString(),16));
                              long sensor_Num = Integer.valueOf(str.subSequence(34+i, 38+i).toString(),16);
                              long machine_id = Integer.valueOf(str.subSequence(10, 14).toString(),16);
@@ -330,7 +338,7 @@ public class Mysql implements Callback{
                              long hour = Integer.valueOf(str.subSequence(46+i, 48+i).toString(),16);
                              long minute = Integer.valueOf(str.subSequence(48+i, 50+i).toString(),16);
                              long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
-                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());*/
+                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());
                                 	
 								String fitemid = str.substring(106, 108);
 							 
@@ -368,7 +376,7 @@ public class Mysql implements Callback{
    	        		str="";
    	        	}
        	     
-           }/*else if(str.length()>=300 && str.length()!= 118){
+           }else if(str.length()>=300 && str.length()!= 118){
         	
        	    	String [] stringArr = str.split("FD");
        	    	
@@ -422,7 +430,7 @@ public class Mysql implements Callback{
 	        	   
 	        	   str="";
 	        	   
-	           }*/
+	           }
             
 		} catch (Exception e) {
 			str="";
@@ -430,6 +438,6 @@ public class Mysql implements Callback{
             e.printStackTrace();  
         }  
 		
-	}
+	}*/
 
 }

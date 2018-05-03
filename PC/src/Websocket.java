@@ -15,7 +15,7 @@ import java.util.Map.Entry;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
-public class Websocket implements Callback {
+public class Websocket {
 
 	Timestamp timesql1;
 	Timestamp timesql2;
@@ -29,18 +29,22 @@ public class Websocket implements Callback {
 	private ArrayList<String> listarray2;
 	private ArrayList<String> listarray3;
 	private boolean datawritetype = false;
-	private HashMap<String, Socket> websocket;
 	private HashMap<String, SocketChannel> websocketlist = null;
 
-	public Websocket(String str,java.sql.Statement stmt, HashMap<String, Socket> websocket, ArrayList<String> listarray2,ArrayList<String> listarray3, HashMap<String, SocketChannel> websocketlist) {
+	public Websocket(String str, ArrayList<String> listarray2,ArrayList<String> listarray3, HashMap<String, SocketChannel> websocketlist) {
 		// TODO Auto-generated constructor stub
 
         this.strdata = str;
-		this.websocket = websocket; 
-        this.connet = connet;
         this.listarray2 = listarray2;
         this.listarray3 = listarray3;
         this.websocketlist = websocketlist;
+        
+	}
+	
+	public void Websocketrun(String str) {
+		// TODO Auto-generated constructor stub
+
+        this.strdata = str;
 		
         try {
 			
@@ -347,13 +351,13 @@ public class Websocket implements Callback {
 	                       		 }
 	                       	 }
 	                       	 
-	                       	String fequipment_no = "0001";
+	                       	/*String fequipment_no = "0001";
                        		String finsframework_id = "17";
                				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit+"00:00:00"+"00:00:00"
    	                    			 +status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+"00:00:00"+"00:00:00"
-   	                    			 +status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+"00:00:00"+"00:00:00";
+   	                    			 +status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+"00:00:00"+"00:00:00";*/
 	                       	 
-	                       	 /*for(int i=0;i<listarray2.size();i+=4){
+	                       	 for(int i=0;i<listarray2.size();i+=4){
 	                       		 String fequipment_no = listarray2.get(i+1);
 	                       		 String fgather_no = listarray2.get(i+2);
 	                       		 String finsframework_id = listarray2.get(i+3);
@@ -382,7 +386,7 @@ public class Websocket implements Callback {
 	       	                    	}
 	       	                     }
 	                       		 //System.out.println("2");
-	                       	 }*/
+	                       	 }
 
 	                       	 //System.out.println(strsend);
                        	 
@@ -478,22 +482,14 @@ public class Websocket implements Callback {
         	   str=""; 
                
 		    }}}catch (Exception e) {
-			
-			if(datawritetype = true){
-				
-				chweb = null;
-				websocket.remove(websocketfail);
-				datawritetype=false;
-				
-			}
+			e.printStackTrace();
 		}
         
 	}
-
+/*
 	@Override
 	public void taskResult(String str,String connet,ArrayList<String> listarray1,ArrayList<String> listarray2,ArrayList<String> listarray3,HashMap<String, Socket> websocket,String ip1) {
 		// TODO Auto-generated method stub
-		this.websocket = websocket; 
         this.strdata = str;
         this.connet = connet;
         this.listarray2 = listarray2;
@@ -789,7 +785,7 @@ public class Websocket implements Callback {
 		    			        	
 		    			        }
 		                        
-		                     /*  //数据发送
+		                       //数据发送
 		                       byte[] bb3=strsend.getBytes();
 		                         
 		       				ByteBuffer byteBuf = ByteBuffer.allocate(bb3.length);
@@ -808,7 +804,7 @@ public class Websocket implements Callback {
 		       					//将内容返回给客户端
 		       					websocketfail=entry.getKey();
 		       	                responseClient(byteBuf, true, entry.getValue());
-		       				} */
+		       				} 
 	               	    	 
 	               	     }	
 	               	     else{
@@ -885,5 +881,5 @@ public class Websocket implements Callback {
 	            out.write(byteBuf.array(), 0, byteBuf.limit());  
 	            out.flush();  
 	    }  
-
+*/
 }
