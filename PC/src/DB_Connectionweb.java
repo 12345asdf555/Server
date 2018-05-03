@@ -91,7 +91,10 @@ public class DB_Connectionweb {
 
         // if(state ==1)
 
-         inSql = "SELECT * from ( SELECT count(num1) result1,count(num2) result2,count(num1)+count(num2) num3,eno from ( SELECT case when fstatus!=0 then 1 end num1, case when fstatus=0 then 1 end num2,m.fid, m.fequipment_no eno from tb_live_data l INNER join tb_welding_machine m on m.fid = l.fmachine_id where FWeldTime like '%"+nowTime.substring(0,10)+"%')A group by fid UNION select 0 result1,0 result2,0 num3,fequipment_no eno from tb_welding_machine where fid not in (SELECT m.fid from tb_live_data l INNER join tb_welding_machine m on m.fid = l.fmachine_id where FWeldTime like '%"+nowTime.substring(0,10)+"%') )temp";
+         //inSql = "SELECT * from ( SELECT count(num1) result1,count(num2) result2,count(num1)+count(num2) num3,eno from ( SELECT case when fstatus!=0 then 1 end num1, case when fstatus=0 then 1 end num2,m.fid, m.fequipment_no eno from tb_live_data l INNER join tb_welding_machine m on m.fid = l.fmachine_id where FWeldTime like '%"+nowTime.substring(0,10)+"%')A group by fid UNION select 0 result1,0 result2,0 num3,fequipment_no eno from tb_welding_machine where fid not in (SELECT m.fid from tb_live_data l INNER join tb_welding_machine m on m.fid = l.fmachine_id where FWeldTime like '%"+nowTime.substring(0,10)+"%') )temp";
+
+         inSql = "SELECT * from ( SELECT count(num1) result1,count(num2) result2,count(num1)+count(num2) num3,eno from ( SELECT case when fstatus!=0 then 1 end num1, case when fstatus=0 then 1 end num2,m.fid, m.fequipment_no eno from tb_live_data l INNER join tb_welding_machine m on m.fid = l.fmachine_id where FWeldTime between '"+nowTime.substring(0,10)+" 00:00:00' and '"+nowTime.substring(0,10)+" 59:59:59')A group by fid UNION select 0 result1,0 result2,0 num3,fequipment_no eno from tb_welding_machine where fid not in (SELECT m.fid from tb_live_data l INNER join tb_welding_machine m on m.fid = l.fmachine_id where FWeldTime between '"+nowTime.substring(0,10)+" 00:00:00' and '"+nowTime.substring(0,10)+" 59:59:59') )temp";
+
 
        /*  else {
 

@@ -345,7 +345,9 @@ public class Server implements Runnable {
 		    	}
             }  
     		
-		    connet=connet1+ip+connet2;
+		    String[] values = ip.split(",");
+			
+			connet=connet1+values[0]+connet2+values[1]+connet3+values[2]+connet4+values[3]+connet5;
 		    
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(connet);
@@ -357,7 +359,7 @@ public class Server implements Runnable {
         		timework1 = rs1.getString("fWeldTime");
         	}
         	
-        	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss","2017-10-13 15:00:00").getTime();
+        	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss","2017-07-01 01:00:00").getTime();
 	        System.out.println(datetime1);
 	        
 	        
@@ -367,7 +369,7 @@ public class Server implements Runnable {
         		timework2 = rs2.getString("fWeldTime");
         	}
         	
-        	long datetime2 = DateTools.parse("yy-MM-dd HH:mm:ss","2018-04-13 14:00:00").getTime();
+        	long datetime2 = DateTools.parse("yy-MM-dd HH:mm:ss","2018-05-03 11:00:00").getTime();
 	        System.out.println(datetime2);
         	
 	        for(long i=datetime1;i<=datetime2;i+=3600000){
