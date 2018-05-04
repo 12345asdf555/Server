@@ -33,27 +33,32 @@ public class DB_Connectionmysql {
 
 	public Server server;
 	
+	public java.sql.Connection conn = null;
 	public java.sql.Statement stmt =null;
-	/*String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
-
-            "user=root&password=123456&characterEncoding=UTF8";
-
-    String uri = "jdbc:mysql://121.196.222.216:3306/Weld?";
-
-    String user = "user=root&password=123456&characterEncoding=UTF8";
 
 
+	public DB_Connectionmysql(String connet){
+		try {
 
-     String connet = "jdbc:mysql://121.196.222.216:3306/Weld?"
+			Class.forName("com.mysql.jdbc.Driver");  
+            conn = DriverManager.getConnection(connet);
+            stmt= conn.createStatement();
 
-             + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8";
+       } catch (SQLException e) {
 
-    String inSql = null;*/
+           System.out.println("Broken conn");
+           e.printStackTrace();
 
+       } catch (ClassNotFoundException e) {  
 
-    public DB_Connectionmysql(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,java.sql.Statement stmt,ArrayList<String> listarray2)
+           System.out.println("Broken driver");
+           e.printStackTrace();  
 
-    {
+       } 
+	}
+
+    public void DB_Connectionmysqlrun(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,ArrayList<String> listarray2){
+
 
     	
     	Date date = new Date();
@@ -63,10 +68,10 @@ public class DB_Connectionmysql {
         Timestamp goodsC_date = Timestamp.valueOf(nowTime);
 
         for(int i=0;i<listarray2.size();i+=4){
-          	 if(machine_id.equals(listarray2.get(i+2))){
-          		 fmachine = listarray2.get(i);
-          		 break;
-          	 }
+       	 if(machine_id.equals(listarray2.get(i+2))){
+       		 fmachine = listarray2.get(i);
+       		 break;
+       	 }
         }
 
         if(fmachine != null){
@@ -76,8 +81,9 @@ public class DB_Connectionmysql {
             inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
        	 
             try {
-
+            	//System.out.println(fmachine);
                 stmt.executeUpdate(inSql);
+                //System.out.println("1");
 
             } catch (SQLException e) {
 
@@ -290,12 +296,17 @@ public class DB_Connectionmysql {
             e.printStackTrace();
 
         }  */
-
-
-
-
-
     }
+    
+    protected void finalize( ){
+		try {
+			conn.close();
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
     
     
 }

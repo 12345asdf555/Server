@@ -107,51 +107,25 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        new Socketsend(str,ip1);
 	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
+			Mysql mysql = new Mysql(connet,listarray2);
+			Websocket websocket = new Websocket(str,listarray2,listarray3,websocketlist,dbdata);
 			
 			if(str.substring(0,2).equals("FA")){
-				
-				String[] strlist =str.split("F5");
-		        for(int i=0;i<strlist.length;i++){
-		        	
-		        	str = strlist[i];
-		        	str = str + "F5";
-		        	
-		        	try{
-		        		if(stmt==null || stmt.isClosed()==true)
-			        	{
-			        		try {
-								Class.forName("com.mysql.jdbc.Driver");
-								stmt = DriverManager.getConnection(connet).createStatement();
-			        	    } catch (ClassNotFoundException e) {  
-			                    System.out.println("Broken driver");
-			                    e.printStackTrace();
-			                    return;
-			                } catch (SQLException e) {
-			                    System.out.println("Broken conn");
-			                    e.printStackTrace();
-			                    return;
-			                }  
-			        	}
-		        	}catch (Exception e) {
-						// TODO Auto-generated catch block
+			
+				mysql.Mysqlrun(str);
+		        websocket.Websocketrun(str);
+		        //System.out.println("1");
+		        //new Socketsend(str,ip1);
+		        if(socketchannel!=null){
+			        try {
+						socketchannel.writeAndFlush(str).sync();
+					} catch (InterruptedException e) {
+						socketchannel = null;
 						e.printStackTrace();
-						return;
 					}
-		        	
-		        	new Mysql(str,stmt,listarray2);
-			        new Websocket(str,stmt,websocket,listarray2,listarray3,websocketlist,dbdata);
-			        //System.out.println("1");
-			        //new Socketsend(str,ip1);
-			        if(socketchannel!=null){
-				        try {
-							socketchannel.writeAndFlush(str).sync();
-						} catch (InterruptedException e) {
-							socketchannel = null;
-							e.printStackTrace();
-						}
-			        }
 		        }
-	        
+		        
+		        
 	        }else{
 	        	Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
                 while(webiter.hasNext()){

@@ -155,7 +155,7 @@ public class Server implements Runnable {
 	    NS.ip1 = this.ip1;
 	    NS.connet = this.connet;
 		
-	    try {  
+	    /*try {  
 
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
@@ -169,7 +169,7 @@ public class Server implements Runnable {
         } catch (SQLException e) {
             System.out.println("Broken conn");
             e.printStackTrace();
-        }  
+        }  */
             
 	    Date date = new Date();
         String nowtime = DateTools.format("HH:mm:ss",date);
@@ -252,17 +252,12 @@ public class Server implements Runnable {
                     		+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     
-                    try {
-                    	stmt.executeUpdate(sqlstandby);
-                    	stmt.executeUpdate(sqlwork);
-                    	stmt.executeUpdate(sqlalarm);
-                        
-                    	stmt.close();
-                        conn.close();
-                    } catch (SQLException e) {
-                        System.out.println("Broken insert");
-                        e.printStackTrace();
-                    } 
+                	stmt.executeUpdate(sqlstandby);
+                	stmt.executeUpdate(sqlwork);
+                	stmt.executeUpdate(sqlalarm);
+                    
+                	stmt.close();
+                    conn.close();
                         
                 } catch (ClassNotFoundException e) {  
                     System.out.println("Broken driver");
@@ -277,7 +272,7 @@ public class Server implements Runnable {
 	    
 	    
 	    DB_Connectioncode check = new DB_Connectioncode(connet);
-	    DB_Connectionweb b =new DB_Connectionweb(stmt);
+	    DB_Connectionweb b =new DB_Connectionweb(connet);
   		dbdata = b.getId();
 		NS.dbdata = this.dbdata;
   		

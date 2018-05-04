@@ -15,7 +15,8 @@ import java.util.Date;
 
 public class DB_Connectionweb {
 	public String inSql;
-	public  String datasend="";
+	public String connet;
+	public String datasend="";
 	private ArrayList<String> listarray = new ArrayList<String>();
 	
 	public ArrayList<String> getId() {
@@ -42,11 +43,11 @@ public class DB_Connectionweb {
 
     String inSql = null;*/
 
-    public DB_Connectionweb(java.sql.Statement stmt)
+    public DB_Connectionweb(String connet)
 
     {
     	
-        /*java.sql.Connection conn = null;
+        java.sql.Connection conn = null;
 
         java.sql.Statement stmt =null;
 
@@ -65,7 +66,7 @@ public class DB_Connectionweb {
 
          try {
 
-             conn = DriverManager.getConnection(stmt2);
+             conn = DriverManager.getConnection(connet);
 
              stmt= conn.createStatement();
 
@@ -77,7 +78,7 @@ public class DB_Connectionweb {
 
             e.printStackTrace();
 
-        }*/
+        }
 
 
 
