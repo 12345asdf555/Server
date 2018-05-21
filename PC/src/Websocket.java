@@ -132,7 +132,13 @@ public class Websocket {
 		                       	 }
 		                     }
 		       				 
-		       				 String status1=strdata.substring(38,40);
+		       				 String status1=Integer.valueOf(strdata.substring(38,40),16).toString();
+		       				if(status1.length()!=2){
+		                       	 int lenth=2-status1.length();
+		                       	 for(int i=0;i<lenth;i++){
+		                       		status1="0"+status1;
+		                       	 }
+		                        }
 		       				 
 		       				long year1 = Integer.valueOf(str.subSequence(40, 42).toString(),16);
 	                        String yearstr1 = String.valueOf(year1);
@@ -208,7 +214,14 @@ public class Websocket {
 		                       		voltage2="0"+voltage2;
 		                       	 }
 		                     }
-	       				 String status2=strdata.substring(64,66);
+		       				 
+	       				 String status2=Integer.valueOf(strdata.substring(64,66),16).toString();
+	       				 if(status2.length()!=2){
+	                       	 int lenth=2-status2.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		status2="0"+status2;
+	                       	 }
+	                        }
 	       				 
 	       				 long year2 = Integer.valueOf(str.subSequence(66, 68).toString(),16);
 	                        String yearstr2 = String.valueOf(year2);
@@ -284,7 +297,13 @@ public class Websocket {
 		                       		voltage3="0"+voltage3;
 		                       	 }
 		                     }
-	       				 String status3=strdata.substring(90,92);
+	       				 String status3=Integer.valueOf(strdata.substring(90,92),16).toString();
+	       				if(status3.length()!=2){
+	                       	 int lenth=2-status3.length();
+	                       	 for(int i=0;i<lenth;i++){
+	                       		status3="0"+status3;
+	                       	 }
+	                        }
 	       				 
 	       				 long year3 = Integer.valueOf(str.subSequence(92, 94).toString(),16);
 	                        String yearstr3 = String.valueOf(year3);
@@ -436,9 +455,10 @@ public class Websocket {
 			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+worktime1 + totaltime1
 			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+worktime1 + totaltime1;
 	                       			}	
+	                       			break;
 		   	                     }
 	               		         
-		   	                     else{
+		   	                     /*else{
 		   	                    	if(finsframework_id==null || finsframework_id==""){
 	                       				 finsframework_id="nu";
 	                       				strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
@@ -449,7 +469,7 @@ public class Websocket {
 			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
 			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00";
 	       	                    	}
-		   	                     }
+		   	                     }*/
 		                   	 }
 	                       	 
 	                       	 /*for(int i=0;i<listarray2.size();i+=3){

@@ -11,14 +11,14 @@ import java.util.Locale;
 public class Mysql {
 
 	private String str;
-    private String connet;
+    private java.sql.Statement stmt;
 	private ArrayList<String> listarray2;
 	private DB_Connectionmysql db;
 	
-	public Mysql(String connet,ArrayList<String> listarray2) {
-		this.connet = connet;
+	public Mysql(java.sql.Statement stmt,ArrayList<String> listarray2) {
+		this.stmt = stmt;
 		this.listarray2 = listarray2;
-		db = new DB_Connectionmysql(connet);
+		db = new DB_Connectionmysql(stmt);
 	}
     
 	
@@ -105,7 +105,7 @@ public class Mysql {
                              String minutestr = String.valueOf(minute);
                              long second = Integer.valueOf(str.subSequence(50+i, 52+i).toString(),16);
                              String secondstr = String.valueOf(second);
-                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString());
+                             int status = Integer.parseInt(str.subSequence(38+i, 40+i).toString(),16);
                	    		 
                              String timestr = yearstr+"-"+monthstr+"-"+daystr+" "+hourstr+":"+minutestr+":"+secondstr;
                              try {
@@ -140,7 +140,7 @@ public class Mysql {
                	    	 }
  	                    //System.out.println(str);
                	    	 db=null;
-               	    	 System.gc();
+               	    	 //System.gc();
                    	     str="";
                	     }
                	        			

@@ -107,10 +107,11 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        new Socketsend(str,ip1);
 	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
-			Mysql mysql = new Mysql(connet,listarray2);
+			Mysql mysql = new Mysql(stmt,listarray2);
+			Android android = new Android(stmt);
 			Websocket websocket = new Websocket(str,listarray2,listarray3,websocketlist,dbdata);
 			
-			if(str.substring(0,2).equals("FA")){
+			if(str.substring(0,2).equals("FA")){  //处理实时数据
 			
 				mysql.Mysqlrun(str);
 		        websocket.Websocketrun(str);
@@ -125,8 +126,12 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 					}
 		        }
 		        
-		        
-	        }else{
+	        }else if(str.substring(0,4).equals("FE24")){   //处理android数据
+	        	
+	        	android.Androidrun(str);
+	        	
+	        }else{    //处理焊机下发和上传
+	        	
 	        	Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
                 while(webiter.hasNext()){
                 	try{

@@ -23,34 +23,21 @@ public class DB_Connectioncode {
 		this.datasend = datasend;
 	}
     public Server server;
-    /*public String connet = "jdbc:mysql://121.196.222.216:3306/Weld?"
-    + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8";*/
+    
     public String inSql = "";
-
-	/*String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
-
-            "user=root&password=123456&characterEncoding=UTF8";
-
-    String uri = "jdbc:mysql://121.196.222.216:3306/Weld?";
-
-    String user = "user=root&password=123456&characterEncoding=UTF8";
-
-
-
-     String connet = "jdbc:mysql://121.196.222.216:3306/Weld?"
-
-             + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8";
-
-    String inSql = null;*/
 
 	private String code;
 
 	private String select;
 
-    public DB_Connectioncode(String connet)
+	private Statement stmt;
+
+    public DB_Connectioncode(java.sql.Statement stmt)
 
     {
-    	String inSql;
+    	
+    	this.stmt = stmt;
+    	/*String inSql;
     	
         java.sql.Connection conn = null;
 
@@ -81,41 +68,10 @@ public class DB_Connectioncode {
 
             e.printStackTrace();
 
-        }
+        }*/
 
-         //查焊机和采集设备号
-         
-         /*select = "select tb_welding_machine.fid,tb_gather.fgather_no from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
-         
-         try {
-
-          	ResultSet rs =stmt.executeQuery(select);
-              
-              while (rs.next()) {
-            	  String fid = rs.getString("fid");
-            	  String fgather_no = rs.getString("fgather_no");
-            	  listarray1.add(fgather_no);
-              	  listarray1.add(fid);
-              }
-
-          } catch (SQLException e) {
-
-              System.out.println("Broken insert");
-
-              e.printStackTrace();
-
-          } */
-         
-     /*    for(int i=0;i<=listarray1.size()/2;i+=2){
-        	 if(machine_id.equals(listarray1.get(i))){
-        		 fid = listarray1.get(i+1);
-        	 }
-         }*/
-         
-         
-         
+    	
        //查焊机
-         
          inSql = "select tb_welding_machine.fid,tb_welding_machine.fequipment_no,tb_gather.fgather_no,tb_welding_machine.finsframework_id from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
          
          try {
@@ -213,7 +169,7 @@ public class DB_Connectioncode {
          
          
 
-        try {
+        /*try {
 
             stmt.close();
 
@@ -225,7 +181,7 @@ public class DB_Connectioncode {
 
             e.printStackTrace();
 
-        }
+        }*/
 
          return; 
 

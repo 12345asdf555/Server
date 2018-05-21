@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import java.text.SimpleDateFormat;
-
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -19,7 +19,11 @@ import java.util.Date;
 public class DB_Connectionandroid {
 	
 	public String inSql;
+	public String select;
 	public  String datasend="";
+	public String fmachine;
+    public ArrayList<String> listarray1 = new ArrayList<String>();
+    public ArrayList<String> listarray2 = new ArrayList<String>();
 	
 	public String getId() {
 		return datasend;
@@ -29,110 +33,55 @@ public class DB_Connectionandroid {
 	}
 
 	public Server server;
-	/*String Connection="jdbc:mysql://121.196.222.216:3306/Weld?"+
-
-            "user=root&password=123456&characterEncoding=UTF8";
-
-    String uri = "jdbc:mysql://121.196.222.216:3306/Weld?";
-
-    String user = "user=root&password=123456&characterEncoding=UTF8";
+	
+	public java.sql.Connection conn = null;
+	public java.sql.Statement stmt =null;
 
 
+	public DB_Connectionandroid(java.sql.Statement stmt){
+		this.stmt = stmt;
+		/*try {
 
-     String connet = "jdbc:mysql://121.196.222.216:3306/Weld?"
+			Class.forName("com.mysql.jdbc.Driver");  
+            conn = DriverManager.getConnection(connet);
+            stmt= conn.createStatement();
 
-             + "user=root&password=123456&useUnicode=true&characterEncoding=UTF8";
+       } catch (SQLException e) {
 
-    String inSql = null;*/
-    
-    private String code;
+           System.out.println("Broken conn");
+           e.printStackTrace();
 
-    public DB_Connectionandroid(BigDecimal electricity,BigDecimal voltage,BigInteger sensor_Num,String machine_id,String welder_id,String code,BigInteger year,BigInteger month,BigInteger day, BigInteger hour,BigInteger minute,BigInteger second,int status,String connet)
+       } catch (ClassNotFoundException e) {  
 
-    {
+           System.out.println("Broken driver");
+           e.printStackTrace();  
 
-        java.sql.Connection conn = null;
+       } */
+	}
 
-        java.sql.Statement stmt =null;
-
-
-        try {  
-
-            Class.forName("com.mysql.jdbc.Driver");  
-
-        } catch (ClassNotFoundException e) {  
-
-            System.out.println("Broken driver");
-
-            e.printStackTrace();  
-
-        }  
-
-         try {
-
-             conn = DriverManager.getConnection(connet);
-
-             stmt= conn.createStatement();
+    public void DB_Connectionandroidrun(BigDecimal electricity,BigDecimal voltage,BigInteger sensor_Num,String machine_id,String welder_id,String code,BigInteger year,BigInteger month,BigInteger day, BigInteger hour,BigInteger minute,BigInteger second,int status){
 
 
+    	
+    	Date date = new Date();
 
-        } catch (SQLException e) {
+        String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
 
-            System.out.println("Broken conn");
+        Timestamp goodsC_date = Timestamp.valueOf(nowTime);
 
-            e.printStackTrace();
-
-        }
-
-         Date date = new Date();
-
-         String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-
-         Timestamp goodsC_date = Timestamp.valueOf(nowTime);
-
-
-
-        // if(state ==1)
-
-             inSql = "insert into tb_data(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status,Dtime) values('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
-
-       /*  else {
-
-             inSql = "insert into sj(id,bed_Number,state,Dtime) values('"+ id +"','" + bedNumber + "','leave','" + goodsC_date + "')";
-
-        }*/
-
-         try {
-
-            stmt.executeUpdate(inSql);
-
-        } catch (SQLException e) {
-
-            System.out.println("Broken insert");
-
-            e.printStackTrace();
-
-        } 
-         
-        try {
-
-            stmt.close();
-
-             conn.close(); 
-
-        } catch (SQLException e) {
-
-            System.out.println("Broken close");
-
-            e.printStackTrace();
-
-        }  
-
-
-
-
-
+        inSql = "insert into tb_data(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status,Dtime) values('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+          
     }
+    
+    /*protected void finalize( ){
+		try {
+			conn.close();
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}*/
     
     
 }

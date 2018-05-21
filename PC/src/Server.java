@@ -155,7 +155,7 @@ public class Server implements Runnable {
 	    NS.ip1 = this.ip1;
 	    NS.connet = this.connet;
 		
-	    /*try {  
+	    try {  
 
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
@@ -169,7 +169,7 @@ public class Server implements Runnable {
         } catch (SQLException e) {
             System.out.println("Broken conn");
             e.printStackTrace();
-        }  */
+        }  
             
 	    Date date = new Date();
         String nowtime = DateTools.format("HH:mm:ss",date);
@@ -271,7 +271,7 @@ public class Server implements Runnable {
         }, time , 1000*60*60);
 	    
 	    
-	    DB_Connectioncode check = new DB_Connectioncode(connet);
+	    DB_Connectioncode check = new DB_Connectioncode(stmt);
 	    DB_Connectionweb b =new DB_Connectionweb(connet);
   		dbdata = b.getId();
 		NS.dbdata = this.dbdata;
@@ -294,7 +294,32 @@ public class Server implements Runnable {
             @Override  
             public void run() {
   		
-        		DB_Connectioncode check = new DB_Connectioncode(connet);
+	            try{
+	        		if(stmt==null || stmt.isClosed()==true)
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							stmt = DriverManager.getConnection(connet).createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        		
+			            NS.stmt = stmt;
+		        		
+		        	}
+	        	}catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return;
+				}
+            	
+        		DB_Connectioncode check = new DB_Connectioncode(stmt);
         		
         		//listarray1 = check.getId1();
         		listarray2 = check.getId2();
