@@ -10,23 +10,18 @@ import java.util.Locale;
 
 public class Mysql {
 
-	private String str;
-    private java.sql.Statement stmt;
-	private ArrayList<String> listarray2;
-	private DB_Connectionmysql db;
+    public java.sql.Statement stmt;
+	public ArrayList<String> listarray2;
+	public DB_Connectionmysql db;
 	
-	public Mysql(java.sql.Statement stmt,ArrayList<String> listarray2) {
+	public Mysql(java.sql.Statement stmt) {
 		this.stmt = stmt;
-		this.listarray2 = listarray2;
 		db = new DB_Connectionmysql(stmt);
+		this.db = db;
 	}
     
-	
-	
 	public void Mysqlrun(String str) {
 		// TODO Auto-generated constructor stub
-		this.str = str;
-		
 		try{
 			
             if (str.length() == 110) {  
@@ -139,7 +134,7 @@ public class Mysql {
 
                	    	 }
  	                    //System.out.println(str);
-               	    	 db=null;
+               	    	 //db=null;
                	    	 //System.gc();
                    	     str="";
                	     }
@@ -226,8 +221,7 @@ public class Mysql {
 			str="";
             System.out.println("S: Error 2");  
             e.printStackTrace();  
-        }  
-		
+        } 
 	}
 		
 

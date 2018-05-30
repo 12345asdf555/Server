@@ -18,12 +18,21 @@ import java.util.Date;
 
 public class DB_Connectionandroid {
 	
-	public String inSql;
 	public String select;
 	public  String datasend="";
 	public String fmachine;
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
+    public int work = 1;
+	public int count1 = 1;
+	public int count2 = 1;
+	public int count3 = 1;
+	public int count4 = 1;
+	public String inSql1 = "";
+	public String inSql2 = "";
+	public String inSql3 = "";
+	public String inSql4 = "";
+	public final String inSql = "insert into tb_data(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status,Dtime) values";
 	
 	public String getId() {
 		return datasend;
@@ -59,18 +68,180 @@ public class DB_Connectionandroid {
        } */
 	}
 
-    public void DB_Connectionandroidrun(BigDecimal electricity,BigDecimal voltage,BigInteger sensor_Num,String machine_id,String welder_id,String code,BigInteger year,BigInteger month,BigInteger day, BigInteger hour,BigInteger minute,BigInteger second,int status){
+    public void DB_Connectionandroidrun(BigDecimal electricity,BigDecimal voltage,BigDecimal sensor_Num,String machine_id,String welder_id,String code,BigInteger year,BigInteger month,BigInteger day, BigInteger hour,BigInteger minute,BigInteger second,int status){
 
-
-    	
-    	Date date = new Date();
-
-        String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-
-        Timestamp goodsC_date = Timestamp.valueOf(nowTime);
-
-        inSql = "insert into tb_data(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status,Dtime) values('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+    	Date date;
+        String nowTime;
+        Timestamp goodsC_date;
+        //inSql = "insert into tb_data(electricity,voltage,sensor_Num,machine_id,welder_id,code,year,month,day,hour,minute,second,status,Dtime) values('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
           
+        synchronized (this) {
+    	 	switch(Integer.valueOf(work)){
+        	case 1:
+        		date = new Date();
+                nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+                goodsC_date = Timestamp.valueOf(nowTime);
+    	         
+           	 	if(count1==1){
+           	 		inSql1 = inSql + "('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+           	 	}else{
+           	 		inSql1 = inSql1 + ",('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+           	 	}
+                
+                count1++;
+                
+                if(count1 == 100){
+                	
+                	try {
+                    	
+                        stmt.executeUpdate(inSql1);
+                        work = work + 1;
+                        if(work==5){
+                    		work = 1;
+                    	}
+                        
+                        count1 = 0;
+                        inSql1 = "";
+                        
+                    } catch (SQLException e) {
+                    	count1 = 0;
+                        inSql1 = "";
+                        System.out.println("Broken insert");
+                        e.printStackTrace();
+                    } 
+                 }
+         
+                break;
+                
+        	case 2:
+        		
+        		date = new Date();
+                nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+                goodsC_date = Timestamp.valueOf(nowTime);
+                
+           	 	BigDecimal voltage2 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+    	         
+           	 	if(count2==1){
+        	 		inSql2 = inSql + "('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+        	 	}else{
+        	 		inSql2 = inSql2 + ",('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+        	 	}
+           	 	
+                count2++;
+                
+                if(count2 == 100){
+                	
+                	try {
+                    	
+                        stmt.executeUpdate(inSql2);
+                        work = work + 1;
+                        if(work==5){
+                    		work = 1;
+                    	}
+                        
+                        count2 = 0;
+                        inSql2 = "";
+                        
+                    } catch (SQLException e) {
+                    	count2 = 0;
+                        inSql2 = "";
+                        System.out.println("Broken insert");
+                        e.printStackTrace();
+                    } 
+                 }
+        		
+                break;
+                
+        	case 3:
+        		
+        		date = new Date();
+                nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+                goodsC_date = Timestamp.valueOf(nowTime);
+
+                for(int i=0;i<listarray2.size();i+=4){
+               	 	if(machine_id.equals(listarray2.get(i+2))){
+               	 		fmachine = listarray2.get(i);
+               	 		break;
+               	 	}
+                }
+                
+           	 	BigDecimal voltage3 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+    	         
+           	 	if(count3==1){
+        	 		inSql3 = inSql + "('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+        	 	}else{
+        	 		inSql3 = inSql3 + ",('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+        	 	}
+           	 
+                count3++;
+                
+                if(count3 == 100){
+                	
+                	try {
+                    	
+                        stmt.executeUpdate(inSql3);
+                        work = work + 1;
+                        if(work==5){
+                    		work = 1;
+                    	}
+                        
+                        count3 = 0;
+                        inSql3 = "";
+                        
+                    } catch (SQLException e) {
+                    	count3 = 0;
+                        inSql3 = "";
+                        System.out.println("Broken insert");
+                        e.printStackTrace();
+                    } 
+                 }
+        		
+                break;
+                
+        	case 4:
+        		
+        		date = new Date();
+                nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+                goodsC_date = Timestamp.valueOf(nowTime);
+               	 
+           	 	BigDecimal voltage4 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+    	         
+           	 	if(count4==1){
+        	 		inSql4 = inSql + "('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+        	 	}else{
+        	 		inSql4 = inSql4 + ",('"+ electricity +"','" + voltage + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + year + "','" + month + "','" + day + "','" + hour + "','" + minute + "','" + second + "','" + status + "','" + goodsC_date + "')";
+        	 	}
+           	 
+                count4++;
+                
+                if(count4 == 100){
+                	
+                	try {
+                    	
+                        stmt.executeUpdate(inSql4);
+                        work = work + 1;
+                        if(work==5){
+                    		work = 1;
+                    	}
+                        
+                        count4 = 0;
+                        inSql4 = "";
+                        
+                    } catch (SQLException e) {
+                    	count4 = 0;
+                        inSql4 = "";
+                        System.out.println("Broken insert");
+                        e.printStackTrace();
+                    } 
+                 }
+                
+                break;
+                
+        	 }
+		 }
+        
+        
+        
     }
     
     /*protected void finalize( ){

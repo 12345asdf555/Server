@@ -48,7 +48,8 @@ public class Websocket {
 		// TODO Auto-generated constructor stub
 
         this.strdata = str;
-		
+		//System.out.println("1:"+str);
+        
         try {
 			
 			if(websocketlist==null || websocketlist.isEmpty()){
@@ -83,7 +84,9 @@ public class Websocket {
 	               	     }
 	               	     String check6 = str.substring(104,106);
 	               	     if(check5.equals(check6)){
-	             
+
+	               	    	 //System.out.println("2");
+	               	    	 
 		               	     strdata=str;
 		               	     //String weldname = strdata.substring(10,14);
 		       				 int weldname1 = Integer.valueOf(strdata.subSequence(10, 14).toString(),16);
@@ -359,6 +362,8 @@ public class Websocket {
 	       					e.printStackTrace();
 	       				 }
 		       				 
+	                        //System.out.println("3");
+	                        
                         try{
                         	
 	                       	 for(int i=0;i<listarray3.size();i+=5){
@@ -372,6 +377,8 @@ public class Websocket {
 	                       		 }
 	                       	 }
 	                       	 
+	                       	//System.out.println("4");
+	                       	 
 	                       	 String worktime = "";
 		                   	 String totaltime = "";
 		                   	 String worktime1 = "";
@@ -383,7 +390,11 @@ public class Websocket {
 		                   		 String fgather_no = listarray2.get(i+2);
 		                   		 String finsframework_id = listarray2.get(i+3);
 	
+		                   		 System.out.print(fequipment_no+" ");
+		                   		 
 		                   		 if(weldname.equals(fgather_no)){
+		                   			 
+		                   			 //System.out.println("5");
 		                   			 
 		                   			 for(int j=0;j<dbdata.size();j+=3){
 		                       			 if(dbdata.get(j).equals(fequipment_no)){
@@ -444,6 +455,8 @@ public class Websocket {
 		               		        }
 		               		         totaltime1 = workhour2 + workminute2 + worksecond2;
 	
+		               		      //System.out.println("6");
+		               		         
 	               		         if(weldname.equals(fgather_no)){
 	                       			if(finsframework_id==null || finsframework_id==""){
 	                       				finsframework_id="nu";
@@ -457,6 +470,8 @@ public class Websocket {
 	                       			}	
 	                       			break;
 		   	                     }
+	               		         
+	               		         //System.out.println("f:"+strsend);
 	               		         
 		   	                     /*else{
 		   	                    	if(finsframework_id==null || finsframework_id==""){

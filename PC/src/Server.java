@@ -121,6 +121,7 @@ public class Server implements Runnable {
     
     public void run() {
     	
+    	//读取IPconfig配置文件获取ip地址和数据库配置
 		try {
 			FileInputStream in = new FileInputStream("IPconfig.txt");  
             InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
@@ -155,13 +156,14 @@ public class Server implements Runnable {
 	    NS.ip1 = this.ip1;
 	    NS.connet = this.connet;
 		
+	    //连接数据库
 	    try {  
 
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
-            
             stmt= conn.createStatement();
-            NS.stmt = this.stmt;
+            NS.mysql.db.stmt = this.stmt;
+            NS.android.db.stmt = this.stmt;
 
         } catch (ClassNotFoundException e) {  
             System.out.println("Broken driver");
@@ -170,13 +172,19 @@ public class Server implements Runnable {
             System.out.println("Broken conn");
             e.printStackTrace();
         }  
-            
+        
+	    //开启线程每小时更新三张状态表
 	    Date date = new Date();
         String nowtime = DateTools.format("HH:mm:ss",date);
         String[] timesplit = nowtime.split(":");
         String hour = timesplit[0];
        
         Calendar calendar = Calendar.getInstance();
+        
+        //calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)); //测试
+        //calendar.set(Calendar.MINUTE, 27);    // 控制分
+        //calendar.set(Calendar.SECOND, 00);    // 控制秒
+        
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)+1); // 控制时
         calendar.set(Calendar.MINUTE, 00);    // 控制分
         calendar.set(Calendar.SECOND, 00);    // 控制秒
@@ -193,10 +201,10 @@ public class Server implements Runnable {
   		
             	try {  
 
-                    /*Class.forName("com.mysql.jdbc.Driver");  
+                    Class.forName("com.mysql.jdbc.Driver");  
                     conn = DriverManager.getConnection(connet);
                     stmt= conn.createStatement();
-                    NS.stmt = stmt;*/
+                    NS.stmt = stmt;
                     
                     Class.forName("com.mysql.jdbc.Driver");  
                     conn = DriverManager.getConnection(connet);
@@ -207,8 +215,10 @@ public class Server implements Runnable {
                     String nowtime = DateTools.format("HH:mm:ss",date);
                     String[] timesplit = nowtime.split(":");
                     String hour = timesplit[0];
-                    String time2=nowtimefor+" "+hour+":00:00";
-                	
+                    String time2 = nowtimefor+" "+hour+":00:00";
+                    Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-3600000);
+                    String time3 = DateTools.format("yyyy-MM-dd HH:mm:ss",d1);
+                    
                 	String timework = null;
                 	String timestandby = null;
                 	String timealarm = null;
@@ -231,21 +241,21 @@ public class Server implements Runnable {
                     String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
                     		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "
                     		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
-                    		+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + timestandby + "','" + time2 + "' FROM tb_live_data "
+                    		+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "' FROM tb_live_data "
                     		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime BETWEEN '" + timestandby + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     
                     String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
                     		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime) SELECT tb_live_data.fwelder_id,"
                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
-                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + timework + "','" + time2 + "' FROM tb_live_data "
+                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "' FROM tb_live_data "
                     		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + timework + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     
                     String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
                     		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) SELECT tb_live_data.fwelder_id,"
                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
-                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + timealarm + "','" + time2 + "' FROM tb_live_data "
+                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "' FROM tb_live_data "
                     		+ "INNER JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
                     		+ "WHERE fstatus= '3' and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
                     		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
@@ -265,12 +275,15 @@ public class Server implements Runnable {
                 } catch (SQLException e) {
                     System.out.println("Broken conn");
                     e.printStackTrace();
-                }  
+                } catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             	
             }  
         }, time , 1000*60*60);
 	    
-	    
+	    //获取最新焊口和焊机统计时间
 	    DB_Connectioncode check = new DB_Connectioncode(stmt);
 	    DB_Connectionweb b =new DB_Connectionweb(connet);
   		dbdata = b.getId();
@@ -285,9 +298,11 @@ public class Server implements Runnable {
 		System.out.println(listarray3);
 		
 		//NS.listarray1 = this.listarray1;
+		NS.mysql.listarray2 = this.listarray2;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
 	    
+		//开启线程每分钟更新焊口数据
 		Timer tExit2 = null; 
 		tExit2 = new Timer();  
         tExit2.schedule(new TimerTask() {  
@@ -310,7 +325,8 @@ public class Server implements Runnable {
 		                    return;
 		                }  
 		        		
-			            NS.stmt = stmt;
+			            NS.mysql.db.stmt = stmt;
+			            NS.android.db.stmt = stmt;
 		        		
 		        	}
 	        	}catch (Exception e) {
@@ -326,15 +342,17 @@ public class Server implements Runnable {
         		listarray3 = check.getId3();
         		
         		//System.out.println(listarray1);
-        		System.out.println(listarray2);
-        		System.out.println(listarray3);
+        		//System.out.println(listarray2);
+        		//System.out.println(listarray3);
         		
         		//NS.listarray1 = listarray1;
+        		NS.mysql.listarray2 = listarray2;
         		NS.listarray2 = listarray2;
         		NS.listarray3 = listarray3;
             }  
         }, 0,60000);
         
+        //工作线程
         new Thread(socketstart).start();
 		new Thread(websocketstart).start();
 		new Thread(sockettran).start();
@@ -379,7 +397,9 @@ public class Server implements Runnable {
         		timework1 = rs1.getString("fWeldTime");
         	}
         	
-        	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss","2017-07-01 01:00:00").getTime();
+	        String[] values1 = ip1.split("——");
+	        
+        	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss",values1[0]).getTime();
 	        System.out.println(datetime1);
 	        
 	        
@@ -389,7 +409,7 @@ public class Server implements Runnable {
         		timework2 = rs2.getString("fWeldTime");
         	}
         	
-        	long datetime2 = DateTools.parse("yy-MM-dd HH:mm:ss","2018-05-03 11:00:00").getTime();
+        	long datetime2 = DateTools.parse("yy-MM-dd HH:mm:ss",values1[1]).getTime();
 	        System.out.println(datetime2);
         	
 	        for(long i=datetime1;i<=datetime2;i+=3600000){

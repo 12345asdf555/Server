@@ -33,6 +33,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
     public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
+    public Mysql mysql = new Mysql(stmt);
+    public Android android = new Android(stmt);
 	
     public int a=0;
     
@@ -107,8 +109,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        new Socketsend(str,ip1);
 	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
-			Mysql mysql = new Mysql(stmt,listarray2);
-			Android android = new Android(stmt);
 			Websocket websocket = new Websocket(str,listarray2,listarray3,websocketlist,dbdata);
 			
 			if(str.substring(0,2).equals("FA")){  //处理实时数据
