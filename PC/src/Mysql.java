@@ -14,9 +14,8 @@ public class Mysql {
 	public ArrayList<String> listarray2;
 	public DB_Connectionmysql db;
 	
-	public Mysql(java.sql.Statement stmt) {
-		this.stmt = stmt;
-		db = new DB_Connectionmysql(stmt);
+	public Mysql() {
+		db = new DB_Connectionmysql();
 		this.db = db;
 	}
     
@@ -133,7 +132,7 @@ public class Mysql {
 							}
 
                	    	 }
- 	                    //System.out.println(str);
+ 	                     //System.out.println(str);
                	    	 //db=null;
                	    	 //System.gc();
                    	     str="";

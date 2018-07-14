@@ -20,6 +20,7 @@ public class DB_Connectionmysql {
 	public String select;
 	public  String datasend="";
 	public String fmachine;
+	public String connet;
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
 	
@@ -45,8 +46,7 @@ public class DB_Connectionmysql {
 	public String inSql4 = "";
 	public final String inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values";
 
-	public DB_Connectionmysql(java.sql.Statement stmt){
-		this.stmt = stmt;
+	public DB_Connectionmysql(){
 		/*try {
 
 			Class.forName("com.mysql.jdbc.Driver");  
@@ -100,7 +100,22 @@ public class DB_Connectionmysql {
                     if(count1 == 100){
                     	
                     	try {
-                        	
+                    		if(stmt==null || stmt.isClosed()==true)
+        		        	{
+        		        		try {
+        							Class.forName("com.mysql.jdbc.Driver");
+        							conn = DriverManager.getConnection(connet);
+        							stmt = conn.createStatement();
+        		        	    } catch (ClassNotFoundException e) {  
+        		                    System.out.println("Broken driver");
+        		                    e.printStackTrace();
+        		                    return;
+        		                } catch (SQLException e) {
+        		                    System.out.println("Broken conn");
+        		                    e.printStackTrace();
+        		                    return;
+        		                }  
+        		        	}
                             stmt.executeUpdate(inSql1);
                             work = work + 1;
                             if(work==5){
@@ -150,6 +165,22 @@ public class DB_Connectionmysql {
                     	
                     	try {
                         	
+                    		if(stmt==null || stmt.isClosed()==true)
+        		        	{
+        		        		try {
+        							Class.forName("com.mysql.jdbc.Driver");
+        							conn = DriverManager.getConnection(connet);
+        							stmt = conn.createStatement();
+        		        	    } catch (ClassNotFoundException e) {  
+        		                    System.out.println("Broken driver");
+        		                    e.printStackTrace();
+        		                    return;
+        		                } catch (SQLException e) {
+        		                    System.out.println("Broken conn");
+        		                    e.printStackTrace();
+        		                    return;
+        		                }  
+        		        	}
                             stmt.executeUpdate(inSql2);
                             work = work + 1;
                             if(work==5){
@@ -199,6 +230,22 @@ public class DB_Connectionmysql {
                     	
                     	try {
                         	
+                    		if(stmt==null || stmt.isClosed()==true)
+        		        	{
+        		        		try {
+        							Class.forName("com.mysql.jdbc.Driver");
+        							conn = DriverManager.getConnection(connet);
+        							stmt = conn.createStatement();
+        		        	    } catch (ClassNotFoundException e) {  
+        		                    System.out.println("Broken driver");
+        		                    e.printStackTrace();
+        		                    return;
+        		                } catch (SQLException e) {
+        		                    System.out.println("Broken conn");
+        		                    e.printStackTrace();
+        		                    return;
+        		                }  
+        		        	}
                             stmt.executeUpdate(inSql3);
                             work = work + 1;
                             if(work==5){
@@ -248,6 +295,22 @@ public class DB_Connectionmysql {
                     	
                     	try {
                         	
+                    		if(stmt==null || stmt.isClosed()==true)
+        		        	{
+        		        		try {
+        							Class.forName("com.mysql.jdbc.Driver");
+        							conn = DriverManager.getConnection(connet);
+        							stmt = conn.createStatement();
+        		        	    } catch (ClassNotFoundException e) {  
+        		                    System.out.println("Broken driver");
+        		                    e.printStackTrace();
+        		                    return;
+        		                } catch (SQLException e) {
+        		                    System.out.println("Broken conn");
+        		                    e.printStackTrace();
+        		                    return;
+        		                }  
+        		        	}
                             stmt.executeUpdate(inSql4);
                             work = work + 1;
                             if(work==5){

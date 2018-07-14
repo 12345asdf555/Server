@@ -3,6 +3,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -27,15 +28,15 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public Thread workThread;
     public java.sql.Statement stmt =null;
     public SocketChannel socketchannel = null;
-    public HashMap<String, Socket> websocket;
     public ArrayList<String> dbdata = new ArrayList<String>();
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
     public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
-    public Mysql mysql = new Mysql(stmt);
-    public Android android = new Android(stmt);
-	
+    public Mysql mysql = new Mysql();
+    public Android android = new Android();
+    public Websocket websocket = new Websocket();
+	public byte[] b;
     public int a=0;
     
 	@Override  
@@ -46,6 +47,36 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			 Workspace ws = new Workspace(str);
 	         workThread = new Thread(ws);  
 	         workThread.start(); 
+	         
+	         /*try {
+				b = str.getBytes("ISO-8859-1");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	         str="";
+	         for(int i=0;i<b.length;i++){
+              	
+              	//判断为数字还是字母，若为字母+256取正数
+              	if(b[i]<0){
+              		String r = Integer.toHexString(b[i]+256);
+              		String rr=r.toUpperCase();
+                  	//数字补为两位数
+                  	if(rr.length()==1){
+              			rr='0'+rr;
+                  	}
+                  	//strdata为总接收数据
+              		str += rr;
+              	}
+              	else{
+              		String r = Integer.toHexString(b[i]);
+                  	if(r.length()==1)
+              			r='0'+r;
+                  	r=r.toUpperCase();
+              		str+=r;	
+              	}
+              }
+	         System.out.println("D");*/
 	         
 			 /*ByteBuf buf=(ByteBuf)msg; 
 			 byte[] req=new byte[buf.readableBytes()];  
@@ -109,12 +140,10 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        new Socketsend(str,ip1);
 	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
-			Websocket websocket = new Websocket(str,listarray2,listarray3,websocketlist,dbdata);
-			
 			if(str.substring(0,2).equals("FA")){  //处理实时数据
 			
 				mysql.Mysqlrun(str);
-		        websocket.Websocketrun(str);
+		        websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
 		        //System.out.println("1");
 		        //new Socketsend(str,ip1);
 		        if(socketchannel!=null){
@@ -126,7 +155,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 					}
 		        }
 		        
-	        }else if(str.substring(0,4).equals("FE24")){   //处理android数据
+	        }else if(str.substring(0,2).equals("þ")){   //处理android数据
 	        	
 	        	android.Androidrun(str);
 	        	

@@ -105,7 +105,7 @@ public class DB_Connectioncode {
 
          try {
 
-         	ResultSet rs =stmt.executeQuery(inSql);
+         	 ResultSet rs =stmt.executeQuery(inSql);
              
              while (rs.next()) {
             	int fwelded_junction_no = rs.getInt("fwelded_junction_no");

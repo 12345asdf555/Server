@@ -87,7 +87,7 @@ public class Server implements Runnable {
     public String connet2 = ":3306/"; 
     public String connet3 = "?user="; 
     public String connet4 = "&password=";
-    public String connet5 = "&useUnicode=true&characterEncoding=UTF8";
+    public String connet5 = "&useUnicode=true&autoReconnect=true&characterEncoding=UTF8";
     public String connet;
     public byte b[];
     public DB_Connectioncode check;
@@ -162,8 +162,10 @@ public class Server implements Runnable {
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
             stmt= conn.createStatement();
-            NS.mysql.db.stmt = this.stmt;
-            NS.android.db.stmt = this.stmt;
+            NS.mysql.db.stmt = stmt;
+            NS.android.db.stmt = stmt;
+            NS.mysql.db.connet = connet;
+            NS.android.db.connet = connet;
 
         } catch (ClassNotFoundException e) {  
             System.out.println("Broken driver");
@@ -193,8 +195,6 @@ public class Server implements Runnable {
 	    Timer tExit1 = null; 
 		tExit1 = new Timer();  
         tExit1.schedule(new TimerTask() {  
-            private Connection conn;
-			private Statement stmt;
 
 			@Override  
             public void run() {
@@ -208,7 +208,7 @@ public class Server implements Runnable {
                     
                     Class.forName("com.mysql.jdbc.Driver");  
                     conn = DriverManager.getConnection(connet);
-                    stmt= conn.createStatement();
+                    stmt = conn.createStatement();
                     	
                 	Date date = new Date();
                     String nowtimefor = DateTools.format("yyyy-MM-dd",date);
@@ -266,8 +266,8 @@ public class Server implements Runnable {
                 	stmt.executeUpdate(sqlwork);
                 	stmt.executeUpdate(sqlalarm);
                     
-                	stmt.close();
-                    conn.close();
+                	/*stmt.close();
+                    conn.close();*/
                         
                 } catch (ClassNotFoundException e) {  
                     System.out.println("Broken driver");
@@ -287,7 +287,7 @@ public class Server implements Runnable {
 	    DB_Connectioncode check = new DB_Connectioncode(stmt);
 	    DB_Connectionweb b =new DB_Connectionweb(connet);
   		dbdata = b.getId();
-		NS.dbdata = this.dbdata;
+		NS.websocket.dbdata = this.dbdata;
   		
 		//listarray1 = check.getId1();
 		listarray2 = check.getId2();
@@ -299,6 +299,7 @@ public class Server implements Runnable {
 		
 		//NS.listarray1 = this.listarray1;
 		NS.mysql.listarray2 = this.listarray2;
+		NS.android.listarray2 = this.listarray2;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
 	    
@@ -310,11 +311,13 @@ public class Server implements Runnable {
             public void run() {
   		
 	            try{
-	        		if(stmt==null || stmt.isClosed()==true)
+	        		/*if(NS.mysql.db.stmt==null || NS.mysql.db.stmt.isClosed()==true)
 		        	{
 		        		try {
 							Class.forName("com.mysql.jdbc.Driver");
-							stmt = DriverManager.getConnection(connet).createStatement();
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+							NS.mysql.db.stmt = stmt;
 		        	    } catch (ClassNotFoundException e) {  
 		                    System.out.println("Broken driver");
 		                    e.printStackTrace();
@@ -324,10 +327,38 @@ public class Server implements Runnable {
 		                    e.printStackTrace();
 		                    return;
 		                }  
-		        		
-			            NS.mysql.db.stmt = stmt;
-			            NS.android.db.stmt = stmt;
-		        		
+		        	}else if(NS.android.db.stmt==null || NS.android.db.stmt.isClosed()==true)
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+							NS.android.db.stmt = stmt;
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}*/
+	            	if(stmt==null || stmt.isClosed()==true)
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
 		        	}
 	        	}catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -347,8 +378,17 @@ public class Server implements Runnable {
         		
         		//NS.listarray1 = listarray1;
         		NS.mysql.listarray2 = listarray2;
+        		NS.android.listarray2 = listarray2;
         		NS.listarray2 = listarray2;
         		NS.listarray3 = listarray3;
+        		
+        		/*try {
+					stmt.close();
+					conn.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
             }  
         }, 0,60000);
         
@@ -401,7 +441,6 @@ public class Server implements Runnable {
 	        
         	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss",values1[0]).getTime();
 	        System.out.println(datetime1);
-	        
 	        
 	        String sqlfirstwork2 = "SELECT tb_live_data.fWeldTime FROM tb_live_data ORDER BY tb_live_data.fWeldTime DESC LIMIT 0,1";
 	        ResultSet rs2 =stmt.executeQuery(sqlfirstwork2);
@@ -511,7 +550,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5555).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -557,7 +596,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5550).sync().channel();
+	            Channel ch = serverBootstrap.bind(4555).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
