@@ -48,7 +48,7 @@ public class Websocket {
         	//无用户连接时增加统计焊机工作时间
 			if(websocketlist==null || websocketlist.isEmpty()){
 				
-				if (str.length() == 110) { 
+				/*if (str.length() == 110) { 
 					
 					 //校验第一位是否为FA末位是否为F5
 		       	     String check1 =str.substring(0,2);
@@ -145,7 +145,7 @@ public class Websocket {
 		               	     }
 		           	     }
 		       	     }
-				}
+				}*/
 			}
 			
 			//用户连接时发送实时数据
@@ -473,14 +473,23 @@ public class Websocket {
 	                       	 
 	                       	//System.out.println("4");
 	                       	 
-	                       	 String worktime = "";
+	                       	 /*String worktime = "";
 		                   	 String totaltime = "";
 		                   	 String worktime1 = "";
 		                   	 String totaltime1 = "";
 		                   	 String workhour1,workminute1,worksecond1;
-		                   	 String workhour2,workminute2,worksecond2;
+		                   	 String workhour2,workminute2,worksecond2;*/
 		                   	 for(int i=0;i<listarray2.size();i+=4){
-		                   		 String fequipment_no = listarray2.get(i+1);
+		                   		 //修改发送焊机编号为焊机id
+		                   		 //String fequipment_no = listarray2.get(i+1);
+		                   		 String fequipment_no = listarray2.get(i);
+		                   		 if(fequipment_no.length()!=4){
+			                       	 int lenth=4-secondstr3.length();
+			                       	 for(int i1=0;i1<lenth;i1++){
+			                       		fequipment_no="0"+fequipment_no;
+			                       	 }
+		                         }
+		                   		 
 		                   		 String fgather_no = listarray2.get(i+2);
 		                   		 String finsframework_id = listarray2.get(i+3);
 	
@@ -490,7 +499,7 @@ public class Websocket {
 		                   			 
 		                   			 //System.out.println("5");
 		                   			 
-		                   			 for(int j=0;j<dbdata.size();j+=3){
+		                   			 /*for(int j=0;j<dbdata.size();j+=3){
 		                       			 if(dbdata.get(j).equals(fequipment_no)){
 		                       				 if(status1.equals("00")){
 		                       					 worktime=Integer.toString(Integer.valueOf(dbdata.get(j+1)));
@@ -547,20 +556,20 @@ public class Websocket {
 		               		        }else{
 		               		        	worksecond2 = String.valueOf(second4);
 		               		        }
-		               		         totaltime1 = workhour2 + workminute2 + worksecond2;
+		               		         totaltime1 = workhour2 + workminute2 + worksecond2;*/
 	
 		               		      //System.out.println("6");
 		               		         
 	               		         if(weldname.equals(fgather_no)){
 	                       			if(finsframework_id==null || finsframework_id==""){
 	                       				finsframework_id="nu";
-	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit+worktime1 + totaltime1
-			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+worktime1 + totaltime1
-			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+worktime1 + totaltime1;
+	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit+"00:00:00"+"00:00:00"
+			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+"00:00:00"+"00:00:00"
+			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+"00:00:00"+"00:00:00";
 	                       			}else{
-	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit+worktime1 + totaltime1
-			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+worktime1 + totaltime1
-			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+worktime1 + totaltime1;
+	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit+"00:00:00"+"00:00:00"
+			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+"00:00:00"+"00:00:00"
+			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+"00:00:00"+"00:00:00";
 	                       			}	
 	                       			break;
 	               		        	 
@@ -570,23 +579,23 @@ public class Websocket {
 	               		         }
 	               		         
 	               		         //每天晚上12点清零
-	               		         Date date = new Date();
+	               		         /*Date date = new Date();
 		                         String nowtime = DateTools.format("HH:mm:ss",date);
 		                         if(nowtime.equals("23:59:59") || nowtime.equals("00:00:00") || nowtime.equals("00:00:01")){
 		                   			 for(int l=0;l<dbdata.size();l+=3){
 		                   				 dbdata.set(l+1, "0");
 		                   				 dbdata.set(l+2, "0");
 		                   			 }
-		                   		 }
+		                   		 }*/
 	               		         
 	               		         //System.out.println("f:"+strsend);
 	               		         
 		   	                     /*else{
 		   	                    	if(finsframework_id==null || finsframework_id==""){
 	                       				 finsframework_id="nu";
-	                       				strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00";
+	                       				strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+worktime1 + totaltime1
+			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+worktime1 + totaltime1
+			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+worktime1 + totaltime1;
 	       	                    	}else{
 	       	                    		strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
 			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"

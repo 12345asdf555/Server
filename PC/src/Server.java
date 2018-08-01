@@ -294,8 +294,8 @@ public class Server implements Runnable {
 		listarray3 = check.getId3();
 		
 		//System.out.println(listarray1);
-		System.out.println(listarray2);
-		System.out.println(listarray3);
+		//System.out.println(listarray2);
+		//System.out.println(listarray3);
 		
 		//NS.listarray1 = this.listarray1;
 		NS.mysql.listarray2 = this.listarray2;
@@ -373,8 +373,8 @@ public class Server implements Runnable {
         		listarray3 = check.getId3();
         		
         		//System.out.println(listarray1);
-        		//System.out.println(listarray2);
-        		//System.out.println(listarray3);
+        		System.out.println(listarray2);
+        		System.out.println(listarray3);
         		
         		//NS.listarray1 = listarray1;
         		NS.mysql.listarray2 = listarray2;
@@ -543,6 +543,7 @@ public class Server implements Runnable {
 	                	chsoc.pipeline().addLast(NS);
 	                	socketcount++;
 						socketlist.put(Integer.toString(socketcount),chsoc);
+						NS.socketlist = socketlist;
 						NWS.socketlist = socketlist;
 						
 	                }
@@ -550,7 +551,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5555).sync();
+				f = b.bind(5551).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -587,7 +588,7 @@ public class Server implements Runnable {
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://192.168.1.107:5554/SerialPortDemo/ws/张三"));
+							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://cms.cnec5.com:4555/SerialPortDemo/ws/张三"));
 							chweb.pipeline().addLast("myWebSocketHandler", NWS);
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);

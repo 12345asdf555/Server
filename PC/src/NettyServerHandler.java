@@ -32,6 +32,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
+    public HashMap<String, SocketChannel> socketlist = new HashMap<>();
     public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
     public Mysql mysql = new Mysql();
     public Android android = new Android();
@@ -158,6 +159,21 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        }else if(str.substring(0,2).equals("þ")){   //处理android数据
 	        	
 	        	android.Androidrun(str);
+	        	
+	        }else if(str.substring(0,2).equals("JN")){  //江南任务派发 任务号、焊工、焊机、状态
+	        	
+	        	Iterator<Entry<String, SocketChannel>> iter = socketlist.entrySet().iterator();
+                while(iter.hasNext()){
+                	try{
+                    	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
+                    	socketfail = entry.getKey();
+                    	SocketChannel socketcon = entry.getValue();
+                    	socketcon.writeAndFlush(str).sync();
+                	}catch (Exception e) {
+						socketlist.remove(socketfail);
+						iter = websocketlist.entrySet().iterator();
+   					 }
+                }
 	        	
 	        }else{    //处理焊机下发和上传
 	        	
