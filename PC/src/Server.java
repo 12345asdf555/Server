@@ -373,8 +373,8 @@ public class Server implements Runnable {
         		listarray3 = check.getId3();
         		
         		//System.out.println(listarray1);
-        		System.out.println(listarray2);
-        		System.out.println(listarray3);
+        		//System.out.println(listarray2);
+        		//System.out.println(listarray3);
         		
         		//NS.listarray1 = listarray1;
         		NS.mysql.listarray2 = listarray2;
@@ -551,7 +551,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5557).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -597,7 +597,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(4555).sync().channel();
+	            Channel ch = serverBootstrap.bind(5556).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();

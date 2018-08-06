@@ -162,20 +162,46 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	
 	        }else if(str.substring(0,2).equals("JN")){  //江南任务派发 任务号、焊工、焊机、状态
 	        	
+	        	System.out.println(" ");
+	        	System.out.println(str);
+	        	
+	        	ArrayList<String> listarraybuf = new ArrayList<String>();
+	        	boolean ifdo = false;
+	        	
 	        	Iterator<Entry<String, SocketChannel>> iter = socketlist.entrySet().iterator();
                 while(iter.hasNext()){
                 	try{
                     	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
+                    	
+                    	System.out.println(entry);
+                    	
                     	socketfail = entry.getKey();
-                    	SocketChannel socketcon = entry.getValue();
+
+        				SocketChannel socketcon = entry.getValue();
                     	socketcon.writeAndFlush(str).sync();
+                    	
                 	}catch (Exception e) {
-						socketlist.remove(socketfail);
-						iter = websocketlist.entrySet().iterator();
+                		
+                		System.out.println(socketfail);
+                		e.printStackTrace();
+
+                		listarraybuf.add(socketfail);
+                		ifdo = true;
    					 }
                 }
 	        	
+                if(ifdo){
+                	for(int i=0;i<listarraybuf.size();i++){
+                    	socketlist.remove(listarraybuf.get(i));
+                	}
+                }
+                
 	        }else{    //处理焊机下发和上传
+	        	
+	        	//System.out.println(str);
+	        	
+	        	ArrayList<String> listarraybuf = new ArrayList<String>();
+	        	boolean ifdo = false;
 	        	
 	        	Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
                 while(webiter.hasNext()){
@@ -185,10 +211,21 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                     	SocketChannel websocketcon = entry.getValue();
                     	websocketcon.writeAndFlush(new TextWebSocketFrame(str)).sync();
                 	}catch (Exception e) {
-						websocketlist.remove(websocketfail);
-						webiter = websocketlist.entrySet().iterator();
+                		
+                		listarraybuf.add(socketfail);
+                		ifdo = true;
+                		
+						/*websocketlist.remove(websocketfail);
+						webiter = websocketlist.entrySet().iterator();*/
    					 }
                 }
+                
+                if(ifdo){
+                	for(int i=0;i<listarraybuf.size();i++){
+                		websocketlist.remove(listarraybuf.get(i));
+                	}
+                }
+                
 	        }
 					
 			/*} catch (InterruptedException e) {
