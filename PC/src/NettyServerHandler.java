@@ -143,8 +143,20 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			
 			if(str.substring(0,2).equals("FA")){  //处理实时数据
 			
-				mysql.Mysqlrun(str);
-		        websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
+				if(str.length()==170){
+					mysql.Mysqlrun1(str);
+			        websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
+			   }
+				   
+			   else if(str.length()==110){
+				   mysql.Mysqlrun(str);
+			       websocket.Websocketrun(str,listarray2,listarray3,websocketlist);	
+			   }
+				
+				//旧
+				/*mysql.Mysqlrun(str);
+		        websocket.Websocketrun(str,listarray2,listarray3,websocketlist);*/
+				
 		        //System.out.println("1");
 		        //new Socketsend(str,ip1);
 		        if(socketchannel!=null){
@@ -212,7 +224,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                     	websocketcon.writeAndFlush(new TextWebSocketFrame(str)).sync();
                 	}catch (Exception e) {
                 		
-                		listarraybuf.add(socketfail);
+                		listarraybuf.add(websocketfail);
                 		ifdo = true;
                 		
 						/*websocketlist.remove(websocketfail);

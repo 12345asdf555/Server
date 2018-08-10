@@ -530,17 +530,5 @@ public class DB_Connectionandroid {
         
         
         
-    }
-    
-    /*protected void finalize( ){
-		try {
-			conn.close();
-			stmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
-    
-    
+    }  
 }
