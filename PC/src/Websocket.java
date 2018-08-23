@@ -1224,25 +1224,24 @@ public class Websocket {
 			                         }
 		                   			 
 		                   			//江南
-		                   			/*if(weldname.equals(fgather_no)){
-		                       			if(finsframework_id==null || finsframework_id==""){
-		                       				finsframework_id="nu";
-		                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
-				   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
-				   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
-		                       			}else{
-		                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
-				   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
-				   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
-		                       			}	
-		                       			break;
-		                   			}*/
-		                   			
-		                   			
-		                   			
 		                   			if(weldname.equals(fgather_no)){
 		                       			if(finsframework_id==null || finsframework_id==""){
 		                       				finsframework_id="nu";
+		                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
+				   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
+				   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
+		                       			}else{
+		                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
+				   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
+				   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
+		                       			}	
+		                       			break;
+		                   			}
+		                   			
+		                   			
+		                   			/*if(weldname.equals(fgather_no)){
+		                       			if(finsframework_id==null || finsframework_id==""){
+		                       				finsframework_id="nu";
 		                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+"00000000000000000000"+timesql1+limit+"00:00:00"+"00:00:00"
 				   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+"00000000000000000000"+timesql2+limit+"00:00:00"+"00:00:00"
 				   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00";
@@ -1252,7 +1251,7 @@ public class Websocket {
 				   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00";
 		                       			}	
 		                       			break;
-		                   			}
+		                   			}*/
 		                   		 }
 		                   	 }
                        }catch (Exception e) {

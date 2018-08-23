@@ -229,7 +229,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 		
 						/*websocketlist.remove(websocketfail);
 						webiter = websocketlist.entrySet().iterator();*/
-   					 }
+   					}
                 }
                 
                 if(ifdo){
