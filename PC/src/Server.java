@@ -257,7 +257,7 @@ public class Server implements Runnable {
                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
                     		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "' FROM tb_live_data "
                     		+ "INNER JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
-                    		+ "WHERE fstatus= '3' and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
+                    		+ "WHERE fstatus= '3' and tb_welded_junction.fitemid = tb_live_data.fitemid and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
                     		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
                     		+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
@@ -551,7 +551,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5557).sync();
+				f = b.bind(5555).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -597,7 +597,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5556).sync().channel();
+	            Channel ch = serverBootstrap.bind(4555).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
