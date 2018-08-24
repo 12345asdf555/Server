@@ -45,6 +45,8 @@ public class Websocket {
         this.strdata = str;
 		//System.out.println("1:"+str);
         
+        synchronized (this) {
+        
         try {
 			
         	//鏃犵敤鎴疯繛鎺ユ椂澧炲姞缁熻鐒婃満宸ヤ綔鏃堕棿
@@ -1324,6 +1326,7 @@ public class Websocket {
 				
 			}
 		}
+        }
         
 	}
 	
