@@ -212,7 +212,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                     	websocketcon.writeAndFlush(new TextWebSocketFrame(str)).sync();
                 	}catch (Exception e) {
                 		
-                		listarraybuf.add(socketfail);
+                		listarraybuf.add(websocketfail);
                 		ifdo = true;
                 		
 						/*websocketlist.remove(websocketfail);

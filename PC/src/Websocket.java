@@ -483,19 +483,19 @@ public class Websocket {
 		                   		 //修改发送焊机编号为焊机id
 		                   		 //String fequipment_no = listarray2.get(i+1);
 		                   		 String fequipment_no = listarray2.get(i);
-		                   		 if(fequipment_no.length()!=4){
-			                       	 int lenth=4-secondstr3.length();
-			                       	 for(int i1=0;i1<lenth;i1++){
-			                       		fequipment_no="0"+fequipment_no;
-			                       	 }
-		                         }
-		                   		 
 		                   		 String fgather_no = listarray2.get(i+2);
 		                   		 String finsframework_id = listarray2.get(i+3);
 	
 		                   		 //System.out.print(fequipment_no+" ");
 		                   		 
 		                   		 if(weldname.equals(fgather_no)){
+		                   			 
+		                   			if(fequipment_no.length()!=4){
+				                       	 int lenth=4-fequipment_no.length();
+				                       	 for(int i1=0;i1<lenth;i1++){
+				                       		fequipment_no="0"+fequipment_no;
+				                       	 }
+			                         }
 		                   			 
 		                   			 //System.out.println("5");
 		                   			 
@@ -669,7 +669,7 @@ public class Websocket {
 	       				
 	       				byteBuf.flip();*/
 	                        
-                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
+                        /*Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
                         while(webiter.hasNext()){
                         	try{
 	                        	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
@@ -683,6 +683,34 @@ public class Websocket {
 	       							datawritetype=false;
 	       						 }
 	       					 }
+                        }*/
+                        
+                        //System.out.println(strsend);
+                        
+                        ArrayList<String> listarraybuf = new ArrayList<String>();
+        	        	boolean ifdo = false;
+                        
+                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
+                        while(webiter.hasNext()){
+                        	try{
+                            	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+                            	websocketfail = entry.getKey();
+                            	SocketChannel websocketcon = entry.getValue();
+                            	websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+                        	}catch (Exception e) {
+                        		
+                        		listarraybuf.add(websocketfail);
+                        		ifdo = true;
+                        		
+        						/*websocketlist.remove(websocketfail);
+        						webiter = websocketlist.entrySet().iterator();*/
+           					 }
+                        }
+                        
+                        if(ifdo){
+                        	for(int i=0;i<listarraybuf.size();i++){
+                        		websocketlist.remove(listarraybuf.get(i));
+                        	}
                         }
                         
                         strsend="";

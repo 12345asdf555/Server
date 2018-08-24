@@ -183,10 +183,6 @@ public class Server implements Runnable {
        
         Calendar calendar = Calendar.getInstance();
         
-        //calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)); //测试
-        //calendar.set(Calendar.MINUTE, 27);    // 控制分
-        //calendar.set(Calendar.SECOND, 00);    // 控制秒
-        
         calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)+1); // 控制时
         calendar.set(Calendar.MINUTE, 00);    // 控制分
         calendar.set(Calendar.SECOND, 00);    // 控制秒
@@ -257,7 +253,7 @@ public class Server implements Runnable {
                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
                     		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "' FROM tb_live_data "
                     		+ "INNER JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
-                    		+ "WHERE fstatus= '3' and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
+                    		+ "WHERE fstatus= '3' and tb_welded_junction.fitemid = tb_live_data.fitemid and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
                     		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
                     		+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
@@ -265,9 +261,6 @@ public class Server implements Runnable {
                 	stmt.executeUpdate(sqlstandby);
                 	stmt.executeUpdate(sqlwork);
                 	stmt.executeUpdate(sqlalarm);
-                    
-                	/*stmt.close();
-                    conn.close();*/
                         
                 } catch (ClassNotFoundException e) {  
                     System.out.println("Broken driver");
@@ -289,15 +282,12 @@ public class Server implements Runnable {
   		dbdata = b.getId();
 		NS.websocket.dbdata = this.dbdata;
   		
-		//listarray1 = check.getId1();
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
 		
-		//System.out.println(listarray1);
-		//System.out.println(listarray2);
-		//System.out.println(listarray3);
+		System.out.println(listarray2);
+		System.out.println(listarray3);
 		
-		//NS.listarray1 = this.listarray1;
 		NS.mysql.listarray2 = this.listarray2;
 		NS.android.listarray2 = this.listarray2;
 		NS.listarray2 = this.listarray2;
@@ -311,39 +301,6 @@ public class Server implements Runnable {
             public void run() {
   		
 	            try{
-	        		/*if(NS.mysql.db.stmt==null || NS.mysql.db.stmt.isClosed()==true)
-		        	{
-		        		try {
-							Class.forName("com.mysql.jdbc.Driver");
-							conn = DriverManager.getConnection(connet);
-							stmt = conn.createStatement();
-							NS.mysql.db.stmt = stmt;
-		        	    } catch (ClassNotFoundException e) {  
-		                    System.out.println("Broken driver");
-		                    e.printStackTrace();
-		                    return;
-		                } catch (SQLException e) {
-		                    System.out.println("Broken conn");
-		                    e.printStackTrace();
-		                    return;
-		                }  
-		        	}else if(NS.android.db.stmt==null || NS.android.db.stmt.isClosed()==true)
-		        	{
-		        		try {
-							Class.forName("com.mysql.jdbc.Driver");
-							conn = DriverManager.getConnection(connet);
-							stmt = conn.createStatement();
-							NS.android.db.stmt = stmt;
-		        	    } catch (ClassNotFoundException e) {  
-		                    System.out.println("Broken driver");
-		                    e.printStackTrace();
-		                    return;
-		                } catch (SQLException e) {
-		                    System.out.println("Broken conn");
-		                    e.printStackTrace();
-		                    return;
-		                }  
-		        	}*/
 	            	if(stmt==null || stmt.isClosed()==true)
 		        	{
 		        		try {
@@ -368,27 +325,13 @@ public class Server implements Runnable {
             	
         		DB_Connectioncode check = new DB_Connectioncode(stmt);
         		
-        		//listarray1 = check.getId1();
         		listarray2 = check.getId2();
         		listarray3 = check.getId3();
         		
-        		//System.out.println(listarray1);
-        		//System.out.println(listarray2);
-        		//System.out.println(listarray3);
-        		
-        		//NS.listarray1 = listarray1;
         		NS.mysql.listarray2 = listarray2;
         		NS.android.listarray2 = listarray2;
         		NS.listarray2 = listarray2;
         		NS.listarray3 = listarray3;
-        		
-        		/*try {
-					stmt.close();
-					conn.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
             }  
         }, 0,60000);
         
@@ -397,7 +340,70 @@ public class Server implements Runnable {
 		new Thread(websocketstart).start();
 		new Thread(sockettran).start();
 		
-    	
+		//开启线程每天查询邮件
+        Calendar calendarmail = Calendar.getInstance();
+        
+        calendarmail.set(Calendar.HOUR_OF_DAY, 20); // 控制时
+        calendarmail.set(Calendar.MINUTE, 02);    // 控制分
+        calendarmail.set(Calendar.SECOND, 00);    // 控制秒
+        time = calendarmail.getTime(); 
+        
+	    Timer tExit3 = null; 
+		tExit3 = new Timer();  
+        tExit3.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				ArrayList<String> listarraymail = new ArrayList<String>();
+				String sqlmail = "SELECT tb_catweldinf.fweldnum,tb_catweldinf.fcheckintime,tb_catweldinf.ficworkime FROM tb_catweldinf";
+				String sqlmailer = "SELECT femailname,femailaddress,femailtype FROM tb_catemailinf";
+				ResultSet rs;
+				try {
+					rs = stmt.executeQuery(sqlmail);
+	            	while (rs.next()) {
+	            		listarraymail.add(rs.getString("fweldnum"));
+	            		listarraymail.add(rs.getString("fcheckintime"));
+	            		listarraymail.add(rs.getString("ficworkime"));
+	            	}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				for(int i=0;i<listarraymail.size();i+=3){
+					Date date = new Date();
+					String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
+					
+					String checkintime = listarraymail.get(i+1);
+					String icworktime = listarraymail.get(i+2);
+					
+					String[] nowtimebuf = nowtime.split("-");
+					String[] checkintimebuf = checkintime.split("-");
+					String[] icworktimebuf = icworktime.split("-");
+					
+					if(Integer.valueOf(nowtimebuf[0]) - Integer.valueOf(checkintimebuf[0]) == 0){
+						if((Integer.valueOf(nowtimebuf[1]) - Integer.valueOf(checkintimebuf[1])) % 5 == 0){
+							if((Integer.valueOf(nowtimebuf[2]) - Integer.valueOf(checkintimebuf[1]) >0 && (Integer.valueOf(nowtimebuf[2]) - Integer.valueOf(checkintimebuf[1])) % 15 == 0)){
+								
+							}else if((Integer.valueOf(checkintimebuf[1]) - Integer.valueOf(nowtimebuf[2]) >0 && (Integer.valueOf(checkintimebuf[1]) - Integer.valueOf(nowtimebuf[2])) % 15 == 0)){
+								
+							}
+						}
+					}else if(Integer.valueOf(nowtimebuf[0]) - Integer.valueOf(checkintimebuf[0]) != 0){
+						if(Integer.valueOf(checkintimebuf[1]) - (Integer.valueOf(nowtimebuf[1])) % 5 == 0){
+							if((Integer.valueOf(nowtimebuf[2]) - Integer.valueOf(checkintimebuf[1]) >0 && (Integer.valueOf(nowtimebuf[2]) - Integer.valueOf(checkintimebuf[1])) % 15 == 0)){
+								
+							}else if((Integer.valueOf(checkintimebuf[1]) - Integer.valueOf(nowtimebuf[2]) >0 && (Integer.valueOf(checkintimebuf[1]) - Integer.valueOf(nowtimebuf[2])) % 15 == 0)){
+								
+							}
+						}
+					}
+				}
+				
+			}  
+        	
+        }, time,86400000);
     	
 		//更新优化报表
     	/*String timework1 = null;
@@ -437,7 +443,7 @@ public class Server implements Runnable {
         		timework1 = rs1.getString("fWeldTime");
         	}
         	
-	        String[] values1 = ip1.split("——");
+	        String[] values1 = ip1.split("to");
 	        
         	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss",values1[0]).getTime();
 	        System.out.println(datetime1);
@@ -479,7 +485,7 @@ public class Server implements Runnable {
                 		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
                 		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + t1 + "','" + t2 + "' FROM tb_live_data "
                 		+ "LEFT JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
-                		+ "WHERE fstatus= '3' and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
+                		+ "WHERE fstatus= '3' and tb_welded_junction.fitemid = tb_live_data.fitemid and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
                 		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
                 		+ " AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
                 		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
@@ -551,7 +557,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5557).sync();
+				f = b.bind(5551).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -593,6 +599,8 @@ public class Server implements Runnable {
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);
 							NS.websocketlist = websocketlist;
+							
+							//System.out.println(chweb);
 						}
 	            		
 	            	});
