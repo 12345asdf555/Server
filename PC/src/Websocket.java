@@ -40,6 +40,8 @@ public class Websocket {
 	public void Websocketrun(String str, ArrayList<String> listarray2, ArrayList<String> listarray3, HashMap<String, SocketChannel> websocketlist) {
 		// TODO Auto-generated constructor stub
 
+		synchronized (this) {
+		
         this.strdata = str;
 		//System.out.println("1:"+str);
         
@@ -765,6 +767,7 @@ public class Websocket {
 			}
 		}
         
+		}
 	}
 	
 	public Websocket(String str,java.sql.Statement stmt, HashMap<String, Socket> websocket, ArrayList<String> listarray2,ArrayList<String> listarray3, HashMap<String, SocketChannel> websocketlist, ArrayList<String> dbdata) {

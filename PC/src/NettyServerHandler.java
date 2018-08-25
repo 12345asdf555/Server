@@ -141,6 +141,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        new Socketsend(str,ip1);
 	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
+			synchronized (this) {
+			
 			if(str.substring(0,2).equals("FA")){  //处理实时数据
 			
 				mysql.Mysqlrun(str);
@@ -261,6 +263,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			
 		}
  
+		}
 	 }
 	 
 	 /*public Runnable work = new Runnable() {

@@ -11,5 +11,6 @@
 	<classpathentry exported="true" kind="lib" path="D:/myeclipse/sqlite-jdbc-3.8.11.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/myeclipse/netty-all-5.0.0.Alpha2.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/myeclipse/netty-all-5.0.0.Alpha2-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/myeclipse/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
