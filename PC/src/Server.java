@@ -285,18 +285,23 @@ public class Server implements Runnable {
 	    
 	    //获取最新焊口和焊机统计时间
 	    DB_Connectioncode check = new DB_Connectioncode(stmt);
-	    DB_Connectionweb b =new DB_Connectionweb(connet);
-  		dbdata = b.getId();
+	    //DB_Connectionweb b =new DB_Connectionweb(connet);
+  		//dbdata = b.getId();
 		NS.websocket.dbdata = this.dbdata;
   		
+		listarray1 = check.getId1();
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
 		
+		System.out.println(listarray1);
 		System.out.println(listarray2);
 		System.out.println(listarray3);
 		
+		NS.mysql.listarray1 = this.listarray1;
 		NS.mysql.listarray2 = this.listarray2;
+		NS.android.listarray1 = this.listarray1;
 		NS.android.listarray2 = this.listarray2;
+		NS.listarray1 = this.listarray1;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
 	    
@@ -332,11 +337,16 @@ public class Server implements Runnable {
             	
         		DB_Connectioncode check = new DB_Connectioncode(stmt);
         		
+        		listarray1 = check.getId1();
         		listarray2 = check.getId2();
         		listarray3 = check.getId3();
         		
+        		NS.mysql.listarray1 = listarray1;
         		NS.mysql.listarray2 = listarray2;
+        		NS.mysql.listarray3 = listarray3;
+        		NS.android.listarray1 = listarray1;
         		NS.android.listarray2 = listarray2;
+        		NS.listarray1 = listarray1;
         		NS.listarray2 = listarray2;
         		NS.listarray3 = listarray3;
             }  
@@ -347,7 +357,7 @@ public class Server implements Runnable {
 		new Thread(websocketstart).start();
 		new Thread(sockettran).start();
 		
-		//开启线程每天查询邮件
+		/*//开启线程每天查询邮件
         Calendar calendarmail = Calendar.getInstance();
         
         calendarmail.set(Calendar.HOUR_OF_DAY, 17); // 控制时
@@ -547,7 +557,7 @@ public class Server implements Runnable {
 			}  
         	
 				
-        }, time,86400000);
+        }, time,86400000);*/
     	
 		//更新优化报表
     	/*String timework1 = null;
@@ -701,7 +711,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5557).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {

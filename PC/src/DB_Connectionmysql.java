@@ -23,6 +23,7 @@ public class DB_Connectionmysql {
 	public String connet;
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
+    public ArrayList<String> listarray3 = new ArrayList<String>();
 	
 	public String getId() {
 		return datasend;
@@ -45,6 +46,7 @@ public class DB_Connectionmysql {
 	public String inSql3 = "";
 	public String inSql4 = "";
 	public final String inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values";
+	
 
 	public DB_Connectionmysql(){
 		/*try {
@@ -66,11 +68,13 @@ public class DB_Connectionmysql {
        } */
 	}
 
-    public void DB_Connectionmysqlrun(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,ArrayList<String> listarray2){
+    public void DB_Connectionmysqlrun(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,ArrayList<String> listarray1,ArrayList<String> listarray2,ArrayList<String> listarray3){
     	
     	Date date;
     	String nowTime;
     	Timestamp goodsC_date;
+    	String welder = null;
+    	String junctionnum = null;
     	synchronized (this) {
     	 	switch(Integer.valueOf(work)){
         	case 1:
@@ -78,6 +82,13 @@ public class DB_Connectionmysql {
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
 
+                for(int i=0;i<listarray1.size();i+=2){
+               	 	if(welder_id.equals(listarray1.get(i))){
+               	 		welder = listarray1.get(i+1);
+               	 		break;
+               	 	}
+                }
+                
                 for(int i=0;i<listarray2.size();i+=4){
                	 	if(machine_id.equals(listarray2.get(i+2))){
                	 		fmachine = listarray2.get(i);
@@ -85,14 +96,21 @@ public class DB_Connectionmysql {
                	 	}
                 }
 
+                for(int i=0;i<listarray3.size();i+=6){
+               	 	if(code.equals(listarray3.get(i+5))){
+               	 		junctionnum = listarray3.get(i);
+               	 		break;
+               	 	}
+                }
+                
                 if(fmachine != null){
                	 
                	 	BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
         	         
                	 	if(count1==1){
-               	 		inSql1 = inSql + "('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+               	 		inSql1 = inSql + "('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder + "','" + junctionnum + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
                	 	}else{
-               	 		inSql1 = inSql1 + ",('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+               	 		inSql1 = inSql1 + ",('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + machine_id + "','" + welder + "','" + junctionnum + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
                	 	}
                     
                     count1++;
@@ -142,9 +160,23 @@ public class DB_Connectionmysql {
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
 
+                for(int i=0;i<listarray1.size();i+=2){
+               	 	if(welder_id.equals(listarray1.get(i))){
+               	 		welder = listarray1.get(i+1);
+               	 		break;
+               	 	}
+                }
+                
                 for(int i=0;i<listarray2.size();i+=4){
                	 	if(machine_id.equals(listarray2.get(i+2))){
                	 		fmachine = listarray2.get(i);
+               	 		break;
+               	 	}
+                }
+
+                for(int i=0;i<listarray3.size();i+=6){
+               	 	if(code.equals(listarray3.get(i+5))){
+               	 		junctionnum = listarray3.get(i);
                	 		break;
                	 	}
                 }
@@ -154,9 +186,9 @@ public class DB_Connectionmysql {
                	 	BigDecimal voltage2 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
         	         
                	 	if(count2==1){
-            	 		inSql2 = inSql + "('"+ electricity +"','" + voltage2 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+            	 		inSql2 = inSql + "('"+ electricity +"','" + voltage2 + "','" + sensor_Num + "','" + machine_id + "','" + welder + "','" + junctionnum + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
             	 	}else{
-            	 		inSql2 = inSql2 + ",('"+ electricity +"','" + voltage2 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+            	 		inSql2 = inSql2 + ",('"+ electricity +"','" + voltage2 + "','" + sensor_Num + "','" + machine_id + "','" + welder + "','" + junctionnum + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
             	 	}
                	 	
                     count2++;
@@ -207,9 +239,23 @@ public class DB_Connectionmysql {
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
 
+                for(int i=0;i<listarray1.size();i+=2){
+               	 	if(welder_id.equals(listarray1.get(i))){
+               	 		welder = listarray1.get(i+1);
+               	 		break;
+               	 	}
+                }
+                
                 for(int i=0;i<listarray2.size();i+=4){
                	 	if(machine_id.equals(listarray2.get(i+2))){
                	 		fmachine = listarray2.get(i);
+               	 		break;
+               	 	}
+                }
+
+                for(int i=0;i<listarray3.size();i+=6){
+               	 	if(code.equals(listarray3.get(i+5))){
+               	 		junctionnum = listarray3.get(i);
                	 		break;
                	 	}
                 }
@@ -219,9 +265,9 @@ public class DB_Connectionmysql {
                	 	BigDecimal voltage3 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
         	         
                	 	if(count3==1){
-            	 		inSql3 = inSql + "('"+ electricity +"','" + voltage3 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+            	 		inSql3 = inSql + "('"+ electricity +"','" + voltage3 + "','" + sensor_Num + "','" + machine_id + "','" + welder + "','" + junctionnum + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
             	 	}else{
-            	 		inSql3 = inSql3 + ",('"+ electricity +"','" + voltage3 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+            	 		inSql3 = inSql3 + ",('"+ electricity +"','" + voltage3 + "','" + sensor_Num + "','" + machine_id + "','" + welder + "','" + junctionnum + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
             	 	}
                	 
                     count3++;
@@ -272,6 +318,13 @@ public class DB_Connectionmysql {
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
 
+                for(int i=0;i<listarray1.size();i+=2){
+               	 	if(welder_id.equals(listarray1.get(i))){
+               	 		welder = listarray1.get(i+1);
+               	 		break;
+               	 	}
+                }
+                
                 for(int i=0;i<listarray2.size();i+=4){
                	 	if(machine_id.equals(listarray2.get(i+2))){
                	 		fmachine = listarray2.get(i);
@@ -279,14 +332,21 @@ public class DB_Connectionmysql {
                	 	}
                 }
 
+                for(int i=0;i<listarray3.size();i+=6){
+               	 	if(code.equals(listarray3.get(i+5))){
+               	 		junctionnum = listarray3.get(i);
+               	 		break;
+               	 	}
+                }
+                
                 if(fmachine != null){
                	 
                	 	BigDecimal voltage4 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
         	         
                	 	if(count4==1){
-            	 		inSql4 = inSql + "('"+ electricity +"','" + voltage4 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+            	 		inSql4 = inSql + "('"+ electricity +"','" + voltage4 + "','" + sensor_Num + "','" + machine_id + "','" + welder + "','" + junctionnum + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
             	 	}else{
-            	 		inSql4 = inSql4 + ",('"+ electricity +"','" + voltage4 + "','" + sensor_Num + "','" + machine_id + "','" + welder_id + "','" + code + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
+            	 		inSql4 = inSql4 + ",('"+ electricity +"','" + voltage4 + "','" + sensor_Num + "','" + machine_id + "','" + welder + "','" + junctionnum + "','" + status + "','" + fitemid + "','" + goodsC_date + "','" + timesql + "','" + fmachine + "')";
             	 	}
                	 
                     count4++;

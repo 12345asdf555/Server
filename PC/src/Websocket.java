@@ -26,12 +26,14 @@ public class Websocket {
 	private String strdata;
 	private SocketChannel chweb;
 	private String websocketfail;
+	private ArrayList<String> listarray1;
 	private ArrayList<String> listarray2;
 	private ArrayList<String> listarray3;
 	private boolean datawritetype = false;
 	private HashMap<String, Socket> websocket;
 	private HashMap<String, SocketChannel> websocketlist = null;
 	public ArrayList<String> dbdata = new ArrayList<String>();
+	
 
 	public Websocket() {
 		// TODO Auto-generated constructor stub
@@ -43,6 +45,7 @@ public class Websocket {
 		synchronized (this) {
 		
         this.strdata = str;
+        String weldernum = null;
 		//System.out.println("1:"+str);
         
         try {
@@ -462,8 +465,8 @@ public class Websocket {
 	                        
                         try{
                         	
-	                       	 for(int i=0;i<listarray3.size();i+=5){
-	                       		 String weldjunction = listarray3.get(i);
+	                       	 for(int i=0;i<listarray3.size();i+=6){
+	                       		 String weldjunction = listarray3.get(i+5);
 	                       		 if(weldjunction.equals(code)){
 	                       			 String maxe = listarray3.get(i+1);
 	                       			 String mixe = listarray3.get(i+2);
@@ -498,7 +501,7 @@ public class Websocket {
 				                       		fequipment_no="0"+fequipment_no;
 				                       	 }
 			                         }
-		                   			 
+		                   			
 		                   			 //System.out.println("5");
 		                   			 
 		                   			 /*for(int j=0;j<dbdata.size();j+=3){

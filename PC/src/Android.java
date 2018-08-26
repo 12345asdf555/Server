@@ -14,6 +14,7 @@ public class Android {
 	private String str;
 	private java.sql.Statement stmt;
 	public DB_Connectionandroid db;
+	public ArrayList<String> listarray1;
 	public ArrayList<String> listarray2;
 	
 	public Android() {

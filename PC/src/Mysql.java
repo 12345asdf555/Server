@@ -11,7 +11,9 @@ import java.util.Locale;
 public class Mysql {
 
     public java.sql.Statement stmt;
+    public ArrayList<String> listarray1;
 	public ArrayList<String> listarray2;
+	public ArrayList<String> listarray3;
 	public DB_Connectionmysql db;
 	
 	public Mysql() {
@@ -123,7 +125,7 @@ public class Mysql {
 	                                	
 								 String fitemid = str.substring(106, 108);
 							 
-								 db.DB_Connectionmysqlrun(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,listarray2);
+								 db.DB_Connectionmysqlrun(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,listarray1,listarray2,listarray3);
 								 //System.out.println(str);
                              } catch (Exception e) {
 								str="";
