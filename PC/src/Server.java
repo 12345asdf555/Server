@@ -748,7 +748,7 @@ public class Server implements Runnable {
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://cms.cnec5.com:4555/SerialPortDemo/ws/张三"));
+							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://localhost:5550/SerialPortDemo/ws/张三"));
 							chweb.pipeline().addLast("myWebSocketHandler", NWS);
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);
@@ -759,7 +759,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5556).sync().channel();
+	            Channel ch = serverBootstrap.bind(5550).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
