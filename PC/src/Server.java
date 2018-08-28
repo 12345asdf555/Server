@@ -348,10 +348,10 @@ public class Server implements Runnable {
 		new Thread(sockettran).start();
 		
 		//开启线程每天查询邮件
-        Calendar calendarmail = Calendar.getInstance();
+        /*Calendar calendarmail = Calendar.getInstance();
         
-        calendarmail.set(Calendar.HOUR_OF_DAY, 17); // 控制时
-        calendarmail.set(Calendar.MINUTE, 50);    // 控制分
+        calendarmail.set(Calendar.HOUR_OF_DAY, 9); // 控制时
+        calendarmail.set(Calendar.MINUTE, 14);    // 控制分
         calendarmail.set(Calendar.SECOND, 00);    // 控制秒
         time = calendarmail.getTime(); 
         
@@ -400,26 +400,32 @@ public class Server implements Runnable {
 					String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",resultDate);
 					
 					String[] nowtimebuf = nowtime.split(" ");
-					String[] checkintimebuf = listarraymail.get(i+1).split(" ");
-					
-					nowtime = nowtimebuf[0];
-					String checkintime = checkintimebuf[0];
+					String[] checkintimebuf = null;
+					String checkintime = null;
+					try{
+						checkintimebuf = listarraymail.get(i+1).split(" ");
+						nowtime = nowtimebuf[0];
+						checkintime = checkintimebuf[0];
+						
+						if(nowtime.equals(checkintime)){
+							if(halfyearname.equals("")){
+								halfyearname = listarraymail.get(i);
+							}else{
+								halfyearname = listarraymail.get(i) + "、" + halfyearname ;
+							}
 							
-					if(nowtime.equals(checkintime)){
-						if(halfyearname.equals("")){
-							halfyearname = listarraymail.get(i);
-						}else{
-							halfyearname = listarraymail.get(i) + "、" + halfyearname ;
+							String sqlmailcheck2 = "update tb_catweldinf set fhalfyearsure = '" + DateTools.format("yyyy-MM-dd HH:mm:ss",new Date()) + "' WHERE fweldername = '" + listarraymail.get(i) + "'";
+						    try {
+								stmt.execute(sqlmailcheck2);
+							} catch (SQLException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
 						}
 						
-						String sqlmailcheck2 = "update tb_catweldinf set fhalfyearsure = '" + DateTools.format("yyyy-MM-dd HH:mm:ss",new Date()) + "' WHERE fweldername = '" + listarraymail.get(i) + "'";
-					    try {
-							stmt.execute(sqlmailcheck2);
-						} catch (SQLException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
+					}catch(Exception e){
+						System.out.println("入职时间为空");
 					}
 					
 				}
@@ -497,7 +503,7 @@ public class Server implements Runnable {
 						
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.out.println("IC卡有效期为空");
 					}
 					
 				}
@@ -527,7 +533,7 @@ public class Server implements Runnable {
 							    msg.saveChanges();
 
 							    Transport transport = session.getTransport();
-							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//发件人邮箱,授权码
+							    transport.connect("jiangsudongyu123@163.com","qwerasdf12345678");//发件人邮箱,授权码
 							    
 							    transport.sendMessage(msg, msg.getAllRecipients());
 							    transport.close();
@@ -547,7 +553,7 @@ public class Server implements Runnable {
 			}  
         	
 				
-        }, time,86400000);
+        }, time,86400000);*/
     	
 		//更新优化报表
     	/*String timework1 = null;
@@ -701,7 +707,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5557).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -737,7 +743,7 @@ public class Server implements Runnable {
 
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
-							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
+							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8080));
 							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://cms.cnec5.com:4555/SerialPortDemo/ws/张三"));
 							chweb.pipeline().addLast("myWebSocketHandler", NWS);
 							websocketcount++;

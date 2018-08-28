@@ -108,8 +108,7 @@ public class DB_Connectioncode {
          	 ResultSet rs =stmt.executeQuery(inSql);
              
              while (rs.next()) {
-            	int fwelded_junction_no = rs.getInt("fwelded_junction_no");
-            	String weldjunction = String.valueOf(fwelded_junction_no);
+            	String weldjunction = rs.getString("fwelded_junction_no");
              	if(weldjunction.length()!=8){
              		int lenth=8-weldjunction.length();
              		for(int i=0;i<lenth;i++){
