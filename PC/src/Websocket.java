@@ -42,7 +42,7 @@ public class Websocket {
 	public void Websocketrun(String str, ArrayList<String> listarray2, ArrayList<String> listarray3, HashMap<String, SocketChannel> websocketlist) {
 		// TODO Auto-generated constructor stub
 
-		synchronized (this) {
+		
 		
         this.strdata = str;
         String weldernum = null;
@@ -697,30 +697,34 @@ public class Websocket {
                         
                         //System.out.println(strsend);
                         
-                        ArrayList<String> listarraybuf = new ArrayList<String>();
-        	        	boolean ifdo = false;
+                        synchronized (this) {
                         
-                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
-                        while(webiter.hasNext()){
-                        	try{
-                            	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-                            	websocketfail = entry.getKey();
-                            	SocketChannel websocketcon = entry.getValue();
-                            	websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
-                        	}catch (Exception e) {
-                        		
-                        		listarraybuf.add(websocketfail);
-                        		ifdo = true;
-                        		
-        						/*websocketlist.remove(websocketfail);
-        						webiter = websocketlist.entrySet().iterator();*/
-           					 }
-                        }
+	                        ArrayList<String> listarraybuf = new ArrayList<String>();
+	        	        	boolean ifdo = false;
+	                        
+	                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
+	                        while(webiter.hasNext()){
+	                        	try{
+	                            	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+	                            	websocketfail = entry.getKey();
+	                            	SocketChannel websocketcon = entry.getValue();
+	                            	websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+	                        	}catch (Exception e) {
+	                        		
+	                        		listarraybuf.add(websocketfail);
+	                        		ifdo = true;
+	                        		
+	        						/*websocketlist.remove(websocketfail);
+	        						webiter = websocketlist.entrySet().iterator();*/
+	           					 }
+	                        }
+	                        
+	                        if(ifdo){
+	                        	for(int i=0;i<listarraybuf.size();i++){
+	                        		websocketlist.remove(listarraybuf.get(i));
+	                        	}
+	                        }
                         
-                        if(ifdo){
-                        	for(int i=0;i<listarraybuf.size();i++){
-                        		websocketlist.remove(listarraybuf.get(i));
-                        	}
                         }
                         
                         strsend="";
@@ -775,7 +779,7 @@ public class Websocket {
 			}
 		}
         
-		}
+		
 	}
 	
 	public Websocket(String str,java.sql.Statement stmt, HashMap<String, Socket> websocket, ArrayList<String> listarray2,ArrayList<String> listarray3, HashMap<String, SocketChannel> websocketlist, ArrayList<String> dbdata) {
