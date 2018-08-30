@@ -345,7 +345,7 @@ public class Server implements Runnable {
         //工作线程
         new Thread(socketstart).start();
 		new Thread(websocketstart).start();
-		new Thread(sockettran).start();
+		//new Thread(sockettran).start();
 		
 		//开启线程每天查询邮件
         /*Calendar calendarmail = Calendar.getInstance();
@@ -438,7 +438,8 @@ public class Server implements Runnable {
 								Properties props = new Properties();
 							    props.setProperty("mail.smtp.auth", "true");
 							    props.setProperty("mail.transport.protocol", "smtp");
-							    props.put("mail.smtp.host","smtp.qq.com");// smtp服务器地址
+							    props.put("mail.smtp.host","25");// smtp服务器地址
+							    props.put("mail.smtp.port","25");// smtp服务器地址
 							    
 							    Session session = Session.getInstance(props);
 							    session.setDebug(true);
@@ -707,7 +708,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5557).sync();
+				f = b.bind(5551).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
