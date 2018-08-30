@@ -45,7 +45,7 @@ public class Websocket {
         this.strdata = str;
 		//System.out.println("1:"+str);
         
-        synchronized (this) {
+        
         
         try {
 			
@@ -822,6 +822,8 @@ public class Websocket {
 	       				
 	       				byteBuf.flip();*/
 	                        
+                        synchronized (this) {
+                        
                         ArrayList<String> listarraybuf = new ArrayList<String>();
         	        	boolean ifdo= false;
                         
@@ -849,6 +851,7 @@ public class Websocket {
                         }
                       }
                     
+                      }
                         
                         strsend="";
                         
@@ -1276,6 +1279,8 @@ public class Websocket {
           
                        datawritetype = true;
                        
+                       synchronized (this) {
+                       
                        ArrayList<String> listarraybuf = new ArrayList<String>();
        	        	   boolean ifdo= false;
                        
@@ -1299,6 +1304,8 @@ public class Websocket {
                        for(int i=0;i<listarraybuf.size();i++){
                          websocketlist.remove(listarraybuf.get(i));
                        }
+                     }
+                       
                      }
                        
                        strsend="";
@@ -1340,7 +1347,7 @@ public class Websocket {
 		}
         }
         
-	}
+	
 	
 	
 	
