@@ -495,6 +495,8 @@ public class Websocket {
 		                   		 
 		                   		 if(weldname.equals(fgather_no)){
 		                   			 
+		                   			try{
+		                   			
 		                   			if(fequipment_no.length()!=4){
 				                       	 int lenth=4-fequipment_no.length();
 				                       	 for(int i1=0;i1<lenth;i1++){
@@ -607,6 +609,9 @@ public class Websocket {
 			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00";
 	       	                    	}
 		   	                     }*/
+		                   		 }catch(Exception e){
+	               		        	 //e.getStackTrace();
+	               		         }
 		                   	 }
 	                       	 
 	                       	 /*for(int i=0;i<listarray2.size();i+=3){
