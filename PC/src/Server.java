@@ -529,10 +529,10 @@ public class Server implements Runnable {
 	            b.group(bossGroup,workerGroup)
 	            	.channel(NioServerSocketChannel.class)
 	            	.option(ChannelOption.SO_BACKLOG,1024)
+	            	.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,1000)
 	            	.childHandler(NS);  
 	            
 	            
-	          
 	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
 	                @Override
 	                public void initChannel(SocketChannel chsoc) throws Exception {
