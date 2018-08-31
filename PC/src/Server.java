@@ -745,6 +745,7 @@ public class Server implements Runnable {
 						protected void initChannel(SocketChannel chweb) throws Exception {
 							// TODO Auto-generated method stub
 
+							synchronized (this) {
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
@@ -753,6 +754,7 @@ public class Server implements Runnable {
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);
 							NS.websocketlist = websocketlist;
+							}
 							
 							//System.out.println(chweb);
 						}
