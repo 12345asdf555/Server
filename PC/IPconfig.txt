@@ -1,2 +1,3 @@
-121.196.222.216,XMWeld,db_admin,PIJXmcLRa0QgOw2c
-192.168.3.333
+10.1.12.104,Item_weld,brucestifler,?bhq1130hdn?
+10.1.1.108
+多级转发、数据库插入

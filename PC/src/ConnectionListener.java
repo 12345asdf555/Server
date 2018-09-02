@@ -27,10 +27,10 @@ public class ConnectionListener implements ChannelFutureListener {
 		        public void run() {  
 		          client.createBootstrap(new Bootstrap(), loop);  
 		        }  
-		      }, 10L, TimeUnit.SECONDS);  
-		    }else{
-				  client.server.NS.socketchannel = socketChannel;
-			}  
-		  }  
-	}
+		    }, 10L, TimeUnit.SECONDS);  
+		}else{
+			client.server.NS.socketchannel = socketChannel;
+		}  
+	}  
+}
 
