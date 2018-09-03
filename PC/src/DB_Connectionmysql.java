@@ -81,12 +81,10 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
     	Date date;
     	String nowTime;
     	Timestamp goodsC_date;
+    	String fmachine = null;
     	synchronized (this) {
     	 	switch(Integer.valueOf(work)){
         	case 1:
-        		
-        		fmachine = null;
-        		
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
@@ -150,9 +148,6 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                 break;
                 
         	case 2:
-        		
-        		fmachine = null;
-        		
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
@@ -217,10 +212,6 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                 break;
                 
         	case 3:
-        		
-        		fmachine = null;
-        		
-        		
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
@@ -285,10 +276,6 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                 break;
                 
         	case 4:
-        		
-        		fmachine = null;
-        		
-        		
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
@@ -365,12 +352,10 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
     	Date date;
     	String nowTime;
     	Timestamp goodsC_date;
+    	String fmachine = null;
     	synchronized (this) {
     	 	switch(Integer.valueOf(work1)){
         	case 1:
-        		
-        		fmachine = null;
-        		
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
@@ -434,10 +419,6 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                 break;
                 
         	case 2:
-        		
-        		fmachine = null;
-        		
-        		
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
@@ -502,10 +483,6 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                 break;
                 
         	case 3:
-        		
-        		fmachine = null;
-        		
-        		
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
@@ -570,10 +547,6 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                 break;
                 
         	case 4:
-        		
-        		fmachine = null;
-        		
-        		
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
