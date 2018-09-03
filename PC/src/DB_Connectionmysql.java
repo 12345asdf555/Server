@@ -71,6 +71,7 @@ public class DB_Connectionmysql {
     	Date date;
     	String nowTime;
     	Timestamp goodsC_date;
+    	String fmachine = null;
     	synchronized (this) {
     	 	switch(Integer.valueOf(work)){
         	case 1:
