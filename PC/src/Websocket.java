@@ -464,7 +464,7 @@ public class Websocket {
 	                        //System.out.println("3");
 	                        
                         try{
-                        	String weldjunction = "";
+                        	String weldjunction = "00000000";
                         	limit = "000000000000";
 	                       	 for(int i=0;i<listarray3.size();i+=6){
 	                       		 weldjunction = listarray3.get(i+5);
@@ -475,6 +475,10 @@ public class Websocket {
 	                       			 String mixv = listarray3.get(i+4);
 	                       			 limit = maxe + mixe + maxv + mixv;
 	                       		 }
+	                       	 }
+	                       	 
+	                       	 if(limit.equals("000000000000")){
+	                       		weldjunction = "00000000";
 	                       	 }
 	                       	 
 	                       	//System.out.println("4");
