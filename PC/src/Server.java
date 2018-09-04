@@ -268,7 +268,7 @@ public class Server implements Runnable {
                 	stmt.executeUpdate(sqlstandby);
                 	stmt.executeUpdate(sqlwork);
                 	stmt.executeUpdate(sqlalarm);
-                        
+                	
                 } catch (ClassNotFoundException e) {  
                     System.out.println("Broken driver");
                     e.printStackTrace();  
