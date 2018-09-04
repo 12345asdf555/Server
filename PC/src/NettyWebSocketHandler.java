@@ -74,7 +74,6 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 	/**
      * 接受数据
      */
-    @Override
     protected void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
         // 如果是HTTP请求
         if (msg instanceof FullHttpRequest) {
@@ -160,6 +159,12 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
         // websocket 服务,现在时刻是: ")
         // + new java.util.Date().toString());
     }
+
+	@Override
+	protected void channelRead0(ChannelHandlerContext arg0, Object arg1) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	/**
 	* 接收客户端发送的消息 channel 通道 Read 读 简而言之就是从通道中读取数据，也就是服务端接收客户端发来的数据。但是这个数据在不进行解码时它是ByteBuf类型的

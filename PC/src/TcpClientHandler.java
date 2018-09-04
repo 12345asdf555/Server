@@ -20,7 +20,6 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override
 	protected void messageReceived(ChannelHandlerContext arg0, Object arg1) throws Exception {
 		// TODO Auto-generated method stub
 		
@@ -49,6 +48,12 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
 	        }  
 	      }, 10L, TimeUnit.SECONDS);  
 	      super.channelInactive(ctx);
-    } 
+    }
+
+	@Override
+	protected void channelRead0(ChannelHandlerContext arg0, Object arg1) throws Exception {
+		// TODO Auto-generated method stub
+		
+	} 
 	
 }

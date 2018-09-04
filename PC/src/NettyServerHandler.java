@@ -40,7 +40,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	public byte[] b;
     public int a=0;
     
-	@Override  
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		 
 		 try{
@@ -278,9 +277,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		 
 	 };*/
 	 
-	 @Override  
-	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {  
-		 super.channelReadComplete(ctx);  
+	 public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {  
+		 //super.channelReadComplete(ctx);  
 	     ctx.flush();  
 	 } 
      @Override  
