@@ -24,7 +24,7 @@ public class Reciver {
 	private ArrayList<String> listarray2;
 	private ArrayList<String> listarray3;
 	private HashMap<String, Socket> websocket;
-    private HashMap<String, SocketChannel> clientList = new HashMap<>();
+    private HashMap<String, SocketChannel> clientList = new HashMap();
 	private String ip1;
 	private String connet;
 	private boolean type;
@@ -68,19 +68,19 @@ public class Reciver {
 		             sc.register(selector, SelectionKey.OP_READ);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						System.out.println("1-Á¬½Ó");
+						System.out.println("1-ï¿½ï¿½ï¿½ï¿½");
 						e.printStackTrace();
 					}  
 		         } 
 			 }
 		 } finally{  
 	            try {
-	            	System.out.println("2-Á¬½Ó");
+	            	System.out.println("2-ï¿½ï¿½ï¿½ï¿½");
 					selector.close(); 
 					ssc.close();
 	            } catch (IOException e) {
 					// TODO Auto-generated catch block
-	            	System.out.println("2-Á¬½Ó");
+	            	System.out.println("2-ï¿½ï¿½ï¿½ï¿½");
 					e.printStackTrace();
 				} 
 	     }
@@ -90,7 +90,7 @@ public class Reciver {
 	}
 	
 	
-	private void startWRThread(Selector selector) {
+	private void startWRThread(final Selector selector) {
 		// TODO Auto-generated method stub
 		new Thread(new Runnable() {
 
@@ -122,11 +122,11 @@ public class Reciver {
 		                                         sc.shutdownOutput(); 
 		                                 }  */
 		                                
-		                                //ÏÂ·¢ÇúÏß
+		                                //ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½
 		                                if(str.subSequence(0, 2).equals("FA") && str.subSequence(6, 8).equals("52")){
 		                                    	
 		  
-		                                    // ÒÀ´Î´¦ÀíselectorÉÏµÄÃ¿¸öÒÑÑ¡ÔñµÄSelectionKey  
+		                                    // ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½selectorï¿½Ïµï¿½Ã¿ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½SelectionKey  
 		                                	for (Entry<String, SocketChannel> entry : clientList.entrySet()) {
 		                                		sc=entry.getValue();
 		                                		String clientadd = sc.getRemoteAddress().toString().replace("/", "");
@@ -140,7 +140,7 @@ public class Reciver {
 		                                	}
 		                                }
 		                                }catch(Exception e){  
-		                                	System.out.println("4-´¦Àí");
+		                                	System.out.println("4-ï¿½ï¿½ï¿½ï¿½");
 		                                	e.printStackTrace();  
 		                                	readyKey.cancel();
 		                                	/*try {
@@ -172,7 +172,7 @@ public class Reciver {
 	                                		it.remove(); 
 	                                	}catch (Exception e) {  
 	                	                    // TODO Auto-generated catch block
-	                                		System.out.println("6-´¦Àí");
+	                                		System.out.println("6-ï¿½ï¿½ï¿½ï¿½");
 	                	                    e.printStackTrace();  
 	                	                } 
 	                                }  
@@ -182,7 +182,7 @@ public class Reciver {
 		                    }  
 		                } catch (IOException e) {  
 		                    // TODO Auto-generated catch block 
-		                	System.out.println("3-´¦Àí");
+		                	System.out.println("3-ï¿½ï¿½ï¿½ï¿½");
 		                	readyKey.cancel();
 		                	//e.printStackTrace();  
 		                } 

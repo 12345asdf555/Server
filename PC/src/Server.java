@@ -101,9 +101,9 @@ public class Server implements Runnable {
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
-    public HashMap<String, SocketChannel> socketlist = new HashMap<>();
-    public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
-    public HashMap<String, SocketChannel> clientList = new HashMap<>();
+    public HashMap<String, SocketChannel> socketlist = new HashMap();
+    public HashMap<String, SocketChannel> websocketlist = new HashMap();
+    public HashMap<String, SocketChannel> clientList = new HashMap();
     public int socketcount=0;
     public int websocketcount=0;
     public int clientcount=0;
@@ -708,7 +708,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5558).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -758,7 +758,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5556).sync().channel();
+	            Channel ch = serverBootstrap.bind(5554).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();

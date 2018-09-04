@@ -32,8 +32,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
-    public HashMap<String, SocketChannel> socketlist = new HashMap<>();
-    public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
+    public HashMap<String, SocketChannel> socketlist = new HashMap();
+    public HashMap<String, SocketChannel> websocketlist = new HashMap();
     public Mysql mysql = new Mysql();
     public Android android = new Android();
     public Websocket websocket = new Websocket();

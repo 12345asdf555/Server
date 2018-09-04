@@ -37,7 +37,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 @Sharable
 public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 	
-	public HashMap<String, SocketChannel> socketlist = new HashMap<>();
+	public HashMap<String, SocketChannel> socketlist = new HashMap();
 	public ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 	private static final Logger logger = Logger.getLogger(WebSocketServerHandshaker.class.getName());
 	private WebSocketServerHandshaker handsharker;
