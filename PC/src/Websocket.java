@@ -477,8 +477,8 @@ public class Websocket {
 	                       		 }
 	                       	 }
 	                       	 
-	                       	 if(limit.equals("000000000000")){
-	                       		weldjunction = "00000000";
+	                       	 if(welder.equals("0000")){
+	                       		code = "00000000";
 	                       	 }
 	                       	 
 	                       	//System.out.println("4");
@@ -575,13 +575,13 @@ public class Websocket {
 	               		         if(weldname.equals(fgather_no)){
 	                       			if(finsframework_id==null || finsframework_id==""){
 	                       				finsframework_id="nu";
-	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"400050045005"+"00:00:00"+"00:00:00"+weldjunction
-			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"400050045005"+"00:00:00"+"00:00:00"+weldjunction
-			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"400050045005"+"00:00:00"+"00:00:00"+weldjunction;
+	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"400050045005"+"00:00:00"+"00:00:00"+code
+			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"400050045005"+"00:00:00"+"00:00:00"+code
+			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"400050045005"+"00:00:00"+"00:00:00"+code;
 	                       			}else{
-	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"400050045005"+"00:00:00"+"00:00:00"+weldjunction
-			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"400050045005"+"00:00:00"+"00:00:00"+weldjunction
-			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"400050045005"+"00:00:00"+"00:00:00"+weldjunction;
+	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"400050045005"+"00:00:00"+"00:00:00"+code
+			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"400050045005"+"00:00:00"+"00:00:00"+code
+			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"400050045005"+"00:00:00"+"00:00:00"+code;
 	                       			}	
 	                       			break;
 	               		        	 
