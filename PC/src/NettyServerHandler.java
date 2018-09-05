@@ -15,12 +15,13 @@ import java.util.Map.Entry;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 @Sharable 
-public class NettyServerHandler extends ChannelHandlerAdapter{
+public class NettyServerHandler extends ChannelInboundHandlerAdapter{
 	
 	public String ip;
     public String ip1;
