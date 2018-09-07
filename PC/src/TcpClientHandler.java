@@ -39,7 +39,7 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
       super.channelInactive(ctx);  
     }  
 	
-	/*@Override  
+	@Override  
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		
 		final EventLoop eventLoop = ctx.channel().eventLoop();  
@@ -50,6 +50,6 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
 	        }  
 	      }, 10L, TimeUnit.SECONDS);  
 	      super.channelInactive(ctx);   
-    } */
+    } 
 	
 }

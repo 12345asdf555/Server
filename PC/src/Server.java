@@ -390,7 +390,7 @@ public class Server implements Runnable {
 					e.printStackTrace();
 				}*/
             }  
-        }, 0,60000);
+        }, 0,6000000);
         
         //工作线程
         new Thread(socketstart).start();
@@ -551,7 +551,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5555).sync();
+				f = b.bind(5554).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
