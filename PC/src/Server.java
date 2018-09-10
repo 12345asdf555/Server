@@ -536,6 +536,7 @@ public class Server implements Runnable {
 	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
 	                @Override
 	                public void initChannel(SocketChannel chsoc) throws Exception {
+	                	synchronized (socketlist) {
 	                	chsoc.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
 	                	chsoc.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
 	                	chsoc.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
@@ -545,7 +546,7 @@ public class Server implements Runnable {
 						socketlist.put(Integer.toString(socketcount),chsoc);
 						NS.socketlist = socketlist;
 						NWS.socketlist = socketlist;
-						
+	                	}
 	                }
 	            });
 	            
@@ -585,7 +586,7 @@ public class Server implements Runnable {
 						protected void initChannel(SocketChannel chweb) throws Exception {
 							// TODO Auto-generated method stub
 
-							synchronized (this) {
+							synchronized (websocketlist) {
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));

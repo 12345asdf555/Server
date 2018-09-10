@@ -822,7 +822,7 @@ public class Websocket {
 	       				
 	       				byteBuf.flip();*/
 	                        
-                        synchronized (this) {
+                    synchronized (websocketlist) {
                         
                         ArrayList<String> listarraybuf = new ArrayList<String>();
         	        	boolean ifdo= false;
@@ -1279,7 +1279,7 @@ public class Websocket {
           
                        datawritetype = true;
                        
-                       synchronized (this) {
+                       synchronized (websocketlist) {
                        
                        ArrayList<String> listarraybuf = new ArrayList<String>();
        	        	   boolean ifdo= false;

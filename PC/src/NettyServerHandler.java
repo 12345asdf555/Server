@@ -141,10 +141,10 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        new Socketsend(str,ip1);
 	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
-			synchronized (this) {
 			
 			if(str.substring(0,2).equals("FA")){  //处理实时数据
-			
+				
+				synchronized (websocketlist) {
 				if(str.length()==170){
 					mysql.Mysqlrun1(str);
 			        websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
@@ -169,13 +169,14 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						e.printStackTrace();
 					}
 		        }
-		        
+				}
 	        }else if(str.substring(0,2).equals("þ")){   //处理android数据
 	        	
 	        	android.Androidrun(str);
 	        	
 	        }else if(str.substring(0,2).equals("JN")){  //江南任务派发 任务号、焊工、焊机、状态
 	        	
+	        	synchronized (socketlist) {
 	        	System.out.println(" ");
 	        	System.out.println(str);
 	        	
@@ -209,11 +210,13 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                     	socketlist.remove(listarraybuf.get(i));
                 	}
                 }
+	        	}
                 
 	        }else{    //处理焊机下发和上传
 	        	
 	        	//System.out.println(str);
 	        	
+	        	synchronized (websocketlist) {
 	        	ArrayList<String> listarraybuf = new ArrayList<String>();
 	        	boolean ifdo = false;
 	        	
@@ -239,7 +242,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 		websocketlist.remove(listarraybuf.get(i));
                 	}
                 }
-                
+	        	}
 	        }
 					
 			/*} catch (InterruptedException e) {
@@ -273,7 +276,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	            }
 	        }*/
 			
-		}
+		
  
 		}
 	 }
