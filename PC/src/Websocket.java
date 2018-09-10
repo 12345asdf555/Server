@@ -711,13 +711,13 @@ public class Websocket {
 			                       			
 			                       			if(finsframework_id==null || finsframework_id==""){
 			                       				finsframework_id="nu";
-			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+wirefeedrate1+weldingrate1+weldheatinput1+hatwirecurrent1+vibrafrequency1+timesql1+limit+"00:00:00"+"00:00:00"
-					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+wirefeedrate2+weldingrate2+weldheatinput2+hatwirecurrent2+vibrafrequency2+timesql2+limit+"00:00:00"+"00:00:00"
-					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+wirefeedrate3+weldingrate3+weldheatinput3+hatwirecurrent3+vibrafrequency3+timesql3+limit+"00:00:00"+"00:00:00";
+			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+wirefeedrate1+weldingrate1+weldheatinput1+hatwirecurrent1+vibrafrequency1+timesql1+limit+"00:00:00"+"00:00:00"+code
+					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+wirefeedrate2+weldingrate2+weldheatinput2+hatwirecurrent2+vibrafrequency2+timesql2+limit+"00:00:00"+"00:00:00"+code
+					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+wirefeedrate3+weldingrate3+weldheatinput3+hatwirecurrent3+vibrafrequency3+timesql3+limit+"00:00:00"+"00:00:00"+code;
 			                       			}else{
-			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+wirefeedrate1+weldingrate1+weldheatinput1+hatwirecurrent1+vibrafrequency1+timesql1+limit+"00:00:00"+"00:00:00"
-					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+wirefeedrate2+weldingrate2+weldheatinput2+hatwirecurrent2+vibrafrequency2+timesql2+limit+"00:00:00"+"00:00:00"
-					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+wirefeedrate3+weldingrate3+weldheatinput3+hatwirecurrent3+vibrafrequency3+timesql3+limit+"00:00:00"+"00:00:00";
+			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+wirefeedrate1+weldingrate1+weldheatinput1+hatwirecurrent1+vibrafrequency1+timesql1+limit+"00:00:00"+"00:00:00"+code
+					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+wirefeedrate2+weldingrate2+weldheatinput2+hatwirecurrent2+vibrafrequency2+timesql2+limit+"00:00:00"+"00:00:00"+code
+					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+wirefeedrate3+weldingrate3+weldheatinput3+hatwirecurrent3+vibrafrequency3+timesql3+limit+"00:00:00"+"00:00:00"+code;
 			                       			}	
 			                       			break;
 			                       			
@@ -1255,13 +1255,13 @@ public class Websocket {
 			                   			if(weldname.equals(fgather_no)){
 			                       			if(finsframework_id==null || finsframework_id==""){
 			                       				finsframework_id="nu";
-			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+"00000000000000000000"+timesql1+limit+"00:00:00"+"00:00:00"
-					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+"00000000000000000000"+timesql2+limit+"00:00:00"+"00:00:00"
-					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00";
+			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+"00000000000000000000"+timesql1+limit+"00:00:00"+"00:00:00"+code
+					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+"00000000000000000000"+timesql2+limit+"00:00:00"+"00:00:00"+code
+					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00"+code;
 			                       			}else{
-			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+"00000000000000000000"+timesql1+limit+"00:00:00"+"00:00:00"
-					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+"00000000000000000000"+timesql2+limit+"00:00:00"+"00:00:00"
-					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00";
+			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+"00000000000000000000"+timesql1+limit+"00:00:00"+"00:00:00"+code
+					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+"00000000000000000000"+timesql2+limit+"00:00:00"+"00:00:00"+code
+					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00"+code;
 			                       			}	
 			                       			break;
 			                   			}
