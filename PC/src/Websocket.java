@@ -702,7 +702,7 @@ public class Websocket {
                         
                         //System.out.println(strsend);
                         
-                        synchronized (this) {
+                        synchronized (websocketlist) {
                         
 	                        ArrayList<String> listarraybuf = new ArrayList<String>();
 	        	        	boolean ifdo = false;

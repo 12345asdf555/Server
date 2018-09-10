@@ -141,10 +141,10 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        new Socketsend(str,ip1);
 	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
-			synchronized (this) {
 			
 			if(str.substring(0,2).equals("FA")){  //处理实时数据
-			
+				
+				synchronized (websocketlist) {
 				mysql.Mysqlrun(str);
 		        websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
 		        //System.out.println("1");
@@ -157,6 +157,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						e.printStackTrace();
 					}
 		        }
+				}
 		        
 	        }else if(str.substring(0,2).equals("þ")){   //处理android数据
 	        	
@@ -167,6 +168,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	System.out.println(" ");
 	        	System.out.println(str);
 	        	
+	        	synchronized (socketlist) {
 	        	ArrayList<String> listarraybuf = new ArrayList<String>();
 	        	boolean ifdo = false;
 	        	
@@ -197,11 +199,13 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                     	socketlist.remove(listarraybuf.get(i));
                 	}
                 }
+	        	}
                 
 	        }else{    //处理焊机下发和上传
 	        	
 	        	//System.out.println(str);
 	        	
+	        	synchronized (websocketlist) {
 	        	ArrayList<String> listarraybuf = new ArrayList<String>();
 	        	boolean ifdo = false;
 	        	
@@ -227,7 +231,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 		websocketlist.remove(listarraybuf.get(i));
                 	}
                 }
-                
+	        	}
 	        }
 					
 			/*} catch (InterruptedException e) {
@@ -261,7 +265,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	            }
 	        }*/
 			
-		}
  
 		}
 	 }

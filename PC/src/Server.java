@@ -696,6 +696,7 @@ public class Server implements Runnable {
 	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
 	                @Override
 	                public void initChannel(SocketChannel chsoc) throws Exception {
+	                	synchronized (socketlist) {
 	                	chsoc.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
 	                	chsoc.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
 	                	chsoc.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
@@ -705,13 +706,13 @@ public class Server implements Runnable {
 						socketlist.put(Integer.toString(socketcount),chsoc);
 						NS.socketlist = socketlist;
 						NWS.socketlist = socketlist;
-						
+	                	}
 	                }
 	            });
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5557).sync();
+				f = b.bind(5551).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -745,7 +746,7 @@ public class Server implements Runnable {
 						protected void initChannel(SocketChannel chweb) throws Exception {
 							// TODO Auto-generated method stub
 
-							synchronized (this) {
+							synchronized (websocketlist) {
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
@@ -761,7 +762,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5556).sync().channel();
+	            Channel ch = serverBootstrap.bind(4555).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
