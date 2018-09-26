@@ -830,7 +830,7 @@ public class Server implements Runnable {
 	                //读入缓存(定义一个1M的缓存区)  
 	                byte[] buf = new byte[1024]; 
 	                
-l	                //读到字节（读取输入流数据到缓存）  
+	                //读到字节（读取输入流数据到缓存）  
 	                int len = in.read(buf, 0, 1024);
 	                
 	                //读到字节数组（定义一个容纳数据大小合适缓存区）  
