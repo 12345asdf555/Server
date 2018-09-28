@@ -1,4 +1,5 @@
 import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -134,6 +135,11 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
         String str = ((TextWebSocketFrame) frame).text();
 
         if(str.substring(0,2).equals("7E")){
+        	
+        	synchronized (socketlist) {
+        	ArrayList<String> listarraybuf = new ArrayList<String>();
+        	boolean ifdo = false;
+        	
 			Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
             while(webiter.hasNext()){
             	try{
@@ -149,11 +155,18 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
                 	}
                 	
             	}catch (Exception e) {
-					socketlist.remove(socketfail);
-					webiter = socketlist.entrySet().iterator();
+            		listarraybuf.add(socketfail);
+            		ifdo = true;
 			    }
             }
-			System.out.println(str);
+            
+            if(ifdo){
+            	for(int i=0;i<listarraybuf.size();i++){
+            		socketlist.remove(listarraybuf.get(i));
+            	}
+            }
+        	}
+        	
 		}
         
         // ctx.channel().write(new TextWebSocketFrame(request + " , 欢迎使用netty
