@@ -135,7 +135,7 @@ public class DB_Connectioncode {
          
          
          
-       //查最大最小电流
+         //查最大最小电流
          inSql = "select fid,fitemId,fwelded_junction_no,fmax_electricity, fmin_electricity, fmax_valtage, fmin_valtage from tb_welded_junction ";
 
          try {
