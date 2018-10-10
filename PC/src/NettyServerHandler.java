@@ -141,8 +141,24 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        new Socketsend(str,ip1);
 	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
 			
-			
-			if(str.substring(0,2).equals("FA")){  //处理实时数据
+			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==236){
+				
+				synchronized (websocketlist) {
+					mysql.Mysqlbase(str);
+			        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+			        //System.out.println("1");
+			        //new Socketsend(str,ip1);
+			        if(socketchannel!=null){
+				        try {
+							socketchannel.writeAndFlush(str).sync();
+						} catch (InterruptedException e) {
+							socketchannel = null;
+							e.printStackTrace();
+						}
+			        }
+				}
+				
+			}else if(str.substring(0,2).equals("FA")){  //处理实时数据
 				
 				synchronized (websocketlist) {
 				mysql.Mysqlrun(str);

@@ -72,25 +72,27 @@ public class DB_Connectioncode {
 
     	
     	 //查焊工
-        inSql = "SELECT fid,fwelder_no FROM `tb_welder`";
+        inSql = "SELECT fid,Fowner,fwelder_no FROM `tb_welder`";
 
         try {
-
-        	 ResultSet rs =stmt.executeQuery(inSql);
+        	
+        	ResultSet rs =stmt.executeQuery(inSql);
             
             while (rs.next()) {
-           	String welderid = rs.getString("fid");
-            	if(welderid.length()!=4){
-            		int lenth=4-welderid.length();
-            		for(int i=0;i<lenth;i++){
-            			welderid="0"+welderid;
-            		}
-            	} 
-           	
-            	String fwelder_no = rs.getString("fwelder_no");
-            	
-            	listarray1.add(welderid);
-            	listarray1.add(fwelder_no);
+	           	String welderid = rs.getString("fid");
+	        	if(welderid.length()!=4){
+	        		int lenth=4-welderid.length();
+	        		for(int i=0;i<lenth;i++){
+	        			welderid="0"+welderid;
+	        		}
+	        	} 
+	       	
+	        	String fwelder_no = rs.getString("fwelder_no");
+	        	String Fowner = rs.getString("Fowner");
+	        	
+	        	listarray1.add(welderid);
+	        	listarray1.add(fwelder_no);
+	        	listarray1.add(Fowner);
             	
             }
 
@@ -105,7 +107,7 @@ public class DB_Connectioncode {
     	
     	
        //查焊机
-         inSql = "select tb_welding_machine.fid,tb_welding_machine.fequipment_no,tb_gather.fgather_no,tb_welding_machine.finsframework_id from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
+         inSql = "select tb_gather.fid,tb_welding_machine.fequipment_no,tb_gather.fgather_no,tb_gather.fitemId from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
          
          try {
 
@@ -115,11 +117,11 @@ public class DB_Connectioncode {
             	String fid = rs.getString("fid");
             	String fequipment_no = rs.getString("fequipment_no");
              	String fgather_no = rs.getString("fgather_no");
-             	String finsframework_id = rs.getString("finsframework_id");
+             	String fitemId = rs.getString("fitemId");
              	listarray2.add(fid);
              	listarray2.add(fequipment_no);
              	listarray2.add(fgather_no);
-             	listarray2.add(finsframework_id);
+             	listarray2.add(fitemId);
              	
              }
              	
@@ -134,7 +136,7 @@ public class DB_Connectioncode {
          
          
        //查最大最小电流
-         inSql = "select fid,fwelded_junction_no,fmax_electricity, fmin_electricity, fmax_valtage, fmin_valtage from tb_welded_junction ";
+         inSql = "select fid,fitemId,fwelded_junction_no,fmax_electricity, fmin_electricity, fmax_valtage, fmin_valtage from tb_welded_junction ";
 
          try {
 
@@ -183,6 +185,7 @@ public class DB_Connectioncode {
              	}
              	
              	String weldjunction = rs.getString("fwelded_junction_no");
+             	String fitemId = rs.getString("fitemId");
              	
              	listarray3.add(weldjunction);
              	listarray3.add(fmax_electricity);
@@ -190,6 +193,7 @@ public class DB_Connectioncode {
              	listarray3.add(fmax_valtage);
              	listarray3.add(fmin_valtage);
              	listarray3.add(weldjunctionid);
+             	listarray3.add(fitemId);
              	
              }
 

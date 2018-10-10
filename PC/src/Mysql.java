@@ -2,6 +2,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.Socket;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +22,60 @@ public class Mysql {
 		this.db = db;
 	}
     
+	public void Mysqlbase(String str) {
+		// TODO Auto-generated method stub
+		Date time;
+		Timestamp timesql = null;
+		if (str.length() == 236) {
+			
+			//校验第一位是否为FA末位是否为F5
+      	    String check1 =str.substring(0,2);
+      	    String check11=str.substring(234,236);
+      	    if(check1.equals("7E") && check11.equals("7D")){
+
+      	    	long welderid = Integer.valueOf(str.substring(34,38));
+      	    	long weldid = Integer.valueOf(str.substring(18,22));
+      	    	long gatherid = Integer.valueOf(str.substring(14,18));
+      	    	long itemid = Integer.valueOf(str.substring(232,234));
+      	    	String weldmodel = Integer.valueOf(str.subSequence(12, 14).toString(),16).toString();
+      	    	
+      	    	for(int a=0;a<129;a+=64){
+      	    		long junctionid = Integer.valueOf(str.substring(70+a, 78+a));
+      	    		BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(50+a, 54+a).toString(),16));
+                    BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(54+a, 58+a).toString(),16));
+                    int status = Integer.parseInt(str.subSequence(78+a, 80+a).toString(),16);
+                    BigDecimal fwirefeedrate = new BigDecimal(Integer.valueOf(str.subSequence(58+a, 62+a).toString(),16));
+      	    		String year = Integer.valueOf(str.subSequence(38+a, 40+a).toString(),16).toString();
+      	    		String month = Integer.valueOf(str.subSequence(40+a, 42+a).toString(),16).toString();
+      	    		String day = Integer.valueOf(str.subSequence(42+a, 44+a).toString(),16).toString();
+      	    		String hour = Integer.valueOf(str.subSequence(44+a, 46+a).toString(),16).toString();
+      	    		String minute = Integer.valueOf(str.subSequence(46+a, 48+a).toString(),16).toString();
+      	    		String second = Integer.valueOf(str.subSequence(48+a, 50+a).toString(),16).toString();
+      	    		String strdate = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
+      	    		
+					try {
+						time = DateTools.parse("yy-MM-dd HH:mm:ss",strdate);
+						timesql = new Timestamp(time.getTime());
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+      	    		
+					int channel = Integer.valueOf(str.subSequence(100+a, 102+a).toString(),16);
+					BigDecimal maxelectricity = new BigDecimal(Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16));
+					BigDecimal minelectricity = new BigDecimal(Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16));
+					BigDecimal maxvoltage = new BigDecimal(Integer.valueOf(str.subSequence(92+a, 96+a).toString(),16));
+					BigDecimal minvoltage = new BigDecimal(Integer.valueOf(str.subSequence(96+a, 100+a).toString(),16));
+					BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(80+a, 82+a).toString(),16));
+					int fmaterialgas = Integer.parseInt(str.subSequence(82+a, 84+a).toString(),16);
+
+					db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3);
+					 
+      	    	}
+            }
+        }
+    }
+	
 	public void Mysqlrun(String str) {
 		// TODO Auto-generated constructor stub
 		try{
@@ -224,9 +279,7 @@ public class Mysql {
             e.printStackTrace();  
         } 
 	}
-		
-
-
+	
 	/*@Override
 	public void taskResult(String str,String connet,ArrayList<String> listarray1,ArrayList<String> listarray2,ArrayList<String> listarray3,HashMap<String, Socket> websocket,String ip1) {
 		// TODO Auto-generated method stub

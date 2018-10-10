@@ -33,19 +33,16 @@ public class Websocket {
 	private HashMap<String, SocketChannel> websocketlist = null;
 	public ArrayList<String> dbdata = new ArrayList<String>();
 
-	public Websocket() {
-		// TODO Auto-generated constructor stub
+	public void Websocketbase(String str, ArrayList<String> listarray22, ArrayList<String> listarray32,HashMap<String, SocketChannel> websocketlist2) {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	
 	
 	public void Websocketrun(String str, ArrayList<String> listarray2, ArrayList<String> listarray3, HashMap<String, SocketChannel> websocketlist) {
 		// TODO Auto-generated constructor stub
 
         this.strdata = str;
 		//System.out.println("1:"+str);
-        
-        
         
         try {
 			
@@ -1237,24 +1234,24 @@ public class Websocket {
 				                         }
 			                   			 
 			                   			//江南
-			                   			/*if(weldname.equals(fgather_no)){
-			                       			if(finsframework_id==null || finsframework_id==""){
-			                       				finsframework_id="nu";
-			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
-					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
-					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
-			                       			}else{
-			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
-					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
-					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
-			                       			}	
-			                       			break;
-			                   			}*/
-			                   			
-			                   			
 			                   			if(weldname.equals(fgather_no)){
 			                       			if(finsframework_id==null || finsframework_id==""){
 			                       				finsframework_id="nu";
+			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"300050045005"+"00:00:00"+"00:00:00"
+					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"300050045005"+"00:00:00"+"00:00:00"
+					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"300050045005"+"00:00:00"+"00:00:00";
+			                       			}else{
+			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"300050045005"+"00:00:00"+"00:00:00"
+					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"300050045005"+"00:00:00"+"00:00:00"
+					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"300050045005"+"00:00:00"+"00:00:00";
+			                       			}	
+			                       			break;
+			                   			}
+			                   			
+			                   			
+			                   			/*if(weldname.equals(fgather_no)){
+			                       			if(finsframework_id==null || finsframework_id==""){
+			                       				finsframework_id="nu";
 			                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+"00000000000000000000"+timesql1+limit+"00:00:00"+"00:00:00"+code
 					   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+"00000000000000000000"+timesql2+limit+"00:00:00"+"00:00:00"+code
 					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00"+code;
@@ -1264,7 +1261,7 @@ public class Websocket {
 					   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00"+code;
 			                       			}	
 			                       			break;
-			                   			}
+			                   			}*/
 		                   			}catch(Exception e){
 		                   				//e.getStackTrace();
 		                   			}
@@ -2363,6 +2360,10 @@ public class Websocket {
 			}
 		}
         
+	}
+
+	public Websocket() {
+		// TODO Auto-generated constructor stub
 	}
 
 	/*@Override

@@ -168,7 +168,7 @@ public class Server implements Runnable {
 
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
-            stmt= conn.createStatement();
+            stmt = conn.createStatement();
             NS.mysql.db.stmt = stmt;
             NS.android.db.stmt = stmt;
             NS.mysql.db.connet = connet;
@@ -448,7 +448,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5556).sync().channel();
+	            Channel ch = serverBootstrap.bind(5550).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
