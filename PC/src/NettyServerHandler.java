@@ -49,44 +49,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	         workThread = new Thread(ws);  
 	         workThread.start(); 
 	         
-	         /*try {
-				b = str.getBytes("ISO-8859-1");
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	         str="";
-	         for(int i=0;i<b.length;i++){
-              	
-              	//判断为数字还是字母，若为字母+256取正数
-              	if(b[i]<0){
-              		String r = Integer.toHexString(b[i]+256);
-              		String rr=r.toUpperCase();
-                  	//数字补为两位数
-                  	if(rr.length()==1){
-              			rr='0'+rr;
-                  	}
-                  	//strdata为总接收数据
-              		str += rr;
-              	}
-              	else{
-              		String r = Integer.toHexString(b[i]);
-                  	if(r.length()==1)
-              			r='0'+r;
-                  	r=r.toUpperCase();
-              		str+=r;	
-              	}
-              }
-	         System.out.println("D");*/
-	         
-			 /*ByteBuf buf=(ByteBuf)msg; 
-			 byte[] req=new byte[buf.readableBytes()];  
-		     buf.readBytes(req);
-		     Workspace ws = new Workspace(req);
-	         workThread = new Thread(ws);  
-	         workThread.start();*/
-			      
-	         
 		 }finally{
 			 
 			 ReferenceCountUtil.release(msg);
@@ -112,35 +74,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			//try {
-				/*for(int i=0;i<req.length;i++){
-	             
-	            //判断为数字还是字母，若为字母+256取正数
-	            if(req[i]<0){
-	              String r = Integer.toHexString(req[i]+256);
-	              String rr=r.toUpperCase();
-	                //数字补为两位数
-	                if(rr.length()==1){
-	                	rr='0'+rr;
-	                }
-	                //strdata为总接收数据
-	                str += rr;
-	               
-	            }
-	            else{
-	              String r = Integer.toHexString(req[i]);
-	              if(r.length()==1)
-	              r='0'+r;
-	              r=r.toUpperCase();
-	              str+=r;  
-	            }
-	        }*/
-				
-			//System.out.println(str);
-			/*new Mysql(str,connet,listarray1);
-	        new Socketsend(str,ip1);
-	        new Websocket(str,connet,websocket,listarray2,listarray3,websocketlist);*/
-			
+		
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==236){
 				
 				synchronized (websocketlist) {

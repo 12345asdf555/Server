@@ -26,17 +26,241 @@ public class Websocket {
 	private String strdata;
 	private SocketChannel chweb;
 	private String websocketfail;
-	private ArrayList<String> listarray2;
-	private ArrayList<String> listarray3;
+	public ArrayList<String> listarray1;
+	public ArrayList<String> listarray2;
+	public ArrayList<String> listarray3;
 	private boolean datawritetype = false;
 	private HashMap<String, Socket> websocket;
 	private HashMap<String, SocketChannel> websocketlist = null;
 	public ArrayList<String> dbdata = new ArrayList<String>();
 
-	public void Websocketbase(String str, ArrayList<String> listarray22, ArrayList<String> listarray32,HashMap<String, SocketChannel> websocketlist2) {
+	public void Websocketbase(String str, ArrayList<String> listarray2, ArrayList<String> listarray3,HashMap<String, SocketChannel> websocketlist) {
 		// TODO Auto-generated method stub
+		Date time;
+		Timestamp timesql = null;
 		
+		if(websocketlist==null || websocketlist.isEmpty()){
+		}
+		else
+		{	
+			if (str.length() == 236) {
+				
+				//校验第一位是否为FA末位是否为F5
+	      	    String check1 =str.substring(0,2);
+	      	    String check11=str.substring(234,236);
+	      	    if(check1.equals("7E") && check11.equals("7D")){
+	      	    	
+	      	    	String welderid = Integer.valueOf(str.substring(34,38)).toString();
+	      	    	if(welderid.length()!=4){
+	             		int lenth=4-welderid.length();
+	             		for(int i=0;i<lenth;i++){
+	             			welderid="0"+welderid;
+	             		}
+	             	}
+	      	    	String weldid = Integer.valueOf(str.substring(18,22)).toString();
+	      	    	if(weldid.length()!=4){
+	             		int lenth=4-weldid.length();
+	             		for(int i=0;i<lenth;i++){
+	             			weldid="0"+weldid;
+	             		}
+	             	}
+	      	    	String gatherid = Integer.valueOf(str.substring(14,18)).toString();
+	      	    	if(gatherid.length()!=4){
+	             		int lenth=4-gatherid.length();
+	             		for(int i=0;i<lenth;i++){
+	             			gatherid="0"+gatherid;
+	             		}
+	             	}
+	      	    	String itemins = Integer.valueOf(str.substring(232,234)).toString();
+	      	    	if(itemins.length()!=4){
+	             		int lenth=4-itemins.length();
+	             		for(int i=0;i<lenth;i++){
+	             			itemins="0"+itemins;
+	             		}
+	             	}
+	      	    	String weldmodel = Integer.valueOf(str.subSequence(12, 14).toString(),16).toString();
+	      	    	if(weldmodel.length()!=4){
+	             		int lenth=4-weldmodel.length();
+	             		for(int i=0;i<lenth;i++){
+	             			weldmodel="0"+weldmodel;
+	             		}
+	             	}
+	      	    	
+	      	    	for(int a=0;a<129;a+=64){
+	      	    		
+	      	    		String welderins = "0000";
+	      	    		String junctionins = "0000";
+	      	    		String ins = "0000";
+	      	    		
+	      	    		String junctionid = Integer.valueOf(str.substring(70+a, 78+a)).toString();
+	      	    		if(junctionid.length()!=4){
+		             		int lenth=4-junctionid.length();
+		             		for(int i=0;i<lenth;i++){
+		             			junctionid="0"+junctionid;
+		             		}
+		             	}
+		      	    	String electricity = Integer.valueOf(str.subSequence(50+a, 54+a).toString(),16).toString();
+		      	    	if(electricity.length()!=4){
+		             		int lenth=4-electricity.length();
+		             		for(int i=0;i<lenth;i++){
+		             			electricity="0"+electricity;
+		             		}
+		             	}
+		      	    	String voltage = Integer.valueOf(str.subSequence(54+a, 58+a).toString(),16).toString();
+		      	    	if(voltage.length()!=4){
+		             		int lenth=4-voltage.length();
+		             		for(int i=0;i<lenth;i++){
+		             			voltage="0"+voltage;
+		             		}
+		             	}
+		      	    	String setelectricity = Integer.valueOf(str.subSequence(62+a, 66+a).toString(),16).toString();
+		      	    	if(setelectricity.length()!=4){
+		             		int lenth=4-setelectricity.length();
+		             		for(int i=0;i<lenth;i++){
+		             			setelectricity="0"+setelectricity;
+		             		}
+		             	}
+		      	    	String setvoltage = Integer.valueOf(str.subSequence(66+a, 70+a).toString(),16).toString();
+		      	    	if(setvoltage.length()!=4){
+		             		int lenth=4-setvoltage.length();
+		             		for(int i=0;i<lenth;i++){
+		             			setvoltage="0"+setvoltage;
+		             		}
+		             	}
+		      	    	String status = Integer.valueOf(str.subSequence(78+a, 80+a).toString(),16).toString();
+		      	    	if(status.length()!=2){
+		             		int lenth=2-status.length();
+		             		for(int i=0;i<lenth;i++){
+		             			status="0"+status;
+		             		}
+		             	}
+		      	    	
+	                    String year = Integer.valueOf(str.subSequence(38+a, 40+a).toString(),16).toString();
+	      	    		String month = Integer.valueOf(str.subSequence(40+a, 42+a).toString(),16).toString();
+	      	    		String day = Integer.valueOf(str.subSequence(42+a, 44+a).toString(),16).toString();
+	      	    		String hour = Integer.valueOf(str.subSequence(44+a, 46+a).toString(),16).toString();
+	      	    		String minute = Integer.valueOf(str.subSequence(46+a, 48+a).toString(),16).toString();
+	      	    		String second = Integer.valueOf(str.subSequence(48+a, 50+a).toString(),16).toString();
+	      	    		String strdate = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
+	      	    		try {
+							time = DateTools.parse("yy-MM-dd HH:mm:ss",strdate);
+							timesql = new Timestamp(time.getTime());
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+	      	    		
+	      	    		String channel = Integer.valueOf(str.subSequence(100+a, 102+a).toString(),16).toString();
+						if(channel.length()!=2){
+		             		int lenth=2-channel.length();
+		             		for(int i=0;i<lenth;i++){
+		             			channel="0"+channel;
+		             		}
+		             	}
+						String maxelectricity = Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).toString();
+						if(maxelectricity.length()!=4){
+		             		int lenth=4-maxelectricity.length();
+		             		for(int i=0;i<lenth;i++){
+		             			maxelectricity="0"+maxelectricity;
+		             		}
+		             	}
+						String minelectricity = Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).toString();
+						if(minelectricity.length()!=4){
+		             		int lenth=4-minelectricity.length();
+		             		for(int i=0;i<lenth;i++){
+		             			minelectricity="0"+minelectricity;
+		             		}
+		             	}
+						String maxvoltage = Integer.valueOf(str.subSequence(92+a, 96+a).toString(),16).toString();
+						if(maxvoltage.length()!=4){
+		             		int lenth=4-maxvoltage.length();
+		             		for(int i=0;i<lenth;i++){
+		             			maxvoltage="0"+maxvoltage;
+		             		}
+		             	}
+						String minvoltage = Integer.valueOf(str.subSequence(96+a, 100+a).toString(),16).toString();
+						if(minvoltage.length()!=4){
+		             		int lenth=4-minvoltage.length();
+		             		for(int i=0;i<lenth;i++){
+		             			minvoltage="0"+minvoltage;
+		             		}
+		             	}
+						
+						for(int i=0;i<listarray1.size();i+=3){
+		                	if(Integer.valueOf(welderid) == Integer.valueOf(listarray1.get(i))){
+		                		welderins = listarray1.get(i+2);
+		                		if(welderins.length()!=4){
+				             		int lenth=4-welderins.length();
+				             		for(int i1=0;i1<lenth;i1++){
+				             			welderins="0"+welderins;
+				             		}
+				             	}
+		                		break;
+		                	}
+		                }
+		                
+		                for(int i=0;i<listarray3.size();i+=7){
+		                	if(Integer.valueOf(junctionid) == Integer.valueOf(listarray3.get(i+5))){
+		                		junctionins = listarray3.get(i+6);
+		                		if(junctionins.length()!=4){
+				             		int lenth=4-junctionins.length();
+				             		for(int i1=0;i1<lenth;i1++){
+				             			junctionins="0"+junctionins;
+				             		}
+				             	}
+		                		break;
+		                	}
+		                }
+		                
+		                for(int i=0;i<listarray2.size();i+=4){
+		                	if(Integer.valueOf(gatherid) == Integer.valueOf(listarray2.get(i))){
+		                		ins = listarray2.get(i+3);
+		                		if(ins.length()!=4){
+				             		int lenth=4-ins.length();
+				             		for(int i1=0;i1<lenth;i1++){
+				             			ins="0"+ins;
+				             		}
+				             	}
+		                		break;
+		                	}
+		                }
+						
+						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
+	      	    	}
+	      	    	
+	      	    	synchronized (websocketlist) {
+                        
+                        ArrayList<String> listarraybuf = new ArrayList<String>();
+        	        	boolean ifdo= false;
+                        
+                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
+                        while(webiter.hasNext()){
+	      	                try{
+		      	                Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+		      	                websocketfail = entry.getKey();
+		      	                SocketChannel websocketcon = entry.getValue();
+		      	                websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+	      	                }catch (Exception e) {
+		      	                listarraybuf.add(websocketfail);
+		      	                ifdo = true;
+	      	                }
+                        }
+                      
+                        if(ifdo){
+		                    for(int i=0;i<listarraybuf.size();i++){
+		                    	websocketlist.remove(listarraybuf.get(i));
+		                    }
+                        }
+      	                strsend = "";
+	      	    	}
+	      	    }
+			}
+		}
 	}
+	
+	
+	
+	
 	
 	public void Websocketrun(String str, ArrayList<String> listarray2, ArrayList<String> listarray3, HashMap<String, SocketChannel> websocketlist) {
 		// TODO Auto-generated constructor stub
@@ -49,104 +273,6 @@ public class Websocket {
         	//鏃犵敤鎴疯繛鎺ユ椂澧炲姞缁熻鐒婃満宸ヤ綔鏃堕棿
 			if(websocketlist==null || websocketlist.isEmpty()){
 				
-				/*if (str.length() == 110) { 
-					
-					 //鏍￠獙绗竴浣嶆槸鍚︿负FA鏈綅鏄惁涓篎5
-		       	     String check1 =str.substring(0,2);
-		       	     String check11=str.substring(108,110);
-		       	     if(check1.equals("FA") && check11.equals("F5")){
-			        		
-		       	    	 //鏍￠獙闀垮害
-		           	     int check2=str.length();
-		           	     if(check2==110){
-		           	        			
-		           	    	 //鏍￠獙浣嶆牎楠�
-		               	     String check3=str.substring(2,104);
-		               	     String check5="";
-		               	     int check4=0;
-		               	     for (int i11 = 0; i11 < check3.length()/2; i11++)
-		               	     {
-		               	    	String tstr1=check3.substring(i11*2, i11*2+2);
-		               	    	check4+=Integer.valueOf(tstr1,16);
-		               	     }
-		               	     if((Integer.toHexString(check4)).toUpperCase().length()==2){
-		               	    	check5 = ((Integer.toHexString(check4)).toUpperCase());
-		               	     }else{
-		               	    	check5 = ((Integer.toHexString(check4)).toUpperCase()).substring(1,3);
-		               	     }
-		               	     String check6 = str.substring(104,106);
-		               	     if(check5.equals(check6)){
-		               	    	 
-		               	    	 strdata=str;
-			               	     //String weldname = strdata.substring(10,14);
-			       				 int weldname1 = Integer.valueOf(strdata.subSequence(10, 14).toString(),16);
-			       				 String weldname = String.valueOf(weldname1);
-			       				 if(weldname.length()!=4){
-			                       	 int lenth=4-weldname.length();
-			                       	 for(int i=0;i<lenth;i++){
-			                       		 weldname="0"+weldname;
-			                       	 }
-			                     }
-			       				String status1=Integer.valueOf(strdata.substring(38,40),16).toString();
-			       				if(status1.length()!=2){
-			                       	 int lenth=2-status1.length();
-			                       	 for(int i=0;i<lenth;i++){
-			                       		status1="0"+status1;
-			                       	 }
-		                        }
-			       				
-			       				 String worktime = "";
-			                   	 String totaltime = "";
-			                   	 String worktime1 = "";
-			                   	 String totaltime1 = "";
-			                   	 String workhour1,workminute1,worksecond1;
-			                   	 String workhour2,workminute2,worksecond2;
-			                   	 for(int i=0;i<listarray2.size();i+=4){
-			                   		 String fequipment_no = listarray2.get(i+1);
-			                   		 String fgather_no = listarray2.get(i+2);
-			                   		 String finsframework_id = listarray2.get(i+3);
-		
-			                   		 //System.out.print(fequipment_no+" ");
-			                   		 
-			                   		 if(weldname.equals(fgather_no)){
-			                   			 
-			                   			 //System.out.println("5");
-			                   			 
-			                   			 for(int j=0;j<dbdata.size();j+=3){
-			                       			 if(dbdata.get(j).equals(fequipment_no)){
-			                       				 if(status1.equals("00")){
-			                       					 worktime=Integer.toString(Integer.valueOf(dbdata.get(j+1)));
-			                       					 totaltime=Integer.toString(Integer.valueOf(dbdata.get(j+2))+3);
-			                       					 dbdata.set(j+2, totaltime);
-			                       				 }else{
-			                       					 worktime=Integer.toString(Integer.valueOf(dbdata.get(j+1))+3);
-			                       					 totaltime=Integer.toString(Integer.valueOf(dbdata.get(j+2))+3);
-		
-			                       					 dbdata.set(j+1, worktime);
-			                       					 dbdata.set(j+2, totaltime);
-			                       				 }
-			                       				 break;
-			                       			 }
-			                       		 }
-			                   		 }
-			                   		 
-			                   		 //姣忓ぉ鏅氫笂12鐐规竻闆�
-			                   		 Date date = new Date();
-			                         String nowtime = DateTools.format("HH:mm:ss",date);
-			                   		 if(nowtime.equals("23:59:59") || nowtime.equals("00:00:00") || nowtime.equals("00:00:01")){
-			                   			 synchronized (this) {
-				                   			 for(int l=0;l<dbdata.size();l+=3){
-				                   				 dbdata.set(l+1, "0");
-				                   				 dbdata.set(l+2, "0");
-				                   			 }
-			                   			 }
-			                   		 }
-			                        
-			                   	 }
-		               	     }
-		           	     }
-		       	     }
-				}*/
 			}
 			
 			else

@@ -105,6 +105,7 @@ public class DB_Connectionmysql {
                 	if(welderid == Integer.valueOf(listarray1.get(a))){
                 		weldernum = listarray1.get(a+1);
                 		welderins = listarray1.get(a+2);
+                		break;
                 	}
                 }
                 
@@ -112,14 +113,16 @@ public class DB_Connectionmysql {
                 	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
                 		junctionnum = listarray3.get(a);
                 		junctionins = listarray3.get(a+6);
+                		break;
                 	}
                 }
                 
-                for(int a=0;a<listarray2.size();a+=7){
+                for(int a=0;a<listarray2.size();a+=4){
                 	if(gatherid == Integer.valueOf(listarray2.get(a))){
                 		gathernum = listarray2.get(a+2);
                 		weldnum = listarray2.get(a+1);
                 		ins = listarray2.get(a+3);
+                		break;
                 	}
                 }
                 
@@ -189,7 +192,7 @@ public class DB_Connectionmysql {
                 	}
                 }
                 
-                for(int a=0;a<listarray2.size();a+=7){
+                for(int a=0;a<listarray2.size();a+=4){
                 	if(gatherid == Integer.valueOf(listarray2.get(a))){
                 		gathernum = listarray2.get(a+2);
                 		weldnum = listarray2.get(a+1);
@@ -263,7 +266,7 @@ public class DB_Connectionmysql {
                 	}
                 }
                 
-                for(int a=0;a<listarray2.size();a+=7){
+                for(int a=0;a<listarray2.size();a+=4){
                 	if(gatherid == Integer.valueOf(listarray2.get(a))){
                 		gathernum = listarray2.get(a+2);
                 		weldnum = listarray2.get(a+1);
@@ -337,7 +340,7 @@ public class DB_Connectionmysql {
                 	}
                 }
                 
-                for(int a=0;a<listarray2.size();a+=7){
+                for(int a=0;a<listarray2.size();a+=4){
                 	if(gatherid == Integer.valueOf(listarray2.get(a))){
                 		gathernum = listarray2.get(a+2);
                 		weldnum = listarray2.get(a+1);
