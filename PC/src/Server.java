@@ -331,7 +331,7 @@ public class Server implements Runnable {
             public void run() {
   		
 	            try{
-	            	if(stmt==null || stmt.isClosed()==true)
+	            	if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
 		        	{
 		        		try {
 							Class.forName("com.mysql.jdbc.Driver");
