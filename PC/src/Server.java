@@ -169,6 +169,7 @@ public class Server implements Runnable {
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
             stmt = conn.createStatement();
+            NS.mysql.db.conn = conn;
             NS.mysql.db.stmt = stmt;
             NS.android.db.stmt = stmt;
             NS.mysql.db.connet = connet;
@@ -331,7 +332,7 @@ public class Server implements Runnable {
             public void run() {
   		
 	            try{
-	            	if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+	            	if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
 		        	{
 		        		try {
 							Class.forName("com.mysql.jdbc.Driver");

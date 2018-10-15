@@ -137,7 +137,7 @@ public class DB_Connectionmysql {
                 if(countbase1 == 100){
                 	
                 	try {
-                		if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
@@ -211,7 +211,7 @@ public class DB_Connectionmysql {
                 if(countbase2 == 100){
                 	
                 	try {
-                		if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
@@ -285,7 +285,7 @@ public class DB_Connectionmysql {
                 if(countbase3 == 100){
                 	
                 	try {
-                		if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
@@ -359,7 +359,7 @@ public class DB_Connectionmysql {
                 if(countbase4 == 100){
                 	
                 	try {
-                		if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
