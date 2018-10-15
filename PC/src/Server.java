@@ -344,12 +344,13 @@ public class Server implements Runnable {
 		                    return;
 		                }  
 		        	}*/
-	            	if(stmt==null || stmt.isClosed()==true)
+	            	if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
 		        	{
 		        		try {
 							Class.forName("com.mysql.jdbc.Driver");
 							conn = DriverManager.getConnection(connet);
 							stmt = conn.createStatement();
+							
 		        	    } catch (ClassNotFoundException e) {  
 		                    System.out.println("Broken driver");
 		                    e.printStackTrace();
