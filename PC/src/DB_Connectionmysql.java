@@ -111,7 +111,7 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                     if(count5 == 100){
                     	
                     	try {
-                    		if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+                    		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
         		        	{
         		        		try {
         							Class.forName("com.mysql.jdbc.Driver");
@@ -175,7 +175,7 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                     	
                     	try {
                         	
-                    		if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+                    		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
         		        	{
         		        		try {
         							Class.forName("com.mysql.jdbc.Driver");
@@ -239,7 +239,7 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                     	
                     	try {
                         	
-                    		if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+                    		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
         		        	{
         		        		try {
         							Class.forName("com.mysql.jdbc.Driver");
@@ -303,7 +303,7 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                     	
                     	try {
                         	
-                    		if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+                    		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
         		        	{
         		        		try {
         							Class.forName("com.mysql.jdbc.Driver");

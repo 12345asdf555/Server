@@ -162,6 +162,7 @@ public class Server implements Runnable {
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
             stmt= conn.createStatement();
+          
             NS.mysql.db.stmt = stmt;
             NS.android.db.stmt = stmt;
             NS.mysql.db.connet = connet;
@@ -344,7 +345,7 @@ public class Server implements Runnable {
 		                    return;
 		                }  
 		        	}*/
-	            	if(stmt==null || stmt.isClosed()==true || conn==null || conn.isClosed()==true)
+	            	if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
 		        	{
 		        		try {
 							Class.forName("com.mysql.jdbc.Driver");
@@ -367,7 +368,7 @@ public class Server implements Runnable {
 					return;
 				}
             	
-        		DB_Connectioncode check = new DB_Connectioncode(stmt);
+	            DB_Connectioncode check = new DB_Connectioncode(stmt);
         		
         		//listarray1 = check.getId1();
         		listarray2 = check.getId2();
@@ -391,7 +392,7 @@ public class Server implements Runnable {
 					e.printStackTrace();
 				}*/
             }  
-        }, 0,6000000);
+        }, 0,60000);
         
         //工作线程
         new Thread(socketstart).start();
@@ -553,7 +554,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5555).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
