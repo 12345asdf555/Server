@@ -164,6 +164,7 @@ public class Server implements Runnable {
             stmt= conn.createStatement();
           
             NS.mysql.db.stmt = stmt;
+            NS.mysql.db.conn = conn;
             NS.android.db.stmt = stmt;
             NS.mysql.db.connet = connet;
             NS.android.db.connet = connet;
