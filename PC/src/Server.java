@@ -369,7 +369,7 @@ public class Server implements Runnable {
         		NS.listarray2 = listarray2;
         		NS.listarray3 = listarray3;
             }  
-        }, 0,60000);
+        }, 0,6000);
         
         //工作线程
         new Thread(socketstart).start();

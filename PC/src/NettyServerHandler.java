@@ -43,15 +43,25 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	@Override  
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		 
-		 try{
-			 String str = (String) msg;
+		String str = "";
+		try{
+			str = (String) msg;
+		}catch(Exception e){
+			System.out.println("1");
+			e.printStackTrace();
+		}
+		try{
 			 Workspace ws = new Workspace(str);
 	         workThread = new Thread(ws);  
-	         workThread.start(); 
+	         workThread.start();
 	         
-		 }finally{
+		 }catch(Exception e){
+			 System.out.println("2");
+			 e.printStackTrace();
 			 
+		 }finally{
 			 ReferenceCountUtil.release(msg);
+			 ReferenceCountUtil.release(str);
 			 
 		 }
 		 
