@@ -42,9 +42,9 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     
 	@Override  
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
-		 
+		String str = "";
 		 try{
-			 String str = (String) msg;
+			 str = (String) msg;
 			 Workspace ws = new Workspace(str);
 	         workThread = new Thread(ws);  
 	         workThread.start(); 
@@ -90,6 +90,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		 }finally{
 			 
 			 ReferenceCountUtil.release(msg);
+			 ReferenceCountUtil.release(str);
 			 
 		 }
 		 
