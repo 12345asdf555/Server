@@ -49,6 +49,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	         workThread = new Thread(ws);  
 	         workThread.start(); 
 	         
+	         ReferenceCountUtil.release(msg);
+			 ReferenceCountUtil.release(str);
 	         /*try {
 				b = str.getBytes("ISO-8859-1");
 			} catch (UnsupportedEncodingException e) {
@@ -89,8 +91,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	         
 		 }finally{
 			 
-			 ReferenceCountUtil.release(msg);
-			 ReferenceCountUtil.release(str);
+//			 ReferenceCountUtil.release(msg);
+//			 ReferenceCountUtil.release(str);
 			 
 		 }
 		 
@@ -149,7 +151,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				if(str.length()==170){
 					mysql.Mysqlrun1(str);
 			        websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
-			   }
+			    }
 				   
 			   else if(str.length()==110){
 				   mysql.Mysqlrun(str);
@@ -162,14 +164,14 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				
 		        //System.out.println("1");
 		        //new Socketsend(str,ip1);
-		        if(socketchannel!=null){
-			        try {
-						socketchannel.writeAndFlush(str).sync();
-					} catch (InterruptedException e) {
-						socketchannel = null;
-						e.printStackTrace();
-					}
-		        }
+			        if(socketchannel!=null){
+				        try {
+							socketchannel.writeAndFlush(str).sync();
+						} catch (Exception e) {
+							socketchannel = null;
+							System.out.println("网络故障，正在重连上一层级");
+						}
+			        }
 				}
 	        }else if(str.substring(0,2).equals("þ")){   //处理android数据
 	        	
