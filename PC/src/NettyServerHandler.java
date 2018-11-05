@@ -46,23 +46,14 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		String str = "";
 		try{
 			str = (String) msg;
-		}catch(Exception e){
-			System.out.println("1");
-			e.printStackTrace();
-		}
-		try{
-			 Workspace ws = new Workspace(str);
-	         workThread = new Thread(ws);  
-	         workThread.start();
-	         
+			Workspace ws = new Workspace(str);
+	        workThread = new Thread(ws);  
+	        workThread.start();
+	        
+	        ReferenceCountUtil.release(msg);
+			ReferenceCountUtil.release(str);
 		 }catch(Exception e){
-			 System.out.println("2");
 			 e.printStackTrace();
-			 
-		 }finally{
-			 ReferenceCountUtil.release(msg);
-			 ReferenceCountUtil.release(str);
-			 
 		 }
 		 
 	 }
@@ -88,18 +79,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==236){
 				
 				synchronized (websocketlist) {
-					mysql.Mysqlbase(str);
+					//mysql.Mysqlbase(str);
 			        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
-			        //System.out.println("1");
-			        //new Socketsend(str,ip1);
-			        if(socketchannel!=null){
-				        try {
-							socketchannel.writeAndFlush(str).sync();
-						} catch (InterruptedException e) {
-							socketchannel = null;
-							e.printStackTrace();
-						}
-			        }
 				}
 				
 			}else if(str.substring(0,2).equals("FA")){  //处理实时数据
@@ -107,8 +88,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				synchronized (websocketlist) {
 				mysql.Mysqlrun(str);
 		        websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
-		        //System.out.println("1");
-		        //new Socketsend(str,ip1);
 		        if(socketchannel!=null){
 			        try {
 						socketchannel.writeAndFlush(str).sync();
@@ -145,10 +124,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                     	socketcon.writeAndFlush(str).sync();
                     	
                 	}catch (Exception e) {
-                		
                 		System.out.println(socketfail);
                 		e.printStackTrace();
-
                 		listarraybuf.add(socketfail);
                 		ifdo = true;
    					 }
@@ -180,9 +157,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 		
                 		listarraybuf.add(websocketfail);
                 		ifdo = true;
-                		
-						/*websocketlist.remove(websocketfail);
-						webiter = websocketlist.entrySet().iterator();*/
    					 }
                 }
                 
@@ -193,53 +167,9 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 }
 	        	}
 	        }
-					
-			/*} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-		        //new Websocket(str,connet,websocket,listarray2,listarray3);
-		        //new Sqlite(str);
-		    
-			
-	        /*for(int i=0;i<req.length;i++){
-	             
-	            //判断为数字还是字母，若为字母+256取正数
-	            if(req[i]<0){
-	              String r = Integer.toHexString(req[i]+256);
-	              String rr=r.toUpperCase();
-	                //数字补为两位数
-	                if(rr.length()==1){
-	                	rr='0'+rr;
-	                }
-	                //strdata为总接收数据
-	                str += rr;
-	               
-	            }
-	            else{
-	              String r = Integer.toHexString(req[i]);
-	              if(r.length()==1)
-	              r='0'+r;
-	              r=r.toUpperCase();
-	              str+=r;  
-	            }
-	        }*/
-			
- 
 		}
 	 }
 	 
-	 /*public Runnable work = new Runnable() {
-
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			new Mysql(str,connet,listarray1);
-	        new Socketsend(str,ip1);
-	        new Websocket(str,connet,websocket,listarray2,listarray3);
-		} 
-		 
-	 };*/
 	 
 	 @Override  
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {  

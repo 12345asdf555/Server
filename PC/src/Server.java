@@ -348,28 +348,28 @@ public class Server implements Runnable {
 		                    return;
 		                }  
 		        	}
+	            	
+	        		DB_Connectioncode check = new DB_Connectioncode(stmt);
+	        		
+	        		listarray1 = check.getId1();
+	        		listarray2 = check.getId2();
+	        		listarray3 = check.getId3();
+	        		
+	        		NS.mysql.listarray1 = listarray1;
+	        		NS.mysql.listarray2 = listarray2;
+	        		NS.mysql.listarray3 = listarray3;
+	        		NS.android.listarray1 = listarray1;
+	        		NS.android.listarray2 = listarray2;
+	        		NS.listarray1 = listarray1;
+	        		NS.listarray2 = listarray2;
+	        		NS.listarray3 = listarray3;
 	        	}catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return;
 				}
-            	
-        		DB_Connectioncode check = new DB_Connectioncode(stmt);
-        		
-        		listarray1 = check.getId1();
-        		listarray2 = check.getId2();
-        		listarray3 = check.getId3();
-        		
-        		NS.mysql.listarray1 = listarray1;
-        		NS.mysql.listarray2 = listarray2;
-        		NS.mysql.listarray3 = listarray3;
-        		NS.android.listarray1 = listarray1;
-        		NS.android.listarray2 = listarray2;
-        		NS.listarray1 = listarray1;
-        		NS.listarray2 = listarray2;
-        		NS.listarray3 = listarray3;
             }  
-        }, 0,6000);
+        }, 0,60000);
         
         //工作线程
         new Thread(socketstart).start();
