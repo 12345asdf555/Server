@@ -100,6 +100,8 @@ public class DB_Connectionmysql {
                 goodsC_date = Timestamp.valueOf(nowTime);
                 
                 BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+                BigDecimal maxvoltage1 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
+                BigDecimal minvoltage1 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
                 
                 for(int a=0;a<listarray1.size();a+=3){
                 	if(welderid == Integer.valueOf(listarray1.get(a))){
@@ -127,9 +129,9 @@ public class DB_Connectionmysql {
                 }
                 
                 if(countbase1==1){
-           	 		inSqlbase1 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage + "','" + minvoltage + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
+           	 		inSqlbase1 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
            	 	}else{
-           	 		inSqlbase1 = inSqlbase1 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage + "','" + minvoltage + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
+           	 		inSqlbase1 = inSqlbase1 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
            	 	}
                 
                 countbase1++;
@@ -177,6 +179,8 @@ public class DB_Connectionmysql {
                 goodsC_date = Timestamp.valueOf(nowTime);
                 
                 BigDecimal voltage2 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+                BigDecimal maxvoltage2 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
+                BigDecimal minvoltage2 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
                 
                 for(int a=0;a<listarray1.size();a+=3){
                 	if(welderid == Integer.valueOf(listarray1.get(a))){
@@ -201,9 +205,9 @@ public class DB_Connectionmysql {
                 }
                 
                 if(countbase2==1){
-           	 		inSqlbase2 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage + "','" + minvoltage + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
+           	 		inSqlbase2 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
            	 	}else{
-           	 		inSqlbase2 = inSqlbase2 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage + "','" + minvoltage + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
+           	 		inSqlbase2 = inSqlbase2 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
            	 	}
                 
                 countbase2++;
@@ -251,6 +255,8 @@ public class DB_Connectionmysql {
                 goodsC_date = Timestamp.valueOf(nowTime);
                 
                 BigDecimal voltage3 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+                BigDecimal maxvoltage3 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
+                BigDecimal minvoltage3 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
                 
                 for(int a=0;a<listarray1.size();a+=3){
                 	if(welderid == Integer.valueOf(listarray1.get(a))){
@@ -275,9 +281,9 @@ public class DB_Connectionmysql {
                 }
                 
                 if(countbase3==1){
-           	 		inSqlbase3 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage + "','" + minvoltage + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
+           	 		inSqlbase3 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
            	 	}else{
-           	 		inSqlbase3 = inSqlbase3 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage + "','" + minvoltage + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
+           	 		inSqlbase3 = inSqlbase3 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
            	 	}
                 
                 countbase3++;
@@ -325,6 +331,8 @@ public class DB_Connectionmysql {
                 goodsC_date = Timestamp.valueOf(nowTime);
                 
                 BigDecimal voltage4 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+                BigDecimal maxvoltage4 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
+                BigDecimal minvoltage4 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
                 
                 for(int a=0;a<listarray1.size();a+=3){
                 	if(welderid == Integer.valueOf(listarray1.get(a))){
@@ -349,9 +357,9 @@ public class DB_Connectionmysql {
                 }
                 
                 if(countbase4==1){
-           	 		inSqlbase4 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage + "','" + minvoltage + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
+           	 		inSqlbase4 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
            	 	}else{
-           	 		inSqlbase4 = inSqlbase4 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage + "','" + minvoltage + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
+           	 		inSqlbase4 = inSqlbase4 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "')";
            	 	}
                 
                 countbase4++;

@@ -300,8 +300,6 @@ public class Server implements Runnable {
 	    
 	    //获取最新焊口和焊机统计时间
 	    check = new DB_Connectioncode(stmt);
-	    //DB_Connectionweb b =new DB_Connectionweb(connet);
-  		//dbdata = b.getId();
 		NS.websocket.dbdata = this.dbdata;
   		
 		listarray1 = check.getId1();
@@ -372,12 +370,11 @@ public class Server implements Runnable {
         }, 0,60000);
         
         //工作线程
-        new Thread(socketstart).start();
-		new Thread(websocketstart).start();
-		
+        //new Thread(socketstart).start();
+		//new Thread(websocketstart).start();
 		//new Thread(sockettran).start();
     	//new Email();
-		//new UpReport();
+		new UpReport();
 
     }  
     
@@ -396,8 +393,6 @@ public class Server implements Runnable {
 	            	.option(ChannelOption.SO_BACKLOG,1024)
 	            	.childHandler(NS);  
 	            
-	            
-	          
 	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
 	                @Override
 	                public void initChannel(SocketChannel chsoc) throws Exception {
@@ -454,7 +449,7 @@ public class Server implements Runnable {
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://localhost:5550/SerialPortDemo/ws/张三"));
+							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://localhost:5554/SerialPortDemo/ws/张三"));
 							chweb.pipeline().addLast("myWebSocketHandler", NWS);
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);

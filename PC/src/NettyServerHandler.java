@@ -56,6 +56,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			 e.printStackTrace();
 		 }
 		 
+		ctx.flush();
 	 }
 	 
 	 public class Workspace implements Runnable{
@@ -79,8 +80,16 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==236){
 				
 				synchronized (websocketlist) {
-					//mysql.Mysqlbase(str);
+					mysql.Mysqlbase(str);
 			        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+			        if(socketchannel!=null){
+				        try {
+							socketchannel.writeAndFlush(str).sync();
+						} catch (Exception e) {
+							socketchannel = null;
+							e.printStackTrace();
+						}
+			        }
 				}
 				
 			}else if(str.substring(0,2).equals("FA")){  //处理实时数据
@@ -91,7 +100,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		        if(socketchannel!=null){
 			        try {
 						socketchannel.writeAndFlush(str).sync();
-					} catch (InterruptedException e) {
+					} catch (Exception e) {
 						socketchannel = null;
 						e.printStackTrace();
 					}
@@ -103,9 +112,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	android.Androidrun(str);
 	        	
 	        }else if(str.substring(0,2).equals("JN")){  //江南任务派发 任务号、焊工、焊机、状态
-	        	
-	        	System.out.println(" ");
-	        	System.out.println(str);
 	        	
 	        	synchronized (socketlist) {
 	        	ArrayList<String> listarraybuf = new ArrayList<String>();
@@ -124,7 +130,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                     	socketcon.writeAndFlush(str).sync();
                     	
                 	}catch (Exception e) {
-                		System.out.println(socketfail);
                 		e.printStackTrace();
                 		listarraybuf.add(socketfail);
                 		ifdo = true;
@@ -172,8 +177,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	 
 	 
 	 @Override  
-	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {  
-		 super.channelReadComplete(ctx);  
+	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception { 
 	     ctx.flush();  
 	 } 
      @Override  

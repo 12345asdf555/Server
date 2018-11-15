@@ -17,6 +17,8 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.CharsetUtil;
 
 public class Client  
@@ -27,6 +29,7 @@ public class Client
   public Bootstrap bootstrap = new Bootstrap();
   public Server server;
   public ConnectionListener CL = new ConnectionListener(this);
+  public TcpClientHandler handler = new TcpClientHandler(this);
   
   public Client(Server server) {
 	// TODO Auto-generated constructor stub
@@ -42,9 +45,8 @@ public class Client
     new Client().run();  
   }  
   
-  public Bootstrap createBootstrap(Bootstrap bootstrap, EventLoopGroup eventLoop) {  
-    if (bootstrap != null) {  
-      final TcpClientHandler handler = new TcpClientHandler(this);  
+  public Bootstrap createBootstrap(Bootstrap bootstrap, EventLoopGroup eventLoop) {
+    if (bootstrap != null) { 
       
       try {
 		  FileInputStream in = new FileInputStream("IPconfig.txt");  
@@ -74,7 +76,8 @@ public class Client
       
       bootstrap.group(eventLoop);  
       bootstrap.channel(NioSocketChannel.class);  
-      bootstrap.option(ChannelOption.SO_KEEPALIVE, true);  
+      bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,1000);
+      //bootstrap.option(ChannelOption.SO_KEEPALIVE, true);  
       bootstrap.handler(new ChannelInitializer<SocketChannel>() {  
         @Override  
         protected void initChannel(SocketChannel socketChannel) throws Exception { 
@@ -82,11 +85,12 @@ public class Client
       	  socketChannel.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
       	  socketChannel.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
       	  socketChannel.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
+      	  socketChannel.pipeline().addLast(new WriteTimeoutHandler(5)); 
           socketChannel.pipeline().addLast(handler);  
           CL.socketChannel = socketChannel;
         }  
       });  
-      bootstrap.remoteAddress(fitemid, 5555);
+      bootstrap.remoteAddress(fitemid, 5551);
       bootstrap.connect().addListener(CL); 
     }  
     return bootstrap;  

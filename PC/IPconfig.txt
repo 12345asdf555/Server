@@ -1,2 +1,1 @@
-121.196.222.216,WELDMES,db_admin,PIJXmcLRa0QgOw2c
-2018-01-01 15:00:00to2018-08-30 15:00:00
+cms.cnec5.com,Company_weld,root,123456Ab
