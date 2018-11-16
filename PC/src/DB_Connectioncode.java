@@ -107,7 +107,7 @@ public class DB_Connectioncode {
     	
     	
        //查焊机
-         inSql = "select tb_gather.fid,tb_welding_machine.fequipment_no,tb_gather.fgather_no,tb_gather.fitemId from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
+         inSql = "select tb_gather.fid,tb_welding_machine.fequipment_no,tb_gather.fgather_no,tb_welding_machine.finsframework_id from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
          
          try {
 
@@ -117,7 +117,7 @@ public class DB_Connectioncode {
             	String fid = rs.getString("fid");
             	String fequipment_no = rs.getString("fequipment_no");
              	String fgather_no = rs.getString("fgather_no");
-             	String fitemId = rs.getString("fitemId");
+             	String fitemId = rs.getString("finsframework_id");
              	listarray2.add(fid);
              	listarray2.add(fequipment_no);
              	listarray2.add(fgather_no);

@@ -67,7 +67,7 @@ public class DB_Connectionandroid {
         
         try {
         	
-        	if(stmt==null || stmt.isClosed()==true)
+        	if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
 			{
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(connet);
@@ -92,7 +92,7 @@ public class DB_Connectionandroid {
         endtime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
         try {
         	
-        	if(stmt==null || stmt.isClosed()==true)
+        	if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
 			{
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(connet);
@@ -120,7 +120,7 @@ public class DB_Connectionandroid {
 		try {
 			
         	//得到需要处理的Android数据是起始时间
-        	if(stmt==null || stmt.isClosed()==true)
+        	if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
 			{
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(connet);
@@ -270,7 +270,7 @@ public class DB_Connectionandroid {
                 	
                 	try {
                     	
-                		if(stmt==null || stmt.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
@@ -343,7 +343,7 @@ public class DB_Connectionandroid {
                 	
                 	try {
                     	
-                		if(stmt==null || stmt.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
@@ -416,7 +416,7 @@ public class DB_Connectionandroid {
                 	
                 	try {
                     	
-                		if(stmt==null || stmt.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
@@ -489,7 +489,7 @@ public class DB_Connectionandroid {
                 	
                 	try {
                     	
-                		if(stmt==null || stmt.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");

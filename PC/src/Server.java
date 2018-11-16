@@ -47,6 +47,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 
 import java.util.Set;
 import java.util.Timer;
@@ -69,6 +71,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.CharsetUtil;
 
@@ -370,11 +373,11 @@ public class Server implements Runnable {
         }, 0,60000);
         
         //工作线程
-        //new Thread(socketstart).start();
-		//new Thread(websocketstart).start();
+        new Thread(socketstart).start();
+		new Thread(websocketstart).start();
 		//new Thread(sockettran).start();
     	//new Email();
-		new UpReport();
+		//new UpReport();
 
     }  
     
@@ -446,10 +449,18 @@ public class Server implements Runnable {
 							// TODO Auto-generated method stub
 
 							synchronized (websocketlist) {
+							try{
+		                        SSLContext sslContext = SslUtil.createSSLContext("PKCS12","/opt/tomcat/cert/cert-1542089844623_cms.cnec5.com.pfx","1qo8TcPw");
+		                        SSLEngine engine = sslContext.createSSLEngine(); 
+		                        engine.setUseClientMode(false);
+		                        chweb.pipeline().addLast(new SslHandler(engine));
+	                        }catch(Exception e){
+	                          System.out.println("wss链接失败");
+	                        }
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://localhost:5554/SerialPortDemo/ws/张三"));
+							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("wss://localhost:5550/SerialPortDemo/ws/张三"));
 							chweb.pipeline().addLast("myWebSocketHandler", NWS);
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);
