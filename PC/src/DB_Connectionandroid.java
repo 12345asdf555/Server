@@ -253,7 +253,12 @@ public class DB_Connectionandroid {
                	 		break;
                	 	}
                 }
-                
+                if(itemid1.equals("")){
+       	 			itemid1="0";
+       	 		}
+                if(machine_id1.equals("")){
+                	machine_id1="0";
+       	 		}
                 BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
                 
            	 	if(count1==1){
@@ -326,7 +331,12 @@ public class DB_Connectionandroid {
                	 		break;
                	 	}
                 } 
-           	 	
+                if(itemid2.equals("")){
+       	 			itemid2="0";
+       	 		}
+                if(machine_id2.equals("")){
+                	machine_id2="0";
+       	 		}
            	 	BigDecimal voltage2 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
                 
            	 	if(count2==1){
@@ -399,7 +409,12 @@ public class DB_Connectionandroid {
             	 		break;
             	 	}
            	 	}  
-
+           	 	if(itemid3.equals("")){
+    	 			itemid3="0";
+    	 		}
+           	 	if(machine_id3.equals("")){
+           	 		machine_id3="0";
+    	 		}
            	 	BigDecimal voltage3 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
            	 	
            	 if(count3==1){
@@ -472,7 +487,12 @@ public class DB_Connectionandroid {
          	 		break;
          	 	}
         	 	}
-
+        	 	if(itemid4.equals("")){
+    	 			itemid4="0";
+    	 		}
+        	 	if(machine_id4.equals("")){
+           	 		machine_id4="0";
+    	 		}
            	 	BigDecimal voltage4 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
            	 	
            	 	if(count4==1){
