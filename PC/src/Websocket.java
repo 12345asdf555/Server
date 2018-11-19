@@ -43,35 +43,35 @@ public class Websocket {
 		}
 		else
 		{	
-			if (str.length() == 236) {
+			if (str.length() == 290) {
 				
 				//校验第一位是否为FA末位是否为F5
 	      	    String check1 =str.substring(0,2);
-	      	    String check11=str.substring(234,236);
+	      	    String check11=str.substring(288,290);
 	      	    if(check1.equals("7E") && check11.equals("7D")){
 	      	    	
-	      	    	String welderid = Integer.valueOf(str.substring(34,38)).toString();
+	      	    	String welderid = Integer.valueOf(str.substring(40,44)).toString();
 	      	    	if(welderid.length()!=4){
 	             		int lenth=4-welderid.length();
 	             		for(int i=0;i<lenth;i++){
 	             			welderid="0"+welderid;
 	             		}
 	             	}
-	      	    	String weldid = Integer.valueOf(str.substring(18,22)).toString();
+	      	    	String weldid = Integer.valueOf(str.substring(20,24)).toString();
 	      	    	if(weldid.length()!=4){
 	             		int lenth=4-weldid.length();
 	             		for(int i=0;i<lenth;i++){
 	             			weldid="0"+weldid;
 	             		}
 	             	}
-	      	    	String gatherid = Integer.valueOf(str.substring(14,18)).toString();
+	      	    	String gatherid = Integer.valueOf(str.substring(16,20)).toString();
 	      	    	if(gatherid.length()!=4){
 	             		int lenth=4-gatherid.length();
 	             		for(int i=0;i<lenth;i++){
 	             			gatherid="0"+gatherid;
 	             		}
 	             	}
-	      	    	String itemins = Integer.valueOf(str.substring(232,234)).toString();
+	      	    	String itemins = Integer.valueOf(str.substring(286,288)).toString();
 	      	    	if(itemins.length()!=4){
 	             		int lenth=4-itemins.length();
 	             		for(int i=0;i<lenth;i++){
@@ -86,48 +86,48 @@ public class Websocket {
 	             		}
 	             	}
 	      	    	
-	      	    	for(int a=0;a<129;a+=64){
+	      	    	for(int a=0;a<161;a+=80){
 	      	    		
 	      	    		String welderins = "0000";
 	      	    		String junctionins = "0000";
 	      	    		String ins = "0000";
 	      	    		
-	      	    		String junctionid = Integer.valueOf(str.substring(70+a, 78+a)).toString();
+	      	    		String junctionid = Integer.valueOf(str.substring(76+a, 84+a)).toString();
 	      	    		if(junctionid.length()!=4){
 		             		int lenth=4-junctionid.length();
 		             		for(int i=0;i<lenth;i++){
 		             			junctionid="0"+junctionid;
 		             		}
 		             	}
-		      	    	String electricity = Integer.valueOf(str.subSequence(50+a, 54+a).toString(),16).toString();
+		      	    	String electricity = Integer.valueOf(str.subSequence(56+a, 60+a).toString(),16).toString();
 		      	    	if(electricity.length()!=4){
 		             		int lenth=4-electricity.length();
 		             		for(int i=0;i<lenth;i++){
 		             			electricity="0"+electricity;
 		             		}
 		             	}
-		      	    	String voltage = Integer.valueOf(str.subSequence(54+a, 58+a).toString(),16).toString();
+		      	    	String voltage = Integer.valueOf(str.subSequence(60+a, 64+a).toString(),16).toString();
 		      	    	if(voltage.length()!=4){
 		             		int lenth=4-voltage.length();
 		             		for(int i=0;i<lenth;i++){
 		             			voltage="0"+voltage;
 		             		}
 		             	}
-		      	    	String setelectricity = Integer.valueOf(str.subSequence(62+a, 66+a).toString(),16).toString();
+		      	    	String setelectricity = Integer.valueOf(str.subSequence(68+a, 72+a).toString(),16).toString();
 		      	    	if(setelectricity.length()!=4){
 		             		int lenth=4-setelectricity.length();
 		             		for(int i=0;i<lenth;i++){
 		             			setelectricity="0"+setelectricity;
 		             		}
 		             	}
-		      	    	String setvoltage = Integer.valueOf(str.subSequence(66+a, 70+a).toString(),16).toString();
+		      	    	String setvoltage = Integer.valueOf(str.subSequence(72+a, 76+a).toString(),16).toString();
 		      	    	if(setvoltage.length()!=4){
 		             		int lenth=4-setvoltage.length();
 		             		for(int i=0;i<lenth;i++){
 		             			setvoltage="0"+setvoltage;
 		             		}
 		             	}
-		      	    	String status = Integer.valueOf(str.subSequence(78+a, 80+a).toString(),16).toString();
+		      	    	String status = Integer.valueOf(str.subSequence(84+a, 86+a).toString(),16).toString();
 		      	    	if(status.length()!=2){
 		             		int lenth=2-status.length();
 		             		for(int i=0;i<lenth;i++){
@@ -135,12 +135,12 @@ public class Websocket {
 		             		}
 		             	}
 		      	    	
-	                    String year = Integer.valueOf(str.subSequence(38+a, 40+a).toString(),16).toString();
-	      	    		String month = Integer.valueOf(str.subSequence(40+a, 42+a).toString(),16).toString();
-	      	    		String day = Integer.valueOf(str.subSequence(42+a, 44+a).toString(),16).toString();
-	      	    		String hour = Integer.valueOf(str.subSequence(44+a, 46+a).toString(),16).toString();
-	      	    		String minute = Integer.valueOf(str.subSequence(46+a, 48+a).toString(),16).toString();
-	      	    		String second = Integer.valueOf(str.subSequence(48+a, 50+a).toString(),16).toString();
+	                    String year = Integer.valueOf(str.subSequence(44+a, 46+a).toString(),16).toString();
+	      	    		String month = Integer.valueOf(str.subSequence(46+a, 48+a).toString(),16).toString();
+	      	    		String day = Integer.valueOf(str.subSequence(48+a, 50+a).toString(),16).toString();
+	      	    		String hour = Integer.valueOf(str.subSequence(50+a, 52+a).toString(),16).toString();
+	      	    		String minute = Integer.valueOf(str.subSequence(52+a, 54+a).toString(),16).toString();
+	      	    		String second = Integer.valueOf(str.subSequence(54+a, 56+a).toString(),16).toString();
 	      	    		String strdate = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
 	      	    		try {
 							time = DateTools.parse("yy-MM-dd HH:mm:ss",strdate);
@@ -150,35 +150,35 @@ public class Websocket {
 							e.printStackTrace();
 						}
 	      	    		
-	      	    		String channel = Integer.valueOf(str.subSequence(100+a, 102+a).toString(),16).toString();
+	      	    		String channel = Integer.valueOf(str.subSequence(106+a, 108+a).toString(),16).toString();
 						if(channel.length()!=2){
 		             		int lenth=2-channel.length();
 		             		for(int i=0;i<lenth;i++){
 		             			channel="0"+channel;
 		             		}
 		             	}
-						String maxelectricity = Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).toString();
+						String maxelectricity = Integer.valueOf(str.subSequence(90+a, 94+a).toString(),16).toString();
 						if(maxelectricity.length()!=4){
 		             		int lenth=4-maxelectricity.length();
 		             		for(int i=0;i<lenth;i++){
 		             			maxelectricity="0"+maxelectricity;
 		             		}
 		             	}
-						String minelectricity = Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).toString();
+						String minelectricity = Integer.valueOf(str.subSequence(94+a, 98+a).toString(),16).toString();
 						if(minelectricity.length()!=4){
 		             		int lenth=4-minelectricity.length();
 		             		for(int i=0;i<lenth;i++){
 		             			minelectricity="0"+minelectricity;
 		             		}
 		             	}
-						String maxvoltage = Integer.valueOf(str.subSequence(92+a, 96+a).toString(),16).toString();
+						String maxvoltage = Integer.valueOf(str.subSequence(98+a, 102+a).toString(),16).toString();
 						if(maxvoltage.length()!=4){
 		             		int lenth=4-maxvoltage.length();
 		             		for(int i=0;i<lenth;i++){
 		             			maxvoltage="0"+maxvoltage;
 		             		}
 		             	}
-						String minvoltage = Integer.valueOf(str.subSequence(96+a, 100+a).toString(),16).toString();
+						String minvoltage = Integer.valueOf(str.subSequence(102+a, 106+a).toString(),16).toString();
 						if(minvoltage.length()!=4){
 		             		int lenth=4-minvoltage.length();
 		             		for(int i=0;i<lenth;i++){
