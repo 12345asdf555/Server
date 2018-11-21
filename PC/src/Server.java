@@ -252,6 +252,19 @@ public class Server implements Runnable {
                 		timewarn = rs4.getString("fUploadDataTime");
                 	}
                 	
+                	if(timework == null || timework.equals("null")){
+                		timework = "2000-01-01 01:01:01";
+                	}
+                	if(timestandby == null || timestandby.equals("null")){
+                		timestandby = "2000-01-01 01:01:01";
+                	}
+                	if(timealarm == null || timealarm.equals("null")){
+                		timealarm = "2000-01-01 01:01:01";
+                	}
+                	if(timewarn == null || timewarn.equals("null")){
+                		timewarn = "2000-01-01 01:01:01";
+                	}
+                	
                     String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
                     		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime,tb_standby.fwelder_no,tb_standby.fjunction_no,tb_standby.fweld_no,tb_standby.fchannel,tb_standby.fmax_electricity,tb_standby.fmin_electricity,tb_standby.fmax_voltage,tb_standby.fmin_voltage,tb_standby.fwelder_itemid,tb_standby.fjunction_itemid,tb_standby.fmachine_itemid,tb_standby.fwirefeedrate,tb_standby.fmachinemodel,tb_standby.fwirediameter,tb_standby.fmaterialgas) SELECT "
                     		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
@@ -376,8 +389,8 @@ public class Server implements Runnable {
         //工作线程
         new Thread(socketstart).start();
 		new Thread(websocketstart).start();
+    	new Email();
 		//new Thread(sockettran).start();
-    	//new Email();
 		//new UpReport();
 
     }  
