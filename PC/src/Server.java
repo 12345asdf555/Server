@@ -416,7 +416,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5555).sync();
+				f = b.bind(5551).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -450,14 +450,14 @@ public class Server implements Runnable {
 							// TODO Auto-generated method stub
 
 							synchronized (websocketlist) {
-							try{
+							/*try{
 		                        SSLContext sslContext = SslUtil.createSSLContext("PKCS12","/opt/tomcat/cert/cert-1542089844623_cms.cnec5.com.pfx","1qo8TcPw");
 		                        SSLEngine engine = sslContext.createSSLEngine(); 
 		                        engine.setUseClientMode(false);
 		                        chweb.pipeline().addLast(new SslHandler(engine));
 	                        }catch(Exception e){
 	                          System.out.println("wss链接失败");
-	                        }
+	                        }*/
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));

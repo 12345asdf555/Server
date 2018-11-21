@@ -122,15 +122,12 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 	try{
                     	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
                     	
-                    	System.out.println(entry);
-                    	
                     	socketfail = entry.getKey();
 
         				SocketChannel socketcon = entry.getValue();
                     	socketcon.writeAndFlush(str).sync();
                     	
                 	}catch (Exception e) {
-                		e.printStackTrace();
                 		listarraybuf.add(socketfail);
                 		ifdo = true;
    					 }
