@@ -2226,39 +2226,39 @@ public class Websocket {
 	               		         if(weldname.equals(fgather_no)){
 	               		        	 
 	               		        	 //江南
+	               		        	/*if(finsframework_id==null || finsframework_id==""){
+	                       				finsframework_id="nu";
+	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
+			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
+			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
+	                       			}else{
+	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
+			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
+			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
+	                       			}	*/
+	               		        	 
 	               		        	if(finsframework_id==null || finsframework_id==""){
 	                       				finsframework_id="nu";
-	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
+	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+"00000000000000000000"+timesql1+limit+"00:00:00"+"00:00:00"+code
+			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+"00000000000000000000"+timesql2+limit+"00:00:00"+"00:00:00"+code
+			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00"+code;
 	                       			}else{
-	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+"000000000000"+"00:00:00"+"00:00:00";
+	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+"00000000000000000000"+timesql1+limit+"00:00:00"+"00:00:00"+code
+			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+"00000000000000000000"+timesql2+limit+"00:00:00"+"00:00:00"+code
+			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00"+code;
 	                       			}	
-	               		        	 
-	                       			/*if(finsframework_id==null || finsframework_id==""){
-	                       				finsframework_id="nu";
-	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit+"00:00:00"+"00:00:00"
-			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+"00:00:00"+"00:00:00"
-			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+"00:00:00"+"00:00:00";
-	                       			}else{
-	                       				strsend+=status1+finsframework_id+fequipment_no+welder+electricity1+voltage1+timesql1+limit+"00:00:00"+"00:00:00"
-			   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+timesql2+limit+"00:00:00"+"00:00:00"
-			   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+timesql3+limit+"00:00:00"+"00:00:00";
-	                       			}	*/
 		   	                     }
 	               		         
 		   	                     else{
 		   	                    	if(finsframework_id==null || finsframework_id==""){
 	                       				 finsframework_id="nu";
-	                       				strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00";
+	                       				strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"+code
+			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"+code
+			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"+code;
 	       	                    	}else{
-	       	                    		strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"
-			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00";
+	       	                    		strsend+="09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"+code
+			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"+code
+			   	                    			+"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000"+"00:00:00"+"00:00:00"+code;
 	       	                    	}
 		   	                     }
 		                   	 }

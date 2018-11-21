@@ -120,7 +120,7 @@ public class DB_Connectionandroid {
 		try {
 			
         	//得到需要处理的Android数据是起始时间
-        	if(stmt==null || stmt.isClosed()==true)
+        	if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
 			{
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(connet);
@@ -174,7 +174,7 @@ public class DB_Connectionandroid {
 	        			+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) "
 	        			+ "SELECT tb_data.welder_id,tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),AVG(tb_data.voltage),AVG(tb_data.sensor_Num),"
 	        			+ "COUNT(tb_data.fid),'" + datetime1 +"','" + datetime2 + "' FROM tb_data LEFT JOIN tb_welded_junction ON tb_data.code = tb_welded_junction.fwelded_junction_no "
-	        			+ "WHERE status= '3' and (tb_data.voltage > tb_welded_junction.fmax_valtage OR tb_data.electricity > tb_welded_junction.fmax_electricity "
+	        			+ "WHERE status= '3' and tb_welded_junction.fitemid = tb_data.itemid and (tb_data.voltage > tb_welded_junction.fmax_valtage OR tb_data.electricity > tb_welded_junction.fmax_electricity "
 	        			+ "OR tb_data.voltage < tb_welded_junction.fmin_valtage OR tb_data.electricity < tb_welded_junction.fmin_electricity) AND tb_data.weldtime BETWEEN '" + datetime1 + "' AND '" + datetime2 + "' "
 	        			+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
 	        	
@@ -272,7 +272,7 @@ public class DB_Connectionandroid {
                 
                 count1++;
                 
-                if(count1 == 100){
+                if(count1 == 1){
                 	
                 	try {
                     	
@@ -351,7 +351,7 @@ public class DB_Connectionandroid {
            	 	
                 count2++;
                 
-                if(count2 == 100){
+                if(count2 == 1){
                 	
                 	try {
                     	
@@ -430,7 +430,7 @@ public class DB_Connectionandroid {
            	 
                 count3++;
                 
-                if(count3 == 100){
+                if(count3 == 1){
                 	
                 	try {
                     	
@@ -509,7 +509,7 @@ public class DB_Connectionandroid {
            	 
                 count4++;
                 
-                if(count4 == 100){
+                if(count4 == 1){
                 	
                 	try {
                     	

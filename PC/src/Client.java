@@ -84,12 +84,13 @@ public class Client
       	  socketChannel.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
       	  socketChannel.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
       	  socketChannel.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
+      	  socketChannel.pipeline().addLast("ping", new IdleStateHandler(60, 60, 60 * 10, TimeUnit.SECONDS));
           socketChannel.pipeline().addLast(handler);  
           socketChannel.pipeline().addLast("ping", new IdleStateHandler(60, 60, 60 * 10, TimeUnit.SECONDS));
           CL.socketChannel = socketChannel;
         }  
       });  
-      bootstrap.remoteAddress(fitemid, 5555);
+      bootstrap.remoteAddress(fitemid, 5551);
       bootstrap.connect().addListener(CL); 
     }  
     return bootstrap;  
