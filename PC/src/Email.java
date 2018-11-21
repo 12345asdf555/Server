@@ -37,8 +37,8 @@ public class Email {
 		//开启线程每天查询邮件
         Calendar calendarmail = Calendar.getInstance();
         
-        calendarmail.set(Calendar.HOUR_OF_DAY, 17); // 控制时
-        calendarmail.set(Calendar.MINUTE, 50);    // 控制分
+        calendarmail.set(Calendar.HOUR_OF_DAY, 07); // 控制时
+        calendarmail.set(Calendar.MINUTE, 00);    // 控制分
         calendarmail.set(Calendar.SECOND, 00);    // 控制秒
         time = calendarmail.getTime(); 
         
@@ -210,7 +210,6 @@ public class Email {
 				for(int i=0;i<listarraymail.size();i+=3){
 					
 					//ic卡有效期提醒
-					
 					Date dateic;
 					try {
 						dateic = DateTools.parse("yyyy-MM-dd HH:mm:ss",listarraymail.get(i+2));
