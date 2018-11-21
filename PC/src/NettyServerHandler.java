@@ -157,8 +157,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				   
 			   else if(str.length()==110){
 				   mysql.Mysqlrun(context,str);
-			       websocket.Websocketrun(str,listarray2,listarray3,websocketlist);	
-			       android.Androidrun(str);
+			       websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
 			   }
 				
 				//旧
