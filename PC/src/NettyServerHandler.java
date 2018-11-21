@@ -39,10 +39,12 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public Websocket websocket = new Websocket();
 	public byte[] b;
     public int a=0;
+	private NettyServerHandler context;
     
 	@Override  
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		String str = "";
+		context = this;
 		 try{
 			 str = (String) msg;
 			 Workspace ws = new Workspace(str);
@@ -152,7 +154,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			   }
 				   
 			   else if(str.length()==110){
-				   mysql.Mysqlrun(str);
+				   mysql.Mysqlrun(context,str);
 			       websocket.Websocketrun(str,listarray2,listarray3,websocketlist);	
 			   }
 				
@@ -165,7 +167,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		        if(socketchannel!=null){
 			        try {
 						socketchannel.writeAndFlush(str).sync();
-					} catch (InterruptedException e) {
+					} catch (Exception e) {
 						socketchannel = null;
 						e.printStackTrace();
 					}

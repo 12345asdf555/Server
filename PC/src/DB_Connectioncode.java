@@ -32,6 +32,10 @@ public class DB_Connectioncode {
 
 	private Statement stmt;
 
+	private int over_value;
+
+	private int standby_over_value;
+
     public DB_Connectioncode(java.sql.Statement stmt)
 
     {
@@ -166,8 +170,17 @@ public class DB_Connectioncode {
 
          } 
          
-         
-         
+         //查字典超时待机、超标
+         String dic_str = "SELECT fvaluename FROM tb_dictionary WHERE fvalue='82' OR fvalue='83'";
+			try {
+				ResultSet dictionary =stmt.executeQuery(dic_str);
+				dictionary.next();
+				standby_over_value=dictionary.getInt(1);
+				dictionary.next();
+				over_value=dictionary.getInt(1);
+			} catch (SQLException e) {
+					e.printStackTrace();
+			}
 
         /*try {
 
@@ -213,6 +226,13 @@ public class DB_Connectioncode {
 		this.listarray3 = listarray3;
 	}
 
+	public int getover_value() {
+		return over_value;
+	}
+	
+	public int getstandby_over_value() {
+		return standby_over_value;
+	}
     
 }
 

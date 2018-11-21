@@ -67,7 +67,7 @@ public class DB_Connectionandroid {
         
         try {
         	
-        	if(stmt==null || stmt.isClosed()==true)
+        	if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
 			{
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(connet);
@@ -92,7 +92,7 @@ public class DB_Connectionandroid {
         endtime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
         try {
         	
-        	if(stmt==null || stmt.isClosed()==true)
+        	if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
 			{
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(connet);
@@ -255,7 +255,13 @@ public class DB_Connectionandroid {
                 }
                 
                 BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
-                
+                if(itemid1.equals("")){
+                    itemid1="0";
+                }
+                if(machine_id1.equals("")){
+                  machine_id1="0";
+                }
+                    
            	 	if(count1==1){
            	 		inSql1 = inSqldata + "('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + gather_id + "','" + machine_id1 + "','" + welder_id + "','" + code + "','" + status + "','" + itemid1 + "','" + timesql + "','" + goodsC_date + "')";
            	 		inSql11 =  inSqllive + "('"+ electricity +"','" + voltage1 + "','" + sensor_Num + "','" + gather_id + "','" + machine_id1 + "','" + welder_id + "','" + code + "','" + status + "','" + itemid1 + "','" + timesql + "','" + goodsC_date + "')";
@@ -270,7 +276,7 @@ public class DB_Connectionandroid {
                 	
                 	try {
                     	
-                		if(stmt==null || stmt.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
@@ -328,7 +334,13 @@ public class DB_Connectionandroid {
                 } 
            	 	
            	 	BigDecimal voltage2 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
-                
+	           	if(itemid2.equals("")){
+	                itemid1="0";
+	            }
+	            if(machine_id2.equals("")){
+	              machine_id1="0";
+	            }
+             
            	 	if(count2==1){
         	 		inSql2 = inSqldata + "('"+ electricity +"','" + voltage2 + "','" + sensor_Num + "','" + gather_id + "','" + machine_id2 + "','" + welder_id + "','" + code + "','" + status + "','" + itemid2 + "','" + timesql + "','" + goodsC_date + "')";
         	 		inSql22 =  inSqllive + "('"+ electricity +"','" + voltage2 + "','" + sensor_Num + "','" + gather_id + "','" + machine_id2 + "','" + welder_id + "','" + code + "','" + status + "','" + itemid2 + "','" + timesql + "','" + goodsC_date + "')";
@@ -343,7 +355,7 @@ public class DB_Connectionandroid {
                 	
                 	try {
                     	
-                		if(stmt==null || stmt.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
@@ -401,7 +413,13 @@ public class DB_Connectionandroid {
            	 	}  
 
            	 	BigDecimal voltage3 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
-           	 	
+	           	if(itemid3.equals("")){
+	                itemid1="0";
+	            }
+	            if(machine_id3.equals("")){
+	              machine_id1="0";
+	            }
+             
            	 if(count3==1){
      	 		inSql3 = inSqldata + "('"+ electricity +"','" + voltage3 + "','" + sensor_Num + "','" + gather_id + "','" + machine_id3 + "','" + welder_id + "','" + code + "','" + status + "','" + itemid3 + "','" + timesql + "','" + goodsC_date + "')";
      	 		inSql33 =  inSqllive + "('"+ electricity +"','" + voltage3 + "','" + sensor_Num + "','" + gather_id + "','" + machine_id3 + "','" + welder_id + "','" + code + "','" + status + "','" + itemid3 + "','" + timesql + "','" + goodsC_date + "')";
@@ -416,7 +434,7 @@ public class DB_Connectionandroid {
                 	
                 	try {
                     	
-                		if(stmt==null || stmt.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");
@@ -474,7 +492,13 @@ public class DB_Connectionandroid {
         	 	}
 
            	 	BigDecimal voltage4 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
-           	 	
+	           	if(itemid4.equals("")){
+	                itemid1="0";
+	            }
+	            if(machine_id4.equals("")){
+	              machine_id1="0";
+	            }
+             
            	 	if(count4==1){
            	 		inSql4 = inSqldata + "('"+ electricity +"','" + voltage4 + "','" + sensor_Num + "','" + gather_id + "','" + machine_id4 + "','" + welder_id + "','" + code + "','" + status + "','" + itemid4 + "','" + timesql + "','" + goodsC_date + "')";
            	 		inSql44 =  inSqllive + "('"+ electricity +"','" + voltage4 + "','" + sensor_Num + "','" + gather_id + "','" + machine_id4 + "','" + welder_id + "','" + code + "','" + status + "','" + itemid4 + "','" + timesql + "','" + goodsC_date + "')";
@@ -489,7 +513,7 @@ public class DB_Connectionandroid {
                 	
                 	try {
                     	
-                		if(stmt==null || stmt.isClosed()==true)
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     		        	{
     		        		try {
     							Class.forName("com.mysql.jdbc.Driver");

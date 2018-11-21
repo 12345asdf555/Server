@@ -45,6 +45,9 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -62,6 +65,7 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.CharsetUtil;
 
@@ -110,6 +114,8 @@ public class Server implements Runnable {
     public java.sql.Statement stmt =null;
 	private Date time;
 	private ArrayList<String> dbdata;
+	private int over_value;
+	private int standby_over_value;
     
     public String getconnet(){
     	return connet;
@@ -146,7 +152,7 @@ public class Server implements Runnable {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		
 		String[] values = ip.split(",");
 		
@@ -155,6 +161,7 @@ public class Server implements Runnable {
 	    NS.ip = this.ip;
 	    NS.ip1 = this.ip1;
 	    NS.connet = this.connet;
+	    NS.mysql.connet = this.connet;
 		
 	    //连接数据库
 	    try {  
@@ -166,6 +173,7 @@ public class Server implements Runnable {
             NS.mysql.db.stmt = stmt;
             NS.mysql.db.conn = conn;
             NS.android.db.stmt = stmt;
+            NS.android.db.conn = conn;
             NS.mysql.db.connet = connet;
             NS.android.db.connet = connet;
 
@@ -240,6 +248,7 @@ public class Server implements Runnable {
                 		timealarm = rs3.getString("fUploadDataTime");
                 	}
                 	
+                	
                     String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
                     		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "
                     		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
@@ -263,7 +272,7 @@ public class Server implements Runnable {
                     		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
                     		+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
-                    
+                   
                 	stmt.executeUpdate(sqlstandby);
                 	stmt.executeUpdate(sqlwork);
                 	stmt.executeUpdate(sqlalarm);
@@ -287,13 +296,15 @@ public class Server implements Runnable {
 	    
 	    //获取最新焊口和焊机统计时间
 	    DB_Connectioncode check = new DB_Connectioncode(stmt);
-	    DB_Connectionweb b =new DB_Connectionweb(connet);
-  		dbdata = b.getId();
-		NS.websocket.dbdata = this.dbdata;
+	    //DB_Connectionweb b =new DB_Connectionweb(connet);
+  		//dbdata = b.getId();
+		//NS.websocket.dbdata = this.dbdata;
   		
 		//listarray1 = check.getId1();
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
+		over_value = check.getover_value();
+		standby_over_value = check.getstandby_over_value();
 		
 		//System.out.println(listarray1);
 		System.out.println(listarray2);
@@ -301,6 +312,9 @@ public class Server implements Runnable {
 		
 		//NS.listarray1 = this.listarray1;
 		NS.mysql.listarray2 = this.listarray2;
+		NS.mysql.listarray3 = this.listarray3;
+		NS.mysql.over_value = this.over_value;
+		NS.mysql.standby_over_value = this.standby_over_value;
 		NS.android.listarray2 = this.listarray2;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
@@ -374,6 +388,8 @@ public class Server implements Runnable {
         		//listarray1 = check.getId1();
         		listarray2 = check.getId2();
         		listarray3 = check.getId3();
+        		over_value = check.getover_value();
+        		standby_over_value = check.getstandby_over_value();
         		
         		//System.out.println(listarray1);
         		//System.out.println(listarray2);
@@ -381,6 +397,9 @@ public class Server implements Runnable {
         		
         		//NS.listarray1 = listarray1;
         		NS.mysql.listarray2 = listarray2;
+        		NS.mysql.listarray3 = listarray3;
+        		NS.mysql.over_value = over_value;
+        		NS.mysql.standby_over_value = standby_over_value;
         		NS.android.listarray2 = listarray2;
         		NS.listarray2 = listarray2;
         		NS.listarray3 = listarray3;
@@ -590,10 +609,18 @@ public class Server implements Runnable {
 							// TODO Auto-generated method stub
 
 							synchronized (websocketlist) {
+							try{
+			                	SSLContext sslContext = SslUtil.createSSLContext("PKCS12","/opt/tomcat/cert/cert-1542089844623_cms.cnec5.com.pfx","1qo8TcPw");///opt/tomcat/cert/cert-1542089844623_cms.cnec5.com.pfx
+			                	SSLEngine engine = sslContext.createSSLEngine(); 
+			                	engine.setUseClientMode(false);
+			                	chweb.pipeline().addLast(new SslHandler(engine));
+		                	}catch(Exception e){
+		                		System.out.println("wss链接失败");
+		                	}
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://cms.cnec5.com:4555/SerialPortDemo/ws/张三"));
+							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("wss://cms.cnec5.com:4555/SerialPortDemo/ws/张三"));
 							chweb.pipeline().addLast("myWebSocketHandler", NWS);
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);

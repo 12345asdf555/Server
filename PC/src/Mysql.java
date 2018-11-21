@@ -1,18 +1,33 @@
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.Socket;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import javax.mail.internet.ParseException;
+
+import net.sf.json.JSONObject;
+
 public class Mysql {
 
-    public java.sql.Statement stmt;
+	public java.sql.Connection conn = null;
+	public java.sql.Statement stmt =null;
+	public String connet;
 	public ArrayList<String> listarray2;
+	public ArrayList<String> listarray3;
+	public ArrayList<String> listarray4 = new ArrayList<String>();
 	public DB_Connectionmysql db;
+	public int flag=0,over_value = 0,standby_over_value = 0;
+	public JSONObject json = new JSONObject();
+	public JSONObject standby_json = new JSONObject();
 	
 	public Mysql() {
 		db = new DB_Connectionmysql();
@@ -235,8 +250,9 @@ public class Mysql {
         } 
 	}
 	
-	public void Mysqlrun(String str) {
+	public void Mysqlrun(NettyServerHandler context, String str) {
 		// TODO Auto-generated constructor stub
+		NettyServerHandler NS = context;
 		try{
 			
             if (str.length() == 110) {  
@@ -340,6 +356,199 @@ public class Mysql {
 								 String fitemid = str.substring(106, 108);
 							 
 								 db.DB_Connectionmysqlrun1(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,listarray2);
+
+								 
+								/*if(flag==0){ 
+	 								ResultSet dictionary = null;
+		 							String dic_str = "SELECT fvaluename FROM tb_dictionary WHERE fvalue='82' OR fvalue='83'";
+	 								try {
+	 									
+	 									if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+	 		        		        	{
+	 		        		        		try {
+	 		        							Class.forName("com.mysql.jdbc.Driver");
+	 		        							conn = DriverManager.getConnection(connet);
+	 		        							stmt = conn.createStatement();
+	 		        		        	    } catch (ClassNotFoundException e) {  
+	 		        		                    System.out.println("Broken driver");
+	 		        		                    e.printStackTrace();
+	 		        		                    return;
+	 		        		                } catch (SQLException e) {
+	 		        		                    System.out.println("Broken conn");
+	 		        		                    e.printStackTrace();
+	 		        		                    return;
+	 		        		                }  
+	 		        		        	}
+	 									
+	 									dictionary =stmt.executeQuery(dic_str);
+	 									dictionary.next();
+	 									over_value=dictionary.getInt(1);
+	 									dictionary.next();
+	 									standby_over_value=dictionary.getInt(1)*60;
+	 									flag=1;
+	 								} catch (SQLException e) {
+	 									e.printStackTrace();
+	 								}
+								 }*/
+								if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+	        		        	{
+	        		        		try {
+	        							Class.forName("com.mysql.jdbc.Driver");
+	        							conn = DriverManager.getConnection(connet);
+	        							stmt = conn.createStatement();
+	        		        	    } catch (ClassNotFoundException e) {  
+	        		                    System.out.println("Broken driver");
+	        		                    e.printStackTrace();
+	        		                    return;
+	        		                } catch (SQLException e) {
+	        		                    System.out.println("Broken conn");
+	        		                    e.printStackTrace();
+	        		                    return;
+	        		                }  
+	        		        	}
+								 
+								 String weldid = null;
+								 for(int j=0;j<listarray2.size();j+=4){
+					               	 	if(machine_id.equals(listarray2.get(j+2))){
+					               	 	weldid = listarray2.get(j);
+					               	 		break;
+					               	 	}
+					             }
+								 BigDecimal maxelectricity = null;
+								 BigDecimal minelectricity = null;
+							     BigDecimal maxvoltage = null;
+								 BigDecimal minvoltage = null;
+		                    	 for(int k=0;k<listarray3.size();k+=5){
+		                    		 String weldjunction = listarray3.get(k);
+		                    		 if(weldjunction.equals(code)){
+		                    			 maxelectricity = new BigDecimal(listarray3.get(k+1));
+		                    			 minelectricity = new BigDecimal(listarray3.get(k+2));
+		                    			 maxvoltage = new BigDecimal(listarray3.get(k+3));
+		                    			 minvoltage = new BigDecimal(listarray3.get(k+4));
+		                    			 
+		                    		 }
+		                    	 }
+//		                    	 System.out.println(status);
+		    					DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		    					if((electricity.compareTo(maxelectricity)==1||electricity.compareTo(minelectricity)==(-1)||voltage.compareTo(minvoltage)==(-1)||voltage.compareTo(maxvoltage)==1)&&status!=0&&status!=5&&status!=7){
+		    						if(weldid!=null){
+			    						if(json.has(String.valueOf(weldid))){
+			    							json.put(weldid,json.get(weldid)+String.valueOf(electricity)+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
+			    						}else{
+			    							json.put(weldid,electricity+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
+			    						}
+		    						}
+		    					}else{
+		    						if(!json.isEmpty()){
+		    							if(json.containsKey(String.valueOf(weldid))){
+			    						String body_str[] = json.get(String.valueOf(weldid)).toString().split(";");
+			    						if(body_str.length>=over_value){//over_value
+			    							String first_body_detail[] = body_str[0].split(",");
+		    								String last_body_detail[] = body_str[body_str.length-1].split(",");
+		    								BigInteger overtime;
+		    								overtime = new BigInteger(String.valueOf((df.parse(last_body_detail[2]).getTime()-df.parse(first_body_detail[2]).getTime())/1000+1));
+//		    								System.out.println(overtime);
+		    								ResultSet id = null;
+		    								String sqlhead = "INSERT INTO tb_over_head"
+		    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
+		    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_body_detail[2]+"','"+last_body_detail[2]+"','"+overtime+"')";
+		    								String findid = "SELECT @@IDENTITY AS id";
+		    								try {
+		    									stmt.execute(sqlhead);
+		    									id =stmt.executeQuery(findid);
+		    									id.next();
+		    								} catch (SQLException e) {
+		    									e.printStackTrace();
+		    								}
+	    									String sqlbody = "INSERT INTO tb_over_body (fhead_id, felectricity, fvoltage, FWeldTime, fmax_electricity, fmin_electricity, fmax_voltage, fmin_voltage) VALUES ";
+			    							for(int i1=0;i1<body_str.length;i1++){
+			    								String body_detail[] = body_str[i1].split(",");
+			    								if(null!=id.getString(1)){
+		    										sqlbody += "("+id.getString(1)+","+body_detail[0]+","+body_detail[1]+",'"+body_detail[2]+"',"+body_detail[3]+","+body_detail[4]+","+body_detail[5]+","+body_detail[6]+"),";
+			    								}
+			    							}
+	    									try {
+	    										int len = sqlbody.length();
+	    										stmt.execute(sqlbody.substring(0, len-1));
+	    										
+	    									} catch (SQLException e) {
+	    										e.printStackTrace();
+	    									}
+			    							body_str=null;
+			    							json.remove(weldid);
+			    						}else{
+			    							body_str=null;
+			    							json.remove(weldid);
+			    						}
+		    						}
+		    						}
+		    					}
+		    					if(status==0){
+		    						if(weldid!=null){
+			    						if(standby_json.has(String.valueOf(weldid))){
+			    							standby_json.put(weldid,standby_json.get(weldid)+String.valueOf(electricity)+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
+			    						}else{
+			    							standby_json.put(weldid,electricity+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
+			    						}
+			    						String head_length[] = standby_json.get(weldid).toString().split(";");
+			    						if(head_length.length>standby_over_value){
+			    							String fmachid=weldid;
+		    								if(fmachid.length()!=4){
+						                       	 int lenth=4-fmachid.length();
+						                       	 for(int i1=0;i1<lenth;i1++){
+						                       		fmachid="0"+fmachid;
+						                       	 }
+					                         }
+			    							if(!listarray4.contains(fmachid)){
+			    								listarray4.add(fmachid);
+			    							}
+			    						}
+		    						}
+		    					}else{
+		    						if(!standby_json.isEmpty()){
+		    							boolean fl = standby_json.containsKey(weldid);
+		    							if(standby_json.containsKey(weldid)){
+				    						String shead_str[] = standby_json.get(String.valueOf(weldid)).toString().split(";");
+				    						if(shead_str.length>=standby_over_value){//standby_over_value
+				    							String first_shead_detail[] = shead_str[0].split(",");
+			    								String last_shead_detail[] = shead_str[shead_str.length-1].split(",");
+			    								BigInteger overtime;
+			    								overtime = new BigInteger(String.valueOf((df.parse(last_shead_detail[2]).getTime()-df.parse(first_shead_detail[2]).getTime())/1000+1));
+	//		    								System.out.println(overtime);
+			    								ResultSet id = null;
+			    								String sqlhead = "INSERT INTO tb_standby_over"
+			    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
+			    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_shead_detail[2]+"','"+last_shead_detail[2]+"','"+overtime+"')";
+			    								stmt.execute(sqlhead);
+			    								shead_str=null;
+			    								standby_json.remove(weldid);
+			    								String fmachid=weldid;
+			    								if(fmachid.length()!=4){
+							                       	 int lenth=4-fmachid.length();
+							                       	 for(int i1=0;i1<lenth;i1++){
+							                       		fmachid="0"+fmachid;
+							                       	 }
+						                         }
+				    							listarray4.remove(fmachid);
+				    						}else{
+				    							shead_str=null;
+				    							standby_json.remove(weldid);
+				    							String fmachid=weldid;
+			    								if(fmachid.length()!=4){
+							                       	 int lenth=4-fmachid.length();
+							                       	 for(int i1=0;i1<lenth;i1++){
+							                       		fmachid="0"+fmachid;
+							                       	 }
+						                         }
+				    							listarray4.remove(fmachid);
+				    						}
+			    						}
+		    						}
+		    					}
+								 
+		    					
+		    					NS.websocket.listarray4 = listarray4;
+		    					
 								 //System.out.println(str);
                              } catch (Exception e) {
 								str="";
