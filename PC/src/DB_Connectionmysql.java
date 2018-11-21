@@ -130,9 +130,11 @@ public class DB_Connectionmysql {
                 
                 if(ins == null || ins.equals("null")){
                 	ins = "00";
-                }else if(junctionins.equals(null) || junctionins.equals("null")){
+                }
+                if(junctionins.equals(null) || junctionins.equals("null")){
                 	junctionins = "00";
-                }else if(welderins.equals(null) || welderins.equals("null")){
+                }
+                if(welderins.equals(null) || welderins.equals("null")){
                 	welderins = "00";
                 }
                 
