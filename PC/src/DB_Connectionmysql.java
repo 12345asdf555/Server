@@ -130,6 +130,16 @@ public class DB_Connectionmysql {
                 	}
                 }
                 
+                if(ins == null || ins.equals("null")){
+                	ins = "00";
+                }
+                if(junctionins.equals(null) || junctionins.equals("null")){
+                	junctionins = "00";
+                }
+                if(welderins.equals(null) || welderins.equals("null")){
+                	welderins = "00";
+                }
+                
                 if(countbase1==1){
            	 		inSqlbase1 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate1 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow1 + "')";
            	 	}else{
@@ -206,6 +216,14 @@ public class DB_Connectionmysql {
                 		weldnum = listarray2.get(a+1);
                 		ins = listarray2.get(a+3);
                 	}
+                }
+                
+                if(ins == null || ins.equals("null")){
+                	ins = "00";
+                }else if(junctionins.equals(null) || junctionins.equals("null")){
+                	junctionins = "00";
+                }else if(welderins.equals(null) || welderins.equals("null")){
+                	welderins = "00";
                 }
                 
                 if(countbase2==1){
@@ -286,6 +304,14 @@ public class DB_Connectionmysql {
                 	}
                 }
                 
+                if(ins == null || ins.equals("null")){
+                	ins = "00";
+                }else if(junctionins.equals(null) || junctionins.equals("null")){
+                	junctionins = "00";
+                }else if(welderins.equals(null) || welderins.equals("null")){
+                	welderins = "00";
+                }
+                
                 if(countbase3==1){
            	 		inSqlbase3 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate3 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow3 + "')";
            	 	}else{
@@ -362,6 +388,14 @@ public class DB_Connectionmysql {
                 		weldnum = listarray2.get(a+1);
                 		ins = listarray2.get(a+3);
                 	}
+                }
+                
+                if(ins == null || ins.equals("null")){
+                	ins = "00";
+                }else if(junctionins.equals(null) || junctionins.equals("null")){
+                	junctionins = "00";
+                }else if(welderins.equals(null) || welderins.equals("null")){
+                	welderins = "00";
                 }
                 
                 if(countbase4==1){

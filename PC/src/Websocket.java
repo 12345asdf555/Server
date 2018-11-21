@@ -189,42 +189,64 @@ public class Websocket {
 						for(int i=0;i<listarray1.size();i+=3){
 		                	if(Integer.valueOf(welderid) == Integer.valueOf(listarray1.get(i))){
 		                		welderins = listarray1.get(i+2);
-		                		if(welderins.length()!=4){
-				             		int lenth=4-welderins.length();
-				             		for(int i1=0;i1<lenth;i1++){
-				             			welderins="0"+welderins;
-				             		}
-				             	}
-		                		break;
+		                		if(welderins.equals(null) || welderins.equals("null")){
+			                		break;
+				                }else{
+			                		if(welderins.length()!=4){
+					             		int lenth=4-welderins.length();
+					             		for(int i1=0;i1<lenth;i1++){
+					             			welderins="0"+welderins;
+					             		}
+					             	}
+			                		break;
+				                }
 		                	}
 		                }
 		                
 		                for(int i=0;i<listarray3.size();i+=7){
 		                	if(Integer.valueOf(junctionid) == Integer.valueOf(listarray3.get(i+5))){
 		                		junctionins = listarray3.get(i+6);
-		                		if(junctionins.length()!=4){
-				             		int lenth=4-junctionins.length();
-				             		for(int i1=0;i1<lenth;i1++){
-				             			junctionins="0"+junctionins;
-				             		}
-				             	}
-		                		break;
+		                		if(junctionins.equals(null) || junctionins.equals("null")){
+			                		break;
+				                }else{
+			                		if(junctionins.length()!=4){
+					             		int lenth=4-junctionins.length();
+					             		for(int i1=0;i1<lenth;i1++){
+					             			junctionins="0"+junctionins;
+					             		}
+					             	}
+			                		break;
+				                }
 		                	}
 		                }
 		                
 		                for(int i=0;i<listarray2.size();i+=4){
 		                	if(Integer.valueOf(gatherid) == Integer.valueOf(listarray2.get(i))){
 		                		ins = listarray2.get(i+3);
-		                		if(ins.length()!=4){
-				             		int lenth=4-ins.length();
-				             		for(int i1=0;i1<lenth;i1++){
-				             			ins="0"+ins;
-				             		}
-				             	}
-		                		break;
+		                		if(ins == null || ins.equals("null")){
+			                		break;
+				                }else{
+			                		if(ins.length()!=4){
+					             		int lenth=4-ins.length();
+					             		for(int i1=0;i1<lenth;i1++){
+					             			ins="0"+ins;
+					             		}
+					             	}
+			                		break;
+				                }
 		                	}
 		                }
 						
+		                if(ins == null || ins.equals("null")){
+		                	ins = "00";
+		                }
+		                if(junctionins.equals(null) || junctionins.equals("null")){
+		                	junctionins = "00";
+		                }
+		                if(welderins.equals(null) || welderins.equals("null")){
+		                	welderins = "00";
+		                }
+		                
 						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
 	      	    	}
 	      	    	
