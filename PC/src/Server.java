@@ -244,6 +244,15 @@ public class Server implements Runnable {
                 		timealarm = rs3.getString("fUploadDataTime");
                 	}
                 	
+                	if(timework == null || timework.equals("null")){
+                		timework = "2000-01-01 01:01:01";
+                	}
+                	if(timestandby == null || timestandby.equals("null")){
+                		timestandby = "2000-01-01 01:01:01";
+                	}
+                	if(timealarm == null || timealarm.equals("null")){
+                		timealarm = "2000-01-01 01:01:01";
+                	}
                 	
                     String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
                     		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "
