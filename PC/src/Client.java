@@ -89,7 +89,7 @@ public class Client
           CL.socketChannel = socketChannel;
         }  
       });  
-      bootstrap.remoteAddress(fitemid, 5551);
+      bootstrap.remoteAddress(fitemid, 5555);
       bootstrap.connect().addListener(CL); 
     }  
     return bootstrap;  
