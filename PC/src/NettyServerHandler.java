@@ -171,17 +171,9 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						socketchannel.writeAndFlush(str).sync();
 					} catch (Exception e) {
 						socketchannel = null;
-						e.printStackTrace();
+						System.out.println("网络故障，正在重连上一层级");
 					}
 		        }
-			        if(socketchannel!=null){
-				        try {
-							socketchannel.writeAndFlush(str).sync();
-						} catch (Exception e) {
-							socketchannel = null;
-							System.out.println("网络故障，正在重连上一层级");
-						}
-			        }
 				}
 	        }else if(str.substring(0,2).equals("þ")){   //处理android数据
 	        	
