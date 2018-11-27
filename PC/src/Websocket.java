@@ -1294,6 +1294,7 @@ public class Websocket {
 								   	                    			+status2+finsframework_id+fequipment_no+welder+electricity2+voltage2+"00000000000000000000"+timesql2+limit+"00:00:00"+"00:00:00"+code
 								   	                    			+status3+finsframework_id+fequipment_no+welder+electricity3+voltage3+"00000000000000000000"+timesql3+limit+"00:00:00"+"00:00:00"+code;
 						                       			}
+			                   							break;
 			                   						}
 			                   					}
 			                   				}
