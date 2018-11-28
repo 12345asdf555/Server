@@ -445,7 +445,7 @@ public class Mysql {
     		    					if(maxvoltage == null || maxvoltage.equals("null")){
     		    						maxvoltage = new BigDecimal(0);
     		    					}
-    		    					if((electricity.compareTo(maxelectricity)==1||electricity.compareTo(minelectricity)==(-1))){
+    		    					if((electricity.compareTo(maxelectricity)==1||electricity.compareTo(minelectricity)==(-1)) && status==3){
     		    						if(weldid!=null){
     			    						if(json.has(String.valueOf(weldid))){
     			    							json.put(weldid,json.get(weldid)+String.valueOf(electricity)+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
