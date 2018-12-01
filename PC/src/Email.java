@@ -290,7 +290,7 @@ public class Email {
 		        c.add(Calendar.DATE, - 5);
 		        Date d = c.getTime();
 		        String five_day = format.format(d);
-				String fwelder = "SELECT fwelder_no,fname FROM tb_welder WHERE fwelder_no NOT IN (SELECT DISTINCT fwelder_id FROM tb_live_data WHERE FWeldTime>'"+five_day+"')";
+				String fwelder = "SELECT fwelder_no,fname FROM tb_welder WHERE fid NOT IN (SELECT DISTINCT fwelder_id FROM tb_live_data WHERE FWeldTime>'"+five_day+"')";
 //				ArrayList<String> welder_list = new ArrayList<String>();
 				ResultSet fwelder_rs;
 				String fwelder_str="";
