@@ -600,6 +600,7 @@ public class Server implements Runnable {
 			                	SSLContext sslContext = SslUtil.createSSLContext("PKCS12","/opt/tomcat/cert/cert-1542089844623_cms.cnec5.com.pfx","1qo8TcPw");///opt/tomcat/cert/cert-1542089844623_cms.cnec5.com.pfx
 			                	SSLEngine engine = sslContext.createSSLEngine(); 
 			                	engine.setUseClientMode(false);
+			                	engine.setNeedClientAuth(false);
 			                	chweb.pipeline().addLast(new SslHandler(engine));
 		                	}catch(Exception e){
 		                		System.out.println("wss链接失败");
@@ -617,7 +618,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5554).sync().channel();
+	            Channel ch = serverBootstrap.bind(4555).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
