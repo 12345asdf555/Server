@@ -389,8 +389,8 @@ public class Server implements Runnable {
         //工作线程
         new Thread(socketstart).start();
 		new Thread(websocketstart).start();
+		new Thread(sockettran).start();
     	new Email().run();
-		//new Thread(sockettran).start();
 		//new UpReport();
 
     }  
