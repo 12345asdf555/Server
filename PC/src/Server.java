@@ -596,18 +596,18 @@ public class Server implements Runnable {
 							// TODO Auto-generated method stub
 
 							synchronized (websocketlist) {
-							try{
+							/*try{
 			                	SSLContext sslContext = SslUtil.createSSLContext("PKCS12","/home/root1/CMS/cert/cert-1542089844623_cms.cnec5.com.pfx","1qo8TcPw");///opt/tomcat/cert/cert-1542089844623_cms.cnec5.com.pfx
 			                	SSLEngine engine = sslContext.createSSLEngine(); 
 			                	engine.setUseClientMode(false);
 			                	chweb.pipeline().addLast(new SslHandler(engine));
 		                	}catch(Exception e){
 		                		System.out.println("wss链接失败");
-		                	}
+		                	}*/
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("wss://cms.cnec5.com:4555/SerialPortDemo/ws/张三"));
+							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://cms.cnec5.com:4555/SerialPortDemo/ws/张三"));
 							chweb.pipeline().addLast("myWebSocketHandler", NWS);
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);
