@@ -151,8 +151,8 @@ public class Websocket {
 						}
 	      	    		
 	      	    		String channel = Integer.valueOf(str.subSequence(100+a, 102+a).toString(),16).toString();
-						if(channel.length()!=2){
-		             		int lenth=2-channel.length();
+						if(channel.length()!=4){
+		             		int lenth=4-channel.length();
 		             		for(int i=0;i<lenth;i++){
 		             			channel="0"+channel;
 		             		}
@@ -238,13 +238,13 @@ public class Websocket {
 		                }
 						
 		                if(ins == null || ins.equals("null")){
-		                	ins = "00";
+		                	ins = "0000";
 		                }
 		                if(junctionins.equals(null) || junctionins.equals("null")){
-		                	junctionins = "00";
+		                	junctionins = "0000";
 		                }
 		                if(welderins.equals(null) || welderins.equals("null")){
-		                	welderins = "00";
+		                	welderins = "0000";
 		                }
 		                
 						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
