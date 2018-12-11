@@ -44,7 +44,6 @@ public class Websocket {
 		else
 		{	
 			if (str.length() == 236) {
-				
 				//校验第一位是否为FA末位是否为F5
 	      	    String check1 =str.substring(0,2);
 	      	    String check11=str.substring(234,236);
@@ -249,7 +248,6 @@ public class Websocket {
 		                
 						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
 	      	    	}
-	      	    	
 	      	    	synchronized (websocketlist) {
                         
                         ArrayList<String> listarraybuf = new ArrayList<String>();
