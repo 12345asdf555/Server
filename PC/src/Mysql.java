@@ -392,7 +392,7 @@ public class Mysql {
     	 								}
     								 }*/
 								 try {
-								 
+									
     								if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
     	        		        	{
     	        		        		try {
@@ -445,131 +445,136 @@ public class Mysql {
     		    					if(maxvoltage == null || maxvoltage.equals("null")){
     		    						maxvoltage = new BigDecimal(0);
     		    					}
-    		    					if((electricity.compareTo(maxelectricity)==1||electricity.compareTo(minelectricity)==(-1)) && status==3){
-    		    						if(weldid!=null){
-    			    						if(json.has(String.valueOf(weldid))){
-    			    							json.put(weldid,json.get(weldid)+String.valueOf(electricity)+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
-    			    						}else{
-    			    							json.put(weldid,electricity+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
-    			    						}
-    		    						}
-    		    					}else{
-    		    						if(!json.isEmpty()){
-    		    							if(json.containsKey(String.valueOf(weldid))){
-    			    						String body_str[] = json.get(String.valueOf(weldid)).toString().split(";");
-    			    						if(body_str.length>=over_value){//over_value
-    			    							String first_body_detail[] = body_str[0].split(",");
-    		    								String last_body_detail[] = body_str[body_str.length-1].split(",");
-    		    								BigInteger overtime;
-    		    								overtime = new BigInteger(String.valueOf((df.parse(last_body_detail[2]).getTime()-df.parse(first_body_detail[2]).getTime())/1000+1));
-//    		    								System.out.println(overtime);
-    		    								ResultSet id = null;
-    		    								String sqlhead = "INSERT INTO tb_over_head"
-    		    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
-    		    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_body_detail[2]+"','"+last_body_detail[2]+"','"+overtime+"')";
-    		    								String findid = "SELECT @@IDENTITY AS id";
-    		    								try {
-    		    									stmt.execute(sqlhead);
-    		    									id =stmt.executeQuery(findid);
-    		    									id.next();
-    		    								} catch (SQLException e) {
-    		    									e.printStackTrace();
-    		    								}
-    	    									String sqlbody = "INSERT INTO tb_over_body (fhead_id, felectricity, fvoltage, FWeldTime, fmax_electricity, fmin_electricity, fmax_voltage, fmin_voltage) VALUES ";
-    			    							for(int i1=0;i1<body_str.length;i1++){
-    			    								String body_detail[] = body_str[i1].split(",");
-    			    								if(null!=id.getString(1)){
-    		    										sqlbody += "("+id.getString(1)+","+body_detail[0]+","+body_detail[1]+",'"+body_detail[2]+"',"+body_detail[3]+","+body_detail[4]+","+body_detail[5]+","+body_detail[6]+"),";
-    			    								}
-    			    							}
-    	    									try {
-    	    										int len = sqlbody.length();
-    	    										stmt.execute(sqlbody.substring(0, len-1));
-    	    										
-    	    									} catch (SQLException e) {
-    	    										e.printStackTrace();
-    	    									}
-    			    							body_str=null;
-    			    							json.remove(weldid);
-    			    						}else{
-    			    							body_str=null;
-    			    							json.remove(weldid);
-    			    						}
-    		    						}
-    		    						}
+    		    					synchronized (json) {
+	    		    					if((electricity.compareTo(maxelectricity)==1||electricity.compareTo(minelectricity)==(-1)) && status==3){
+	    		    						if(weldid!=null){
+	    			    						if(json.has(String.valueOf(weldid))){
+	    			    							json.put(weldid,json.get(weldid)+String.valueOf(electricity)+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
+	    			    						}else{
+	    			    							json.put(weldid,electricity+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
+	    			    						}
+	    		    						}
+	    		    					}else{
+	    		    						if(!json.isEmpty()){
+	    		    							if(json.containsKey(String.valueOf(weldid))){
+	    			    						String body_str[] = json.get(String.valueOf(weldid)).toString().split(";");
+	    			    						if(body_str.length>=over_value){//over_value
+	    			    							String first_body_detail[] = body_str[0].split(",");
+	    		    								String last_body_detail[] = body_str[body_str.length-1].split(",");
+	    		    								BigInteger overtime;
+	    		    								overtime = new BigInteger(String.valueOf((df.parse(last_body_detail[2]).getTime()-df.parse(first_body_detail[2]).getTime())/1000+1));
+	//    		    								System.out.println(overtime);
+	    		    								ResultSet id = null;
+	    		    								String sqlhead = "INSERT INTO tb_over_head"
+	    		    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
+	    		    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_body_detail[2]+"','"+last_body_detail[2]+"','"+overtime+"')";
+	    		    								String findid = "SELECT @@IDENTITY AS id";
+	    		    								try {
+	    		    									stmt.execute(sqlhead);
+	    		    									id =stmt.executeQuery(findid);
+	    		    									id.next();
+	    		    								} catch (SQLException e) {
+	    		    									e.printStackTrace();
+	    		    								}
+	    	    									String sqlbody = "INSERT INTO tb_over_body (fhead_id, felectricity, fvoltage, FWeldTime, fmax_electricity, fmin_electricity, fmax_voltage, fmin_voltage) VALUES ";
+	    			    							for(int i1=0;i1<body_str.length;i1++){
+	    			    								String body_detail[] = body_str[i1].split(",");
+	    			    								if(null!=id.getString(1)){
+	    		    										sqlbody += "("+id.getString(1)+","+body_detail[0]+","+body_detail[1]+",'"+body_detail[2]+"',"+body_detail[3]+","+body_detail[4]+","+body_detail[5]+","+body_detail[6]+"),";
+	    			    								}
+	    			    							}
+	    	    									try {
+	    	    										int len = sqlbody.length();
+	    	    										stmt.execute(sqlbody.substring(0, len-1));
+	    	    										
+	    	    									} catch (SQLException e) {
+	    	    										e.printStackTrace();
+	    	    									}
+	    			    							body_str=null;
+	    			    							json.remove(weldid);
+	    			    						}else{
+	    			    							body_str=null;
+	    			    							json.remove(weldid);
+	    			    						}
+	    		    						}
+	    		    						}
+	    		    					}
     		    					}
-    		    					if(status==0){
-    		    						if(weldid!=null){
-    			    						if(standby_json.has(String.valueOf(weldid))){
-    			    							standby_json.put(weldid,standby_json.get(weldid)+String.valueOf(electricity)+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
-    			    						}else{
-    			    							standby_json.put(weldid,electricity+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
-    			    						}
-    			    						String head_length[] = standby_json.get(weldid).toString().split(";");
-    			    						if(head_length.length>standby_over_value){
-    			    							String fmachid=weldid;
-    		    								if(fmachid.length()!=4){
-    						                       	 int lenth=4-fmachid.length();
-    						                       	 for(int i1=0;i1<lenth;i1++){
-    						                       		fmachid="0"+fmachid;
-    						                       	 }
-    					                         }
-    			    							if(!listarray4.contains(fmachid)){
-    			    								listarray4.add(fmachid);
-    			    							}
-    			    						}
-    		    						}
-    		    					}else{
-    		    						if(!standby_json.isEmpty()){
-    		    							boolean fl = standby_json.containsKey(weldid);
-    		    							if(standby_json.containsKey(weldid)){
-    				    						String shead_str[] = standby_json.get(String.valueOf(weldid)).toString().split(";");
-    				    						if(shead_str.length>=standby_over_value){//standby_over_value
-    				    							String first_shead_detail[] = shead_str[0].split(",");
-    			    								String last_shead_detail[] = shead_str[shead_str.length-1].split(",");
-    			    								BigInteger overtime;
-    			    								overtime = new BigInteger(String.valueOf((df.parse(last_shead_detail[2]).getTime()-df.parse(first_shead_detail[2]).getTime())/1000+1));
-    	//		    								System.out.println(overtime);
-    			    								ResultSet id = null;
-    			    								String sqlhead = "INSERT INTO tb_standby_over"
-    			    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
-    			    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_shead_detail[2]+"','"+last_shead_detail[2]+"','"+overtime+"')";
-    			    								stmt.execute(sqlhead);
-    			    								shead_str=null;
-    			    								standby_json.remove(weldid);
-    			    								String fmachid=weldid;
-    			    								if(fmachid.length()!=4){
-    							                       	 int lenth=4-fmachid.length();
-    							                       	 for(int i1=0;i1<lenth;i1++){
-    							                       		fmachid="0"+fmachid;
-    							                       	 }
-    						                         }
-    				    							listarray4.remove(fmachid);
-    				    						}else{
-    				    							shead_str=null;
-    				    							standby_json.remove(weldid);
-    				    							String fmachid=weldid;
-    			    								if(fmachid.length()!=4){
-    							                       	 int lenth=4-fmachid.length();
-    							                       	 for(int i1=0;i1<lenth;i1++){
-    							                       		fmachid="0"+fmachid;
-    							                       	 }
-    						                         }
-    				    							listarray4.remove(fmachid);
-    				    						}
-    			    						}
-    		    						}
+    		    					synchronized(standby_json){
+    		    						synchronized(listarray4){
+		    		    					if(status==0){
+		    		    						if(weldid!=null){
+		    			    						if(standby_json.has(String.valueOf(weldid))){
+		    			    							standby_json.put(weldid,standby_json.get(weldid)+String.valueOf(electricity)+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
+		    			    						}else{
+		    			    							standby_json.put(weldid,electricity+","+voltage+","+df.format(time)+","+maxelectricity+","+minelectricity+","+maxvoltage+","+minvoltage+";");
+		    			    						}
+		    			    						String head_length[] = standby_json.get(weldid).toString().split(";");
+		    			    						if(head_length.length>standby_over_value){
+		    			    							String fmachid=weldid;
+		    		    								if(fmachid.length()!=4){
+		    						                       	 int lenth=4-fmachid.length();
+		    						                       	 for(int i1=0;i1<lenth;i1++){
+		    						                       		fmachid="0"+fmachid;
+		    						                       	 }
+		    					                         }
+		    			    							if(!listarray4.contains(fmachid)){
+		    			    								listarray4.add(fmachid);
+		    			    							}
+		    			    						}
+		    		    						}
+		    		    					}else{
+		    		    						if(!standby_json.isEmpty()){
+		    		    							boolean fl = standby_json.containsKey(weldid);
+		    		    							if(standby_json.containsKey(weldid)){
+		    				    						String shead_str[] = standby_json.get(String.valueOf(weldid)).toString().split(";");
+		    				    						if(shead_str.length>=standby_over_value){//standby_over_value
+		    				    							String first_shead_detail[] = shead_str[0].split(",");
+		    			    								String last_shead_detail[] = shead_str[shead_str.length-1].split(",");
+		    			    								BigInteger overtime;
+		    			    								overtime = new BigInteger(String.valueOf((df.parse(last_shead_detail[2]).getTime()-df.parse(first_shead_detail[2]).getTime())/1000+1));
+		    	//		    								System.out.println(overtime);
+		    			    								ResultSet id = null;
+		    			    								String sqlhead = "INSERT INTO tb_standby_over"
+		    			    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
+		    			    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_shead_detail[2]+"','"+last_shead_detail[2]+"','"+overtime+"')";
+		    			    								stmt.execute(sqlhead);
+		    			    								shead_str=null;
+		    			    								standby_json.remove(weldid);
+		    			    								String fmachid=weldid;
+		    			    								if(fmachid.length()!=4){
+		    							                       	 int lenth=4-fmachid.length();
+		    							                       	 for(int i1=0;i1<lenth;i1++){
+		    							                       		fmachid="0"+fmachid;
+		    							                       	 }
+		    						                         }
+		    				    							listarray4.remove(fmachid);
+		    				    						}else{
+		    				    							shead_str=null;
+		    				    							standby_json.remove(weldid);
+		    				    							String fmachid=weldid;
+		    			    								if(fmachid.length()!=4){
+		    							                       	 int lenth=4-fmachid.length();
+		    							                       	 for(int i1=0;i1<lenth;i1++){
+		    							                       		fmachid="0"+fmachid;
+		    							                       	 }
+		    						                         }
+		    				    							listarray4.remove(fmachid);
+		    				    						}
+		    			    						}
+		    		    						}
+		    		    					}
+		    								 
+		    		    					NS.websocket.listarray4 = listarray4;
+	    		    					}
     		    					}
-    								 
-    		    					
-    		    					NS.websocket.listarray4 = listarray4;
-    		    					
     								 //System.out.println(str);
                                  } catch (Exception e) {
                                 	e.printStackTrace();
                 	    			System.out.println(str);
                           	    	System.out.println("sumerror");
     							 }
+                                 
                	    		 }catch(Exception e){
                	    			e.printStackTrace();
                	    			System.out.println(str);
