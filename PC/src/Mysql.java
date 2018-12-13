@@ -8,8 +8,10 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import javax.mail.internet.ParseException;
@@ -459,15 +461,21 @@ public class Mysql {
 	    		    							if(json.containsKey(String.valueOf(weldid))){
 	    			    						String body_str[] = json.get(String.valueOf(weldid)).toString().split(";");
 	    			    						if(body_str.length>=over_value){//over_value
-	    			    							String first_body_detail[] = body_str[0].split(",");
-	    		    								String last_body_detail[] = body_str[body_str.length-1].split(",");
+	    			    							List<String> bodytimeList = new ArrayList<String>();
+	    			    							for(int bodytime=0;bodytime<body_str.length;bodytime++){
+	    			    								bodytimeList.add(body_str[bodytime].split(",")[2]);
+	    			    							}
+	    			    							Collections.sort(bodytimeList);
+	    			    							String first_body_detail = bodytimeList.get(0);
+	    		    								String last_body_detail = bodytimeList.get(bodytimeList.size()-1);
 	    		    								BigInteger overtime;
-	    		    								overtime = new BigInteger(String.valueOf((df.parse(last_body_detail[2]).getTime()-df.parse(first_body_detail[2]).getTime())/1000+1));
-	//    		    								System.out.println(overtime);
+//	    		    								overtime = new BigInteger(String.valueOf((df.parse(last_body_detail[2]).getTime()-df.parse(first_body_detail[2]).getTime())/1000+1));
+	    		    								overtime = new BigInteger(String.valueOf(body_str.length));
+	    		    								System.out.println(overtime);
 	    		    								ResultSet id = null;
 	    		    								String sqlhead = "INSERT INTO tb_over_head"
 	    		    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
-	    		    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_body_detail[2]+"','"+last_body_detail[2]+"','"+overtime+"')";
+	    		    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_body_detail+"','"+last_body_detail+"','"+overtime+"')";
 	    		    								String findid = "SELECT @@IDENTITY AS id";
 	    		    								try {
 	    		    									stmt.execute(sqlhead);
@@ -529,15 +537,21 @@ public class Mysql {
 		    		    							if(standby_json.containsKey(weldid)){
 		    				    						String shead_str[] = standby_json.get(String.valueOf(weldid)).toString().split(";");
 		    				    						if(shead_str.length>=standby_over_value){//standby_over_value
-		    				    							String first_shead_detail[] = shead_str[0].split(",");
-		    			    								String last_shead_detail[] = shead_str[shead_str.length-1].split(",");
+		    				    							List<String> standtimeList = new ArrayList<String>();
+			    			    							for(int bodytime=0;bodytime<shead_str.length;bodytime++){
+			    			    								standtimeList.add(shead_str[bodytime].split(",")[2]);
+			    			    							}
+			    			    							Collections.sort(standtimeList);
+		    				    							String first_shead_detail = standtimeList.get(0);
+		    			    								String last_shead_detail = standtimeList.get(standtimeList.size()-1);
 		    			    								BigInteger overtime;
-		    			    								overtime = new BigInteger(String.valueOf((df.parse(last_shead_detail[2]).getTime()-df.parse(first_shead_detail[2]).getTime())/1000+1));
+//		    			    								overtime = new BigInteger(String.valueOf((df.parse(last_shead_detail[2]).getTime()-df.parse(first_shead_detail[2]).getTime())/1000+1));
 		    	//		    								System.out.println(overtime);
+		    			    								overtime = new BigInteger(String.valueOf(shead_str.length));
 		    			    								ResultSet id = null;
 		    			    								String sqlhead = "INSERT INTO tb_standby_over"
 		    			    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
-		    			    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_shead_detail[2]+"','"+last_shead_detail[2]+"','"+overtime+"')";
+		    			    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_shead_detail+"','"+last_shead_detail+"','"+overtime+"')";
 		    			    								stmt.execute(sqlhead);
 		    			    								shead_str=null;
 		    			    								standby_json.remove(weldid);
