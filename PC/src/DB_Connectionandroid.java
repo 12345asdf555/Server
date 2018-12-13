@@ -152,35 +152,38 @@ public class DB_Connectionandroid {
 	        long t2 = DateTools.parse("yyyy-MM-dd HH:mm:ss",weldtimeend).getTime();
 	        
 	        for(long j=t1;j<=t2;j+=3600000){
-	        	
-	        	Date d1 = new Date(j);
-	        	String datetime1 = DateTools.format("yyyy-MM-dd HH:mm:ss", d1);
-	        	Date d2 = new Date(j+3600000);
-	        	String datetime2 = DateTools.format("yyyy-MM-dd HH:mm:ss", d2);
-	        	
-	        	String sqlupdate1 = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,tb_standby.fitemid,tb_standby.felectricity,"
-	        			+ "tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) "
-	        			+ "SELECT tb_data.welder_id,tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),AVG(tb_data.voltage),AVG(tb_data.sensor_Num),"
-	        			+ "COUNT(tb_data.fid),'" + datetime1 +"','" + datetime2 + "' FROM tb_data WHERE tb_data.status = '0' AND tb_data.weldtime BETWEEN '" + datetime1 + "' AND '" + datetime2 + "' "
-	        			+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
-	        	
-	        	String sqlupdate2 = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
-	        			+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime) "
-	        			+ "SELECT tb_data.welder_id,tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),AVG(tb_data.voltage),AVG(tb_data.sensor_Num),"
-	        			+ "COUNT(tb_data.fid),'" + datetime1 +"','" + datetime2 + "' FROM tb_data WHERE tb_data.status = '3' AND tb_data.weldtime BETWEEN '" + datetime1 + "' AND '" + datetime2 + "' "
-	        			+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
-	        	
-	        	String sqlupdate3 = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
-	        			+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) "
-	        			+ "SELECT tb_data.welder_id,tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),AVG(tb_data.voltage),AVG(tb_data.sensor_Num),"
-	        			+ "COUNT(tb_data.fid),'" + datetime1 +"','" + datetime2 + "' FROM tb_data LEFT JOIN tb_welded_junction ON tb_data.code = tb_welded_junction.fwelded_junction_no "
-	        			+ "WHERE status= '3' and tb_welded_junction.fitemid = tb_data.itemid and (tb_data.voltage > tb_welded_junction.fmax_valtage OR tb_data.electricity > tb_welded_junction.fmax_electricity "
-	        			+ "OR tb_data.voltage < tb_welded_junction.fmin_valtage OR tb_data.electricity < tb_welded_junction.fmin_electricity) AND tb_data.weldtime BETWEEN '" + datetime1 + "' AND '" + datetime2 + "' "
-	        			+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
-	        	
-	        	stmt.executeUpdate(sqlupdate1);
-	        	stmt.executeUpdate(sqlupdate2);
-	        	stmt.executeUpdate(sqlupdate3);
+	        	try{
+		        	Date d1 = new Date(j);
+		        	String datetime1 = DateTools.format("yyyy-MM-dd HH:mm:ss", d1);
+		        	Date d2 = new Date(j+3600000);
+		        	String datetime2 = DateTools.format("yyyy-MM-dd HH:mm:ss", d2);
+		        	
+		        	String sqlupdate1 = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,tb_standby.fitemid,tb_standby.felectricity,"
+		        			+ "tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) "
+		        			+ "SELECT tb_data.welder_id,tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),AVG(tb_data.voltage),AVG(tb_data.sensor_Num),"
+		        			+ "COUNT(tb_data.fid),'" + datetime1 +"','" + datetime2 + "' FROM tb_data WHERE tb_data.status = '0' AND tb_data.weldtime BETWEEN '" + datetime1 + "' AND '" + datetime2 + "' "
+		        			+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
+		        	
+		        	String sqlupdate2 = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
+		        			+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime) "
+		        			+ "SELECT tb_data.welder_id,tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),AVG(tb_data.voltage),AVG(tb_data.sensor_Num),"
+		        			+ "COUNT(tb_data.fid),'" + datetime1 +"','" + datetime2 + "' FROM tb_data WHERE tb_data.status = '3' AND tb_data.weldtime BETWEEN '" + datetime1 + "' AND '" + datetime2 + "' "
+		        			+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
+		        	
+		        	String sqlupdate3 = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
+		        			+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) "
+		        			+ "SELECT tb_data.welder_id,tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),AVG(tb_data.voltage),AVG(tb_data.sensor_Num),"
+		        			+ "COUNT(tb_data.fid),'" + datetime1 +"','" + datetime2 + "' FROM tb_data LEFT JOIN tb_welded_junction ON tb_data.code = tb_welded_junction.fwelded_junction_no "
+		        			+ "WHERE status= '3' and tb_welded_junction.fitemid = tb_data.itemid and (tb_data.voltage > tb_welded_junction.fmax_valtage OR tb_data.electricity > tb_welded_junction.fmax_electricity "
+		        			+ "OR tb_data.voltage < tb_welded_junction.fmin_valtage OR tb_data.electricity < tb_welded_junction.fmin_electricity) AND tb_data.weldtime BETWEEN '" + datetime1 + "' AND '" + datetime2 + "' "
+		        			+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
+		        	
+		        	stmt.executeUpdate(sqlupdate1);
+		        	stmt.executeUpdate(sqlupdate2);
+		        	stmt.executeUpdate(sqlupdate3);
+	        	}catch(Exception e){
+	        		e.printStackTrace();
+	        	}
 	        	
 	        }
 	        
