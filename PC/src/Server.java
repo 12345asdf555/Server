@@ -1,5 +1,7 @@
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;  
-import java.io.BufferedWriter;  
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -109,6 +111,7 @@ public class Server implements Runnable {
     public Client client = new Client(this);
     public NettyServerHandler NS = new NettyServerHandler();
     private NettyWebSocketHandler NWS = new NettyWebSocketHandler();
+    public Android android = new Android();
 	private Connection c;
 	public java.sql.Connection conn = null;
     public java.sql.Statement stmt =null;
@@ -321,6 +324,7 @@ public class Server implements Runnable {
 		NS.mysql.over_value = this.over_value;
 		NS.mysql.standby_over_value = this.standby_over_value;
 		NS.android.listarray2 = this.listarray2;
+		NS.android.listarray2 = this.listarray2;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
 	    
@@ -374,7 +378,8 @@ public class Server implements Runnable {
         }, 0,60000);
         
         //工作线程
-        new Thread(socketstart).start();
+        new Thread(ios).start();
+        //new Thread(socketstart).start();
 		new Thread(websocketstart).start();
 		new Thread(sockettran).start();
 		
@@ -642,6 +647,45 @@ public class Server implements Runnable {
 		}
     };
 
+    public Runnable ios = new Runnable(){
+    	public void run(){
+    		try {
+				ServerSocket sp = new ServerSocket(5555);
+				while(true){
+					socket = sp.accept();
+					new Thread(serverThread(socket)).start();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    	}
+
+		private Runnable serverThread(Socket socket) {
+			// TODO Auto-generated method stub
+			try {
+				InputStream input = socket.getInputStream();
+	            BufferedInputStream bis = new BufferedInputStream(input);
+                int n = 0;
+                String data = "";
+                
+                while ( (n = bis.read()) != 255){
+                	if(Integer.toHexString(n).length() == 1){
+                    	data = data + "0" + Integer.toHexString(n);
+                	}else if(Integer.toHexString(n).length() == 2){
+                		data = data + Integer.toHexString(n);
+                	}
+                }
+                NS.android.Androidrun(data.toUpperCase());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+			return null;
+		}
+    };
+    
 	 public static void main(String [] args) throws IOException 
 	 {  
 	     Thread desktopServerThread = new Thread(new Server());  

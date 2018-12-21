@@ -26,37 +26,40 @@ public class Android {
 		
 		//记录开始处理Android数据时间
 		db.DB_androidinit1(str);
-		
-		//解析数据插入数据库
-		byte[] b = null;
-		try {
-			b = str.getBytes("ISO-8859-1");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String a = str.substring(str.length()-26, str.length());
+		if(!str.substring(str.length()-26, str.length()).equals("FE1555555555555555555512FD")){
+			//解析数据插入数据库
+			byte[] b = null;
+			try {
+				b = str.getBytes("ISO-8859-1");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	         str="";
+	         for(int i=0;i<b.length;i++){
+	          	
+	          	//判断为数字还是字母，若为字母+256取正数
+	          	if(b[i]<0){
+	          		String r = Integer.toHexString(b[i]+256);
+	          		String rr=r.toUpperCase();
+	              	//数字补为两位数
+	              	if(rr.length()==1){
+	          			rr='0'+rr;
+	              	}
+	              	//strdata为总接收数据
+	          		str += rr;
+	          	}
+	          	else{
+	          		String r = Integer.toHexString(b[i]);
+	              	if(r.length()==1)
+	          			r='0'+r;
+	              	r=r.toUpperCase();
+	          		str+=r;	
+	          	}
+	          }
+			
 		}
-         str="";
-         for(int i=0;i<b.length;i++){
-          	
-          	//判断为数字还是字母，若为字母+256取正数
-          	if(b[i]<0){
-          		String r = Integer.toHexString(b[i]+256);
-          		String rr=r.toUpperCase();
-              	//数字补为两位数
-              	if(rr.length()==1){
-          			rr='0'+rr;
-              	}
-              	//strdata为总接收数据
-          		str += rr;
-          	}
-          	else{
-          		String r = Integer.toHexString(b[i]);
-              	if(r.length()==1)
-          			r='0'+r;
-              	r=r.toUpperCase();
-          		str+=r;	
-          	}
-          }
 		
          	String [] stringArr = str.split("FD");
    	    	

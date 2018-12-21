@@ -61,7 +61,12 @@ public class DB_Connectionandroid {
 	}
 
 	public void DB_androidinit1(String str){
-		length = str.length()/28;
+		if(!str.substring(str.length()-26, str.length()).equals("FE1555555555555555555512FD")){
+			length = str.length()/56;
+		}else{
+			length = (str.length()-26)/56;
+		}
+		
 		Date date = new Date();
         starttime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
         
@@ -275,7 +280,7 @@ public class DB_Connectionandroid {
                 
                 count1++;
                 
-                if(count1 == 1){
+                if(count1 == 100){
                 	
                 	try {
                     	
@@ -302,11 +307,11 @@ public class DB_Connectionandroid {
                     		work = 1;
                     	}
                         
-                        count1 = 0;
+                        count1 = 1;
                         inSql1 = "";
                         
                     } catch (SQLException e) {
-                    	count1 = 0;
+                    	count1 = 1;
                         inSql1 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -354,7 +359,7 @@ public class DB_Connectionandroid {
            	 	
                 count2++;
                 
-                if(count2 == 1){
+                if(count2 == 100){
                 	
                 	try {
                     	
@@ -381,11 +386,11 @@ public class DB_Connectionandroid {
                     		work = 1;
                     	}
                         
-                        count2 = 0;
+                        count2 = 1;
                         inSql2 = "";
                         
                     } catch (SQLException e) {
-                    	count2 = 0;
+                    	count2 = 1;
                         inSql2 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -433,7 +438,7 @@ public class DB_Connectionandroid {
            	 
                 count3++;
                 
-                if(count3 == 1){
+                if(count3 == 100){
                 	
                 	try {
                     	
@@ -460,11 +465,11 @@ public class DB_Connectionandroid {
                     		work = 1;
                     	}
                         
-                        count3 = 0;
+                        count3 = 1;
                         inSql3 = "";
                         
                     } catch (SQLException e) {
-                    	count3 = 0;
+                    	count3 = 1;
                         inSql3 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -512,7 +517,7 @@ public class DB_Connectionandroid {
            	 
                 count4++;
                 
-                if(count4 == 1){
+                if(count4 == 100){
                 	
                 	try {
                     	
@@ -539,11 +544,11 @@ public class DB_Connectionandroid {
                     		work = 1;
                     	}
                         
-                        count4 = 0;
+                        count4 = 1;
                         inSql4 = "";
                         
                     } catch (SQLException e) {
-                    	count4 = 0;
+                    	count4 = 1;
                         inSql4 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();

@@ -305,7 +305,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	 } 
      @Override  
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {  
-         ctx.close();  
+         //ctx.close();  
      } 
 	 
 }
