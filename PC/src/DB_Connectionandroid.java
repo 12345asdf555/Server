@@ -135,8 +135,10 @@ public class DB_Connectionandroid {
         	ResultSet rs =stmt.executeQuery(sqlinit);
         	
         	int i = 0;
-        	String weldtimestart = null;
-        	String weldtimeend = null;
+        	String weldtimestart = "2018-01-01 00:00:00";
+        	Date date = new Date();
+            endtime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
+        	String weldtimeend = endtime;
         	
 			while(rs.next()){
         		if(i == 0){
@@ -147,11 +149,21 @@ public class DB_Connectionandroid {
         		}
         	}
         	
-			String[] timebufsta = weldtimestart.split(":");
-			String[] timebufend1 = weldtimeend.split(":");
-			String[] timebufend2 = timebufend1[0].split(" ");
-			weldtimestart = timebufsta[0] + ":00:00";
-			weldtimeend = timebufend2[0] + " " + Integer.toString(Integer.valueOf(timebufend2[1])+1) + ":00:00";
+			if(weldtimestart==null){
+				weldtimestart = "2018-01-01 00:00:00";
+			}else{
+				String[] timebufsta = weldtimestart.split(":");
+				weldtimestart = timebufsta[0] + ":00:00";
+			}
+			if(weldtimeend==null){
+	        	Date date1 = new Date();
+	            endtime = DateTools.format("yyyy-MM-dd HH:mm:ss",date1);
+				weldtimeend = endtime;
+			}else{
+				String[] timebufend1 = weldtimeend.split(":");
+				String[] timebufend2 = timebufend1[0].split(" ");
+				weldtimeend = timebufend2[0] + " " + Integer.toString(Integer.valueOf(timebufend2[1])+1) + ":00:00";
+			}
 			
         	long t1 = DateTools.parse("yyyy-MM-dd HH:mm:ss",weldtimestart).getTime();
 	        long t2 = DateTools.parse("yyyy-MM-dd HH:mm:ss",weldtimeend).getTime();
