@@ -379,7 +379,7 @@ public class Server implements Runnable {
         
         //工作线程
         new Thread(ios).start();
-        //new Thread(socketstart).start();
+        new Thread(socketstart).start();
 		new Thread(websocketstart).start();
 		new Thread(sockettran).start();
 		
@@ -650,7 +650,7 @@ public class Server implements Runnable {
     public Runnable ios = new Runnable(){
     	public void run(){
     		try {
-				ServerSocket sp = new ServerSocket(5555);
+				ServerSocket sp = new ServerSocket(5554);
 				while(true){
 					socket = sp.accept();
 					new Thread(serverThread(socket)).start();
