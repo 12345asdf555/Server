@@ -475,7 +475,7 @@ public class Mysql {
 	    		    								ResultSet id = null;
 	    		    								String sqlhead = "INSERT INTO tb_over_head"
 	    		    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
-	    		    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_body_detail+"','"+last_body_detail+"','"+overtime+"')";
+	    		    										+ "VALUES ('"+welder_id+"',"+weldid+",'"+code+"',"+fitemid+",'"+first_body_detail+"','"+last_body_detail+"','"+overtime+"')";
 	    		    								String findid = "SELECT @@IDENTITY AS id";
 	    		    								try {
 	    		    									stmt.execute(sqlhead);
@@ -551,7 +551,7 @@ public class Mysql {
 		    			    								ResultSet id = null;
 		    			    								String sqlhead = "INSERT INTO tb_standby_over"
 		    			    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "
-		    			    										+ "VALUES ("+welder_id+","+weldid+","+code+","+fitemid+",'"+first_shead_detail+"','"+last_shead_detail+"','"+overtime+"')";
+		    			    										+ "VALUES ('"+welder_id+"',"+weldid+",'"+code+"',"+fitemid+",'"+first_shead_detail+"','"+last_shead_detail+"','"+overtime+"')";
 		    			    								stmt.execute(sqlhead);
 		    			    								shead_str=null;
 		    			    								standby_json.remove(weldid);
