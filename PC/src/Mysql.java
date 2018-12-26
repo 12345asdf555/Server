@@ -471,7 +471,7 @@ public class Mysql {
 	    		    								BigInteger overtime;
 //	    		    								overtime = new BigInteger(String.valueOf((df.parse(last_body_detail[2]).getTime()-df.parse(first_body_detail[2]).getTime())/1000+1));
 	    		    								overtime = new BigInteger(String.valueOf(body_str.length));
-	    		    								System.out.println(overtime);
+	    		    								//System.out.println(overtime);
 	    		    								ResultSet id = null;
 	    		    								String sqlhead = "INSERT INTO tb_over_head"
 	    		    										+ "(fwelder_id, fmachine_id, fjunction_id, fitemid, fstarttime, fendtime, fovertime) "

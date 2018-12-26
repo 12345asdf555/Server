@@ -1302,7 +1302,7 @@ public class Websocket {
 				                   			}
 		                   				}
 		                   			}catch(Exception e){
-		                   				//e.getStackTrace();
+		                   				e.getStackTrace();
 		                   			}
 		                   			
 		                   		 }
