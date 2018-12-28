@@ -111,7 +111,6 @@ public class Server implements Runnable {
     public Client client = new Client(this);
     public NettyServerHandler NS = new NettyServerHandler();
     private NettyWebSocketHandler NWS = new NettyWebSocketHandler();
-    public Android android = new Android();
 	private Connection c;
 	public java.sql.Connection conn = null;
     public java.sql.Statement stmt =null;
@@ -175,10 +174,7 @@ public class Server implements Runnable {
           
             NS.mysql.db.stmt = stmt;
             NS.mysql.db.conn = conn;
-            NS.android.db.stmt = stmt;
-            NS.android.db.conn = conn;
             NS.mysql.db.connet = connet;
-            NS.android.db.connet = connet;
 
         } catch (ClassNotFoundException e) {  
             System.out.println("Broken driver");
@@ -323,8 +319,6 @@ public class Server implements Runnable {
 		NS.mysql.listarray3 = this.listarray3;
 		NS.mysql.over_value = this.over_value;
 		NS.mysql.standby_over_value = this.standby_over_value;
-		NS.android.listarray2 = this.listarray2;
-		NS.android.listarray2 = this.listarray2;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
 	    
@@ -370,7 +364,6 @@ public class Server implements Runnable {
         		NS.mysql.listarray3 = listarray3;
         		NS.mysql.over_value = over_value;
         		NS.mysql.standby_over_value = standby_over_value;
-        		NS.android.listarray2 = listarray2;
         		NS.listarray2 = listarray2;
         		NS.listarray3 = listarray3;
         		
@@ -378,7 +371,9 @@ public class Server implements Runnable {
         }, 0,60000);
         
         //工作线程
+        new Thread(iosconnect).start();
         new Thread(ios).start();
+        
         new Thread(socketstart).start();
 		new Thread(websocketstart).start();
 		new Thread(sockettran).start();
@@ -566,7 +561,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5555).sync();
+				f = b.bind(5554).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -647,43 +642,45 @@ public class Server implements Runnable {
 		}
     };
 
-    public Runnable ios = new Runnable(){
+    public Runnable iosconnect = new Runnable(){
     	public void run(){
     		try {
-				ServerSocket sp = new ServerSocket(5554);
+				ServerSocket sp = new ServerSocket(5555);
 				while(true){
+					Thread.sleep(1000);
 					socket = sp.accept();
-					new Thread(serverThread(socket)).start();
 				}
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     		
     	}
-
-		private Runnable serverThread(Socket socket) {
-			// TODO Auto-generated method stub
-			try {
-				InputStream input = socket.getInputStream();
-	            BufferedInputStream bis = new BufferedInputStream(input);
-                int n = 0;
-                String data = "";
-                
-                while ( (n = bis.read()) != 255 || (n = bis.read()) != -1){
-                	if(Integer.toHexString(n).length() == 1){
-                    	data = data + "0" + Integer.toHexString(n);
-                	}else if(Integer.toHexString(n).length() == 2){
-                		data = data + Integer.toHexString(n);
-                	}
-                }
-                NS.android.Androidrun(data.toUpperCase());
+    };
+    
+    public Runnable ios = new Runnable(){
+    	public void run(){
+    		try {
+				while(true){
+					Thread.sleep(1000);
+					if(socket != null){
+						IOSthread it = new IOSthread();
+						it.socket = socket;
+						it.connet = connet;
+						it.listarray2 = listarray2;
+						new Thread(it).start();
+						socket = null;
+					}
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}  
-			return null;
-		}
+			}
+    		
+    	}
     };
     
 	 public static void main(String [] args) throws IOException 

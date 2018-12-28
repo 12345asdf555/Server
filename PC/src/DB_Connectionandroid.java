@@ -56,8 +56,19 @@ public class DB_Connectionandroid {
 	private String endtime;
 
 
-	public DB_Connectionandroid(){
-		
+	public DB_Connectionandroid(String connet1){
+		this.connet = connet1;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+	        conn = DriverManager.getConnection(connet);
+	        stmt= conn.createStatement();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void DB_androidinit1(String str){
@@ -206,6 +217,9 @@ public class DB_Connectionandroid {
 	        
 	        String sqldel = "TRUNCATE TABLE tb_data";
 	        stmt.executeUpdate(sqldel);
+	        
+	        conn.close();
+	        stmt.close();
 	        
 	        /*String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
             		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "

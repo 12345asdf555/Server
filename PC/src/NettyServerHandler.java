@@ -35,7 +35,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public HashMap<String, SocketChannel> socketlist = new HashMap<>();
     public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
     public Mysql mysql = new Mysql();
-    public Android android = new Android();
     public Websocket websocket = new Websocket();
 	public byte[] b;
     public int a=0;
@@ -177,6 +176,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				}
 	        }else if(str.substring(0,2).equals("þ")){   //处理android数据
 	        	
+	        	Android android = new Android(listarray2,connet);
 	        	android.Androidrun(str);
 	        	
 	        }else if(str.substring(0,2).equals("JN")){  //江南任务派发 任务号、焊工、焊机、状态

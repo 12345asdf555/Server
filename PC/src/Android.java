@@ -12,17 +12,25 @@ import java.util.Locale;
 public class Android {
 
 	private String str;
+	public String connet;
 	private java.sql.Statement stmt;
-	public DB_Connectionandroid db;
 	public ArrayList<String> listarray2;
 	
 	public Android() {
-		db = new DB_Connectionandroid();
+		
 	}
     
+	public Android(ArrayList<String> listarray22, String connet2) {
+		// TODO Auto-generated constructor stub
+		this.listarray2 = listarray22;
+		this.connet = connet2;
+	}
+
 	public void Androidrun(String str) {
 		// TODO Auto-generated constructor stub
 		this.str = str;
+		DB_Connectionandroid db = new DB_Connectionandroid(connet);
+		System.out.println("开始处理安卓数据");
 		
 		//记录开始处理Android数据时间
 		db.DB_androidinit1(str);
@@ -60,6 +68,7 @@ public class Android {
 	          }
 			
 		}
+		System.out.println("安卓数据解析完成");
 		
          	String [] stringArr = str.split("FD");
    	    	
@@ -136,12 +145,12 @@ public class Android {
 	           	     
 	           	     }   
 	           	     else{
-	           	    	 System.out.print("数据接收长度错误");
+	           	    	 System.out.println("数据接收长度错误");
 	           	    	 str="";
 	           	     }
        	         }
 	       	     else{
-	   	        	 System.out.print("数据接收首末位错误");
+	   	        	 System.out.println("数据接收首末位错误");
 	   	        	 str="";
 	       	     }
 	       	     
@@ -154,9 +163,11 @@ public class Android {
          
             //更新状态报表和实时表
             db.DB_androidupdate();
+            System.out.println("安卓数据统计完成");
             
             //记录处理Android数据结束时间
             db.DB_androidinit2();
+            System.out.println("完成.");
             
 	}
 
