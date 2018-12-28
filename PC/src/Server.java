@@ -561,7 +561,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5554).sync();
+				f = b.bind(5555).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -645,7 +645,7 @@ public class Server implements Runnable {
     public Runnable iosconnect = new Runnable(){
     	public void run(){
     		try {
-				ServerSocket sp = new ServerSocket(5555);
+				ServerSocket sp = new ServerSocket(5554);
 				while(true){
 					Thread.sleep(1000);
 					socket = sp.accept();
