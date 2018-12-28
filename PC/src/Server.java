@@ -371,9 +371,7 @@ public class Server implements Runnable {
         }, 0,60000);
         
         //工作线程
-        new Thread(iosconnect).start();
         new Thread(ios).start();
-        
         new Thread(socketstart).start();
 		new Thread(websocketstart).start();
 		new Thread(sockettran).start();
@@ -642,40 +640,23 @@ public class Server implements Runnable {
 		}
     };
 
-    public Runnable iosconnect = new Runnable(){
+    public Runnable ios = new Runnable(){
     	public void run(){
     		try {
 				ServerSocket sp = new ServerSocket(5554);
 				while(true){
 					Thread.sleep(1000);
 					socket = sp.accept();
+					IOSthread it = new IOSthread();
+					it.socket = socket;
+					it.connet = connet;
+					it.listarray2 = listarray2;
+					new Thread(it).start();
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		
-    	}
-    };
-    
-    public Runnable ios = new Runnable(){
-    	public void run(){
-    		try {
-				while(true){
-					Thread.sleep(1000);
-					if(socket != null){
-						IOSthread it = new IOSthread();
-						it.socket = socket;
-						it.connet = connet;
-						it.listarray2 = listarray2;
-						new Thread(it).start();
-						socket = null;
-					}
-				}
-			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
