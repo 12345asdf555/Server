@@ -73,9 +73,9 @@ public class DB_Connectionandroid {
 
 	public void DB_androidinit1(String str){
 		if(!str.substring(str.length()-26, str.length()).equals("FE1555555555555555555512FD")){
-			length = str.length()/56;
+			length = (str.length()-26)/28;
 		}else{
-			length = (str.length()-26)/56;
+			length = str.length()/28;
 		}
 		
 		Date date = new Date();
