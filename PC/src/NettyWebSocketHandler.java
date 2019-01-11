@@ -134,7 +134,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
         String str = ((TextWebSocketFrame) frame).text();
 
-        if(str.substring(0,2).equals("7E")){
+        if(str.substring(0,2).equals("7E") || str.substring(0,6).equals("FE5AA5")){
         	
         	synchronized (socketlist) {
         	ArrayList<String> listarraybuf = new ArrayList<String>();

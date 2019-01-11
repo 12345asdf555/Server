@@ -274,6 +274,234 @@ public class Websocket {
       	                strsend = "";
 	      	    	}
 	      	    }
+			}else if(str.length() == 108){  //松下
+	      	    String check1 =str.substring(0,2);
+	      	    String check11=str.substring(106,108);
+	      	    if(check1.equals("7E") && check11.equals("7D")){
+	      	    	
+	      	    	String welderid = Integer.valueOf(str.substring(34,38)).toString();
+	      	    	if(welderid.length()!=4){
+	             		int lenth=4-welderid.length();
+	             		for(int i=0;i<lenth;i++){
+	             			welderid="0"+welderid;
+	             		}
+	             	}
+	      	    	String weldid = Integer.valueOf(str.substring(18,22)).toString();
+	      	    	if(weldid.length()!=4){
+	             		int lenth=4-weldid.length();
+	             		for(int i=0;i<lenth;i++){
+	             			weldid="0"+weldid;
+	             		}
+	             	}
+	      	    	String gatherid = Integer.valueOf(str.substring(14,18)).toString();
+	      	    	if(gatherid.length()!=4){
+	             		int lenth=4-gatherid.length();
+	             		for(int i=0;i<lenth;i++){
+	             			gatherid="0"+gatherid;
+	             		}
+	             	}
+	      	    	String itemins = Integer.valueOf(str.substring(104,106)).toString();
+	      	    	if(itemins.length()!=4){
+	             		int lenth=4-itemins.length();
+	             		for(int i=0;i<lenth;i++){
+	             			itemins="0"+itemins;
+	             		}
+	             	}
+	      	    	String weldmodel = Integer.valueOf(str.subSequence(12, 14).toString(),16).toString();
+	      	    	if(weldmodel.length()!=4){
+	             		int lenth=4-weldmodel.length();
+	             		for(int i=0;i<lenth;i++){
+	             			weldmodel="0"+weldmodel;
+	             		}
+	             	}
+	      	    	
+      	    		String welderins = "0000";
+      	    		String junctionins = "0000";
+      	    		String ins = "0000";
+      	    		
+      	    		String junctionid = Integer.valueOf(str.substring(70, 78)).toString();
+      	    		if(junctionid.length()!=4){
+	             		int lenth=4-junctionid.length();
+	             		for(int i=0;i<lenth;i++){
+	             			junctionid="0"+junctionid;
+	             		}
+	             	}
+	      	    	String electricity = Integer.valueOf(str.subSequence(50, 54).toString(),16).toString();
+	      	    	if(electricity.length()!=4){
+	             		int lenth=4-electricity.length();
+	             		for(int i=0;i<lenth;i++){
+	             			electricity="0"+electricity;
+	             		}
+	             	}
+	      	    	String voltage = Integer.valueOf(str.subSequence(54, 58).toString(),16).toString();
+	      	    	if(voltage.length()!=4){
+	             		int lenth=4-voltage.length();
+	             		for(int i=0;i<lenth;i++){
+	             			voltage="0"+voltage;
+	             		}
+	             	}
+	      	    	String setelectricity = Integer.valueOf(str.subSequence(62, 66).toString(),16).toString();
+	      	    	if(setelectricity.length()!=4){
+	             		int lenth=4-setelectricity.length();
+	             		for(int i=0;i<lenth;i++){
+	             			setelectricity="0"+setelectricity;
+	             		}
+	             	}
+	      	    	String setvoltage = Integer.valueOf(str.subSequence(66, 70).toString(),16).toString();
+	      	    	if(setvoltage.length()!=4){
+	             		int lenth=4-setvoltage.length();
+	             		for(int i=0;i<lenth;i++){
+	             			setvoltage="0"+setvoltage;
+	             		}
+	             	}
+	      	    	String status = Integer.valueOf(str.subSequence(78, 80).toString(),16).toString();
+	      	    	if(status.length()!=2){
+	             		int lenth=2-status.length();
+	             		for(int i=0;i<lenth;i++){
+	             			status="0"+status;
+	             		}
+	             	}
+	      	    	
+                    String year = Integer.valueOf(str.subSequence(38, 40).toString(),16).toString();
+      	    		String month = Integer.valueOf(str.subSequence(40, 42).toString(),16).toString();
+      	    		String day = Integer.valueOf(str.subSequence(42, 44).toString(),16).toString();
+      	    		String hour = Integer.valueOf(str.subSequence(44, 46).toString(),16).toString();
+      	    		String minute = Integer.valueOf(str.subSequence(46, 48).toString(),16).toString();
+      	    		String second = Integer.valueOf(str.subSequence(48, 50).toString(),16).toString();
+      	    		String strdate = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
+      	    		try {
+						time = DateTools.parse("yy-MM-dd HH:mm:ss",strdate);
+						timesql = new Timestamp(time.getTime());
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+      	    		
+      	    		String channel = Integer.valueOf(str.subSequence(100, 102).toString(),16).toString();
+					if(channel.length()!=4){
+	             		int lenth=4-channel.length();
+	             		for(int i=0;i<lenth;i++){
+	             			channel="0"+channel;
+	             		}
+	             	}
+					String maxelectricity = Integer.valueOf(str.subSequence(84, 88).toString(),16).toString();
+					if(maxelectricity.length()!=4){
+	             		int lenth=4-maxelectricity.length();
+	             		for(int i=0;i<lenth;i++){
+	             			maxelectricity="0"+maxelectricity;
+	             		}
+	             	}
+					String minelectricity = Integer.valueOf(str.subSequence(88, 92).toString(),16).toString();
+					if(minelectricity.length()!=4){
+	             		int lenth=4-minelectricity.length();
+	             		for(int i=0;i<lenth;i++){
+	             			minelectricity="0"+minelectricity;
+	             		}
+	             	}
+					String maxvoltage = Integer.valueOf(str.subSequence(92, 96).toString(),16).toString();
+					if(maxvoltage.length()!=4){
+	             		int lenth=4-maxvoltage.length();
+	             		for(int i=0;i<lenth;i++){
+	             			maxvoltage="0"+maxvoltage;
+	             		}
+	             	}
+					String minvoltage = Integer.valueOf(str.subSequence(96, 100).toString(),16).toString();
+					if(minvoltage.length()!=4){
+	             		int lenth=4-minvoltage.length();
+	             		for(int i=0;i<lenth;i++){
+	             			minvoltage="0"+minvoltage;
+	             		}
+	             	}
+					
+					for(int i=0;i<listarray1.size();i+=3){
+	                	if(Integer.valueOf(welderid) == Integer.valueOf(listarray1.get(i))){
+	                		welderins = listarray1.get(i+2);
+	                		if(welderins.equals(null) || welderins.equals("null")){
+		                		break;
+			                }else{
+		                		if(welderins.length()!=4){
+				             		int lenth=4-welderins.length();
+				             		for(int i1=0;i1<lenth;i1++){
+				             			welderins="0"+welderins;
+				             		}
+				             	}
+		                		break;
+			                }
+	                	}
+	                }
+	                
+	                for(int i=0;i<listarray3.size();i+=7){
+	                	if(Integer.valueOf(junctionid) == Integer.valueOf(listarray3.get(i+5))){
+	                		junctionins = listarray3.get(i+6);
+	                		if(junctionins.equals(null) || junctionins.equals("null")){
+		                		break;
+			                }else{
+		                		if(junctionins.length()!=4){
+				             		int lenth=4-junctionins.length();
+				             		for(int i1=0;i1<lenth;i1++){
+				             			junctionins="0"+junctionins;
+				             		}
+				             	}
+		                		break;
+			                }
+	                	}
+	                }
+	                
+	                for(int i=0;i<listarray2.size();i+=4){
+	                	if(Integer.valueOf(gatherid) == Integer.valueOf(listarray2.get(i))){
+	                		ins = listarray2.get(i+3);
+	                		if(ins == null || ins.equals("null")){
+		                		break;
+			                }else{
+		                		if(ins.length()!=4){
+				             		int lenth=4-ins.length();
+				             		for(int i1=0;i1<lenth;i1++){
+				             			ins="0"+ins;
+				             		}
+				             	}
+		                		break;
+			                }
+	                	}
+	                }
+					
+	                if(ins == null || ins.equals("null")){
+	                	ins = "0000";
+	                }
+	                if(junctionins.equals(null) || junctionins.equals("null")){
+	                	junctionins = "0000";
+	                }
+	                if(welderins.equals(null) || welderins.equals("null")){
+	                	welderins = "0000";
+	                }
+	                
+					strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
+      	    	
+	      	    	synchronized (websocketlist) {
+                        
+                        ArrayList<String> listarraybuf = new ArrayList<String>();
+        	        	boolean ifdo= false;
+                        
+                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
+                        while(webiter.hasNext()){
+	      	                try{
+		      	                Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+		      	                websocketfail = entry.getKey();
+		      	                SocketChannel websocketcon = entry.getValue();
+		      	                websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+	      	                }catch (Exception e) {
+		      	                listarraybuf.add(websocketfail);
+		      	                ifdo = true;
+	      	                }
+                        }
+                      
+                        if(ifdo){
+		                    for(int i=0;i<listarraybuf.size();i++){
+		                    	websocketlist.remove(listarraybuf.get(i));
+		                    }
+                        }
+      	                strsend = "";
+	      	    	}
+	      	    }
 			}
 		}
 	}

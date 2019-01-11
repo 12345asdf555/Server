@@ -77,7 +77,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		public void run() {
 			// TODO Auto-generated method stub
 		
-			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==236){
+			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && (str.length()==236 || str.length()==108)){
 				
 				synchronized (websocketlist) {
 					mysql.Mysqlbase(str);
