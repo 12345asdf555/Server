@@ -221,7 +221,7 @@ public class Server implements Runnable {
                     String[] timesplit = nowtime.split(":");
                     String hour = timesplit[0];
                     String time2 = nowtimefor+" "+hour+":00:00";
-                    Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-3600000);
+                    Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-3599000);
                     String time3 = DateTools.format("yyyy-MM-dd HH:mm:ss",d1);
                     
                 	String timework = null;
@@ -282,8 +282,8 @@ public class Server implements Runnable {
                 	stmt.executeUpdate(sqlalarm);
                 	
                 	String sqlcompensate = "INSERT INTO tb_compensate(tb_compensate.fgather_no,tb_compensate.fcompensate,tb_compensate.fstarttime,tb_compensate.fendtime) "
-                    		+ "SELECT tb_live_data.fgather_no,COUNT(tb_live_data.fid)/TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime)),'" + time3 + "','" + time2 + "' FROM tb_live_data "
-                    		+ "WHERE tb_live_data.FWeldTime BETWEEN '" + timestandby + "' AND '" + time2 + "' GROUP BY tb_live_data.fgather_no";
+                    		+ "SELECT tb_live_data.fgather_no,COUNT(tb_live_data.fid)/(case when TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))=0 then 1 ELSE TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))  END),'" + time3 + "','" + time2 + "' FROM tb_live_data "
+                    		+ "WHERE tb_live_data.FWeldTime BETWEEN '" + time3 + "' AND '" + time2 + "' GROUP BY tb_live_data.fgather_no";
                 	
                 	stmt.executeUpdate(sqlcompensate);
                 	
@@ -291,7 +291,7 @@ public class Server implements Runnable {
                 			+ "SET tb_work.fworktime = tb_work.fworktime/tb_compensate.fcompensate WHERE tb_work.fstarttime = '" + time3 + "'";
                 	
                 	String sqlstandbycom = "UPDATE tb_standby LEFT JOIN tb_compensate ON tb_standby.fgather_no = tb_compensate.fgather_no "
-                			+ "SET tb_standby.fstandbytime = tb_standby.fstandbytime/tb_compensate.fcompensate WHERE tb_work.fstarttime = '" + time3 + "'";
+                			+ "SET tb_standby.fstandbytime = tb_standby.fstandbytime/tb_compensate.fcompensate WHERE tb_standby.fstarttime = '" + time3 + "'";
                 	
                 	String sqlalarmcom = "UPDATE tb_alarm LEFT JOIN tb_compensate ON tb_alarm.fgather_no = tb_compensate.fgather_no "
                 			+ "SET tb_alarm.falarmtime = tb_alarm.falarmtime/tb_compensate.fcompensate WHERE tb_alarm.fstarttime = '" + time3 + "'";
@@ -398,7 +398,7 @@ public class Server implements Runnable {
     	
     	
 		//更新优化报表
-    	/*String timework1 = null;
+    	 /*String timework1 = null;
     	String timework2 = null;
     	String time1 = null;
     	
@@ -453,7 +453,7 @@ public class Server implements Runnable {
 	        	
 	        	Date d1 = new Date(i);
 	        	String t1 = DateTools.format("yy-MM-dd HH:mm:ss", d1);
-	        	Date d2 = new Date(i+3600000);
+	        	Date d2 = new Date(i+3599000);
 	        	String t2 = DateTools.format("yy-MM-dd HH:mm:ss", d2);
 	        	System.out.println(t1);
 	        	System.out.println(t2);
@@ -466,12 +466,13 @@ public class Server implements Runnable {
 //                		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
 //                		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
 //				tb_data
-	        	String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
-                		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "
-                		+ "tb_data.welder_id,tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,"
-                		+ "AVG(tb_data.electricity),AVG(tb_data.voltage),AVG(tb_data.sensor_Num),COUNT(tb_data.fid),'" + t1 + "','" + t2 + "' FROM tb_data "
-                		+ "WHERE tb_data.status = '0' AND tb_data.weldtime BETWEEN '" + t1 + "' AND '" + t2 + "' "
-                		+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
+	        	
+//	        	String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
+//                		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "
+//                		+ "tb_data.welder_id,tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,"
+//                		+ "AVG(tb_data.electricity),AVG(tb_data.voltage),AVG(tb_data.sensor_Num),COUNT(tb_data.fid),'" + t1 + "','" + t2 + "' FROM tb_data "
+//                		+ "WHERE tb_data.status = '0' AND tb_data.weldtime BETWEEN '" + t1 + "' AND '" + t2 + "' "
+//                		+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
                 
 //				tb_live_data
 //                String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
@@ -481,12 +482,13 @@ public class Server implements Runnable {
 //                		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
 //                		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
 //				tb_data
-                String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
-                		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime) SELECT tb_data.welder_id,"
-                		+ "tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),"
-                		+ "AVG(tb_data.voltage),AVG(tb_data.sensor_Num),COUNT(tb_data.fid),'" + t1 + "','" + t2 + "' FROM tb_data "
-                		+ "WHERE tb_data.status = '3' AND tb_data.weldtime BETWEEN '" + t1 + "' AND '" + t2 + "' "
-                		+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
+	        	
+//                String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
+//                		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime) SELECT tb_data.welder_id,"
+//                		+ "tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),"
+//                		+ "AVG(tb_data.voltage),AVG(tb_data.sensor_Num),COUNT(tb_data.fid),'" + t1 + "','" + t2 + "' FROM tb_data "
+//                		+ "WHERE tb_data.status = '3' AND tb_data.weldtime BETWEEN '" + t1 + "' AND '" + t2 + "' "
+//                		+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
                 
 //				tb_live_data
 //                String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
@@ -499,20 +501,114 @@ public class Server implements Runnable {
 //                		+ " AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
 //                		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
 //			  tb_data
-              String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
-        		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) SELECT tb_data.welder_id,"
-        		+ "tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),"
-        		+ "AVG(tb_data.voltage),AVG(tb_data.sensor_Num),COUNT(tb_data.fid),'" + t1 + "','" + t2 + "' FROM tb_data "
-        		+ "LEFT JOIN tb_welded_junction ON tb_data.code = tb_welded_junction.fwelded_junction_no "
-        		+ "WHERE status= '3' and (tb_data.voltage > tb_welded_junction.fmax_valtage OR tb_data.electricity > tb_welded_junction.fmax_electricity "
-        		+ "OR tb_data.voltage < tb_welded_junction.fmin_valtage OR tb_data.electricity < tb_welded_junction.fmin_electricity)"
-        		+ " AND tb_data.weldtime BETWEEN '" + t1 + "' AND '" + t2 + "' "
-        		+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
+                
+//              String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
+//        		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) SELECT tb_data.welder_id,"
+//        		+ "tb_data.gather_id,tb_data.machine_id,tb_data.code,tb_data.itemid,AVG(tb_data.electricity),"
+//        		+ "AVG(tb_data.voltage),AVG(tb_data.sensor_Num),COUNT(tb_data.fid),'" + t1 + "','" + t2 + "' FROM tb_data "
+//        		+ "LEFT JOIN tb_welded_junction ON tb_data.code = tb_welded_junction.fwelded_junction_no "
+//        		+ "WHERE status= '3' and (tb_data.voltage > tb_welded_junction.fmax_valtage OR tb_data.electricity > tb_welded_junction.fmax_electricity "
+//        		+ "OR tb_data.voltage < tb_welded_junction.fmin_valtage OR tb_data.electricity < tb_welded_junction.fmin_electricity)"
+//        		+ " AND tb_data.weldtime BETWEEN '" + t1 + "' AND '" + t2 + "' "
+//        		+ "GROUP BY tb_data.welder_id,tb_data.gather_id,tb_data.code";
                 
                 
-                stmt.executeUpdate(sqlstandby);
-                stmt.executeUpdate(sqlwork);
-                stmt.executeUpdate(sqlalarm);
+                
+                
+                String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
+                		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.frestandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "
+                		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
+                		+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),COUNT(DISTINCT( DATE_FORMAT(FWeldTime,'%y-%m-%d %h:%i')))*60,'" + t1 + "','" + t2 + "' FROM tb_live_data "
+                		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
+                		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
+                
+                String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
+                		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.freworktime,tb_work.fstarttime,tb_work.fendtime) SELECT tb_live_data.fwelder_id,"
+                		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
+                		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),COUNT(DISTINCT( DATE_FORMAT(FWeldTime,'%y-%m-%d %h:%i')))*60,'" + t1 + "','" + t2 + "' FROM tb_live_data "
+                		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
+                		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
+                
+                String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
+                		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.frealarmtime,tb_alarm.fstarttime,tb_alarm.fendtime) SELECT tb_live_data.fwelder_id,"
+                		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
+                		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),COUNT(DISTINCT( DATE_FORMAT(FWeldTime,'%y-%m-%d %h:%i')))*60,'" + t1 + "','" + t2 + "' FROM tb_live_data "
+                		+ "INNER JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
+                		+ "WHERE fstatus= '3' and tb_welded_junction.fitemid = tb_live_data.fitemid and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
+                		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
+                		+ " AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
+                		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
+            	
+                try{
+	        		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+							
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+	        	}catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return;
+				}
+                
+            	stmt.executeUpdate(sqlstandby);
+            	stmt.executeUpdate(sqlwork);
+            	stmt.executeUpdate(sqlalarm);
+            	
+            	String sqlcompensate = "INSERT INTO tb_compensate(tb_compensate.fgather_no,tb_compensate.fcompensate,tb_compensate.fstarttime,tb_compensate.fendtime) "
+                		+ "SELECT tb_live_data.fgather_no,COUNT(tb_live_data.fid)/(case when TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))=0 then 1 ELSE TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))  END),'" + t1 + "','" + t2 + "' FROM tb_live_data "
+                		+ "WHERE tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' GROUP BY tb_live_data.fgather_no";
+            	
+            	stmt.executeUpdate(sqlcompensate);
+            	
+            	String sqlworkcom = "UPDATE tb_work LEFT JOIN tb_compensate ON tb_work.fgather_no = tb_compensate.fgather_no "
+            			+ "SET tb_work.fworktime = tb_work.fworktime/tb_compensate.fcompensate WHERE tb_work.fstarttime = '" + t1 + "'";
+            	
+            	String sqlstandbycom = "UPDATE tb_standby LEFT JOIN tb_compensate ON tb_standby.fgather_no = tb_compensate.fgather_no "
+            			+ "SET tb_standby.fstandbytime = tb_standby.fstandbytime/tb_compensate.fcompensate WHERE tb_standby.fstarttime = '" + t1 + "'";
+            	
+            	String sqlalarmcom = "UPDATE tb_alarm LEFT JOIN tb_compensate ON tb_alarm.fgather_no = tb_compensate.fgather_no "
+            			+ "SET tb_alarm.falarmtime = tb_alarm.falarmtime/tb_compensate.fcompensate WHERE tb_alarm.fstarttime = '" + t1 + "'";
+                
+            	try{
+	        		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+							
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+	        	}catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return;
+				}
+            	
+            	stmt.executeUpdate(sqlworkcom);
+            	stmt.executeUpdate(sqlstandbycom);
+            	stmt.executeUpdate(sqlalarmcom);
                 
 				Thread.sleep(50);
 					
