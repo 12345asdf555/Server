@@ -130,7 +130,7 @@ public class Server implements Runnable {
     public void run() {
     	
     	//读取IPconfig配置文件获取ip地址和数据库配置
-		/*try {
+		try {
 			FileInputStream in = new FileInputStream("IPconfig.txt");  
             InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
             BufferedReader bufReader = new BufferedReader(inReader);  
@@ -289,7 +289,7 @@ public class Server implements Runnable {
                 	stmt.executeUpdate(sqlupdata);
                 	
                 	String sqlcompensate = "INSERT INTO tb_compensate(tb_compensate.fgather_no,tb_compensate.fcompensate,tb_compensate.fstarttime,tb_compensate.fendtime) "
-                    		+ "SELECT tb_live_data.fgather_no,COUNT(tb_live_data.fid)/(case when TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))=0 then 1 ELSE TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))  END),'" + time3 + "','" + time2 + "' FROM tb_live_data "
+                    		+ "SELECT tb_live_data.fgather_no,COUNT(tb_live_data.fid)/(case when TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))=0 then 1 ELSE (TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))+1)  END),'" + time3 + "','" + time2 + "' FROM tb_live_data "
                     		+ "WHERE tb_live_data.FWeldTime BETWEEN '" + time3 + "' AND '" + time2 + "' GROUP BY tb_live_data.fgather_no";
                 	
                 	stmt.executeUpdate(sqlcompensate);
@@ -400,12 +400,12 @@ public class Server implements Runnable {
         new Thread(ios).start();
         new Thread(socketstart).start();
 		new Thread(websocketstart).start();
-		new Thread(sockettran).start();*/
+		new Thread(sockettran).start();
 		
     	
     	
 		//更新优化报表
-    	String timework1 = null;
+    	/*String timework1 = null;
     	String timework2 = null;
     	String time1 = null;
     	
@@ -459,9 +459,9 @@ public class Server implements Runnable {
 	        for(long i=datetime1;i<=datetime2;i+=3600000){
 	        	
 	        	Date d1 = new Date(i);
-	        	String t1 = DateTools.format("yy-MM-dd HH:mm:ss", d1);
+	        	String t1 = DateTools.format("yyyy-MM-dd HH:mm:ss", d1);
 	        	Date d2 = new Date(i+3599000);
-	        	String t2 = DateTools.format("yy-MM-dd HH:mm:ss", d2);
+	        	String t2 = DateTools.format("yyyy-MM-dd HH:mm:ss", d2);
 	        	System.out.println(t1);
 	        	System.out.println(t2);
 	        	
@@ -546,7 +546,7 @@ public class Server implements Runnable {
                 		+ " AND tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' "
                 		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                 
-                String sqlupdata = "UPDATE tb_standby LEFT JOIN tb_work ON tb_standby.fgather_no = tb_work.fgather_no SET tb_standby.fstandbytime = tb_standby.fstandbytime-tb_work.fworktime,tb_standby.frestandbytime = tb_standby.frestandbytime-tb_work.freworktime WHERE tb_standby.fstarttime = '20" + t1 + "' AND tb_work.fstarttime = '20" + t1 + "'";
+                String sqlupdata = "UPDATE tb_standby LEFT JOIN tb_work ON tb_standby.fgather_no = tb_work.fgather_no SET tb_standby.fstandbytime = tb_standby.fstandbytime-tb_work.fworktime,tb_standby.frestandbytime = tb_standby.frestandbytime-tb_work.freworktime WHERE tb_standby.fstarttime = '" + t1 + "' AND tb_work.fstarttime = '" + t1 + "'";
             	
                 try{
 	        		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
@@ -579,7 +579,7 @@ public class Server implements Runnable {
             	stmt.executeUpdate(sqlupdata);
             	
             	String sqlcompensate = "INSERT INTO tb_compensate(tb_compensate.fgather_no,tb_compensate.fcompensate,tb_compensate.fstarttime,tb_compensate.fendtime) "
-                		+ "SELECT tb_live_data.fgather_no,COUNT(tb_live_data.fid)/(case when TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))=0 then 1 ELSE TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))  END),'" + t1 + "','" + t2 + "' FROM tb_live_data "
+                		+ "SELECT tb_live_data.fgather_no,COUNT(tb_live_data.fid)/(case when TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))=0 then 1 ELSE (TIMESTAMPDIFF(SECOND,MIN(tb_live_data.FWeldTime),MAX(tb_live_data.FWeldTime))+1)  END),'" + t1 + "','" + t2 + "' FROM tb_live_data "
                 		+ "WHERE tb_live_data.FWeldTime BETWEEN '" + t1 + "' AND '" + t2 + "' GROUP BY tb_live_data.fgather_no";
             	
             	Thread.sleep(10);
@@ -646,7 +646,7 @@ public class Server implements Runnable {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 
     }  
     
