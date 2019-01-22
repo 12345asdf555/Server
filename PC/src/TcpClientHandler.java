@@ -9,9 +9,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 public class TcpClientHandler extends SimpleChannelInboundHandler{
 
-	public Client client;
+	public Clientconnect client;
 	
-	public TcpClientHandler(Client client) {
+	public TcpClientHandler(Clientconnect client) {
 		// TODO Auto-generated constructor stub
 		this.client = client;
 	}

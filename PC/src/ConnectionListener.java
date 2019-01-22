@@ -11,9 +11,9 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 
 public class ConnectionListener implements ChannelFutureListener {
-	private Client client;  
+	private Clientconnect client;  
 	public SocketChannel socketChannel;
-	public ConnectionListener(Client client) {  
+	public ConnectionListener(Clientconnect client) {  
 	    this.client = client;  
 	}  
 	@Override

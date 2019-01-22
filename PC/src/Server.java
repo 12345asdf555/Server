@@ -1,6 +1,7 @@
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;  
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,10 +16,13 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;  
 import java.net.Socket;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -49,6 +53,12 @@ import java.util.TimerTask;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
+import javax.xml.namespace.QName;
+
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
+import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
+import org.apache.cxf.transports.http.configuration.*;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -70,6 +80,7 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.util.CharsetUtil;
+import net.sf.json.JSONObject;
 
 
 
@@ -108,7 +119,7 @@ public class Server implements Runnable {
     public int clientcount=0;
     public Selector selector = null;
     public ServerSocketChannel ssc = null;
-    public Client client = new Client(this);
+    public Clientconnect client = new Clientconnect(this);
     public NettyServerHandler NS = new NettyServerHandler();
     private NettyWebSocketHandler NWS = new NettyWebSocketHandler();
 	private Connection c;
@@ -118,6 +129,8 @@ public class Server implements Runnable {
 	private ArrayList<String> dbdata;
 	private int over_value;
 	private int standby_over_value;
+	private String textphone;
+	private String textip;
     
     public String getconnet(){
     	return connet;
@@ -141,9 +154,14 @@ public class Server implements Runnable {
 		    	if(writetime==0){
 	                ip=line;
 	                writetime++;
-		    	}
-		    	else{
+		    	}else if(writetime==1){
 		    		ip1=line;
+		    		writetime++;
+		    	}else if(writetime==2){
+		    		textphone=line;
+		    		writetime++;
+		    	}else if(writetime==3){
+		    		textip=line;
 		    		writetime=0;
 		    	}
             }  
@@ -281,7 +299,7 @@ public class Server implements Runnable {
                     		+ " AND tb_live_data.FWeldTime BETWEEN '" + time3 + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
                     		
-                	String sqlupdata = "UPDATE tb_standby LEFT JOIN tb_work ON tb_standby.fgather_no = tb_work.fgather_no SET tb_standby.fstandbytime = tb_standby.fstandbytime-tb_work.fworktime,tb_standby.frestandbytime = tb_standby.frestandbytime-tb_work.freworktime WHERE tb_standby.fendtime = '" + time2 + "' AND tb_work.fendtime = '" + time2 + "'";
+                	String sqlupdata = "UPDATE tb_standby LEFT JOIN tb_work ON tb_standby.fgather_no = tb_work.fgather_no SET tb_standby.fstandbytime = tb_standby.fstandbytime-tb_work.fworktime,tb_standby.frestandbytime = tb_standby.frestandbytime-tb_work.freworktime WHERE tb_standby.fendtime = '" + time2 + "' AND tb_work.fendtime = '" + time2 + "' AND tb_standby.fwelder_id = tb_work.fwelder_id AND tb_standby.fjunction_id = tb_work.fjunction_id";
             	
                 	stmt.executeUpdate(sqlstandby);
                 	stmt.executeUpdate(sqlwork);
@@ -395,6 +413,334 @@ public class Server implements Runnable {
         		
             }  
         }, 0,60000);
+        
+        //发送短信
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.add(Calendar.DAY_OF_MONTH, +1);    // 控制日
+        calendar1.set(Calendar.HOUR_OF_DAY, 8); // 控制时
+        calendar1.set(Calendar.MINUTE, 0);    // 控制分
+        calendar1.set(Calendar.SECOND, 0);    // 控制秒
+        Date time1 = calendar1.getTime(); 
+        
+        Timer tExit3 = new Timer();
+        tExit3.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				
+				Calendar calendar1 = Calendar.getInstance();
+				int date = calendar1.get(Calendar.DAY_OF_WEEK) - 1;
+				if(date==1){
+					//获取时间一周查询
+					Calendar calendar21 = Calendar.getInstance();
+			        calendar21.add(Calendar.DAY_OF_MONTH, -7);    // 控制日
+			        calendar21.set(Calendar.HOUR_OF_DAY, 6); // 控制时
+			        calendar21.set(Calendar.MINUTE, 0);    // 控制分
+			        calendar21.set(Calendar.SECOND, 0);    // 控制秒
+			        Date time1 = calendar21.getTime(); 
+			        String sqltime1 = DateTools.format("yyyy-MM-dd hh:mm:ss", time1);
+			        Calendar calendar22 = Calendar.getInstance();
+			        calendar22.add(Calendar.DAY_OF_MONTH, -1);    // 控制日
+			        calendar22.set(Calendar.HOUR_OF_DAY, 23); // 控制时
+			        calendar22.set(Calendar.MINUTE, 59);    // 控制分
+			        calendar22.set(Calendar.SECOND, 59);    // 控制秒
+			        Date time2 = calendar22.getTime(); 
+			        String sqltime2 = DateTools.format("yyyy-MM-dd hh:mm:ss", time2);
+					
+					String result = "";
+					try{
+						JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
+						Client client = dcf.createClient(textip+"/Company_Service/companyWebService?wsdl");
+						//Client client = dcf.createClient("http://192.168.3.162:8080/Company_Service/companyWebService?wsdl");
+						AuthorityParameter param = new AuthorityParameter("userName", "admin", "password", "123456");
+						client.getOutInterceptors().add(new AuthorityHeaderInterceptor(param)); 
+						client.getOutInterceptors().add(new LoggingOutInterceptor()); 
+						/*HTTPClientPolicy policy = ((HTTPConduit) client.getConduit()).getClient();
+						policy.setConnectionTimeout(30000);
+					  	policy.setReceiveTimeout(180000);*/
+			            //类名+方法名
+					  	String obj1 = "{\"CLASSNAME\":\"liveDataWebServiceImpl\",\"METHOD\":\"getSMSMessage\"}";
+						//参数：组织机构id，起始时间，结束时间
+			            String obj2 = "{\"PARENT\":\"17\",\"STARTTIME\":\""+sqltime1+"\",\"ENDTIME\":\""+sqltime2+"\"}";
+					  	Object[] blocobj = client.invoke(new QName("https://webservice.ssmcxf.sshome.com/", "enterTheWS"), new Object[]{obj1,obj2});
+						result = blocobj[0].toString();
+						
+						JSONObject jsonresult = JSONObject.fromObject(result); 
+						Date time3 = new Date();
+						time3 = new Date(time3.getTime() - 3600*24*1000);
+						String data1 = DateTools.format("yyyy年MM月dd日", time3);
+						
+						//请求的webservice的url
+						URL url = new URL("http://smssh1.253.com/msg/send/json");
+						
+						//创建http链接
+						HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+						
+						//设置请求的方法类型
+						httpURLConnection.setRequestMethod("POST");
+						
+						//设置请求的内容类型
+						httpURLConnection.setRequestProperty("Content-type", "application/json");
+
+						//设置发送数据
+						httpURLConnection.setDoOutput(true);
+						
+						//设置接受数据
+						httpURLConnection.setDoInput(true);
+						
+						String  un  =  "CN0753433";
+			            String  pw  =  "WYLbBdG13w6714";
+			            String  phone  =  textphone;
+			            String  content  =  "【中核五公司】 上周"+jsonresult.getString("ITEMNAME")+"焊接效率：平均焊接时长："+jsonresult.getString("AVGWELDTIME")+",平均工作时长："+jsonresult.getString("AVGWORKTIME")+",焊接时长前5焊工："+jsonresult.getString("FRONTWELDER")+",焊接时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
+						String  postJsonTpl  =  "\"account\":\""+un+"\",\"password\":\""+pw+"\",\"phone\":\""+phone+"\",\"report\":\"false\",\"msg\":\""+content+"\"";
+			            String  jsonBody  =  "{" + String.format(postJsonTpl,  un,  pw,  phone,  content) + "}";
+						
+						//发送数据,使用输出流
+						OutputStream outputStream = httpURLConnection.getOutputStream();
+						//发送的soap协议的数据
+						//String requestXmlString = requestXml("北京");
+						
+						//String content1 = "user_id="+ URLEncoder.encode("123", "gbk");
+						
+						//发送数据
+						outputStream.write(jsonBody.getBytes());
+						
+						//接收数据
+						InputStream inputStream = httpURLConnection.getInputStream();
+						
+						//定义字节数组
+						byte[] b = new byte[1024];
+						
+						//定义一个输出流存储接收到的数据
+						ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+						
+						//开始接收数据
+						int len = 0;
+						while (true) {
+							len = inputStream.read(b);
+							if (len == -1) {
+								//数据读完
+								break;
+							}
+							byteArrayOutputStream.write(b, 0, len);
+						}
+						//从输出流中获取读取到数据(服务端返回的)
+						String response = byteArrayOutputStream.toString();
+					  
+						System.out.println(response);
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+					
+					
+					//获取时间一天查询
+					Calendar calendar211 = Calendar.getInstance();
+			        calendar211.add(Calendar.DAY_OF_MONTH, -1);    // 控制日
+			        calendar211.set(Calendar.HOUR_OF_DAY, 6); // 控制时
+			        calendar211.set(Calendar.MINUTE, 0);    // 控制分
+			        calendar211.set(Calendar.SECOND, 0);    // 控制秒
+			        Date time11 = calendar211.getTime(); 
+			        String sqltime11 = DateTools.format("yyyy-MM-dd hh:mm:ss", time11);
+			        Calendar calendar221 = Calendar.getInstance();
+			        calendar221.add(Calendar.DAY_OF_MONTH, -1);    // 控制日
+			        calendar221.set(Calendar.HOUR_OF_DAY, 23); // 控制时
+			        calendar221.set(Calendar.MINUTE, 59);    // 控制分
+			        calendar221.set(Calendar.SECOND, 59);    // 控制秒
+			        Date time21 = calendar221.getTime(); 
+			        String sqltime21 = DateTools.format("yyyy-MM-dd hh:mm:ss", time21);
+					
+					String result1 = "";
+					try{
+						JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
+						Client client = dcf.createClient(textip+"/Company_Service/companyWebService?wsdl");
+						//Client client = dcf.createClient("http://192.168.3.162:8080/Company_Service/companyWebService?wsdl");
+						AuthorityParameter param = new AuthorityParameter("userName", "admin", "password", "123456");
+						client.getOutInterceptors().add(new AuthorityHeaderInterceptor(param)); 
+						client.getOutInterceptors().add(new LoggingOutInterceptor()); 
+						/*HTTPClientPolicy policy = ((HTTPConduit) client.getConduit()).getClient();
+						policy.setConnectionTimeout(30000);
+					  	policy.setReceiveTimeout(180000);*/
+			            //类名+方法名
+					  	String obj1 = "{\"CLASSNAME\":\"liveDataWebServiceImpl\",\"METHOD\":\"getSMSMessage\"}";
+						//参数：组织机构id，起始时间，结束时间
+			            String obj2 = "{\"PARENT\":\"17\",\"STARTTIME\":\""+sqltime11+"\",\"ENDTIME\":\""+sqltime21+"\"}";
+					  	Object[] blocobj = client.invoke(new QName("https://webservice.ssmcxf.sshome.com/", "enterTheWS"), new Object[]{obj1,obj2});
+						result1 = blocobj[0].toString();
+						
+						JSONObject jsonresult1 = JSONObject.fromObject(result1); 
+						Date time31 = new Date();
+						time31 = new Date(time31.getTime() - 3600*24*1000);
+						String data11 = DateTools.format("yyyy年MM月dd日", time31);
+					
+						//请求的webservice的url
+						URL url1 = new URL("http://smssh1.253.com/msg/send/json");
+						
+						//创建http链接
+						HttpURLConnection httpURLConnection1 = (HttpURLConnection) url1.openConnection();
+						
+						//设置请求的方法类型
+						httpURLConnection1.setRequestMethod("POST");
+						
+						//设置请求的内容类型
+						httpURLConnection1.setRequestProperty("Content-type", "application/json");
+
+						//设置发送数据
+						httpURLConnection1.setDoOutput(true);
+						
+						//设置接受数据
+						httpURLConnection1.setDoInput(true);
+						
+						String  un1  =  "CN0753433";
+			            String  pw1  =  "WYLbBdG13w6714";
+			            String  phone1  =  textphone;
+			            String  content1  =  "【中核五公司】 "+data11+""+jsonresult1.getString("ITEMNAME")+"焊接效率：平均焊接时长："+jsonresult1.getString("AVGWELDTIME")+",平均工作时长："+jsonresult1.getString("AVGWORKTIME")+",焊接时长前5焊工："+jsonresult1.getString("FRONTWELDER")+",焊接时长后5焊工："+jsonresult1.getString("BACKWELDER")+"";
+						String  postJsonTpl1  =  "\"account\":\""+un1+"\",\"password\":\""+pw1+"\",\"phone\":\""+phone1+"\",\"report\":\"false\",\"msg\":\""+content1+"\"";
+			            String  jsonBody1  =  "{" + String.format(postJsonTpl1,  un1,  pw1,  phone1,  content1) + "}";
+						
+						//发送数据,使用输出流
+						OutputStream outputStream1 = httpURLConnection1.getOutputStream();
+						//发送的soap协议的数据
+						//String requestXmlString = requestXml("北京");
+						
+						//String content1 = "user_id="+ URLEncoder.encode("123", "gbk");
+						
+						//发送数据
+						outputStream1.write(jsonBody1.getBytes());
+						
+						//接收数据
+						InputStream inputStream1 = httpURLConnection1.getInputStream();
+						
+						//定义字节数组
+						byte[] b1 = new byte[1024];
+						
+						//定义一个输出流存储接收到的数据
+						ByteArrayOutputStream byteArrayOutputStream1 = new ByteArrayOutputStream();
+						
+						//开始接收数据
+						int len1 = 0;
+						while (true) {
+							len1 = inputStream1.read(b1);
+							if (len1 == -1) {
+								//数据读完
+								break;
+							}
+							byteArrayOutputStream1.write(b1, 0, len1);
+						}
+						//从输出流中获取读取到数据(服务端返回的)
+						String response1 = byteArrayOutputStream1.toString();
+						System.out.println(response1);
+					
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				}else{
+					//短信除周一
+					//获取时间一天查询
+					Calendar calendar21 = Calendar.getInstance();
+			        calendar21.add(Calendar.DAY_OF_MONTH, -1);    // 控制日
+			        calendar21.set(Calendar.HOUR_OF_DAY, 6); // 控制时
+			        calendar21.set(Calendar.MINUTE, 0);    // 控制分
+			        calendar21.set(Calendar.SECOND, 0);    // 控制秒
+			        Date time1 = calendar21.getTime(); 
+			        String sqltime1 = DateTools.format("yyyy-MM-dd hh:mm:ss", time1);
+			        Calendar calendar22 = Calendar.getInstance();
+			        calendar22.add(Calendar.DAY_OF_MONTH, -1);    // 控制日
+			        calendar22.set(Calendar.HOUR_OF_DAY, 23); // 控制时
+			        calendar22.set(Calendar.MINUTE, 59);    // 控制分
+			        calendar22.set(Calendar.SECOND, 59);    // 控制秒
+			        Date time2 = calendar22.getTime(); 
+			        String sqltime2 = DateTools.format("yyyy-MM-dd hh:mm:ss", time2);
+					
+					String result = "";
+					try{
+						JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
+						Client client = dcf.createClient(textip+"/Company_Service/companyWebService?wsdl");
+						//Client client = dcf.createClient("http://192.168.3.162:8080/Company_Service/companyWebService?wsdl");
+						AuthorityParameter param = new AuthorityParameter("userName", "admin", "password", "123456");
+						client.getOutInterceptors().add(new AuthorityHeaderInterceptor(param)); 
+						client.getOutInterceptors().add(new LoggingOutInterceptor()); 
+						/*HTTPClientPolicy policy = ((HTTPConduit) client.getConduit()).getClient();
+						policy.setConnectionTimeout(30000);
+					  	policy.setReceiveTimeout(180000);*/
+			            //类名+方法名
+					  	String obj1 = "{\"CLASSNAME\":\"liveDataWebServiceImpl\",\"METHOD\":\"getSMSMessage\"}";
+						//参数：组织机构id，起始时间，结束时间
+			            String obj2 = "{\"PARENT\":\"17\",\"STARTTIME\":\""+sqltime1+"\",\"ENDTIME\":\""+sqltime2+"\"}";
+					  	Object[] blocobj = client.invoke(new QName("https://webservice.ssmcxf.sshome.com/", "enterTheWS"), new Object[]{obj1,obj2});
+						result = blocobj[0].toString();
+						
+						JSONObject jsonresult = JSONObject.fromObject(result); 
+						Date time3 = new Date();
+						time3 = new Date(time3.getTime() - 3600*24*1000);
+						String data1 = DateTools.format("yyyy年MM月dd日", time3);
+					
+						//请求的webservice的url
+						URL url = new URL("http://smssh1.253.com/msg/send/json");
+						
+						//创建http链接
+						HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+						
+						//设置请求的方法类型
+						httpURLConnection.setRequestMethod("POST");
+						
+						//设置请求的内容类型
+						httpURLConnection.setRequestProperty("Content-type", "application/json");
+
+						//设置发送数据
+						httpURLConnection.setDoOutput(true);
+						
+						//设置接受数据
+						httpURLConnection.setDoInput(true);
+						
+						String  un  =  "CN0753433";
+			            String  pw  =  "WYLbBdG13w6714";
+			            String  phone  =  textphone;
+			            String  content  =  "【中核五公司】 "+data1+""+jsonresult.getString("ITEMNAME")+"焊接效率：平均焊接时长："+jsonresult.getString("AVGWELDTIME")+",平均工作时长："+jsonresult.getString("AVGWORKTIME")+",焊接时长前5焊工："+jsonresult.getString("FRONTWELDER")+",焊接时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
+						String  postJsonTpl  =  "\"account\":\""+un+"\",\"password\":\""+pw+"\",\"phone\":\""+phone+"\",\"report\":\"false\",\"msg\":\""+content+"\"";
+			            String  jsonBody  =  "{" + String.format(postJsonTpl,  un,  pw,  phone,  content) + "}";
+						
+						//发送数据,使用输出流
+						OutputStream outputStream = httpURLConnection.getOutputStream();
+						//发送的soap协议的数据
+						//String requestXmlString = requestXml("北京");
+						
+						//String content1 = "user_id="+ URLEncoder.encode("123", "gbk");
+						
+						//发送数据
+						outputStream.write(jsonBody.getBytes());
+						
+						//接收数据
+						InputStream inputStream = httpURLConnection.getInputStream();
+						
+						//定义字节数组
+						byte[] b = new byte[1024];
+						
+						//定义一个输出流存储接收到的数据
+						ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+						
+						//开始接收数据
+						int len = 0;
+						while (true) {
+							len = inputStream.read(b);
+							if (len == -1) {
+								//数据读完
+								break;
+							}
+							byteArrayOutputStream.write(b, 0, len);
+						}
+						//从输出流中获取读取到数据(服务端返回的)
+						String response = byteArrayOutputStream.toString();
+					  
+						System.out.println(response);
+
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+			}
+        }, time1 , 1000*60*60*24);
         
         //工作线程
         new Thread(ios).start();
@@ -686,7 +1032,7 @@ public class Server implements Runnable {
 	            
 	            //绑定端口，等待同步成功  
 	            ChannelFuture f;
-				f = b.bind(5555).sync();
+				f = b.bind(5551).sync();
 	            //等待服务端关闭监听端口  
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
@@ -727,7 +1073,6 @@ public class Server implements Runnable {
 			                	engine.setUseClientMode(false);
 			                	chweb.pipeline().addLast(new SslHandler(engine));
 		                	}catch(Exception e){
-		                		System.out.println("wss链接失败");
 		                	}
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());

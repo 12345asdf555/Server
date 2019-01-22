@@ -21,7 +21,7 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 
-public class Client  
+public class Clientconnect  
 {  
   private EventLoopGroup loop = new NioEventLoopGroup();
   private String ip;
@@ -30,18 +30,18 @@ public class Client
   public Server server;
   public ConnectionListener CL = new ConnectionListener(this);
   
-  public Client(Server server) {
+  public Clientconnect(Server server) {
 	// TODO Auto-generated constructor stub
 	  this.server = server;
   }
 
-  public Client() {
+  public Clientconnect() {
 	// TODO Auto-generated constructor stub
   }
 
   public static void main( String[] args )  
   {  
-    new Client().run();  
+    new Clientconnect().run();  
   }  
   
   public Bootstrap createBootstrap(Bootstrap bootstrap, EventLoopGroup eventLoop) {  
@@ -49,23 +49,22 @@ public class Client
       final TcpClientHandler handler = new TcpClientHandler(this);  
       
       try {
-		  FileInputStream in = new FileInputStream("IPconfig.txt");  
-          InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
-          BufferedReader bufReader = new BufferedReader(inReader);  
-          String line = null; 
-          int writetime=0;
-			
-		    while((line = bufReader.readLine()) != null){ 
+		   FileInputStream in = new FileInputStream("IPconfig.txt");  
+           InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
+           BufferedReader bufReader = new BufferedReader(inReader);  
+           String line = null; 
+           int writetime=0;
+		
+		   while((line = bufReader.readLine()) != null){ 
 		    	if(writetime==0){
 	                ip=line;
 	                writetime++;
-		    	}
-		    	else{
+		    	}else if(writetime==1){
 		    		fitemid=line;
-		    		writetime=0;
+		    		writetime++;
 		    	}
-          }  
-
+            }  
+		    
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
