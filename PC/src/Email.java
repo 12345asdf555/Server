@@ -282,6 +282,7 @@ public class Email {
 				
 				}
 				
+				//长时间未工作提醒
 				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		        Calendar c = Calendar.getInstance();
 		        c.setTime(new Date());
@@ -309,7 +310,7 @@ public class Email {
 				if(!fwelder_str.equals("")){
 					try{
 						for(int j=0;j<listarraymailer.size();j+=3){
-							if(listarraymailer.get(j+2).equals("2")){
+							if(listarraymailer.get(j+2).equals("3")){
 								Properties props = new Properties();
 							    props.setProperty("mail.smtp.auth", "true");
 							    props.setProperty("mail.transport.protocol", "smtp");
@@ -347,6 +348,7 @@ public class Email {
 				    }
 				}
 			
+				//焊机校验
 				String catmachine = "SELECT fid,fequipment_no,DATE_FORMAT(ftest,'%Y-%m-%d') testtime,DATE_FORMAT(fprevention,'%Y-%m-%d') pretime FROM tb_welding_machine WHERE 1=1";
 				ArrayList<String> test_machineid_list = new ArrayList<String>();
 				ArrayList<String> pre_machineid_list = new ArrayList<String>();
@@ -374,7 +376,7 @@ public class Email {
 				if(!test_machine_str.equals("")){
 					try{
 						for(int j=0;j<listarraymailer.size();j+=3){
-							if(listarraymailer.get(j+2).equals("2")){
+							if(listarraymailer.get(j+2).equals("4")){
 								Properties props = new Properties();
 							    props.setProperty("mail.smtp.auth", "true");
 							    props.setProperty("mail.transport.protocol", "smtp");
@@ -419,10 +421,11 @@ public class Email {
 				    }
 				}
 				
+				//焊机保养
 				if(!pre_machine_str.equals("")){
 					try{
 						for(int j=0;j<listarraymailer.size();j+=3){
-							if(listarraymailer.get(j+2).equals("2")){
+							if(listarraymailer.get(j+2).equals("5")){
 								Properties props = new Properties();
 							    props.setProperty("mail.smtp.auth", "true");
 							    props.setProperty("mail.transport.protocol", "smtp");
