@@ -37,6 +37,7 @@ public class Email {
 		//开启线程每天查询邮件
         Calendar calendarmail = Calendar.getInstance();
         
+        calendarmail.set(Calendar.DAY_OF_MONTH, +1); // 控制天
         calendarmail.set(Calendar.HOUR_OF_DAY, 07); // 控制时
         calendarmail.set(Calendar.MINUTE, 00);    // 控制分
         calendarmail.set(Calendar.SECOND, 00);    // 控制秒
