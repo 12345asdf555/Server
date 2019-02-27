@@ -165,7 +165,6 @@ public class DB_Connectionmysql {
     		                    return;
     		                }  
     		        	}
-                		System.out.println(inSqlbase1);
                         stmt.executeUpdate(inSqlbase1);
                         workbase = workbase + 1;
                         if(workbase==5){
@@ -250,7 +249,6 @@ public class DB_Connectionmysql {
     		                    return;
     		                }  
     		        	}
-                		System.out.println(inSqlbase2);
                         stmt.executeUpdate(inSqlbase2);
                         workbase = workbase + 1;
                         if(workbase==5){
@@ -335,7 +333,6 @@ public class DB_Connectionmysql {
     		                    return;
     		                }  
     		        	}
-                		System.out.println(inSqlbase3);
                         stmt.executeUpdate(inSqlbase3);
                         workbase = workbase + 1;
                         if(workbase==5){
@@ -420,7 +417,6 @@ public class DB_Connectionmysql {
     		                    return;
     		                }  
     		        	}
-                		System.out.println(inSqlbase4);
                         stmt.executeUpdate(inSqlbase4);
                         workbase = workbase + 1;
                         if(workbase==5){
