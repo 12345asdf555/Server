@@ -133,11 +133,11 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                         		work = 1;
                         	}
                             
-                            count5 = 0;
+                            count5 = 1;
                             inSql5 = "";
                             
                         } catch (SQLException e) {
-                        	count5 = 0;
+                        	count5 = 1;
                             inSql5 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -197,11 +197,11 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                         		work = 1;
                         	}
                             
-                            count6 = 0;
+                            count6 = 1;
                             inSql6 = "";
                             
                         } catch (SQLException e) {
-                        	count6 = 0;
+                        	count6 = 1;
                             inSql6 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -261,11 +261,11 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                         		work = 1;
                         	}
                             
-                            count7 = 0;
+                            count7 = 1;
                             inSql7 = "";
                             
                         } catch (SQLException e) {
-                        	count7 = 0;
+                        	count7 = 1;
                             inSql7 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -325,11 +325,11 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                         		work = 1;
                         	}
                             
-                            count8 = 0;
+                            count8 = 1;
                             inSql8 = "";
                             
                         } catch (SQLException e) {
-                        	count8 = 0;
+                        	count8 = 1;
                             inSql8 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -404,11 +404,11 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                         		work1 = 1;
                         	}
                             
-                            count1 = 0;
+                            count1 = 1;
                             inSql1 = "";
                             
                         } catch (SQLException e) {
-                        	count1 = 0;
+                        	count1 = 1;
                             inSql1 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -468,11 +468,11 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                         		work1 = 1;
                         	}
                             
-                            count2 = 0;
+                            count2 = 1;
                             inSql2 = "";
                             
                         } catch (SQLException e) {
-                        	count2 = 0;
+                        	count2 = 1;
                             inSql2 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -532,11 +532,11 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                         		work1 = 1;
                         	}
                             
-                            count3 = 0;
+                            count3 = 1;
                             inSql3 = "";
                             
                         } catch (SQLException e) {
-                        	count3 = 0;
+                        	count3 = 1;
                             inSql3 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -596,11 +596,11 @@ public void DB_Connectionmysqlrun1(BigDecimal electricity,BigDecimal voltage,Str
                         		work1 = 1;
                         	}
                             
-                            count4 = 0;
+                            count4 = 1;
                             inSql4 = "";
                             
                         } catch (SQLException e) {
-                        	count4 = 0;
+                        	count4 = 1;
                             inSql4 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
