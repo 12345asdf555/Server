@@ -173,11 +173,11 @@ public class DB_Connectionmysql {
                     		workbase = 1;
                     	}
                         
-                        countbase1 = 0;
+                        countbase1 = 1;
                         inSqlbase1 = "";
                         
                     } catch (SQLException e) {
-                    	countbase1 = 0;
+                    	countbase1 = 1;
                         inSqlbase1 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -259,11 +259,11 @@ public class DB_Connectionmysql {
                     		workbase = 1;
                     	}
                         
-                        countbase2 = 0;
+                        countbase2 = 1;
                         inSqlbase2 = "";
                         
                     } catch (SQLException e) {
-                    	countbase2 = 0;
+                    	countbase2 = 1;
                         inSqlbase2 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -345,11 +345,11 @@ public class DB_Connectionmysql {
                     		workbase = 1;
                     	}
                         
-                        countbase3 = 0;
+                        countbase3 = 1;
                         inSqlbase3 = "";
                         
                     } catch (SQLException e) {
-                    	countbase3 = 0;
+                    	countbase3 = 1;
                         inSqlbase3 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -431,11 +431,11 @@ public class DB_Connectionmysql {
                     		workbase = 1;
                     	}
                         
-                        countbase4 = 0;
+                        countbase4 = 1;
                         inSqlbase4 = "";
                         
                     } catch (SQLException e) {
-                    	countbase4 = 0;
+                    	countbase4 = 1;
                         inSqlbase4 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
