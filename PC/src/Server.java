@@ -316,7 +316,7 @@ public class Server implements Runnable {
         }, time , 1000*60*60);
 	    
 	    //获取最新焊口和焊机统计时间
-	    check = new DB_Connectioncode(stmt);
+	    check = new DB_Connectioncode(stmt,conn,connet);
 		NS.websocket.dbdata = this.dbdata;
   		
 		listarray1 = check.getId1();
@@ -364,7 +364,7 @@ public class Server implements Runnable {
 		                }  
 		        	}
 	            	
-	        		DB_Connectioncode check = new DB_Connectioncode(stmt);
+	        		DB_Connectioncode check = new DB_Connectioncode(stmt,conn,connet);
 	        		
 	        		listarray1 = check.getId1();
 	        		listarray2 = check.getId2();

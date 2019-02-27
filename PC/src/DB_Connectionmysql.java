@@ -165,17 +165,18 @@ public class DB_Connectionmysql {
     		                    return;
     		                }  
     		        	}
+                		System.out.println(inSqlbase1);
                         stmt.executeUpdate(inSqlbase1);
                         workbase = workbase + 1;
                         if(workbase==5){
                     		workbase = 1;
                     	}
                         
-                        countbase1 = 0;
+                        countbase1 = 1;
                         inSqlbase1 = "";
                         
                     } catch (SQLException e) {
-                    	countbase1 = 0;
+                    	countbase1 = 1;
                         inSqlbase1 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -249,17 +250,18 @@ public class DB_Connectionmysql {
     		                    return;
     		                }  
     		        	}
+                		System.out.println(inSqlbase2);
                         stmt.executeUpdate(inSqlbase2);
                         workbase = workbase + 1;
                         if(workbase==5){
                     		workbase = 1;
                     	}
                         
-                        countbase2 = 0;
+                        countbase2 = 1;
                         inSqlbase2 = "";
                         
                     } catch (SQLException e) {
-                    	countbase2 = 0;
+                    	countbase2 = 1;
                         inSqlbase2 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -333,17 +335,18 @@ public class DB_Connectionmysql {
     		                    return;
     		                }  
     		        	}
+                		System.out.println(inSqlbase3);
                         stmt.executeUpdate(inSqlbase3);
                         workbase = workbase + 1;
                         if(workbase==5){
                     		workbase = 1;
                     	}
                         
-                        countbase3 = 0;
+                        countbase3 = 1;
                         inSqlbase3 = "";
                         
                     } catch (SQLException e) {
-                    	countbase3 = 0;
+                    	countbase3 = 1;
                         inSqlbase3 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
@@ -417,17 +420,18 @@ public class DB_Connectionmysql {
     		                    return;
     		                }  
     		        	}
+                		System.out.println(inSqlbase4);
                         stmt.executeUpdate(inSqlbase4);
                         workbase = workbase + 1;
                         if(workbase==5){
                     		workbase = 1;
                     	}
                         
-                        countbase4 = 0;
+                        countbase4 = 1;
                         inSqlbase4 = "";
                         
                     } catch (SQLException e) {
-                    	countbase4 = 0;
+                    	countbase4 = 1;
                         inSqlbase4 = "";
                         System.out.println("Broken insert");
                         e.printStackTrace();
