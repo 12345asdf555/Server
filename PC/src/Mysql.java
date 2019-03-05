@@ -62,14 +62,47 @@ public class Mysql {
 					}
       	    		
 					int channel = Integer.valueOf(str.subSequence(100+a, 102+a).toString(),16);
-					BigDecimal maxelectricity = new BigDecimal(Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16));
-					BigDecimal minelectricity = new BigDecimal(Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16));
-					BigDecimal maxvoltage = new BigDecimal(Integer.valueOf(str.subSequence(92+a, 96+a).toString(),16));
-					BigDecimal minvoltage = new BigDecimal(Integer.valueOf(str.subSequence(96+a, 100+a).toString(),16));
+					
+					//焊接电流电压上下限
+					BigDecimal maxelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())+(Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16).intValue()));
+					BigDecimal minelectricity = null;
+					if((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue()-Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16))<0){
+						minelectricity = new BigDecimal(0);
+					}else {
+						minelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16).intValue()));
+					}
+					//BigDecimal minelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16).intValue()));
+					BigDecimal maxvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())+(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
+					BigDecimal minvoltage = null;
+					if((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue()-Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16))<0){
+						minvoltage = new BigDecimal(0);
+					}else {
+						minvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
+					}
+					//BigDecimal minvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
+					
+					//报警电流电压上下限
+					BigDecimal wmaxelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())+(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+					BigDecimal wminelectricity = null;
+					if((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue()-Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue())<0){
+						wminelectricity = new BigDecimal(0);
+					}else {
+						wminelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+					}
+					//BigDecimal wminelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+					BigDecimal wmaxvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())+(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()));
+					BigDecimal wminvoltage = null;
+					if((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue()-Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue())<0){
+						wminvoltage = new BigDecimal(0);
+					}else {
+						wminvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()));
+					}
+					//BigDecimal wminvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+					
 					BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(80+a, 82+a).toString(),16));
 					int fmaterialgas = Integer.parseInt(str.subSequence(82+a, 84+a).toString(),16);
 
-					db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3);
+					db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,wmaxelectricity,wminelectricity,wmaxvoltage,wminvoltage);
 					 
       	    	}
             }
@@ -107,14 +140,52 @@ public class Mysql {
 				}
   	    		
 				int channel = Integer.valueOf(str.subSequence(100, 102).toString(),16);
-				BigDecimal maxelectricity = new BigDecimal(Integer.valueOf(str.subSequence(84, 88).toString(),16));
+				/*BigDecimal maxelectricity = new BigDecimal(Integer.valueOf(str.subSequence(84, 88).toString(),16));
 				BigDecimal minelectricity = new BigDecimal(Integer.valueOf(str.subSequence(88, 92).toString(),16));
 				BigDecimal maxvoltage = new BigDecimal(Integer.valueOf(str.subSequence(92, 96).toString(),16));
-				BigDecimal minvoltage = new BigDecimal(Integer.valueOf(str.subSequence(96, 100).toString(),16));
+				BigDecimal minvoltage = new BigDecimal(Integer.valueOf(str.subSequence(96, 100).toString(),16));*/
 				BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(80, 82).toString(),16));
+				
+				//焊接电流电压上下限
+				BigDecimal maxelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())+(Integer.valueOf(str.subSequence(92, 94).toString(),16).intValue()));
+				BigDecimal minelectricity = null;
+				if((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue()-Integer.valueOf(str.subSequence(92, 94).toString(),16))<0){
+					minelectricity = new BigDecimal(0);
+				}else {
+					minelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92, 94).toString(),16).intValue()));
+				}
+				//BigDecimal minelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16).intValue()));
+				BigDecimal maxvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())+(Integer.valueOf(str.subSequence(94, 96).toString(),16).intValue()));
+				BigDecimal minvoltage = null;
+				if((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue()-Integer.valueOf(str.subSequence(94, 96).toString(),16))<0){
+					minvoltage = new BigDecimal(0);
+				}else {
+					minvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94, 96).toString(),16).intValue()));
+				}
+				//BigDecimal minvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
+				
+				//报警电流电压上下限
+				BigDecimal wmaxelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())+(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()));
+				BigDecimal wminelectricity = null;
+				if((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue()-Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue())<0){
+					wminelectricity = new BigDecimal(0);
+				}else {
+					wminelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()));
+				}
+				//BigDecimal wminelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+				BigDecimal wmaxvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())+(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()));
+				BigDecimal wminvoltage = null;
+				if((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue()-Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue())<0){
+					wminvoltage = new BigDecimal(0);
+				}else {
+					wminvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()));
+				}
+				//BigDecimal wminvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+				
+				
 				int fmaterialgas = Integer.parseInt(str.subSequence(82, 84).toString(),16);
 
-				db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3);
+				db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,wmaxelectricity,wminelectricity,wmaxvoltage,wminvoltage);
       	    }
         }
     }

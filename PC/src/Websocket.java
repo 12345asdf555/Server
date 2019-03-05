@@ -156,32 +156,88 @@ public class Websocket {
 		             			channel="0"+channel;
 		             		}
 		             	}
-						String maxelectricity = Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).toString();
+						
+						//焊接电流电压上下限
+						String maxelectricity = Integer.toString(Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue()+Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16).intValue());
 						if(maxelectricity.length()!=4){
 		             		int lenth=4-maxelectricity.length();
 		             		for(int i=0;i<lenth;i++){
 		             			maxelectricity="0"+maxelectricity;
 		             		}
 		             	}
-						String minelectricity = Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).toString();
+						String minelectricity = null;
+						if(((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16).intValue()))<0){
+							minelectricity = "0000";
+						}else {
+							minelectricity = Integer.toString((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16).intValue()));
+						}
+						//String minelectricity = Integer.toString((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16).intValue()));
 						if(minelectricity.length()!=4){
 		             		int lenth=4-minelectricity.length();
 		             		for(int i=0;i<lenth;i++){
 		             			minelectricity="0"+minelectricity;
 		             		}
 		             	}
-						String maxvoltage = Integer.valueOf(str.subSequence(92+a, 96+a).toString(),16).toString();
+						String maxvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())+(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
 						if(maxvoltage.length()!=4){
 		             		int lenth=4-maxvoltage.length();
 		             		for(int i=0;i<lenth;i++){
 		             			maxvoltage="0"+maxvoltage;
 		             		}
 		             	}
-						String minvoltage = Integer.valueOf(str.subSequence(96+a, 100+a).toString(),16).toString();
+						String minvoltage = null;
+						if(((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()))<0){
+							minvoltage = "0000";
+						}else {
+							minvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
+						}
+						//String minvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
 						if(minvoltage.length()!=4){
 		             		int lenth=4-minvoltage.length();
 		             		for(int i=0;i<lenth;i++){
 		             			minvoltage="0"+minvoltage;
+		             		}
+		             	}
+						
+						//报警电流电压上下限
+						String wmaxelectricity = Integer.toString(Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue()+Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue());
+						if(wmaxelectricity.length()!=4){
+		             		int lenth=4-wmaxelectricity.length();
+		             		for(int i=0;i<lenth;i++){
+		             			wmaxelectricity="0"+wmaxelectricity;
+		             		}
+		             	}
+						String wminelectricity = null;
+						if(((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()))<0){
+							wminelectricity = "0000";
+						}else {
+							wminelectricity = Integer.toString(Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue()-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+						}
+						//String wminelectricity = Integer.toString((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+						if(wminelectricity.length()!=4){
+		             		int lenth=4-wminelectricity.length();
+		             		for(int i=0;i<lenth;i++){
+		             			wminelectricity="0"+wminelectricity;
+		             		}
+		             	}
+						String wmaxvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())+(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()));
+						if(wmaxvoltage.length()!=4){
+		             		int lenth=4-wmaxvoltage.length();
+		             		for(int i=0;i<lenth;i++){
+		             			wmaxvoltage="0"+wmaxvoltage;
+		             		}
+		             	}
+						String wminvoltage = null;
+						if(((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()))<0){
+							wminvoltage = "0000";
+						}else{
+							wminvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()));
+						}
+						//String wminvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+						if(wminvoltage.length()!=4){
+		             		int lenth=4-wminvoltage.length();
+		             		for(int i=0;i<lenth;i++){
+		             			wminvoltage="0"+wminvoltage;
 		             		}
 		             	}
 						
@@ -246,7 +302,7 @@ public class Websocket {
 		                	welderins = "0000";
 		                }
 		                
-						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
+						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel + wmaxelectricity + wminelectricity + wmaxvoltage + wminvoltage;
 	      	    	}
 	      	    	synchronized (websocketlist) {
                         
@@ -384,32 +440,87 @@ public class Websocket {
 	             			channel="0"+channel;
 	             		}
 	             	}
-					String maxelectricity = Integer.valueOf(str.subSequence(84, 88).toString(),16).toString();
+					//焊接电流电压上下限
+					String maxelectricity = Integer.toString(Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue()+Integer.valueOf(str.subSequence(92, 94).toString(),16).intValue());
 					if(maxelectricity.length()!=4){
 	             		int lenth=4-maxelectricity.length();
 	             		for(int i=0;i<lenth;i++){
 	             			maxelectricity="0"+maxelectricity;
 	             		}
 	             	}
-					String minelectricity = Integer.valueOf(str.subSequence(88, 92).toString(),16).toString();
+					String minelectricity = null;
+					if(((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92, 94).toString(),16).intValue()))<0){
+						minelectricity = "0000";
+					}else {
+						minelectricity = Integer.toString((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92, 94).toString(),16).intValue()));
+					}
+					//String minelectricity = Integer.toString((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(92+a, 94+a).toString(),16).intValue()));
 					if(minelectricity.length()!=4){
 	             		int lenth=4-minelectricity.length();
 	             		for(int i=0;i<lenth;i++){
 	             			minelectricity="0"+minelectricity;
 	             		}
 	             	}
-					String maxvoltage = Integer.valueOf(str.subSequence(92, 96).toString(),16).toString();
+					String maxvoltage = Integer.toString((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())+(Integer.valueOf(str.subSequence(94, 96).toString(),16).intValue()));
 					if(maxvoltage.length()!=4){
 	             		int lenth=4-maxvoltage.length();
 	             		for(int i=0;i<lenth;i++){
 	             			maxvoltage="0"+maxvoltage;
 	             		}
 	             	}
-					String minvoltage = Integer.valueOf(str.subSequence(96, 100).toString(),16).toString();
+					String minvoltage = null;
+					if(((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94, 96).toString(),16).intValue()))<0){
+						minvoltage = "0000";
+					}else {
+						minvoltage = Integer.toString((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94, 96).toString(),16).intValue()));
+					}
+					//String minvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
 					if(minvoltage.length()!=4){
 	             		int lenth=4-minvoltage.length();
 	             		for(int i=0;i<lenth;i++){
 	             			minvoltage="0"+minvoltage;
+	             		}
+	             	}
+					
+					//报警电流电压上下限
+					String wmaxelectricity = Integer.toString(Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())+(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue());
+					if(wmaxelectricity.length()!=4){
+	             		int lenth=4-wmaxelectricity.length();
+	             		for(int i=0;i<lenth;i++){
+	             			wmaxelectricity="0"+wmaxelectricity;
+	             		}
+	             	}
+					String wminelectricity = null;
+					if(((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()))<0){
+						wminelectricity = "0000";
+					}else {
+						wminelectricity = Integer.toString((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()));
+					}
+					//String wminelectricity = Integer.toString((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+					if(wminelectricity.length()!=4){
+	             		int lenth=4-wminelectricity.length();
+	             		for(int i=0;i<lenth;i++){
+	             			wminelectricity="0"+wminelectricity;
+	             		}
+	             	}
+					String wmaxvoltage = Integer.toString((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())+(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()));
+					if(wmaxvoltage.length()!=4){
+	             		int lenth=4-wmaxvoltage.length();
+	             		for(int i=0;i<lenth;i++){
+	             			wmaxvoltage="0"+wmaxvoltage;
+	             		}
+	             	}
+					String wminvoltage = null;
+					if(((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()))<0){
+						wminvoltage = "0000";
+					}else {
+						wminvoltage = Integer.toString((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()));
+					}
+					//String wminvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+					if(wminvoltage.length()!=4){
+	             		int lenth=4-wminvoltage.length();
+	             		for(int i=0;i<lenth;i++){
+	             			wminvoltage="0"+wminvoltage;
 	             		}
 	             	}
 					
@@ -474,7 +585,7 @@ public class Websocket {
 	                	welderins = "0000";
 	                }
 	                
-					strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
+					strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel+ wmaxelectricity + wminelectricity + wmaxvoltage + wminvoltage;
       	    	
 	      	    	synchronized (websocketlist) {
                         
