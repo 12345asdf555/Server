@@ -483,7 +483,7 @@ public class Websocket {
 	             	}
 					
 					//报警电流电压上下限
-					String wmaxelectricity = Integer.toString(Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())+(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue());
+					String wmaxelectricity = Integer.toString((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())+(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()));
 					if(wmaxelectricity.length()!=4){
 	             		int lenth=4-wmaxelectricity.length();
 	             		for(int i=0;i<lenth;i++){
