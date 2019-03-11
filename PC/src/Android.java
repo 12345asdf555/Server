@@ -46,25 +46,29 @@ public class Android {
 			}
 	         str="";
 	         for(int i=0;i<b.length;i++){
-	          	
-	          	//判断为数字还是字母，若为字母+256取正数
-	          	if(b[i]<0){
-	          		String r = Integer.toHexString(b[i]+256);
-	          		String rr=r.toUpperCase();
-	              	//数字补为两位数
-	              	if(rr.length()==1){
-	          			rr='0'+rr;
-	              	}
-	              	//strdata为总接收数据
-	          		str += rr;
-	          	}
-	          	else{
-	          		String r = Integer.toHexString(b[i]);
-	              	if(r.length()==1)
-	          			r='0'+r;
-	              	r=r.toUpperCase();
-	          		str+=r;	
-	          	}
+	        	try {
+		          	//判断为数字还是字母，若为字母+256取正数
+		          	if(b[i]<0){
+		          		String r = Integer.toHexString(b[i]+256);
+		          		String rr=r.toUpperCase();
+		              	//数字补为两位数
+		              	if(rr.length()==1){
+		          			rr='0'+rr;
+		              	}
+		              	//strdata为总接收数据
+		          		str += rr;
+		          	}
+		          	else{
+		          		String r = Integer.toHexString(b[i]);
+		              	if(r.length()==1)
+		          			r='0'+r;
+		              	r=r.toUpperCase();
+		          		str+=r;	
+		          	}
+	        	}catch (Exception e) {
+					// TODO Auto-generated catch block
+	        		 System.out.println("数据解析错误");
+				}
 	          }
 			
 		}
@@ -156,7 +160,7 @@ public class Android {
 	       	     
             	} catch (Exception e) {
         			str="";
-                    System.out.println("S: Error 2");  
+                    System.out.println("S: 写入数据库错误");  
                     e.printStackTrace();  
                 }     
    	     	} 	

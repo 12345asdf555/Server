@@ -73,9 +73,9 @@ public class DB_Connectionandroid {
 
 	public void DB_androidinit1(String str){
 		if(!str.substring(str.length()-26, str.length()).equals("FE1555555555555555555512FD")){
-			length = (str.length()-26)/28;
+			length = (str.length()-26)/56;
 		}else{
-			length = str.length()/28;
+			length = str.length()/56;
 		}
 		
 		Date date = new Date();
@@ -133,6 +133,8 @@ public class DB_Connectionandroid {
 	}
 	
 	public void DB_androidupdate(){
+		String weldtimestart = "2018-01-01 00:00:00";
+		String weldtimeend = "2030-01-01 00:00:00";
 		try {
 			
         	//得到需要处理的Android数据是起始时间
@@ -146,10 +148,10 @@ public class DB_Connectionandroid {
         	ResultSet rs =stmt.executeQuery(sqlinit);
         	
         	int i = 0;
-        	String weldtimestart = "2018-01-01 00:00:00";
+        	
         	Date date = new Date();
             endtime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
-        	String weldtimeend = endtime;
+        	weldtimeend = endtime;
         	
 			while(rs.next()){
         		if(i == 0){
@@ -175,7 +177,10 @@ public class DB_Connectionandroid {
 				String[] timebufend2 = timebufend1[0].split(" ");
 				weldtimeend = timebufend2[0] + " " + Integer.toString(Integer.valueOf(timebufend2[1])+1) + ":00:00";
 			}
-			
+		}catch(Exception e){
+    		e.printStackTrace();
+    	}
+		try{
         	long t1 = DateTools.parse("yyyy-MM-dd HH:mm:ss",weldtimestart).getTime();
 	        long t2 = DateTools.parse("yyyy-MM-dd HH:mm:ss",weldtimeend).getTime();
 	        
@@ -246,17 +251,17 @@ public class DB_Connectionandroid {
                 		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
             		*/
 	        
-        } catch (ClassNotFoundException e) {  
-            System.out.println("Broken driver");
-            e.printStackTrace();
-            return;
-        } catch (SQLException e) {
+        }  catch (SQLException e) {
             System.out.println("Broken conn");
             e.printStackTrace();
             return;
         } catch (ParseException e){
         	System.out.println("Broken change");
         	e.printStackTrace();
+        } catch (Exception e) {  
+            System.out.println("Broken driver");
+            e.printStackTrace();
+            return;
         }
 	}
 	
