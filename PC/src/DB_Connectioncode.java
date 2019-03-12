@@ -15,6 +15,7 @@ public class DB_Connectioncode {
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
+    public ArrayList<String> listarray4 = new ArrayList<String>();
 	
 	public String getId() {
 		return datasend;
@@ -106,7 +107,7 @@ public class DB_Connectioncode {
     	
     	
     	
-       //查焊机
+         //查焊机
          inSql = "select tb_gather.fid,tb_welding_machine.fequipment_no,tb_gather.fgather_no,tb_welding_machine.finsframework_id from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
          
          try {
@@ -205,6 +206,39 @@ public class DB_Connectioncode {
 
          } 
          
+         //Webservice调用返回焊机实时电流电压
+         inSql = "select tb_gather.fid,tb_welding_machine.fequipment_no from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
+         
+         try {
+
+         	ResultSet rs =stmt.executeQuery(inSql);
+             
+             while (rs.next()) {
+            	String fid = rs.getString("fid");
+            	String fequipment_no = rs.getString("fequipment_no");
+             	listarray4.add(fid);
+             	listarray4.add(fequipment_no);
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             }
+             	
+         } catch (SQLException e) {
+
+             System.out.println("Broken insert");
+
+             e.printStackTrace();
+
+         }
          
         /*try {
 
@@ -250,7 +284,9 @@ public class DB_Connectioncode {
 		this.listarray3 = listarray3;
 	}
 
-    
+	public ArrayList<String> getId4() {
+		return listarray4;
+	}
 }
 
 

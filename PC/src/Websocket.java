@@ -87,7 +87,7 @@ public class Websocket {
 	             	}
 	      	    	
 	      	    	for(int a=0;a<161;a+=80){
-	      	    		
+	      	    		try{
 	      	    		String welderins = "0000";
 	      	    		String junctionins = "0000";
 	      	    		String ins = "0000";
@@ -248,8 +248,11 @@ public class Websocket {
 		                }
 		                
 						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
+	      	    	}catch(Exception e){
+	      	    		System.out.println(str);
+      	    			System.out.println(str.substring(76+a, 84+a));
 	      	    	}
-	      	    	
+	      	    	}
 	      	    	synchronized (websocketlist) {
                         
                         ArrayList<String> listarraybuf = new ArrayList<String>();

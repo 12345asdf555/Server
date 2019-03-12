@@ -104,6 +104,7 @@ public class Server implements Runnable {
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
+    public ArrayList<String> listarray4 = new ArrayList<String>();
     public HashMap<String, SocketChannel> socketlist = new HashMap<>();
     public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
     public HashMap<String, SocketChannel> clientList = new HashMap<>();
@@ -340,10 +341,12 @@ public class Server implements Runnable {
 		listarray1 = check.getId1();
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
+		listarray4 = check.getId4();
 		
 		System.out.println(listarray1);
 		System.out.println(listarray2);
 		System.out.println(listarray3);
+		System.out.println(listarray4);
 		
 		NS.mysql.listarray1 = this.listarray1;
 		NS.mysql.listarray2 = this.listarray2;
@@ -356,6 +359,7 @@ public class Server implements Runnable {
 		NS.listarray1 = this.listarray1;
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
+		NS.listarray4 = this.listarray4;
 	    
 		//开启线程每分钟更新焊口数据
 		Timer tExit2 = null; 
@@ -492,7 +496,7 @@ public class Server implements Runnable {
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("wss://localhost:5550/SerialPortDemo/ws/张三"));
+							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://localhost:5550/SerialPortDemo/ws/张三"));
 							chweb.pipeline().addLast("myWebSocketHandler", NWS);
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);
