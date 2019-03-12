@@ -26,11 +26,11 @@ public class Mysql {
 		// TODO Auto-generated method stub
 		Date time;
 		Timestamp timesql = null;
-		if (str.length() == 236 ) {
+		if (str.length() == 284 ) {
 			
 			//校验第一位是否为FA末位是否为F5
       	    String check1 =str.substring(0,2);
-      	    String check11=str.substring(234,236);
+      	    String check11=str.substring(282,284);
       	    if(check1.equals("7E") && check11.equals("7D")){
 
       	    	long welderid = Integer.valueOf(str.substring(34,38));
@@ -39,7 +39,7 @@ public class Mysql {
       	    	long itemid = Integer.valueOf(str.substring(232,234));
       	    	String weldmodel = Integer.valueOf(str.subSequence(12, 14).toString(),16).toString();
       	    	
-      	    	for(int a=0;a<129;a+=64){
+      	    	for(int a=0;a<161;a+=80){
       	    		long junctionid = Integer.valueOf(str.substring(70+a, 78+a));
       	    		BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(50+a, 54+a).toString(),16));
                     BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(54+a, 58+a).toString(),16));
@@ -81,23 +81,11 @@ public class Mysql {
 					}
 					//BigDecimal minvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
 					
-					//报警电流电压上下限
-					BigDecimal wmaxelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())+(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
-					BigDecimal wminelectricity = null;
-					if((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue()-Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue())<0){
-						wminelectricity = new BigDecimal(0);
-					}else {
-						wminelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
-					}
-					//BigDecimal wminelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
-					BigDecimal wmaxvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())+(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()));
-					BigDecimal wminvoltage = null;
-					if((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue()-Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue())<0){
-						wminvoltage = new BigDecimal(0);
-					}else {
-						wminvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()));
-					}
-					//BigDecimal wminvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+					//报警电流电压上下限wmaxvoltage
+					BigDecimal wmaxelectricity = new BigDecimal(Integer.valueOf(str.subSequence(102+a, 106+a).toString(),16).intValue());
+					BigDecimal wmaxvoltage = new BigDecimal(Integer.valueOf(str.subSequence(106+a, 110+a).toString(),16).intValue());
+					BigDecimal wminelectricity = new BigDecimal(Integer.valueOf(str.subSequence(110+a, 114+a).toString(),16).intValue());
+					BigDecimal wminvoltage = new BigDecimal(Integer.valueOf(str.subSequence(114+a, 118+a).toString(),16).intValue());
 					
 					BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(80+a, 82+a).toString(),16));
 					int fmaterialgas = Integer.parseInt(str.subSequence(82+a, 84+a).toString(),16);
@@ -106,16 +94,16 @@ public class Mysql {
 					 
       	    	}
             }
-        }else if(str.length() == 108){      //松下
+        }else if(str.length() == 124){      //松下
         	//校验第一位是否为FA末位是否为F5
       	    String check1 =str.substring(0,2);
-      	    String check11=str.substring(106,108);
+      	    String check11=str.substring(122,124);
       	    if(check1.equals("7E") && check11.equals("7D")){
 
       	    	long welderid = Integer.valueOf(str.substring(34,38));
       	    	long weldid = Integer.valueOf(str.substring(18,22));
       	    	long gatherid = Integer.valueOf(str.substring(14,18));
-      	    	long itemid = Integer.valueOf(str.substring(104,106));
+      	    	long itemid = Integer.valueOf(str.substring(120,122));
       	    	String weldmodel = Integer.valueOf(str.subSequence(12, 14).toString(),16).toString();
   	    	
   	    		long junctionid = Integer.valueOf(str.substring(70, 78));
@@ -164,24 +152,12 @@ public class Mysql {
 				}
 				//BigDecimal minvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(94+a, 96+a).toString(),16).intValue()));
 				
-				//报警电流电压上下限
-				BigDecimal wmaxelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())+(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()));
-				BigDecimal wminelectricity = null;
-				if((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue()-Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue())<0){
-					wminelectricity = new BigDecimal(0);
-				}else {
-					wminelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()));
-				}
-				//BigDecimal wminelectricity = new BigDecimal((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
-				BigDecimal wmaxvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())+(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()));
-				BigDecimal wminvoltage = null;
-				if((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue()-Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue())<0){
-					wminvoltage = new BigDecimal(0);
-				}else {
-					wminvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()));
-				}
+				//报警电流电压上下限wmaxvoltage
+				BigDecimal wmaxelectricity = new BigDecimal(Integer.valueOf(str.subSequence(102, 106).toString(),16).intValue());
+				BigDecimal wmaxvoltage = new BigDecimal(Integer.valueOf(str.subSequence(106, 110).toString(),16).intValue());
+				BigDecimal wminelectricity = new BigDecimal(Integer.valueOf(str.subSequence(110, 114).toString(),16).intValue());
+				BigDecimal wminvoltage = new BigDecimal(Integer.valueOf(str.subSequence(114, 118).toString(),16).intValue());
 				//BigDecimal wminvoltage = new BigDecimal((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
-				
 				
 				int fmaterialgas = Integer.parseInt(str.subSequence(82, 84).toString(),16);
 

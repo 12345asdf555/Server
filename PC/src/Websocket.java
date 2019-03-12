@@ -43,10 +43,10 @@ public class Websocket {
 		}
 		else
 		{	
-			if (str.length() == 236) {
+			if (str.length() == 284) {
 				//校验第一位是否为FA末位是否为F5
 	      	    String check1 =str.substring(0,2);
-	      	    String check11=str.substring(234,236);
+	      	    String check11=str.substring(282,284);
 	      	    if(check1.equals("7E") && check11.equals("7D")){
 	      	    	
 	      	    	String welderid = Integer.valueOf(str.substring(34,38)).toString();
@@ -70,7 +70,7 @@ public class Websocket {
 	             			gatherid="0"+gatherid;
 	             		}
 	             	}
-	      	    	String itemins = Integer.valueOf(str.substring(232,234)).toString();
+	      	    	String itemins = Integer.valueOf(str.substring(280,282)).toString();
 	      	    	if(itemins.length()!=4){
 	             		int lenth=4-itemins.length();
 	             		for(int i=0;i<lenth;i++){
@@ -85,7 +85,7 @@ public class Websocket {
 	             		}
 	             	}
 	      	    	
-	      	    	for(int a=0;a<129;a+=64){
+	      	    	for(int a=0;a<161;a+=80){
 	      	    		
 	      	    		String welderins = "0000";
 	      	    		String junctionins = "0000";
@@ -199,41 +199,29 @@ public class Websocket {
 		             		}
 		             	}
 						
-						//报警电流电压上下限
-						String wmaxelectricity = Integer.toString(Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue()+Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue());
+						//报警电流电压上下限wmaxvoltage
+						String wmaxelectricity = Integer.toString(Integer.valueOf(str.subSequence(102+a, 106+a).toString(),16).intValue());
 						if(wmaxelectricity.length()!=4){
 		             		int lenth=4-wmaxelectricity.length();
 		             		for(int i=0;i<lenth;i++){
 		             			wmaxelectricity="0"+wmaxelectricity;
 		             		}
 		             	}
-						String wminelectricity = null;
-						if(((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()))<0){
-							wminelectricity = "0000";
-						}else {
-							wminelectricity = Integer.toString(Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue()-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
-						}
-						//String wminelectricity = Integer.toString((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
-						if(wminelectricity.length()!=4){
-		             		int lenth=4-wminelectricity.length();
-		             		for(int i=0;i<lenth;i++){
-		             			wminelectricity="0"+wminelectricity;
-		             		}
-		             	}
-						String wmaxvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())+(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()));
+						String wmaxvoltage = Integer.toString(Integer.valueOf(str.subSequence(106+a, 110+a).toString(),16).intValue());
 						if(wmaxvoltage.length()!=4){
 		             		int lenth=4-wmaxvoltage.length();
 		             		for(int i=0;i<lenth;i++){
 		             			wmaxvoltage="0"+wmaxvoltage;
 		             		}
 		             	}
-						String wminvoltage = null;
-						if(((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()))<0){
-							wminvoltage = "0000";
-						}else{
-							wminvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98+a, 100+a).toString(),16).intValue()));
-						}
-						//String wminvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+						String wminelectricity = Integer.toString(Integer.valueOf(str.subSequence(110+a, 114+a).toString(),16).intValue());
+						if(wminelectricity.length()!=4){
+		             		int lenth=4-wminelectricity.length();
+		             		for(int i=0;i<lenth;i++){
+		             			wminelectricity="0"+wminelectricity;
+		             		}
+		             	}
+						String wminvoltage = Integer.toString(Integer.valueOf(str.subSequence(114+a, 118+a).toString(),16).intValue());
 						if(wminvoltage.length()!=4){
 		             		int lenth=4-wminvoltage.length();
 		             		for(int i=0;i<lenth;i++){
@@ -330,9 +318,9 @@ public class Websocket {
       	                strsend = "";
 	      	    	}
 	      	    }
-			}else if(str.length() == 108){  //松下
+			}else if(str.length() == 124){  //松下
 	      	    String check1 =str.substring(0,2);
-	      	    String check11=str.substring(106,108);
+	      	    String check11=str.substring(122,124);
 	      	    if(check1.equals("7E") && check11.equals("7D")){
 	      	    	
 	      	    	String welderid = Integer.valueOf(str.substring(34,38)).toString();
@@ -356,7 +344,7 @@ public class Websocket {
 	             			gatherid="0"+gatherid;
 	             		}
 	             	}
-	      	    	String itemins = Integer.valueOf(str.substring(104,106)).toString();
+	      	    	String itemins = Integer.valueOf(str.substring(120,122)).toString();
 	      	    	if(itemins.length()!=4){
 	             		int lenth=4-itemins.length();
 	             		for(int i=0;i<lenth;i++){
@@ -482,41 +470,29 @@ public class Websocket {
 	             		}
 	             	}
 					
-					//报警电流电压上下限
-					String wmaxelectricity = Integer.toString((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())+(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()));
+					//报警电流电压上下限wmaxvoltage
+					String wmaxelectricity = Integer.toString(Integer.valueOf(str.subSequence(102, 106).toString(),16).intValue());
 					if(wmaxelectricity.length()!=4){
 	             		int lenth=4-wmaxelectricity.length();
 	             		for(int i=0;i<lenth;i++){
 	             			wmaxelectricity="0"+wmaxelectricity;
 	             		}
 	             	}
-					String wminelectricity = null;
-					if(((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()))<0){
-						wminelectricity = "0000";
-					}else {
-						wminelectricity = Integer.toString((Integer.valueOf(str.subSequence(84, 88).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96, 98).toString(),16).intValue()));
-					}
-					//String wminelectricity = Integer.toString((Integer.valueOf(str.subSequence(84+a, 88+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
-					if(wminelectricity.length()!=4){
-	             		int lenth=4-wminelectricity.length();
-	             		for(int i=0;i<lenth;i++){
-	             			wminelectricity="0"+wminelectricity;
-	             		}
-	             	}
-					String wmaxvoltage = Integer.toString((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())+(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()));
+					String wmaxvoltage = Integer.toString(Integer.valueOf(str.subSequence(106, 110).toString(),16).intValue());
 					if(wmaxvoltage.length()!=4){
 	             		int lenth=4-wmaxvoltage.length();
 	             		for(int i=0;i<lenth;i++){
 	             			wmaxvoltage="0"+wmaxvoltage;
 	             		}
 	             	}
-					String wminvoltage = null;
-					if(((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()))<0){
-						wminvoltage = "0000";
-					}else {
-						wminvoltage = Integer.toString((Integer.valueOf(str.subSequence(88, 92).toString(),16).intValue())-(Integer.valueOf(str.subSequence(98, 100).toString(),16).intValue()));
-					}
-					//String wminvoltage = Integer.toString((Integer.valueOf(str.subSequence(88+a, 92+a).toString(),16).intValue())-(Integer.valueOf(str.subSequence(96+a, 98+a).toString(),16).intValue()));
+					String wminelectricity = Integer.toString(Integer.valueOf(str.subSequence(110, 114).toString(),16).intValue());
+					if(wminelectricity.length()!=4){
+	             		int lenth=4-wminelectricity.length();
+	             		for(int i=0;i<lenth;i++){
+	             			wminelectricity="0"+wminelectricity;
+	             		}
+	             	}
+					String wminvoltage = Integer.toString(Integer.valueOf(str.subSequence(114, 118).toString(),16).intValue());
 					if(wminvoltage.length()!=4){
 	             		int lenth=4-wminvoltage.length();
 	             		for(int i=0;i<lenth;i++){
