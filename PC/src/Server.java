@@ -416,7 +416,7 @@ public class Server implements Runnable {
         
         //发送短信
         Calendar calendar1 = Calendar.getInstance();
-        calendar1.add(Calendar.DAY_OF_MONTH, +1);    // 控制日
+        //calendar1.add(Calendar.DAY_OF_MONTH, +1);    // 控制日
         calendar1.set(Calendar.HOUR_OF_DAY, 8); // 控制时
         calendar1.set(Calendar.MINUTE, 0);    // 控制分
         calendar1.set(Calendar.SECOND, 0);    // 控制秒
@@ -491,7 +491,7 @@ public class Server implements Runnable {
 						String  un  =  "CN0753433";
 			            String  pw  =  "WYLbBdG13w6714";
 			            String  phone  =  textphone;
-			            String  content  =  "【中核五公司】 上周"+jsonresult.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult.getString("WELDERTOTAL")+"人 ,平均工作时长："+jsonresult.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
+			            String  content  =  "【中核五公司(测试)】 上周"+jsonresult.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult.getString("WELDERTOTAL")+"人 ,平均工作时长："+jsonresult.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
 						String  postJsonTpl  =  "\"account\":\""+un+"\",\"password\":\""+pw+"\",\"phone\":\""+phone+"\",\"report\":\"false\",\"msg\":\""+content+"\"";
 			            String  jsonBody  =  "{" + String.format(postJsonTpl,  un,  pw,  phone,  content) + "}";
 						
@@ -593,7 +593,7 @@ public class Server implements Runnable {
 						String  un1  =  "CN0753433";
 			            String  pw1  =  "WYLbBdG13w6714";
 			            String  phone1  =  textphone;
-			            String  content1  =  "【中核五公司】 "+data11+""+jsonresult1.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult1.getString("WELDERTOTAL")+"人 ,平均工作时长："+jsonresult1.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult1.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult1.getString("BACKWELDER")+"";
+			            String  content1  =  "【中核五公司(测试)】 "+data11+""+jsonresult1.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult1.getString("WELDERTOTAL")+"人 ,平均工作时长："+jsonresult1.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult1.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult1.getString("BACKWELDER")+"";
 						String  postJsonTpl1  =  "\"account\":\""+un1+"\",\"password\":\""+pw1+"\",\"phone\":\""+phone1+"\",\"report\":\"false\",\"msg\":\""+content1+"\"";
 			            String  jsonBody1  =  "{" + String.format(postJsonTpl1,  un1,  pw1,  phone1,  content1) + "}";
 						
@@ -697,7 +697,7 @@ public class Server implements Runnable {
 						String  un  =  "CN0753433";
 			            String  pw  =  "WYLbBdG13w6714";
 			            String  phone  =  textphone;
-			            String  content  =  "【中核五公司】 "+data1+""+jsonresult.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult.getString("WELDERTOTAL")+"人 ,平均工作时长："+jsonresult.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
+			            String  content  =  "【中核五公司(测试)】 "+data1+""+jsonresult.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult.getString("WELDERTOTAL")+"人 ,平均工作时长："+jsonresult.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
 						String  postJsonTpl  =  "\"account\":\""+un+"\",\"password\":\""+pw+"\",\"phone\":\""+phone+"\",\"report\":\"false\",\"msg\":\""+content+"\"";
 			            String  jsonBody  =  "{" + String.format(postJsonTpl,  un,  pw,  phone,  content) + "}";
 						
