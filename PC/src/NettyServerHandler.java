@@ -201,7 +201,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 }
 	        	}
                 
-	        } else if(str.equals("SS")){  //江南任务派发 任务号、焊工、焊机、状态
+	        } else if(str.equals("SS")){  //webservice获取实时数据
 	        	
 	        	synchronized (listarray4) {
 	        	ArrayList<String> listarraybuf = new ArrayList<String>();
