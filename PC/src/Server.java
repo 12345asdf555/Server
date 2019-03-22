@@ -335,7 +335,7 @@ public class Server implements Runnable {
         }, time , 1000*60*60);
 	    
 	    //获取最新焊口和焊机统计时间
-	    check = new DB_Connectioncode(stmt);
+	    check = new DB_Connectioncode(stmt,conn,connet);
 		NS.websocket.dbdata = this.dbdata;
   		
 		listarray1 = check.getId1();
@@ -386,7 +386,7 @@ public class Server implements Runnable {
 		                }  
 		        	}
 	            	
-	        		DB_Connectioncode check = new DB_Connectioncode(stmt);
+	        		DB_Connectioncode check = new DB_Connectioncode(stmt,conn,connet);
 	        		
 	        		listarray1 = check.getId1();
 	        		listarray2 = check.getId2();
@@ -411,7 +411,7 @@ public class Server implements Runnable {
         //工作线程
         new Thread(socketstart).start();
 		new Thread(websocketstart).start();
-		new Thread(sockettran).start();
+		//new Thread(sockettran).start();
     	//new Email().run();
 		//new UpReport();
 
@@ -508,7 +508,7 @@ public class Server implements Runnable {
 	            		
 	            	});
 	            
-	            Channel ch = serverBootstrap.bind(5556).sync().channel();
+	            Channel ch = serverBootstrap.bind(5550).sync().channel();
 	            ch.closeFuture().sync();
 	            
 	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();

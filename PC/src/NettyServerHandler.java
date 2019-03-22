@@ -85,7 +85,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			// TODO Auto-generated method stub
 		
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
-				/*synchronized (listarray4) {
+				synchronized (listarray4) {
 					long gatherid = Integer.valueOf(str.substring(16, 20));
 					for(int i=0;i<listarray4.size();i+=14){
 						if(gatherid == Integer.valueOf(listarray4.get(i))){
@@ -136,7 +136,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		                    listarray4.set(i+3, status2);
 						}
 					}
-				}*/
+				}
 				synchronized (websocketlist) {
 					mysql.Mysqlbase(str);
 			        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
@@ -204,6 +204,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        } else if(str.equals("SS")){  //webservice获取实时数据
 	        	
 	        	synchronized (listarray4) {
+	        	synchronized (socketlist) {
 	        	ArrayList<String> listarraybuf = new ArrayList<String>();
 	        	boolean ifdo = false;
 	        	
@@ -257,6 +258,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                     	socketlist.remove(listarraybuf.get(i));
                 	}
                 }
+	        	}
 	        	}
                 
 	        } else{    //处理焊机下发和上传
