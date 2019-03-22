@@ -442,13 +442,11 @@ public class Server implements Runnable {
 		        calendar22.set(Calendar.MINUTE, 59);    // 控制分
 		        calendar22.set(Calendar.SECOND, 59);    // 控制秒
 		        Date time2 = calendar22.getTime(); 
-		        String sqltime2 = DateTools.format("yyyy-MM-dd hh:mm:ss", time2);
+		        String sqltime2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time2);
 				
-				String result = "";
 				try{
 					Date time3 = new Date();
 					time3 = new Date(time3.getTime() - 3600*24*1000);
-					String data1 = DateTools.format("yyyy年MM月dd日", time3);
 				
 					//请求的webservice的url
 					URL url = new URL("http://smssh1.253.com/msg/send/json");
@@ -481,16 +479,21 @@ public class Server implements Runnable {
 					}
 			        
 			        String sql = "SELECT SUM(a)/8/3600,fgather_no FROM "
-			        		+ "(SELECT SUM(tb_work.fworktime) a,tb_work.fgather_no  FROM tb_work WHERE (tb_work.fgather_no = '0001' OR tb_work.fgather_no = '0002') AND tb_work.fUploadDataTime BETWEEN '2019-03-22 07:00:00' AND '2019-03-22 18:00:00' GROUP BY tb_work.fgather_no "
+			        		+ "(SELECT SUM(tb_work.fworktime) a,tb_work.fgather_no  FROM tb_work WHERE (tb_work.fgather_no = '0001' OR tb_work.fgather_no = '0002') AND tb_work.fUploadDataTime BETWEEN '"+sqltime1+"' AND '"+sqltime2+"' GROUP BY tb_work.fgather_no "
 			        		+ "UNION "
-			        		+ "SELECT SUM(tb_standby.fstandbytime) a,tb_standby.fgather_no  FROM tb_standby WHERE (tb_standby.fgather_no = '0001' OR tb_standby.fgather_no = '0002')  AND tb_standby.fUploadDataTime BETWEEN '2019-03-22 07:00:00' AND '2019-03-22 18:00:00' GROUP BY tb_standby.fgather_no) b "
+			        		+ "SELECT SUM(tb_standby.fstandbytime) a,tb_standby.fgather_no  FROM tb_standby WHERE (tb_standby.fgather_no = '0001' OR tb_standby.fgather_no = '0002')  AND tb_standby.fUploadDataTime BETWEEN '"+sqltime1+"' AND '"+sqltime2+"' GROUP BY tb_standby.fgather_no) b "
 			        		+ "WHERE 1=1 GROUP BY fgather_no";
-			        
+			        ResultSet rs = stmt.executeQuery(sql);
+			        ArrayList<String> listarray5 = new ArrayList<String>();
+			        while(rs.next()){
+			        	listarray5.add(rs.getString("SUM(a)/8/3600"));
+			        	listarray5.add(rs.getString("fgather_no"));
+			        }
 					
 					String  un  =  "CN0753433";
 		            String  pw  =  "WYLbBdG13w6714";
 		            String  phone  =  "13122316882";
-		            String  content  =  "【腾焊智能】 ";
+		            String  content  =  "腾焊";
 		            String  postJsonTpl  =  "\"account\":\""+un+"\",\"password\":\""+pw+"\",\"phone\":\""+phone+"\",\"report\":\"false\",\"msg\":\""+content+"\"";
 		            String  jsonBody  =  "{" + String.format(postJsonTpl,  un,  pw,  phone,  content) + "}";
 					
