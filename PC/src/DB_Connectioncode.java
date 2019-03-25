@@ -75,7 +75,7 @@ public class DB_Connectioncode {
         }*/
 
     	
-       //查焊机
+         //查焊机、采集模块编号、id、组织机构
          inSql = "select tb_welding_machine.fid,tb_welding_machine.fequipment_no,tb_gather.fgather_no,tb_welding_machine.finsframework_id from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
          
          try {
@@ -104,7 +104,7 @@ public class DB_Connectioncode {
          
          
          
-       //查最大最小电流
+         //查最大最小电流
          inSql = "select fwelded_junction_no,fmax_electricity, fmin_electricity, fmax_valtage, fmin_valtage from tb_welded_junction ";
 
          try {
@@ -170,7 +170,7 @@ public class DB_Connectioncode {
 
          } 
          
-         //查字典超时待机、超标
+         //查字典超时待机、超标对应时间
          String dic_str = "SELECT fvaluename FROM tb_dictionary WHERE fvalue='82' OR fvalue='83'";
 			try {
 				ResultSet dictionary =stmt.executeQuery(dic_str);
