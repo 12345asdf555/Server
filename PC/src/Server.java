@@ -222,6 +222,7 @@ public class Server implements Runnable {
                     conn = DriverManager.getConnection(connet);
                     stmt = conn.createStatement();
                     	
+                    //获取上次统计时间，为空插入赋默认值
                 	Date date = new Date();
                     String nowtimefor = DateTools.format("yyyy-MM-dd",date);
                     String nowtime = DateTools.format("HH:mm:ss",date);
@@ -269,6 +270,7 @@ public class Server implements Runnable {
                 		timewarn = "2000-01-01 01:01:01";
                 	}
                 	
+                	//统计四张状态表
                     String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
                     		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime,tb_standby.fwelder_no,tb_standby.fjunction_no,tb_standby.fweld_no,tb_standby.fchannel,tb_standby.fmax_electricity,tb_standby.fmin_electricity,tb_standby.fmax_voltage,tb_standby.fmin_voltage,tb_standby.fwelder_itemid,tb_standby.fjunction_itemid,tb_standby.fmachine_itemid,tb_standby.fwirefeedrate,tb_standby.fmachinemodel,tb_standby.fwirediameter,tb_standby.fmaterialgas,tb_standby.fstatus) SELECT "
                     		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
@@ -283,7 +285,6 @@ public class Server implements Runnable {
                     		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + timework + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";*/
                     
-                    //大连
                     String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
                     		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas,tb_work.fstatus) SELECT tb_live_data.fwelder_id,"
                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
@@ -413,7 +414,7 @@ public class Server implements Runnable {
         
         
         //发送短信
-        Calendar calendar1 = Calendar.getInstance();
+        /*Calendar calendar1 = Calendar.getInstance();
         //calendar1.add(Calendar.DAY_OF_MONTH, +1);    // 控制日
         calendar1.set(Calendar.HOUR_OF_DAY, 8); // 控制时
         calendar1.set(Calendar.MINUTE, 0);    // 控制分
@@ -536,7 +537,7 @@ public class Server implements Runnable {
 				}
 			}
 			
-        }, time1 , 1000*60*60*24);
+        }, time1 , 1000*60*60*24);*/
         
         //工作线程
         new Thread(socketstart).start();
@@ -547,7 +548,7 @@ public class Server implements Runnable {
 
     }  
     
-
+    //开启5551端口获取焊机数据
     public Runnable socketstart = new Runnable() {
 
 		@Override
@@ -594,7 +595,8 @@ public class Server implements Runnable {
 	        }  
 		}
     };
-    
+
+    //开启5443端口处理网页实时数据
     public Runnable websocketstart = new Runnable(){
 		@Override
 		public void run() {
@@ -653,6 +655,7 @@ public class Server implements Runnable {
 		}
     };
     
+    //多层级转发
     public Runnable sockettran = new Runnable() {
 
 		@Override
