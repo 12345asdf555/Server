@@ -208,7 +208,7 @@ public class Server implements Runnable {
             public void run() {
   		
             	try {  
-
+            		
                     Class.forName("com.mysql.jdbc.Driver");  
                     conn = DriverManager.getConnection(connet);
                     stmt= conn.createStatement();
@@ -218,6 +218,7 @@ public class Server implements Runnable {
                     conn = DriverManager.getConnection(connet);
                     stmt = conn.createStatement();
                     	
+                    //获取四张状态表初试时间，若为空赋默认值
                 	Date date = new Date();
                     String nowtimefor = DateTools.format("yyyy-MM-dd",date);
                     String nowtime = DateTools.format("HH:mm:ss",date);
@@ -265,6 +266,7 @@ public class Server implements Runnable {
                 		timewarn = "2000-01-01 01:01:01";
                 	}
                 	
+                	//更新四张状态表
                     String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
                     		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime,tb_standby.fwelder_no,tb_standby.fjunction_no,tb_standby.fweld_no,tb_standby.fchannel,tb_standby.fmax_electricity,tb_standby.fmin_electricity,tb_standby.fmax_voltage,tb_standby.fmin_voltage,tb_standby.fwelder_itemid,tb_standby.fjunction_itemid,tb_standby.fmachine_itemid,tb_standby.fwirefeedrate,tb_standby.fmachinemodel,tb_standby.fwirediameter,tb_standby.fmaterialgas,tb_standby.fwmax_electricity,tb_standby.fwmin_electricity,tb_standby.fwmax_voltage,tb_standby.fwmin_voltage,tb_standby.fstatus) SELECT "
                     		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
@@ -393,7 +395,7 @@ public class Server implements Runnable {
 
     }  
     
-
+    //开启5551端口获取焊机数据
     public Runnable socketstart = new Runnable() {
 
 		@Override
@@ -441,6 +443,7 @@ public class Server implements Runnable {
 		}
     };
     
+    //开启5550端口处理网页实时数据
     public Runnable websocketstart = new Runnable(){
 		@Override
 		public void run() {
@@ -499,6 +502,7 @@ public class Server implements Runnable {
 		}
     };
     
+    //多层级转发
     public Runnable sockettran = new Runnable() {
 
 		@Override
