@@ -86,6 +86,21 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
 				synchronized (listarray4) {
+					for(int i=0;i<listarray4.size();i+=14){
+						listarray4.set(i+2, "0");
+	                    listarray4.set(i+3, "0");
+	                    listarray4.set(i+4, "0");
+	                    listarray4.set(i+5, "0");
+	                    listarray4.set(i+6, "0");
+	                    listarray4.set(i+7, "0");
+	                    listarray4.set(i+8, "0");
+	                    listarray4.set(i+9, "0");
+	                    listarray4.set(i+10, "0");
+	                    listarray4.set(i+11, "0");
+	                    listarray4.set(i+12, "0");
+	                    listarray4.set(i+13, "0");
+					}
+					
 					long gatherid = Integer.valueOf(str.substring(16, 20));
 					for(int i=0;i<listarray4.size();i+=14){
 						if(gatherid == Integer.valueOf(listarray4.get(i))){
@@ -133,7 +148,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		                    listarray4.set(i+10, electricity2);
 		                    listarray4.set(i+11, voltage2);
 		                    listarray4.set(i+12, strdate2);
-		                    listarray4.set(i+3, status2);
+		                    listarray4.set(i+13, status2);
 						}
 					}
 				}
@@ -213,8 +228,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 	try{
                     	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
                     	
-                    	System.out.println(entry);
-                    	
                     	socketfail = entry.getKey();
 
         				SocketChannel socketcon = entry.getValue();
@@ -247,7 +260,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                     	socketcon.writeAndFlush(data).sync();
                     	
                 	}catch (Exception e) {
-                		e.printStackTrace();
                 		listarraybuf.add(socketfail);
                 		ifdo = true;
    					 }
