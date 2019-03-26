@@ -131,6 +131,7 @@ public class Server implements Runnable {
 	private int standby_over_value;
 	private String textphone;
 	private String textip;
+	private String ins;
     
     public String getconnet(){
     	return connet;
@@ -162,6 +163,9 @@ public class Server implements Runnable {
 		    		writetime++;
 		    	}else if(writetime==3){
 		    		textip=line;
+		    		writetime++;
+		    	}else if(writetime==4){
+		    		ins=line;
 		    		writetime=0;
 		    	}
             }  
@@ -421,7 +425,7 @@ public class Server implements Runnable {
         
         //发送短信
         Calendar calendar1 = Calendar.getInstance();
-        //calendar1.add(Calendar.DAY_OF_MONTH, +1);    // 控制日
+        calendar1.add(Calendar.DAY_OF_MONTH, +1);    // 控制日
         calendar1.set(Calendar.HOUR_OF_DAY, 8); // 控制时
         calendar1.set(Calendar.MINUTE, 0);    // 控制分
         calendar1.set(Calendar.SECOND, 0);    // 控制秒
@@ -432,6 +436,37 @@ public class Server implements Runnable {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
+				
+				//读取IPconfig配置文件获取ip地址和数据库配置
+				try {
+					FileInputStream in = new FileInputStream("IPconfig.txt");  
+		            InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
+		            BufferedReader bufReader = new BufferedReader(inReader);  
+		            String line = null; 
+		            int writetime=0;
+					
+				    while((line = bufReader.readLine()) != null){ 
+				    	if(writetime==0){
+			                writetime++;
+				    	}else if(writetime==1){
+				    		writetime++;
+				    	}else if(writetime==2){
+				    		textphone=line;
+				    		writetime++;
+				    	}else if(writetime==3){
+				    		writetime++;
+				    	}else if(writetime==4){
+				    		writetime=0;
+				    	}
+		            }  
+
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				Calendar calendar1 = Calendar.getInstance();
 				int date = calendar1.get(Calendar.DAY_OF_WEEK) - 1;
@@ -467,7 +502,7 @@ public class Server implements Runnable {
 			            //类名+方法名
 					  	String obj1 = "{\"CLASSNAME\":\"liveDataWebServiceImpl\",\"METHOD\":\"getSMSMessage\"}";
 						//参数：组织机构id，起始时间，结束时间
-			            String obj2 = "{\"PARENT\":\"17\",\"STARTTIME\":\""+sqltime1+"\",\"ENDTIME\":\""+sqltime2+"\"}";
+			            String obj2 = "{\"PARENT\":\""+ins+"\",\"STARTTIME\":\""+sqltime1+"\",\"ENDTIME\":\""+sqltime2+"\"}";
 					  	Object[] blocobj = client.invoke(new QName("http://webservice.ssmcxf.sshome.com/", "enterTheWS"), new Object[]{obj1,obj2});
 						result = blocobj[0].toString();
 						
@@ -497,7 +532,7 @@ public class Server implements Runnable {
 						String  un  =  "CN0753433";
 			            String  pw  =  "WYLbBdG13w6714";
 			            String  phone  =  textphone;
-			            String  content  =  "【中核五公司(测试)】 上周"+jsonresult.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult.getString("WELDERTOTAL")+"人 ,平均工作时长："+jsonresult.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
+			            String  content  =  "【中核五公司】 上周"+jsonresult.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult.getString("WELDERTOTAL")+"人 ,在线焊机："+jsonresult.getString("MACHINETOTAL")+"台 ,平均工作时长："+jsonresult.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
 						String  postJsonTpl  =  "\"account\":\""+un+"\",\"password\":\""+pw+"\",\"phone\":\""+phone+"\",\"report\":\"false\",\"msg\":\""+content+"\"";
 			            String  jsonBody  =  "{" + String.format(postJsonTpl,  un,  pw,  phone,  content) + "}";
 						
@@ -569,7 +604,7 @@ public class Server implements Runnable {
 			            //类名+方法名
 					  	String obj1 = "{\"CLASSNAME\":\"liveDataWebServiceImpl\",\"METHOD\":\"getSMSMessage\"}";
 						//参数：组织机构id，起始时间，结束时间
-			            String obj2 = "{\"PARENT\":\"17\",\"STARTTIME\":\""+sqltime11+"\",\"ENDTIME\":\""+sqltime21+"\"}";
+			            String obj2 = "{\"PARENT\":\""+ins+"\",\"STARTTIME\":\""+sqltime1+"\",\"ENDTIME\":\""+sqltime2+"\"}";
 					  	Object[] blocobj = client.invoke(new QName("http://webservice.ssmcxf.sshome.com/", "enterTheWS"), new Object[]{obj1,obj2});
 						result1 = blocobj[0].toString();
 						
@@ -599,7 +634,7 @@ public class Server implements Runnable {
 						String  un1  =  "CN0753433";
 			            String  pw1  =  "WYLbBdG13w6714";
 			            String  phone1  =  textphone;
-			            String  content1  =  "【中核五公司(测试)】 "+data11+""+jsonresult1.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult1.getString("WELDERTOTAL")+"人 ,平均工作时长："+jsonresult1.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult1.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult1.getString("BACKWELDER")+"";
+			            String  content1  =  "【中核五公司】 "+data11+""+jsonresult1.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult1.getString("WELDERTOTAL")+"人 ,在线焊机："+jsonresult1.getString("MACHINETOTAL")+"台 ,平均工作时长："+jsonresult1.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult1.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult1.getString("BACKWELDER")+"";
 						String  postJsonTpl1  =  "\"account\":\""+un1+"\",\"password\":\""+pw1+"\",\"phone\":\""+phone1+"\",\"report\":\"false\",\"msg\":\""+content1+"\"";
 			            String  jsonBody1  =  "{" + String.format(postJsonTpl1,  un1,  pw1,  phone1,  content1) + "}";
 						
@@ -662,7 +697,6 @@ public class Server implements Runnable {
 					String result = "";
 					try{
 						JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
-						System.out.println(dcf);
 						Client client = dcf.createClient(textip+"/Company_Service/companyWebService?wsdl");
 						//Client client = dcf.createClient("https://210.13.75.252/Company_Service/companyWebService?wsdl");
 						AuthorityParameter param = new AuthorityParameter("userName", "admin", "password", "123456");
@@ -674,7 +708,7 @@ public class Server implements Runnable {
 			            //类名+方法名
 					  	String obj1 = "{\"CLASSNAME\":\"liveDataWebServiceImpl\",\"METHOD\":\"getSMSMessage\"}";
 						//参数：组织机构id，起始时间，结束时间
-			            String obj2 = "{\"PARENT\":\"17\",\"STARTTIME\":\""+sqltime1+"\",\"ENDTIME\":\""+sqltime2+"\"}";
+			            String obj2 = "{\"PARENT\":\""+ins+"\",\"STARTTIME\":\""+sqltime1+"\",\"ENDTIME\":\""+sqltime2+"\"}";
 					  	Object[] blocobj = client.invoke(new QName("http://webservice.ssmcxf.sshome.com/", "enterTheWS"), new Object[]{obj1,obj2});
 						result = blocobj[0].toString();
 						
@@ -704,7 +738,7 @@ public class Server implements Runnable {
 						String  un  =  "CN0753433";
 			            String  pw  =  "WYLbBdG13w6714";
 			            String  phone  =  textphone;
-			            String  content  =  "【中核五公司(测试)】 "+data1+""+jsonresult.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult.getString("WELDERTOTAL")+"人 ,平均工作时长："+jsonresult.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
+			            String  content  =  "【中核五公司】 "+data1+""+jsonresult.getString("ITEMNAME")+"焊接效率：在线人数："+jsonresult.getString("WELDERTOTAL")+"人 ,在线焊机："+jsonresult.getString("MACHINETOTAL")+"台 ,平均工作时长："+jsonresult.getString("AVGWORKTIME")+"h ,工作时长前5焊工："+jsonresult.getString("FRONTWELDER")+",工作时长后5焊工："+jsonresult.getString("BACKWELDER")+"";
 						String  postJsonTpl  =  "\"account\":\""+un+"\",\"password\":\""+pw+"\",\"phone\":\""+phone+"\",\"report\":\"false\",\"msg\":\""+content+"\"";
 			            String  jsonBody  =  "{" + String.format(postJsonTpl,  un,  pw,  phone,  content) + "}";
 						
