@@ -604,7 +604,7 @@ public class Server implements Runnable {
 			            //类名+方法名
 					  	String obj1 = "{\"CLASSNAME\":\"liveDataWebServiceImpl\",\"METHOD\":\"getSMSMessage\"}";
 						//参数：组织机构id，起始时间，结束时间
-			            String obj2 = "{\"PARENT\":\""+ins+"\",\"STARTTIME\":\""+sqltime1+"\",\"ENDTIME\":\""+sqltime2+"\"}";
+			            String obj2 = "{\"PARENT\":\""+ins+"\",\"STARTTIME\":\""+sqltime11+"\",\"ENDTIME\":\""+sqltime21+"\"}";
 					  	Object[] blocobj = client.invoke(new QName("http://webservice.ssmcxf.sshome.com/", "enterTheWS"), new Object[]{obj1,obj2});
 						result1 = blocobj[0].toString();
 						
