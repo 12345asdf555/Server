@@ -596,7 +596,7 @@ public class Server implements Runnable {
 		}
     };
 
-    //开启5443端口处理网页实时数据
+    //开启5550端口处理网页实时数据
     public Runnable websocketstart = new Runnable(){
 		@Override
 		public void run() {

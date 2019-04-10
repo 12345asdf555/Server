@@ -72,6 +72,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		public byte[] req;
 		private String socketfail;
 		private String websocketfail;
+		private String data;
 
 		public Workspace(String str) {
 			// TODO Auto-generated constructor stub
@@ -86,21 +87,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
 				synchronized (listarray4) {
-					for(int i=0;i<listarray4.size();i+=14){
-						listarray4.set(i+2, "0");
-	                    listarray4.set(i+3, "0");
-	                    listarray4.set(i+4, "0");
-	                    listarray4.set(i+5, "0");
-	                    listarray4.set(i+6, "0");
-	                    listarray4.set(i+7, "0");
-	                    listarray4.set(i+8, "0");
-	                    listarray4.set(i+9, "0");
-	                    listarray4.set(i+10, "0");
-	                    listarray4.set(i+11, "0");
-	                    listarray4.set(i+12, "0");
-	                    listarray4.set(i+13, "0");
-					}
-					
 					long gatherid = Integer.valueOf(str.substring(16, 20));
 					for(int i=0;i<listarray4.size();i+=14){
 						if(gatherid == Integer.valueOf(listarray4.get(i))){
@@ -255,7 +241,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
         					ja.add(jo);
         				}
         				
-        				String data = ja.toString();
+        				data = ja.toString();
         				
                     	socketcon.writeAndFlush(data).sync();
                     	
