@@ -519,11 +519,11 @@ public class DB_Connectionmysql {
                         		work = 1;
                         	}
                             
-                            count1 = 0;
+                            count1 = 1;
                             inSql1 = "";
                             
                         } catch (SQLException e) {
-                        	count1 = 0;
+                        	count1 = 1;
                             inSql1 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -598,11 +598,11 @@ public class DB_Connectionmysql {
                         		work = 1;
                         	}
                             
-                            count2 = 0;
+                            count2 = 1;
                             inSql2 = "";
                             
                         } catch (SQLException e) {
-                        	count2 = 0;
+                        	count2 = 1;
                             inSql2 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -677,11 +677,11 @@ public class DB_Connectionmysql {
                         		work = 1;
                         	}
                             
-                            count3 = 0;
+                            count3 = 1;
                             inSql3 = "";
                             
                         } catch (SQLException e) {
-                        	count3 = 0;
+                        	count3 = 1;
                             inSql3 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
@@ -756,11 +756,11 @@ public class DB_Connectionmysql {
                         		work = 1;
                         	}
                             
-                            count4 = 0;
+                            count4 = 1;
                             inSql4 = "";
                             
                         } catch (SQLException e) {
-                        	count4 = 0;
+                        	count4 = 1;
                             inSql4 = "";
                             System.out.println("Broken insert");
                             e.printStackTrace();
