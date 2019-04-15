@@ -77,32 +77,33 @@ public class DB_Connectioncode {
 
         }*/
 
-    	try {
-			if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
-			{
-				try {
-					Class.forName("com.mysql.jdbc.Driver");
-					conn = DriverManager.getConnection(connet);
-					stmt = conn.createStatement();
-			    } catch (ClassNotFoundException e) {  
-			        System.out.println("Broken driver");
-			        e.printStackTrace();
-			        return;
-			    } catch (SQLException e) {
-			        System.out.println("Broken conn");
-			        e.printStackTrace();
-			        return;
-			    }  
-			}
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
     	
     	 //查焊工
         inSql = "SELECT fid,Fowner,fwelder_no FROM `tb_welder`";
 
         try {
+        	
+        	try {
+    			if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+    			{
+    				try {
+    					Class.forName("com.mysql.jdbc.Driver");
+    					conn = DriverManager.getConnection(connet);
+    					stmt = conn.createStatement();
+    			    } catch (ClassNotFoundException e) {  
+    			        System.out.println("Broken driver");
+    			        e.printStackTrace();
+    			        return;
+    			    } catch (SQLException e) {
+    			        System.out.println("Broken conn");
+    			        e.printStackTrace();
+    			        return;
+    			    }  
+    			}
+    		} catch (SQLException e1) {
+    			// TODO Auto-generated catch block
+    			e1.printStackTrace();
+    		}
         	
         	ResultSet rs =stmt.executeQuery(inSql);
             
@@ -139,6 +140,28 @@ public class DB_Connectioncode {
          
          try {
 
+        	 try {
+     			if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+     			{
+     				try {
+     					Class.forName("com.mysql.jdbc.Driver");
+     					conn = DriverManager.getConnection(connet);
+     					stmt = conn.createStatement();
+     			    } catch (ClassNotFoundException e) {  
+     			        System.out.println("Broken driver");
+     			        e.printStackTrace();
+     			        return;
+     			    } catch (SQLException e) {
+     			        System.out.println("Broken conn");
+     			        e.printStackTrace();
+     			        return;
+     			    }  
+     			}
+     		} catch (SQLException e1) {
+     			// TODO Auto-generated catch block
+     			e1.printStackTrace();
+     		}
+        	 
          	ResultSet rs =stmt.executeQuery(inSql);
              
              while (rs.next()) {
@@ -168,6 +191,28 @@ public class DB_Connectioncode {
 
          try {
 
+        	 try {
+     			if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+     			{
+     				try {
+     					Class.forName("com.mysql.jdbc.Driver");
+     					conn = DriverManager.getConnection(connet);
+     					stmt = conn.createStatement();
+     			    } catch (ClassNotFoundException e) {  
+     			        System.out.println("Broken driver");
+     			        e.printStackTrace();
+     			        return;
+     			    } catch (SQLException e) {
+     			        System.out.println("Broken conn");
+     			        e.printStackTrace();
+     			        return;
+     			    }  
+     			}
+     		} catch (SQLException e1) {
+     			// TODO Auto-generated catch block
+     			e1.printStackTrace();
+     		}
+        	 
          	 ResultSet rs =stmt.executeQuery(inSql);
              
              while (rs.next()) {
