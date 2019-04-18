@@ -247,6 +247,11 @@ public class Websocket {
 		                	welderins = "0000";
 		                }
 		                
+		                //南通去除报警
+		                /*if(status.equals("98") || status.equals("99")){
+		                	status = "03";
+		                }*/
+		                
 						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
 	      	    	}catch(Exception e){
 	      	    		System.out.println(str);
