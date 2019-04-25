@@ -123,18 +123,56 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		      	    		String status1 = Integer.toString(Integer.parseInt(str.subSequence(84+80, 86+80).toString(),16));
 		      	    		String status2 = Integer.toString(Integer.parseInt(str.subSequence(84+80+80, 86+80+80).toString(),16));
 							
+		      	    		String setelectricity = Integer.toString(Integer.valueOf(str.subSequence(68, 72).toString(),16));
+		                    String setvoltage = Integer.toString(Integer.valueOf(str.subSequence(72, 76).toString(),16)/10);
+		                    String setelectricity1 = Integer.toString(Integer.valueOf(str.subSequence(68+80, 72+80).toString(),16));
+		                    String setvoltage1 = Integer.toString(Integer.valueOf(str.subSequence(72+80, 76+80).toString(),16)/10);
+		                    String setelectricity2 = Integer.toString(Integer.valueOf(str.subSequence(68+80+80, 72+80+80).toString(),16));
+		                    String setvoltage2 = Integer.toString(Integer.valueOf(str.subSequence(72+80+80, 76+80+80).toString(),16)/10);
+		      	    		
+		                    String warn = "0";
+		                    if(status.equals("0") || status.equals("3") || status.equals("5") || status.equals("7")){
+		                    	warn = "0";
+		                    }else{
+		                    	warn = Integer.toString(Integer.parseInt(str.subSequence(84, 86).toString(),16));
+		                    	status = "0";
+		                    }
+		                    String warn1 = "0";
+		                    if(status1.equals("0") || status1.equals("3") || status1.equals("5") || status1.equals("7")){
+		                    	warn1 = "0";
+		                    }else{
+		                    	warn1 = Integer.toString(Integer.parseInt(str.subSequence(84+80, 86+80).toString(),16));
+		                    	status1 = "0";
+		                    }
+		                    String warn2 = "0";
+		                    if(status2.equals("0") || status2.equals("3") || status2.equals("5") || status2.equals("7")){
+		                    	warn2 = "0";
+		                    }else{
+		                    	warn2 = Integer.toString(Integer.parseInt(str.subSequence(84+80+80, 86+80+80).toString(),16));
+		                    	status2 = "0";
+		                    }
+		                    
 		                    listarray4.set(i+2, electricity);
 		                    listarray4.set(i+3, voltage);
 		                    listarray4.set(i+4, strdate);
 		                    listarray4.set(i+5, status);
-		                    listarray4.set(i+6, electricity1);
-		                    listarray4.set(i+7, voltage1);
-		                    listarray4.set(i+8, strdate1);
-		                    listarray4.set(i+9, status1);
-		                    listarray4.set(i+10, electricity2);
-		                    listarray4.set(i+11, voltage2);
-		                    listarray4.set(i+12, strdate2);
-		                    listarray4.set(i+13, status2);
+		                    listarray4.set(i+6, setelectricity);
+		                    listarray4.set(i+7, setvoltage);
+		                    listarray4.set(i+8, warn);
+		                    listarray4.set(i+9, electricity1);
+		                    listarray4.set(i+10, voltage1);
+		                    listarray4.set(i+11, strdate1);
+		                    listarray4.set(i+12, status1);
+		                    listarray4.set(i+13, setelectricity1);
+		                    listarray4.set(i+14, setvoltage1);
+		                    listarray4.set(i+15, warn1);
+		                    listarray4.set(i+16, electricity2);
+		                    listarray4.set(i+17, voltage2);
+		                    listarray4.set(i+18, strdate2);
+		                    listarray4.set(i+19, status2);
+		                    listarray4.set(i+20, setelectricity2);
+		                    listarray4.set(i+21, setvoltage2);
+		                    listarray4.set(i+22, warn2);
 						}
 					}
 				}
@@ -220,7 +258,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
         				
         				JSONArray ja = new JSONArray();
         				JSONObject jo = new JSONObject();
-        				for(int i=0;i<listarray4.size();i+=14){
+        				for(int i=0;i<listarray4.size();i+=23){
         					if(listarray4.get(i+1) == null){
             					jo.put("num", "0000");
         					}else if(listarray4.get(i+1) != null){
@@ -230,14 +268,23 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
         					jo.put("vol1", listarray4.get(i+3));
         					jo.put("time1", listarray4.get(i+4));
         					jo.put("status1", listarray4.get(i+5));
-        					jo.put("ele2", listarray4.get(i+6));
-        					jo.put("vol2", listarray4.get(i+7));
-        					jo.put("time2", listarray4.get(i+8));
-        					jo.put("status2", listarray4.get(i+9));
-        					jo.put("ele3", listarray4.get(i+10));
-        					jo.put("vol3", listarray4.get(i+11));
-        					jo.put("time3", listarray4.get(i+12));
-        					jo.put("status3", listarray4.get(i+13));
+        					jo.put("setele1", listarray4.get(i+6));
+        					jo.put("setvol1", listarray4.get(i+7));
+        					jo.put("warn1", listarray4.get(i+8));
+        					jo.put("ele2", listarray4.get(i+9));
+        					jo.put("vol2", listarray4.get(i+10));
+        					jo.put("time2", listarray4.get(i+11));
+        					jo.put("status2", listarray4.get(i+12));
+        					jo.put("setele2", listarray4.get(i+13));
+        					jo.put("setvol2", listarray4.get(i+14));
+        					jo.put("warn2", listarray4.get(i+15));
+        					jo.put("ele3", listarray4.get(i+16));
+        					jo.put("vol3", listarray4.get(i+17));
+        					jo.put("time3", listarray4.get(i+18));
+        					jo.put("status3", listarray4.get(i+19));
+        					jo.put("setele3", listarray4.get(i+20));
+        					jo.put("setvol3", listarray4.get(i+21));
+        					jo.put("warn3", listarray4.get(i+22));
         					ja.add(jo);
         				}
         				

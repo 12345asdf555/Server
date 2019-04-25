@@ -324,6 +324,15 @@ public class DB_Connectioncode {
              	listarray4.add("0");
              	listarray4.add("0");
              	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
+             	listarray4.add("0");
              }
              	
          } catch (SQLException e) {
