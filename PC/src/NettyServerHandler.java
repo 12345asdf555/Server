@@ -88,7 +88,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
 				synchronized (listarray4) {
 					long gatherid = Integer.valueOf(str.substring(16, 20));
-					for(int i=0;i<listarray4.size();i+=14){
+					for(int i=0;i<listarray4.size();i+=23){
 						if(gatherid == Integer.valueOf(listarray4.get(i))){
 							String electricity = Integer.toString(Integer.valueOf(str.subSequence(56, 60).toString(),16));
 		                    String voltage = Integer.toString(Integer.valueOf(str.subSequence(60, 64).toString(),16)/10);
