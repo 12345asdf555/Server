@@ -82,17 +82,17 @@ public class Client
       //bootstrap.option(ChannelOption.SO_KEEPALIVE, true);  
       bootstrap.handler(new ChannelInitializer<SocketChannel>() {  
         @Override  
-        protected void initChannel(SocketChannel socketChannel) throws Exception { 
-          socketChannel.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
-      	  socketChannel.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
+        protected void initChannel(SocketChannel socketChannel) throws Exception {  
+          socketChannel.pipeline().addLast("ping", new IdleStateHandler(60, 60, 60 * 10, TimeUnit.SECONDS));   
+          socketChannel.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4)); 
+          socketChannel.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));   
       	  socketChannel.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
       	  socketChannel.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
-      	  socketChannel.pipeline().addLast("ping", new IdleStateHandler(60, 60, 60 * 10, TimeUnit.SECONDS));
           socketChannel.pipeline().addLast(handler);  
           CL.socketChannel = socketChannel;
         }  
       });  
-      bootstrap.remoteAddress(fitemid, 5551);
+      bootstrap.remoteAddress(fitemid, 5556);
       bootstrap.connect().addListener(CL); 
     }  
     return bootstrap;  

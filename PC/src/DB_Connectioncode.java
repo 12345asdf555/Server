@@ -279,7 +279,7 @@ public class DB_Connectioncode {
          } 
          
          
-        try {
+        /*try {
 
             stmt.close();
             conn.close(); 
@@ -290,7 +290,7 @@ public class DB_Connectioncode {
 
             e.printStackTrace();
 
-        }
+        }*/
 
          return; 
 
