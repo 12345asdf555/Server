@@ -83,12 +83,20 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 					mysql.Mysqlbase(str);
 			        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
 			        if(socketchannel!=null){
-				        try {
-							socketchannel.writeAndFlush(str).sync();
-						} catch (Exception e) {
-							socketchannel = null;
-							e.printStackTrace();
-						}
+			        	synchronized (socketchannel) {
+					        try {
+								socketchannel.writeAndFlush(str).sync();
+							} catch (Exception e) {
+								try {
+									socketchannel.close().sync();
+								} catch (InterruptedException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								socketchannel = null;
+								e.printStackTrace();
+							}
+			        	}
 			        }
 				}
 				

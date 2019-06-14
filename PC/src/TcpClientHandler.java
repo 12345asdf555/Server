@@ -49,7 +49,7 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
             	}catch (Exception e) {
             		listarraybuf.add(socketfail);
             		ifdo = true;
-					 }
+				 }
             }
         	
             if(ifdo){
@@ -71,13 +71,13 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
                 	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
                 	socketfail = entry.getKey();
                 	SocketChannel socketcon = entry.getValue();
-                	String[] socketip1 = socketcon.toString().split("/");
+            		socketcon.writeAndFlush(str).sync();
+                	/*String[] socketip1 = socketcon.toString().split("/");
                 	String[] socketip2 = socketip1[1].split(":");
                 	String socketip = socketip2[0];
-                	//if(!socketip.equals("192.168.1.101")){
                 	if(!socketip.equals("121.196.222.216")){
                 		socketcon.writeAndFlush(str).sync();
-                	}
+                	}*/
                 	
             	}catch (Exception e) {
             		listarraybuf.add(socketfail);
