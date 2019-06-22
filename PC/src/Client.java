@@ -79,7 +79,7 @@ public class Client
       bootstrap.group(eventLoop);  
       bootstrap.channel(NioSocketChannel.class);  
       bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,1000);
-      //bootstrap.option(ChannelOption.SO_KEEPALIVE, true);  
+      bootstrap.option(ChannelOption.SO_KEEPALIVE, true);  
       bootstrap.handler(new ChannelInitializer<SocketChannel>() {  
         @Override  
         protected void initChannel(SocketChannel socketChannel) throws Exception { 
