@@ -148,7 +148,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 }
 	        	}
                 
-	        }else if(str.length()==38 && str.substring(10,12).equals("01")){    //处理焊层焊道信息
+	        } else if(str.length()==38 && str.substring(10,12).equals("01")){    //处理焊层焊道信息
 	        	mysql.db.ceng = Integer.valueOf(str.substring(18, 20),16);
 	        	mysql.db.dao = Integer.valueOf(str.substring(20, 22),16);
 	        	mysql.db.weldstatus = Integer.valueOf(str.substring(16, 18),16);
@@ -160,6 +160,26 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						e.printStackTrace();
 					}
 		        }
+	        } else if(str.substring(0,2).equals("fe") && str.substring(str.length()-2, str.length()).equals("fe")){  //江南任务派发 任务号、焊工、焊机、状态
+	        	//System.out.println("1");
+	        	if(socketchannel!=null){
+		        	//System.out.println(socketchannel);
+		        	synchronized (socketchannel) {
+				        try {
+							socketchannel.writeAndFlush(str).sync();
+						} catch (Exception e) {
+							try {
+								socketchannel.close().sync();
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							socketchannel = null;
+							e.printStackTrace();
+						}
+		        	}
+		        }
+                
 	        } else{    //处理焊机下发和上传
 	        	
 	        	//System.out.println(str);

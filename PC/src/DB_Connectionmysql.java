@@ -206,6 +206,7 @@ public class DB_Connectionmysql {
                     	if(welderid == Integer.valueOf(listarray1.get(a))){
                     		weldernum = listarray1.get(a+1);
                     		welderins = listarray1.get(a+2);
+                    		break;
                     	}
                     }
                     
@@ -213,6 +214,7 @@ public class DB_Connectionmysql {
                     	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
                     		junctionnum = listarray3.get(a);
                     		junctionins = listarray3.get(a+6);
+                    		break;
                     	}
                     }
                     
@@ -221,6 +223,7 @@ public class DB_Connectionmysql {
                     		gathernum = listarray2.get(a+2);
                     		weldnum = listarray2.get(a+1);
                     		ins = listarray2.get(a+3);
+                    		break;
                     	}
                     }
                     

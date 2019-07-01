@@ -1,2 +1,2 @@
-192.168.3.235,CIWJN,root,123456
-192.168.3.235
+localhost,CIWJN,root,123456
+localhost
