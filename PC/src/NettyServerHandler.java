@@ -78,31 +78,28 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			// TODO Auto-generated method stub
 		
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && (str.length()==284 || str.length()==124)){
-				
-				synchronized (websocketlist) {
-					mysql.Mysqlbase(str);
-			        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
-			        if(socketchannel!=null){
-			        	synchronized (socketchannel) {
-					        try {
-								socketchannel.writeAndFlush(str).sync();
-							} catch (Exception e) {
-								try {
-									socketchannel.close().sync();
-								} catch (InterruptedException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-								socketchannel = null;
-								e.printStackTrace();
+
+				mysql.Mysqlbase(str);
+		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+		        if(socketchannel!=null){
+		        	synchronized (socketchannel) {
+				        try {
+							socketchannel.writeAndFlush(str).sync();
+						} catch (Exception e) {
+							try {
+								socketchannel.close().sync();
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
 							}
-			        	}
-			        }
-				}
+							socketchannel = null;
+							e.printStackTrace();
+						}
+		        	}
+		        }
 				
 			}else if(str.substring(0,2).equals("FA")){  //处理实时数据
 				
-				synchronized (websocketlist) {
 				mysql.Mysqlrun(str);
 		        websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
 		        if(socketchannel!=null){
@@ -113,7 +110,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						e.printStackTrace();
 					}
 		        }
-				}
 		        
 	        }else if(str.substring(0,2).equals("þ")){   //处理android数据
 	        	

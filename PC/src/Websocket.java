@@ -384,14 +384,14 @@ public class Websocket {
 	             			voltage="0"+voltage;
 	             		}
 	             	}
-	      	    	String setelectricity = Integer.valueOf(str.subSequence(84, 88).toString(),16).toString();
+	      	    	String setelectricity = Integer.valueOf(str.subSequence(62, 66).toString(),16).toString();
 	      	    	if(setelectricity.length()!=4){
 	             		int lenth=4-setelectricity.length();
 	             		for(int i=0;i<lenth;i++){
 	             			setelectricity="0"+setelectricity;
 	             		}
 	             	}
-	      	    	String setvoltage = Integer.valueOf(str.subSequence(88, 92).toString(),16).toString();
+	      	    	String setvoltage = Integer.valueOf(str.subSequence(66, 70).toString(),16).toString();
 	      	    	if(setvoltage.length()!=4){
 	             		int lenth=4-setvoltage.length();
 	             		for(int i=0;i<lenth;i++){
