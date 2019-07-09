@@ -25,79 +25,79 @@ import io.netty.util.CharsetUtil;
 
 public class Client  
 {  
-  private EventLoopGroup loop = new NioEventLoopGroup();
-  private String ip;
-  private String fitemid; 
-  public Bootstrap bootstrap = new Bootstrap();
-  public Server server;
-  public ConnectionListener CL = new ConnectionListener(this);
-  public TcpClientHandler handler = new TcpClientHandler(this);
-  
-  public Client(Server server) {
-	// TODO Auto-generated constructor stub
-	  this.server = server;
-  }
+	private EventLoopGroup loop = new NioEventLoopGroup();
+	private String ip;
+	private String fitemid; 
+	public Bootstrap bootstrap = new Bootstrap();
+	public Server server;
+	public ConnectionListener CL = new ConnectionListener(this);
+	public TcpClientHandler handler = new TcpClientHandler(this);
 
-  public Client() {
-	// TODO Auto-generated constructor stub
-  }
+	public Client(Server server) {
+		// TODO Auto-generated constructor stub
+		this.server = server;
+	}
 
-  public static void main( String[] args )  
-  {  
-    new Client().run();  
-  }  
-  
-  public Bootstrap createBootstrap(Bootstrap bootstrap, EventLoopGroup eventLoop) {
-    if (bootstrap != null) { 
-      
-      try {
-		  FileInputStream in = new FileInputStream("IPconfig.txt");  
-          InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
-          BufferedReader bufReader = new BufferedReader(inReader);  
-          String line = null; 
-          int writetime=0;
-			
-		    while((line = bufReader.readLine()) != null){ 
-		    	if(writetime==0){
-	                ip=line;
-	                writetime++;
-		    	}
-		    	else{
-		    		fitemid=line;
-		    		writetime=0;
-		    	}
-          }  
+	public Client() {
+		// TODO Auto-generated constructor stub
+	}
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-      
-      bootstrap.group(eventLoop);  
-      bootstrap.channel(NioSocketChannel.class);  
-      bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,1000);
-      bootstrap.option(ChannelOption.SO_KEEPALIVE, true);  
-      bootstrap.handler(new ChannelInitializer<SocketChannel>() {  
-        @Override  
-        protected void initChannel(SocketChannel socketChannel) throws Exception { 
-          socketChannel.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
-      	  socketChannel.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
-      	  socketChannel.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
-      	  socketChannel.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
-      	  socketChannel.pipeline().addLast("ping", new IdleStateHandler(60, 60, 60 * 10, TimeUnit.SECONDS));
-          socketChannel.pipeline().addLast(handler);  
-          CL.socketChannel = socketChannel;
-        }  
-      });  
-      bootstrap.remoteAddress(fitemid, 5551);
-      bootstrap.connect().addListener(CL); 
-    }  
-    return bootstrap;  
-  }  
-  public void run() {  
-    createBootstrap(bootstrap, loop);
-  }  
+	public static void main( String[] args )  
+	{  
+		new Client().run();  
+	}  
+
+	public Bootstrap createBootstrap(Bootstrap bootstrap, EventLoopGroup eventLoop) {
+		if (bootstrap != null) { 
+
+			try {
+				FileInputStream in = new FileInputStream("IPconfig.txt");  
+				InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
+				BufferedReader bufReader = new BufferedReader(inReader);  
+				String line = null; 
+				int writetime=0;
+
+				while((line = bufReader.readLine()) != null){ 
+					if(writetime==0){
+						ip=line;
+						writetime++;
+					}
+					else{
+						fitemid=line;
+						writetime=0;
+					}
+				}  
+
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			bootstrap.group(eventLoop);  
+			bootstrap.channel(NioSocketChannel.class);  
+			bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS,1000);
+			bootstrap.option(ChannelOption.SO_KEEPALIVE, true);  
+			bootstrap.handler(new ChannelInitializer<SocketChannel>() {  
+				@Override  
+				protected void initChannel(SocketChannel socketChannel) throws Exception { 
+					socketChannel.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
+					socketChannel.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
+					socketChannel.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
+					socketChannel.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
+					socketChannel.pipeline().addLast("ping", new IdleStateHandler(60, 60, 60 * 10, TimeUnit.SECONDS));
+					socketChannel.pipeline().addLast(handler);  
+					CL.socketChannel = socketChannel;
+				}  
+			});  
+			bootstrap.remoteAddress(fitemid, 5551);
+			bootstrap.connect().addListener(CL); 
+		}  
+		return bootstrap;  
+	}  
+	public void run() {  
+		createBootstrap(bootstrap, loop);
+	}  
 }

@@ -85,6 +85,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		public void run() {
 			// TODO Auto-generated method stub
 		
+			//基本版
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
 				synchronized (listarray4) {
 					long gatherid = Integer.valueOf(str.substring(16, 20));
@@ -176,18 +177,100 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						}
 					}
 				}
-				synchronized (websocketlist) {
-					mysql.Mysqlbase(str);
-			        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
-			        if(socketchannel!=null){
-				        try {
-							socketchannel.writeAndFlush(str).sync();
-						} catch (Exception e) {
-							socketchannel = null;
-							e.printStackTrace();
+				mysql.Mysqlbase(str);
+		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+		        if(socketchannel!=null){
+			        try {
+						socketchannel.writeAndFlush(str).sync();
+					} catch (Exception e) {
+						socketchannel = null;
+						e.printStackTrace();
+					}
+		        }
+				
+		    //欧华纬华
+			}else if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==320){
+				synchronized (listarray4) {
+					long gatherid = Integer.valueOf(str.substring(16, 20));
+					for(int i=0;i<listarray4.size();i+=23){
+						if(gatherid == Integer.valueOf(listarray4.get(i))){
+							String electricity = Integer.toString(Integer.valueOf(str.subSequence(86, 90).toString(),16));
+		                    String voltage = Integer.toString(Integer.valueOf(str.subSequence(90, 94).toString(),16)/10);
+		                    String electricity1 = Integer.toString(Integer.valueOf(str.subSequence(86+80, 90+80).toString(),16));
+		                    String voltage1 = Integer.toString(Integer.valueOf(str.subSequence(90+80, 94+80).toString(),16)/10);
+		                    String electricity2 = Integer.toString(Integer.valueOf(str.subSequence(86+80+80, 90+80+80).toString(),16));
+		                    String voltage2 = Integer.toString(Integer.valueOf(str.subSequence(90+80+80, 94+80+80).toString(),16)/10);
+		                    
+		                    String year = Integer.valueOf(str.subSequence(74, 76).toString(),16).toString();
+		      	    		String month = Integer.valueOf(str.subSequence(76, 78).toString(),16).toString();
+		      	    		String day = Integer.valueOf(str.subSequence(78, 80).toString(),16).toString();
+		      	    		String hour = Integer.valueOf(str.subSequence(80, 82).toString(),16).toString();
+		      	    		String minute = Integer.valueOf(str.subSequence(82, 84).toString(),16).toString();
+		      	    		String second = Integer.valueOf(str.subSequence(84, 86).toString(),16).toString();
+		      	    		String strdate = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
+		      	    		String year1 = Integer.valueOf(str.subSequence(74+80, 76+80).toString(),16).toString();
+		      	    		String month1 = Integer.valueOf(str.subSequence(76+80, 78+80).toString(),16).toString();
+		      	    		String day1 = Integer.valueOf(str.subSequence(78+80, 80+80).toString(),16).toString();
+		      	    		String hour1 = Integer.valueOf(str.subSequence(80+80, 82+80).toString(),16).toString();
+		      	    		String minute1 = Integer.valueOf(str.subSequence(82+80, 84+80).toString(),16).toString();
+		      	    		String second1 = Integer.valueOf(str.subSequence(84+80, 86+80).toString(),16).toString();
+		      	    		String strdate1 = year1+"-"+month1+"-"+day1+" "+hour1+":"+minute1+":"+second1;
+		      	    		String year2 = Integer.valueOf(str.subSequence(74+80+80, 76+80+80).toString(),16).toString();
+		      	    		String month2 = Integer.valueOf(str.subSequence(76+80+80, 78+80+80).toString(),16).toString();
+		      	    		String day2 = Integer.valueOf(str.subSequence(78+80+80, 80+80+80).toString(),16).toString();
+		      	    		String hour2 = Integer.valueOf(str.subSequence(80+80+80, 82+80+80).toString(),16).toString();
+		      	    		String minute2 = Integer.valueOf(str.subSequence(82+80+80, 84+80+80).toString(),16).toString();
+		      	    		String second2 = Integer.valueOf(str.subSequence(84+80+80, 86+80+80).toString(),16).toString();
+		      	    		String strdate2 = year2+"-"+month2+"-"+day2+" "+hour2+":"+minute2+":"+second2;
+		      	    		
+		      	    		String status = Integer.toString(Integer.parseInt(str.subSequence(114, 116).toString(),16));
+		      	    		String status1 = Integer.toString(Integer.parseInt(str.subSequence(114+80, 116+80).toString(),16));
+		      	    		String status2 = Integer.toString(Integer.parseInt(str.subSequence(114+80+80, 116+80+80).toString(),16));
+							
+		      	    		String[] codebuf1 = str.subSequence(24, 66).toString().split("2A");
+		      	    		String codebuf2 = codebuf1[codebuf1.length-1];
+		      	    		String code = "";
+		      	    		for(int i1=0;i1<codebuf2.length();i1+=2){
+		      	    			code = code + codebuf2.substring(i1+1,i1+2);
+		      	    		}
+		      	    		
+		      	    		String weldspeed = Integer.toString(Integer.parseInt(str.subSequence(66, 70).toString(),16));
+		                    
+		                    listarray4.set(i+2, electricity);
+		                    listarray4.set(i+3, voltage);
+		                    listarray4.set(i+4, strdate);
+		                    listarray4.set(i+5, status);
+		                    listarray4.set(i+6, code);
+		                    listarray4.set(i+7, weldspeed);
+		                    //listarray4.set(i+8, warn);
+		                    listarray4.set(i+9, electricity1);
+		                    listarray4.set(i+10, voltage1);
+		                    listarray4.set(i+11, strdate1);
+		                    listarray4.set(i+12, status1);
+		                    listarray4.set(i+13, code);
+		                    listarray4.set(i+14, weldspeed);
+		                    //listarray4.set(i+15, warn1);
+		                    listarray4.set(i+16, electricity2);
+		                    listarray4.set(i+17, voltage2);
+		                    listarray4.set(i+18, strdate2);
+		                    listarray4.set(i+19, status2);
+		                    listarray4.set(i+20, code);
+		                    listarray4.set(i+21, weldspeed);
+		                    //listarray4.set(i+22, warn2);
+		                    break;
 						}
-			        }
+					}
 				}
+				/*mysql.Mysqlbase(str);
+		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+		        if(socketchannel!=null){
+			        try {
+						socketchannel.writeAndFlush(str).sync();
+					} catch (Exception e) {
+						socketchannel = null;
+						e.printStackTrace();
+					}
+		        }*/
 				
 			}else if(str.substring(0,2).equals("FA")){  //处理实时数据
 				
@@ -240,7 +323,76 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 }
 	        	}
                 
+	        //欧华纬华webservice调用
 	        } else if(str.equals("SS")){  //webservice获取实时数据
+	        	
+	        	synchronized (listarray4) {
+	        	synchronized (socketlist) {
+	        	ArrayList<String> listarraybuf = new ArrayList<String>();
+	        	boolean ifdo = false;
+	        	
+	        	Iterator<Entry<String, SocketChannel>> iter = socketlist.entrySet().iterator();
+                while(iter.hasNext()){
+                	try{
+                    	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
+                    	
+                    	socketfail = entry.getKey();
+
+        				SocketChannel socketcon = entry.getValue();
+        				
+        				JSONArray ja = new JSONArray();
+        				JSONObject jo = new JSONObject();
+        				for(int i=0;i<listarray4.size();i+=23){
+        					if(listarray4.get(i+1) == null){
+            					jo.put("num", "0000");
+        					}else if(listarray4.get(i+1) != null){
+            					jo.put("num", listarray4.get(i+1));
+        					}
+        					jo.put("ele1", listarray4.get(i+2));
+        					jo.put("vol1", listarray4.get(i+3));
+        					jo.put("time1", listarray4.get(i+4));
+        					jo.put("status1", listarray4.get(i+5));
+        					jo.put("code1", listarray4.get(i+6));
+        					jo.put("speed1", listarray4.get(i+7));
+        					jo.put("airflow1", listarray4.get(i+8));
+        					jo.put("ele2", listarray4.get(i+9));
+        					jo.put("vol2", listarray4.get(i+10));
+        					jo.put("time2", listarray4.get(i+11));
+        					jo.put("status2", listarray4.get(i+12));
+        					jo.put("code2", listarray4.get(i+13));
+        					jo.put("speed2", listarray4.get(i+14));
+        					jo.put("airflow2", listarray4.get(i+15));
+        					jo.put("ele3", listarray4.get(i+16));
+        					jo.put("vol3", listarray4.get(i+17));
+        					jo.put("time3", listarray4.get(i+18));
+        					jo.put("status3", listarray4.get(i+19));
+        					jo.put("code3", listarray4.get(i+20));
+        					jo.put("speed3", listarray4.get(i+21));
+        					jo.put("airflow3", listarray4.get(i+22));
+        					ja.add(jo);
+        				}
+        				
+        				data = ja.toString();
+        				
+                    	socketcon.writeAndFlush(data).sync();
+                    	
+                	}catch (Exception e) {
+                		listarraybuf.add(socketfail);
+                		ifdo = true;
+   					 }
+                }
+	        	
+                if(ifdo){
+                	for(int i=0;i<listarraybuf.size();i++){
+                    	socketlist.remove(listarraybuf.get(i));
+                	}
+                }
+	        	}
+	        	}
+                
+	        }
+			//重工webservice获取实时数据
+			/*else if(str.equals("SS")){  
 	        	
 	        	synchronized (listarray4) {
 	        	synchronized (socketlist) {
@@ -306,7 +458,9 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	}
 	        	}
                 
-	        } else{    //处理焊机下发和上传
+	        }*/
+			//处理焊机下发和上传
+	        else{    
 	        	
 	        	//System.out.println(str);
 	        	

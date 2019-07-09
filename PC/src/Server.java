@@ -404,6 +404,7 @@ public class Server implements Runnable {
 	        		NS.listarray1 = listarray1;
 	        		NS.listarray2 = listarray2;
 	        		NS.listarray3 = listarray3;
+	        		NS.listarray4 = listarray4;
 	        	}catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
