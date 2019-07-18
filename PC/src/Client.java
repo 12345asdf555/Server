@@ -88,7 +88,10 @@ public class Client
 					socketChannel.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
 					socketChannel.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
 					socketChannel.pipeline().addLast("ping", new IdleStateHandler(60, 60, 60 * 10, TimeUnit.SECONDS));
-					socketChannel.pipeline().addLast(handler);  
+					socketChannel.pipeline().addLast(
+							new ReadTimeoutHandler(100),
+							new WriteTimeoutHandler(100),
+							handler);  
 					CL.socketChannel = socketChannel;
 				}  
 			});  
