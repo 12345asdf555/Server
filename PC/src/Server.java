@@ -73,6 +73,8 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.CharsetUtil;
 
 
@@ -418,7 +420,10 @@ public class Server implements Runnable {
 	                	chsoc.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
 	                	chsoc.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
 	                	chsoc.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
-	                	chsoc.pipeline().addLast(NS);
+	                	chsoc.pipeline().addLast(
+	                			new ReadTimeoutHandler(100),
+	                			new WriteTimeoutHandler(100),
+	                			NS);
 	                	socketcount++;
 						socketlist.put(Integer.toString(socketcount),chsoc);
 						NS.socketlist = socketlist;
