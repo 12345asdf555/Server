@@ -37,23 +37,23 @@ import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 @Sharable
 public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
-	
+
 	public HashMap<String, SocketChannel> socketlist = new HashMap<>();
 	public ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 	private static final Logger logger = Logger.getLogger(WebSocketServerHandshaker.class.getName());
 	private WebSocketServerHandshaker handsharker;
 	private String socketfail;
-	
+
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
-	// 添加
+		// 添加
 		//group.add(ctx.channel());
 		//System.out.println("客户端与服务端连接开启：" + ctx.channel().remoteAddress().toString());
 	}
-	
+
 	/**
-	* channel 通道 Inactive 不活跃的 当客户端主动断开服务端的链接后，这个通道就是不活跃的。也就是说客户端与服务端关闭了通信通道并且不可以传输数据
-	*/
+	 * channel 通道 Inactive 不活跃的 当客户端主动断开服务端的链接后，这个通道就是不活跃的。也就是说客户端与服务端关闭了通信通道并且不可以传输数据
+	 */
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		// 移除
@@ -61,8 +61,8 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 		//System.out.println("客户端与服务端连接关闭：" + ctx.channel().remoteAddress().toString());
 	}
 	/**
-	* exception 异常 Caught 抓住 抓住异常，当发生异常的时候，可以做一些相应的处理，比如打印日志、关闭链接
-	*/
+	 * exception 异常 Caught 抓住 抓住异常，当发生异常的时候，可以做一些相应的处理，比如打印日志、关闭链接
+	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();
@@ -73,26 +73,26 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 		ctx.flush();
 	}
 	/**
-     * 接受数据
-     */
-    @Override
-    protected void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
-        // 如果是HTTP请求
-        if (msg instanceof FullHttpRequest) {
-            //handleHttpRequest(ctx, (FullHttpRequest) msg);
-        }
-        // WEBSOCKET接入
-        else if (msg instanceof WebSocketFrame) {
-            handleWebSocketFrame(ctx, (WebSocketFrame) msg);
-        }
-    }
-    /**
-     * 处理HTTP请求
-     * 
-     * @param ctx
-     * @param msg
-     */
-    /*private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
+	 * 接受数据
+	 */
+	@Override
+	protected void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
+		// 如果是HTTP请求
+		if (msg instanceof FullHttpRequest) {
+			//handleHttpRequest(ctx, (FullHttpRequest) msg);
+		}
+		// WEBSOCKET接入
+		else if (msg instanceof WebSocketFrame) {
+			handleWebSocketFrame(ctx, (WebSocketFrame) msg);
+		}
+	}
+	/**
+	 * 处理HTTP请求
+	 * 
+	 * @param ctx
+	 * @param msg
+	 */
+	/*private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
         // 如果解码失败,返回异常
         if (!req.getDecoderResult().isSuccess() || (!"websocket".equals(req.headers().get("Upgrade")))) {
             sendHttpResponse(ctx, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));
@@ -110,104 +110,104 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
     }*/
 
 
-    /**
-     * 处理WEBSOCKET请求
-     * 
-     * @param ctx
-     * @param frame
-     */
-    private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
-        // 判断链路是否关闭
-        if (frame instanceof CloseWebSocketFrame) {
-            handsharker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
-            return;
-        }
-        if (frame instanceof PingWebSocketFrame) {
-            new PongWebSocketFrame(frame.content().retain());
-            return;
-        }
-        // 只支持文本消息,不支持二进制消息
-        if (!(frame instanceof TextWebSocketFrame)) {
-            throw new UnsupportedOperationException(
-                String.format("%s frame type not supported", frame.getClass().getName()));
-        }
+	/**
+	 * 处理WEBSOCKET请求
+	 * 
+	 * @param ctx
+	 * @param frame
+	 */
+	private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
+		// 判断链路是否关闭
+		if (frame instanceof CloseWebSocketFrame) {
+			handsharker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
+			return;
+		}
+		if (frame instanceof PingWebSocketFrame) {
+			new PongWebSocketFrame(frame.content().retain());
+			return;
+		}
+		// 只支持文本消息,不支持二进制消息
+		if (!(frame instanceof TextWebSocketFrame)) {
+			throw new UnsupportedOperationException(
+					String.format("%s frame type not supported", frame.getClass().getName()));
+		}
 
-        String str = ((TextWebSocketFrame) frame).text();
+		String str = ((TextWebSocketFrame) frame).text();
 
-        if(str.substring(0,2).equals("7E")){
-        	
-        	synchronized (socketlist) {
-        	ArrayList<String> listarraybuf = new ArrayList<String>();
-        	boolean ifdo = false;
-        	
-			Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
-            while(webiter.hasNext()){
-            	try{
-                	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-                	socketfail = entry.getKey();
-                	SocketChannel socketcon = entry.getValue();
-                	String[] socketip1 = socketcon.toString().split("/");
-                	String[] socketip2 = socketip1[1].split(":");
-                	String socketip = socketip2[0];
-                	//if(!socketip.equals("192.168.1.101")){
-                	if(!socketip.equals("121.196.222.216")){
-                		socketcon.writeAndFlush(str).sync();
-                	}
-                	
-            	}catch (Exception e) {
-            		listarraybuf.add(socketfail);
-            		ifdo = true;
-			    }
-            }
-            
-            if(ifdo){
-            	for(int i=0;i<listarraybuf.size();i++){
-            		socketlist.remove(listarraybuf.get(i));
-            	}
-            }
-        	}
-        	
+		if(str.substring(0,2).equals("7E")){
+
+			synchronized (socketlist) {
+				ArrayList<String> listarraybuf = new ArrayList<String>();
+				boolean ifdo = false;
+
+				Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
+				while(webiter.hasNext()){
+					try{
+						Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+						socketfail = entry.getKey();
+						SocketChannel socketcon = entry.getValue();
+						String[] socketip1 = socketcon.toString().split("/");
+						String[] socketip2 = socketip1[1].split(":");
+						String socketip = socketip2[0];
+						//if(!socketip.equals("192.168.1.101")){
+						if(!socketip.equals("121.196.222.216")){
+							socketcon.writeAndFlush(str).sync();
+						}
+
+					}catch (Exception e) {
+						listarraybuf.add(socketfail);
+						ifdo = true;
+					}
+				}
+
+				if(ifdo){
+					for(int i=0;i<listarraybuf.size();i++){
+						socketlist.remove(listarraybuf.get(i));
+					}
+				}
+			}
+
 		}else if(str.substring(0,1).equals("0") || str.substring(0,1).equals("1")){
 			synchronized (socketlist) {
-	        	ArrayList<String> listarraybuf = new ArrayList<String>();
-	        	boolean ifdo = false;
-	        	
+				ArrayList<String> listarraybuf = new ArrayList<String>();
+				boolean ifdo = false;
+
 				Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
-	            while(webiter.hasNext()){
-	            	try{
-	                	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-	                	socketfail = entry.getKey();
-	                	SocketChannel socketcon = entry.getValue();
-	                	String[] socketip1 = socketcon.toString().split("/");
-	                	String[] socketip2 = socketip1[1].split(":");
-	                	String socketip = socketip2[0];
-	                	//if(!socketip.equals("192.168.1.101")){
-	                	if(!socketip.equals("121.196.222.216")){
-	                		socketcon.writeAndFlush(str).sync();
-	                	}
-	                	
-	            	}catch (Exception e) {
-	            		listarraybuf.add(socketfail);
-	            		ifdo = true;
-				    }
-	            }
-	            
-	            if(ifdo){
-	            	for(int i=0;i<listarraybuf.size();i++){
-	            		socketlist.remove(listarraybuf.get(i));
-	            	}
-	            }
-	        	}
+				while(webiter.hasNext()){
+					try{
+						Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+						socketfail = entry.getKey();
+						SocketChannel socketcon = entry.getValue();
+						String[] socketip1 = socketcon.toString().split("/");
+						String[] socketip2 = socketip1[1].split(":");
+						String socketip = socketip2[0];
+						//if(!socketip.equals("192.168.1.101")){
+						if(!socketip.equals("121.196.222.216")){
+							socketcon.writeAndFlush(str).sync();
+						}
+
+					}catch (Exception e) {
+						listarraybuf.add(socketfail);
+						ifdo = true;
+					}
+				}
+
+				if(ifdo){
+					for(int i=0;i<listarraybuf.size();i++){
+						socketlist.remove(listarraybuf.get(i));
+					}
+				}
+			}
 		}
-        
-        // ctx.channel().write(new TextWebSocketFrame(request + " , 欢迎使用netty
-        // websocket 服务,现在时刻是: ")
-        // + new java.util.Date().toString());
-    }
-	
+
+		// ctx.channel().write(new TextWebSocketFrame(request + " , 欢迎使用netty
+		// websocket 服务,现在时刻是: ")
+		// + new java.util.Date().toString());
+	}
+
 	/**
-	* 接收客户端发送的消息 channel 通道 Read 读 简而言之就是从通道中读取数据，也就是服务端接收客户端发来的数据。但是这个数据在不进行解码时它是ByteBuf类型的
-	*//*
+	 * 接收客户端发送的消息 channel 通道 Read 读 简而言之就是从通道中读取数据，也就是服务端接收客户端发来的数据。但是这个数据在不进行解码时它是ByteBuf类型的
+	 *//*
 	@Override
 	protected void messageReceived(ChannelHandlerContext ctx, Object msg) throws Exception {
 		// 传统的HTTP接入
@@ -253,7 +253,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 		// 返回【谁发的发给谁】
 		// ctx.channel().writeAndFlush(tws);
 	}
-	
+
 	private void handlerWebSocketFrame2(ChannelHandlerContext ctx, WebSocketFrame frame) {
 	// 判断是否关闭链路的指令
 		if (frame instanceof CloseWebSocketFrame) {

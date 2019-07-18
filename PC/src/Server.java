@@ -76,83 +76,85 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
+import io.netty.handler.timeout.WriteTimeoutHandler;
 import io.netty.util.CharsetUtil;
 
 
 
 public class Server implements Runnable {  
-	
- 	//private List<Handler> handlers = new ArrayList<Handler>();  
-    public static final String SERVERIP = "121.196.222.216"; 
-    public static final int SERVERPORT = 5555;
-    public static final int SERVERPORTWEB = 5554;
-    public String str = "";
-    public Socket socket=null;
-    public Socket websocketlink=null;
-    public ServerSocket serverSocket = null;
-    public boolean webtype = false;
-    public int sqlwritetype=0;
-    public int websendtype=0;
-    public int sockettype=0;
-    public String ip=null;
-    public String ip1=null;
-    public String connet1 = "jdbc:mysql://";
-    public String connet2 = ":3306/"; 
-    public String connet3 = "?user="; 
-    public String connet4 = "&password=";
-    public String connet5 = "&useUnicode=true&autoReconnect=true&characterEncoding=UTF8";
-    public String connet;
-    public byte b[];
-    public DB_Connectioncode check;
-    public ArrayList<String> listarray1 = new ArrayList<String>();
-    public ArrayList<String> listarray2 = new ArrayList<String>();
-    public ArrayList<String> listarray3 = new ArrayList<String>();
-    public ArrayList<String> listarray4 = new ArrayList<String>();
-    public HashMap<String, SocketChannel> socketlist = new HashMap<>();
-    public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
-    public HashMap<String, SocketChannel> clientList = new HashMap<>();
-    public int socketcount=0;
-    public int websocketcount=0;
-    public int clientcount=0;
-    public Selector selector = null;
-    public ServerSocketChannel ssc = null;
-    public Client client = new Client(this);
-    public NettyServerHandler NS = new NettyServerHandler();
-    private NettyWebSocketHandler NWS = new NettyWebSocketHandler();
+
+	//private List<Handler> handlers = new ArrayList<Handler>();  
+	public static final String SERVERIP = "121.196.222.216"; 
+	public static final int SERVERPORT = 5555;
+	public static final int SERVERPORTWEB = 5554;
+	public String str = "";
+	public Socket socket=null;
+	public Socket websocketlink=null;
+	public ServerSocket serverSocket = null;
+	public boolean webtype = false;
+	public int sqlwritetype=0;
+	public int websendtype=0;
+	public int sockettype=0;
+	public String ip=null;
+	public String ip1=null;
+	public String connet1 = "jdbc:mysql://";
+	public String connet2 = ":3306/"; 
+	public String connet3 = "?user="; 
+	public String connet4 = "&password=";
+	public String connet5 = "&useUnicode=true&autoReconnect=true&characterEncoding=UTF8";
+	public String connet;
+	public byte b[];
+	public DB_Connectioncode check;
+	public ArrayList<String> listarray1 = new ArrayList<String>();
+	public ArrayList<String> listarray2 = new ArrayList<String>();
+	public ArrayList<String> listarray3 = new ArrayList<String>();
+	public ArrayList<String> listarray4 = new ArrayList<String>();
+	public HashMap<String, SocketChannel> socketlist = new HashMap<>();
+	public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
+	public HashMap<String, SocketChannel> clientList = new HashMap<>();
+	public int socketcount=0;
+	public int websocketcount=0;
+	public int clientcount=0;
+	public Selector selector = null;
+	public ServerSocketChannel ssc = null;
+	public Client client = new Client(this);
+	public NettyServerHandler NS = new NettyServerHandler();
+	private NettyWebSocketHandler NWS = new NettyWebSocketHandler();
 	private Connection c;
 	public java.sql.Connection conn = null;
-    public java.sql.Statement stmt =null;
+	public java.sql.Statement stmt =null;
 	private Date time;
 	private ArrayList<String> dbdata;
-    
-    public String getconnet(){
-    	return connet;
-    }
-    
-    public ArrayList<String> getlistarray1(){
-    	return listarray1;
-    }
-    
-    public void run() {
-    	
-    	//读取IPconfig配置文件获取ip地址和数据库配置
+
+	public String getconnet(){
+		return connet;
+	}
+
+	public ArrayList<String> getlistarray1(){
+		return listarray1;
+	}
+
+	public void run() {
+
+		//读取IPconfig配置文件获取ip地址和数据库配置
 		try {
 			FileInputStream in = new FileInputStream("IPconfig.txt");  
-            InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
-            BufferedReader bufReader = new BufferedReader(inReader);  
-            String line = null; 
-            int writetime=0;
-			
-		    while((line = bufReader.readLine()) != null){ 
-		    	if(writetime==0){
-	                ip=line;
-	                writetime++;
-		    	}
-		    	else{
-		    		ip1=line;
-		    		writetime=0;
-		    	}
-            }  
+			InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
+			BufferedReader bufReader = new BufferedReader(inReader);  
+			String line = null; 
+			int writetime=0;
+
+			while((line = bufReader.readLine()) != null){ 
+				if(writetime==0){
+					ip=line;
+					writetime++;
+				}
+				else{
+					ip1=line;
+					writetime=0;
+				}
+			}  
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -161,145 +163,145 @@ public class Server implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		
+
 		String[] values = ip.split(",");
-		
+
 		connet=connet1+values[0]+connet2+values[1]+connet3+values[2]+connet4+values[3]+connet5;
-		
-	    NS.ip = this.ip;
-	    NS.ip1 = this.ip1;
-	    NS.connet = this.connet;
-		
-	    //连接数据库
-	    try {  
 
-            Class.forName("com.mysql.jdbc.Driver");  
-            conn = DriverManager.getConnection(connet);
-            stmt = conn.createStatement();
-            NS.mysql.db.conn = conn;
-            NS.mysql.db.stmt = stmt;
-            NS.android.db.conn = conn;
-            NS.android.db.stmt = stmt;
-            NS.mysql.db.connet = connet;
-            NS.android.db.connet = connet;
+		NS.ip = this.ip;
+		NS.ip1 = this.ip1;
+		NS.connet = this.connet;
 
-        } catch (ClassNotFoundException e) {  
-            System.out.println("Broken driver");
-            e.printStackTrace();  
-        } catch (SQLException e) {
-            System.out.println("Broken conn");
-            e.printStackTrace();
-        }  
-        
-	    //开启线程每小时更新三张状态表
-	    Date date = new Date();
-        String nowtime = DateTools.format("HH:mm:ss",date);
-        String[] timesplit = nowtime.split(":");
-        String hour = timesplit[0];
-       
-        Calendar calendar = Calendar.getInstance();
-        
-        calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)+1); // 控制时
-        calendar.set(Calendar.MINUTE, 00);    // 控制分
-        calendar.set(Calendar.SECOND, 00);    // 控制秒
-        time = calendar.getTime(); 
-        
-	    Timer tExit1 = null; 
+		//连接数据库
+		try {  
+
+			Class.forName("com.mysql.jdbc.Driver");  
+			conn = DriverManager.getConnection(connet);
+			stmt = conn.createStatement();
+			NS.mysql.db.conn = conn;
+			NS.mysql.db.stmt = stmt;
+			NS.android.db.conn = conn;
+			NS.android.db.stmt = stmt;
+			NS.mysql.db.connet = connet;
+			NS.android.db.connet = connet;
+
+		} catch (ClassNotFoundException e) {  
+			System.out.println("Broken driver");
+			e.printStackTrace();  
+		} catch (SQLException e) {
+			System.out.println("Broken conn");
+			e.printStackTrace();
+		}  
+
+		//开启线程每小时更新三张状态表
+		Date date = new Date();
+		String nowtime = DateTools.format("HH:mm:ss",date);
+		String[] timesplit = nowtime.split(":");
+		String hour = timesplit[0];
+
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)+1); // 控制时
+		calendar.set(Calendar.MINUTE, 00);    // 控制分
+		calendar.set(Calendar.SECOND, 00);    // 控制秒
+		time = calendar.getTime(); 
+
+		Timer tExit1 = null; 
 		tExit1 = new Timer();  
-        tExit1.schedule(new TimerTask() {  
+		tExit1.schedule(new TimerTask() {  
 
 			@Override  
-            public void run() {
-  		
-            	try {  
+			public void run() {
 
-                    Class.forName("com.mysql.jdbc.Driver");  
-                    conn = DriverManager.getConnection(connet);
-                    stmt= conn.createStatement();
-                    NS.stmt = stmt;
-                    
-                    Class.forName("com.mysql.jdbc.Driver");  
-                    conn = DriverManager.getConnection(connet);
-                    stmt = conn.createStatement();
-                    	
-                    //获取上次统计时间，为空插入赋默认值
-                	Date date = new Date();
-                    String nowtimefor = DateTools.format("yyyy-MM-dd",date);
-                    String nowtime = DateTools.format("HH:mm:ss",date);
-                    String[] timesplit = nowtime.split(":");
-                    String hour = timesplit[0];
-                    String time2 = nowtimefor+" "+hour+":00:00";
-                    Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-3600000);
-                    String time3 = DateTools.format("yyyy-MM-dd HH:mm:ss",d1);
-                    
-                	String timework = null;
-                	String timestandby = null;
-                	String timealarm = null;
-                	String timewarn = null;
-                	String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
-                	String sqlfirststandby = "SELECT tb_standby.fUploadDataTime FROM tb_standby ORDER BY tb_standby.fUploadDataTime DESC LIMIT 0,1";
-                	String sqlfirstalarm = "SELECT tb_alarm.fUploadDataTime FROM tb_alarm ORDER BY tb_alarm.fUploadDataTime DESC LIMIT 0,1";
-                	String sqlfirstwarn = "SELECT tb_warn.fUploadDataTime FROM tb_warn ORDER BY tb_warn.fUploadDataTime DESC LIMIT 0,1";
-                	ResultSet rs1 =stmt.executeQuery(sqlfirstwork);
-                	while (rs1.next()) {
-                		timework = rs1.getString("fUploadDataTime");
-                	}
-                	ResultSet rs2 =stmt.executeQuery(sqlfirststandby);
-                	while (rs2.next()) {
-                		timestandby = rs2.getString("fUploadDataTime");
-                	}
-                	ResultSet rs3 =stmt.executeQuery(sqlfirstalarm);
-                	while (rs3.next()) {
-                		timealarm = rs3.getString("fUploadDataTime");
-                	}
-                	ResultSet rs4 =stmt.executeQuery(sqlfirstwarn);
-                	while (rs4.next()) {
-                		timewarn = rs4.getString("fUploadDataTime");
-                	}
-                	
-                	if(timework == null || timework.equals("null")){
-                		timework = "2000-01-01 01:01:01";
-                	}
-                	if(timestandby == null || timestandby.equals("null")){
-                		timestandby = "2000-01-01 01:01:01";
-                	}
-                	if(timealarm == null || timealarm.equals("null")){
-                		timealarm = "2000-01-01 01:01:01";
-                	}
-                	if(timewarn == null || timewarn.equals("null")){
-                		timewarn = "2000-01-01 01:01:01";
-                	}
-                	
-                	//统计四张状态表
-                    String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
-                    		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime,tb_standby.fwelder_no,tb_standby.fjunction_no,tb_standby.fweld_no,tb_standby.fchannel,tb_standby.fmax_electricity,tb_standby.fmin_electricity,tb_standby.fmax_voltage,tb_standby.fmin_voltage,tb_standby.fwelder_itemid,tb_standby.fjunction_itemid,tb_standby.fmachine_itemid,tb_standby.fwirefeedrate,tb_standby.fmachinemodel,tb_standby.fwirediameter,tb_standby.fmaterialgas,tb_standby.fstatus) SELECT "
-                    		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
-                    		+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fstatus FROM tb_live_data "
-                    		+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime BETWEEN '" + timestandby + "' AND '" + time2 + "' "
-                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
-                    
-                    /*String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
+				try {  
+
+					Class.forName("com.mysql.jdbc.Driver");  
+					conn = DriverManager.getConnection(connet);
+					stmt= conn.createStatement();
+					NS.stmt = stmt;
+
+					Class.forName("com.mysql.jdbc.Driver");  
+					conn = DriverManager.getConnection(connet);
+					stmt = conn.createStatement();
+
+					//获取上次统计时间，为空插入赋默认值
+					Date date = new Date();
+					String nowtimefor = DateTools.format("yyyy-MM-dd",date);
+					String nowtime = DateTools.format("HH:mm:ss",date);
+					String[] timesplit = nowtime.split(":");
+					String hour = timesplit[0];
+					String time2 = nowtimefor+" "+hour+":00:00";
+					Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-3600000);
+					String time3 = DateTools.format("yyyy-MM-dd HH:mm:ss",d1);
+
+					String timework = null;
+					String timestandby = null;
+					String timealarm = null;
+					String timewarn = null;
+					String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
+					String sqlfirststandby = "SELECT tb_standby.fUploadDataTime FROM tb_standby ORDER BY tb_standby.fUploadDataTime DESC LIMIT 0,1";
+					String sqlfirstalarm = "SELECT tb_alarm.fUploadDataTime FROM tb_alarm ORDER BY tb_alarm.fUploadDataTime DESC LIMIT 0,1";
+					String sqlfirstwarn = "SELECT tb_warn.fUploadDataTime FROM tb_warn ORDER BY tb_warn.fUploadDataTime DESC LIMIT 0,1";
+					ResultSet rs1 =stmt.executeQuery(sqlfirstwork);
+					while (rs1.next()) {
+						timework = rs1.getString("fUploadDataTime");
+					}
+					ResultSet rs2 =stmt.executeQuery(sqlfirststandby);
+					while (rs2.next()) {
+						timestandby = rs2.getString("fUploadDataTime");
+					}
+					ResultSet rs3 =stmt.executeQuery(sqlfirstalarm);
+					while (rs3.next()) {
+						timealarm = rs3.getString("fUploadDataTime");
+					}
+					ResultSet rs4 =stmt.executeQuery(sqlfirstwarn);
+					while (rs4.next()) {
+						timewarn = rs4.getString("fUploadDataTime");
+					}
+
+					if(timework == null || timework.equals("null")){
+						timework = "2000-01-01 01:01:01";
+					}
+					if(timestandby == null || timestandby.equals("null")){
+						timestandby = "2000-01-01 01:01:01";
+					}
+					if(timealarm == null || timealarm.equals("null")){
+						timealarm = "2000-01-01 01:01:01";
+					}
+					if(timewarn == null || timewarn.equals("null")){
+						timewarn = "2000-01-01 01:01:01";
+					}
+
+					//统计四张状态表
+					String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
+							+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime,tb_standby.fwelder_no,tb_standby.fjunction_no,tb_standby.fweld_no,tb_standby.fchannel,tb_standby.fmax_electricity,tb_standby.fmin_electricity,tb_standby.fmax_voltage,tb_standby.fmin_voltage,tb_standby.fwelder_itemid,tb_standby.fjunction_itemid,tb_standby.fmachine_itemid,tb_standby.fwirefeedrate,tb_standby.fmachinemodel,tb_standby.fwirediameter,tb_standby.fmaterialgas,tb_standby.fstatus) SELECT "
+							+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
+							+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fstatus FROM tb_live_data "
+							+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime BETWEEN '" + timestandby + "' AND '" + time2 + "' "
+							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
+
+					/*String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
                     		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas) SELECT tb_live_data.fwelder_id,"
                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
                     		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas FROM tb_live_data "
                     		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + timework + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";*/
-                    
-                    String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
-                    		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas,tb_work.fstatus) SELECT tb_live_data.fwelder_id,"
-                    		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
-                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fstatus FROM tb_live_data "
-                    		+ "WHERE (tb_live_data.fstatus = '3' OR fstatus= '5' OR fstatus= '7' OR fstatus= '99') AND tb_live_data.FWeldTime BETWEEN '" + timework + "' AND '" + time2 + "' "
-                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
 
-                    String sqlwarn = "INSERT INTO tb_warn(tb_warn.fwelder_id,tb_warn.fgather_no,tb_warn.fmachine_id,tb_warn.fjunction_id,"
-                    		+ "tb_warn.fitemid,tb_warn.felectricity,tb_warn.fvoltage,tb_warn.frateofflow,tb_warn.fwarntime,tb_warn.fstarttime,tb_warn.fendtime,tb_warn.fwelder_no,tb_warn.fjunction_no,tb_warn.fweld_no,tb_warn.fchannel,tb_warn.fmax_electricity,tb_warn.fmin_electricity,tb_warn.fmax_voltage,tb_warn.fmin_voltage,tb_warn.fwelder_itemid,tb_warn.fjunction_itemid,tb_warn.fmachine_itemid,tb_warn.fwirefeedrate,tb_warn.fmachinemodel,tb_warn.fwirediameter,tb_warn.fmaterialgas,tb_warn.fstatus) SELECT "
-                    		+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
-                    		+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fstatus FROM tb_live_data "
-                    		+ "WHERE tb_live_data.fstatus != '0' AND tb_live_data.fstatus != '3' AND tb_live_data.fstatus != '5' AND tb_live_data.fstatus != '7' AND tb_live_data.FWeldTime BETWEEN '" + timewarn + "' AND '" + time2 + "' "
-                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
-                    
-                    /*String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
+					String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
+							+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas,tb_work.fstatus) SELECT tb_live_data.fwelder_id,"
+							+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
+							+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fstatus FROM tb_live_data "
+							+ "WHERE (tb_live_data.fstatus = '3' OR fstatus= '5' OR fstatus= '7' OR fstatus= '99') AND tb_live_data.FWeldTime BETWEEN '" + timework + "' AND '" + time2 + "' "
+							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
+
+					String sqlwarn = "INSERT INTO tb_warn(tb_warn.fwelder_id,tb_warn.fgather_no,tb_warn.fmachine_id,tb_warn.fjunction_id,"
+							+ "tb_warn.fitemid,tb_warn.felectricity,tb_warn.fvoltage,tb_warn.frateofflow,tb_warn.fwarntime,tb_warn.fstarttime,tb_warn.fendtime,tb_warn.fwelder_no,tb_warn.fjunction_no,tb_warn.fweld_no,tb_warn.fchannel,tb_warn.fmax_electricity,tb_warn.fmin_electricity,tb_warn.fmax_voltage,tb_warn.fmin_voltage,tb_warn.fwelder_itemid,tb_warn.fjunction_itemid,tb_warn.fmachine_itemid,tb_warn.fwirefeedrate,tb_warn.fmachinemodel,tb_warn.fwirediameter,tb_warn.fmaterialgas,tb_warn.fstatus) SELECT "
+							+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
+							+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fstatus FROM tb_live_data "
+							+ "WHERE tb_live_data.fstatus != '0' AND tb_live_data.fstatus != '3' AND tb_live_data.fstatus != '5' AND tb_live_data.fstatus != '7' AND tb_live_data.FWeldTime BETWEEN '" + timewarn + "' AND '" + time2 + "' "
+							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
+
+					/*String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
                     		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime,tb_alarm.fwelder_no,tb_alarm.fjunction_no,tb_alarm.fweld_no,tb_alarm.fchannel,tb_alarm.fmax_electricity,tb_alarm.fmin_electricity,tb_alarm.fmax_voltage,tb_alarm.fmin_voltage,tb_alarm.fwelder_itemid,tb_alarm.fjunction_itemid,tb_alarm.fmachine_itemid,tb_alarm.fwirefeedrate,tb_alarm.fmachinemodel,tb_alarm.fwirediameter,tb_alarm.fmaterialgas) SELECT tb_live_data.fwelder_id,"
                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
                     		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas FROM tb_live_data "
@@ -308,50 +310,50 @@ public class Server implements Runnable {
                     		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
                     		+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
                     		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";*/
-                    
-                    //大连
-                    String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
-                    		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime,tb_alarm.fwelder_no,tb_alarm.fjunction_no,tb_alarm.fweld_no,tb_alarm.fchannel,tb_alarm.fmax_electricity,tb_alarm.fmin_electricity,tb_alarm.fmax_voltage,tb_alarm.fmin_voltage,tb_alarm.fwelder_itemid,tb_alarm.fjunction_itemid,tb_alarm.fmachine_itemid,tb_alarm.fwirefeedrate,tb_alarm.fmachinemodel,tb_alarm.fwirediameter,tb_alarm.fmaterialgas,tb_alarm.fstatus) SELECT tb_live_data.fwelder_id,"
-                    		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
-                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fstatus FROM tb_live_data "
-                    		+ "INNER JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
-                    		+ "WHERE (fstatus= '98' OR fstatus= '99')"
-                    		+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
-                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
-                    
-                	stmt.executeUpdate(sqlstandby);
-                	stmt.executeUpdate(sqlwork);
-                	stmt.executeUpdate(sqlwarn);
-                	stmt.executeUpdate(sqlalarm);
-                	
-                } catch (ClassNotFoundException e) {  
-                    System.out.println("Broken driver");
-                    e.printStackTrace();  
-                } catch (SQLException e) {
-                    System.out.println("Broken conn");
-                    e.printStackTrace();
-                } catch (ParseException e) {
+
+					//大连
+					String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
+							+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime,tb_alarm.fwelder_no,tb_alarm.fjunction_no,tb_alarm.fweld_no,tb_alarm.fchannel,tb_alarm.fmax_electricity,tb_alarm.fmin_electricity,tb_alarm.fmax_voltage,tb_alarm.fmin_voltage,tb_alarm.fwelder_itemid,tb_alarm.fjunction_itemid,tb_alarm.fmachine_itemid,tb_alarm.fwirefeedrate,tb_alarm.fmachinemodel,tb_alarm.fwirediameter,tb_alarm.fmaterialgas,tb_alarm.fstatus) SELECT tb_live_data.fwelder_id,"
+							+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
+							+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fstatus FROM tb_live_data "
+							+ "INNER JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
+							+ "WHERE (fstatus= '98' OR fstatus= '99')"
+							+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
+							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
+
+					stmt.executeUpdate(sqlstandby);
+					stmt.executeUpdate(sqlwork);
+					stmt.executeUpdate(sqlwarn);
+					stmt.executeUpdate(sqlalarm);
+
+				} catch (ClassNotFoundException e) {  
+					System.out.println("Broken driver");
+					e.printStackTrace();  
+				} catch (SQLException e) {
+					System.out.println("Broken conn");
+					e.printStackTrace();
+				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-            	
-            }  
-        }, time , 1000*60*60);
-	    
-	    //获取最新焊口和焊机统计时间
-	    check = new DB_Connectioncode(stmt,conn,connet);
+
+			}  
+		}, time , 1000*60*60);
+
+		//获取最新焊口和焊机统计时间
+		check = new DB_Connectioncode(stmt,conn,connet);
 		NS.websocket.dbdata = this.dbdata;
-  		
+
 		listarray1 = check.getId1();
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
 		listarray4 = check.getId4();
-		
+
 		System.out.println(listarray1);
 		System.out.println(listarray2);
 		System.out.println(listarray3);
 		System.out.println(listarray4);
-		
+
 		NS.mysql.listarray1 = this.listarray1;
 		NS.mysql.listarray2 = this.listarray2;
 		NS.mysql.listarray3 = this.listarray3;
@@ -364,72 +366,72 @@ public class Server implements Runnable {
 		NS.listarray2 = this.listarray2;
 		NS.listarray3 = this.listarray3;
 		NS.listarray4 = this.listarray4;
-	    
+
 		//开启线程每分钟更新焊口数据
 		Timer tExit2 = null; 
 		tExit2 = new Timer();  
-        tExit2.schedule(new TimerTask() {  
-            @Override  
-            public void run() {
-  		
-	            try{
-	            	if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
-		        	{
-		        		try {
+		tExit2.schedule(new TimerTask() {  
+			@Override  
+			public void run() {
+
+				try{
+					if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+					{
+						try {
 							Class.forName("com.mysql.jdbc.Driver");
 							conn = DriverManager.getConnection(connet);
 							stmt = conn.createStatement();
-		        	    } catch (ClassNotFoundException e) {  
-		                    System.out.println("Broken driver");
-		                    e.printStackTrace();
-		                    return;
-		                } catch (SQLException e) {
-		                    System.out.println("Broken conn");
-		                    e.printStackTrace();
-		                    return;
-		                }  
-		        	}
-	            	
-	        		DB_Connectioncode check = new DB_Connectioncode(stmt,conn,connet);
-	        		
-	        		listarray1 = check.getId1();
-	        		listarray2 = check.getId2();
-	        		listarray3 = check.getId3();
-	        		
-	        		NS.mysql.listarray1 = listarray1;
-	        		NS.mysql.listarray2 = listarray2;
-	        		NS.mysql.listarray3 = listarray3;
-	        		NS.android.listarray1 = listarray1;
-	        		NS.android.listarray2 = listarray2;
-	        		NS.listarray1 = listarray1;
-	        		NS.listarray2 = listarray2;
-	        		NS.listarray3 = listarray3;
-	        		NS.listarray4 = listarray4;
-	        	}catch (Exception e) {
+						} catch (ClassNotFoundException e) {  
+							System.out.println("Broken driver");
+							e.printStackTrace();
+							return;
+						} catch (SQLException e) {
+							System.out.println("Broken conn");
+							e.printStackTrace();
+							return;
+						}  
+					}
+
+					DB_Connectioncode check = new DB_Connectioncode(stmt,conn,connet);
+
+					listarray1 = check.getId1();
+					listarray2 = check.getId2();
+					listarray3 = check.getId3();
+
+					NS.mysql.listarray1 = listarray1;
+					NS.mysql.listarray2 = listarray2;
+					NS.mysql.listarray3 = listarray3;
+					NS.android.listarray1 = listarray1;
+					NS.android.listarray2 = listarray2;
+					NS.listarray1 = listarray1;
+					NS.listarray2 = listarray2;
+					NS.listarray3 = listarray3;
+					NS.listarray4 = listarray4;
+				}catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return;
 				}
-            }  
-        }, 0,60000);
-        
-        
-        //发送短信
-        /*Calendar calendar1 = Calendar.getInstance();
+			}  
+		}, 0,60000);
+
+
+		//发送短信
+		/*Calendar calendar1 = Calendar.getInstance();
         //calendar1.add(Calendar.DAY_OF_MONTH, +1);    // 控制日
         calendar1.set(Calendar.HOUR_OF_DAY, 8); // 控制时
         calendar1.set(Calendar.MINUTE, 0);    // 控制分
         calendar1.set(Calendar.SECOND, 0);    // 控制秒
         Date time1 = calendar1.getTime(); 
-        
+
         Timer tExit3 = new Timer();
         tExit3.schedule(new TimerTask(){
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				
+
 				Calendar calendar1 = Calendar.getInstance();
-				
+
 				//获取时间一天查询
 				Calendar calendar21 = Calendar.getInstance();
 		        calendar21.add(Calendar.DAY_OF_MONTH, -1);    // 控制日
@@ -445,29 +447,29 @@ public class Server implements Runnable {
 		        calendar22.set(Calendar.SECOND, 59);    // 控制秒
 		        Date time2 = calendar22.getTime(); 
 		        String sqltime2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time2);
-				
+
 				try{
 					Date time3 = new Date();
 					time3 = new Date(time3.getTime() - 3600*24*1000);
-				
+
 					//请求的webservice的url
 					URL url = new URL("http://smssh1.253.com/msg/send/json");
-					
+
 					//创建http链接
 					HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-					
+
 					//设置请求的方法类型
 					httpURLConnection.setRequestMethod("POST");
-					
+
 					//设置请求的内容类型
 					httpURLConnection.setRequestProperty("Content-type", "application/json");
 
 					//设置发送数据
 					httpURLConnection.setDoOutput(true);
-					
+
 					//设置接受数据
 					httpURLConnection.setDoInput(true);
-					
+
 					try {
 						Class.forName("com.mysql.jdbc.Driver");
 	                    conn = DriverManager.getConnection(connet);
@@ -479,7 +481,7 @@ public class Server implements Runnable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-			        
+
 			        String sql = "SELECT SUM(a)/8/3600,fgather_no FROM "
 			        		+ "(SELECT SUM(tb_work.fworktime) a,tb_work.fgather_no  FROM tb_work WHERE (tb_work.fgather_no = '0001' OR tb_work.fgather_no = '0002') AND tb_work.fUploadDataTime BETWEEN '"+sqltime1+"' AND '"+sqltime2+"' GROUP BY tb_work.fgather_no "
 			        		+ "UNION "
@@ -491,33 +493,33 @@ public class Server implements Runnable {
 			        	listarray5.add(rs.getString("SUM(a)/8/3600"));
 			        	listarray5.add(rs.getString("fgather_no"));
 			        }
-					
+
 					String  un  =  "CN0753433";
 		            String  pw  =  "WYLbBdG13w6714";
 		            String  phone  =  "13122316882";
 		            String  content  =  "腾焊";
 		            String  postJsonTpl  =  "\"account\":\""+un+"\",\"password\":\""+pw+"\",\"phone\":\""+phone+"\",\"report\":\"false\",\"msg\":\""+content+"\"";
 		            String  jsonBody  =  "{" + String.format(postJsonTpl,  un,  pw,  phone,  content) + "}";
-					
+
 					//发送数据,使用输出流
 					OutputStream outputStream = httpURLConnection.getOutputStream();
 					//发送的soap协议的数据
 					//String requestXmlString = requestXml("北京");
-					
+
 					//String content1 = "user_id="+ URLEncoder.encode("123", "gbk");
-					
+
 					//发送数据
 					outputStream.write(jsonBody.getBytes());
-					
+
 					//接收数据
 					InputStream inputStream = httpURLConnection.getInputStream();
-					
+
 					//定义字节数组
 					byte[] b = new byte[1024];
-					
+
 					//定义一个输出流存储接收到的数据
 					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-					
+
 					//开始接收数据
 					int len = 0;
 					while (true) {
@@ -530,134 +532,128 @@ public class Server implements Runnable {
 					}
 					//从输出流中获取读取到数据(服务端返回的)
 					String response = byteArrayOutputStream.toString();
-				  
+
 					System.out.println(response);
 
 				}catch(Exception e){
 					e.printStackTrace();
 				}
 			}
-			
+
         }, time1 , 1000*60*60*24);*/
-        
-        //工作线程
-        new Thread(socketstart).start();
+
+		//工作线程
+		new Thread(socketstart).start();
 		new Thread(websocketstart).start();
 		//new Thread(sockettran).start();
-    	//new Email().run();
+		//new Email().run();
 		//new UpReport();
 
-    }  
-    
-    //开启5551端口获取焊机数据
-    public Runnable socketstart = new Runnable() {
+	}  
+
+	//开启5551端口获取焊机数据
+	public Runnable socketstart = new Runnable() {
 
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
 			EventLoopGroup bossGroup = new NioEventLoopGroup(); 
-	        EventLoopGroup workerGroup = new NioEventLoopGroup();
-	        try{  
-	            ServerBootstrap b=new ServerBootstrap();  
-	            b.group(bossGroup,workerGroup)
-	            	.channel(NioServerSocketChannel.class)
-	            	.option(ChannelOption.SO_BACKLOG,1024)
-	            	.childHandler(NS);  
-	            
-	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
-	                @Override
-	                public void initChannel(SocketChannel chsoc) throws Exception {
-	                	synchronized (socketlist) {
-	                	chsoc.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
-	                	chsoc.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
-	                	chsoc.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
-	                	chsoc.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
-	                	chsoc.pipeline().addLast(NS);
-	                	socketcount++;
-						socketlist.put(Integer.toString(socketcount),chsoc);
-						NS.socketlist = socketlist;
-						NWS.socketlist = socketlist;
-	                	}
-	                }
-	            });
-	            
-	            //绑定端口，等待同步成功  
-	            ChannelFuture f;
+			EventLoopGroup workerGroup = new NioEventLoopGroup();
+			try{  
+				ServerBootstrap b=new ServerBootstrap();  
+				b.group(bossGroup,workerGroup)
+				.channel(NioServerSocketChannel.class)
+				.option(ChannelOption.SO_BACKLOG,1024)
+				.childHandler(NS);  
+
+				b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
+					@Override
+					public void initChannel(SocketChannel chsoc) throws Exception {
+						chsoc.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
+						chsoc.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
+						chsoc.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
+						chsoc.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
+						chsoc.pipeline().addLast(
+								new ReadTimeoutHandler(100),
+								new WriteTimeoutHandler(100),
+								NS);
+						synchronized (socketlist) {
+							socketcount++;
+							socketlist.put(Integer.toString(socketcount),chsoc);
+							NS.socketlist = socketlist;
+							NWS.socketlist = socketlist;
+						}
+					}
+				});
+
+				//绑定端口，等待同步成功  
+				ChannelFuture f;
 				f = b.bind(5551).sync();
-	            //等待服务端关闭监听端口  
-	            f.channel().closeFuture().sync(); 
-	        } catch (InterruptedException e) {
+				//等待服务端关闭监听端口  
+				f.channel().closeFuture().sync(); 
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}  finally {  
-	            //释放线程池资源  
-	            bossGroup.shutdownGracefully();  
-	            workerGroup.shutdownGracefully();  
-	        }  
+				//释放线程池资源  
+				bossGroup.shutdownGracefully();  
+				workerGroup.shutdownGracefully();  
+			}  
 		}
-    };
+	};
 
-    //开启5550端口处理网页实时数据
-    public Runnable websocketstart = new Runnable(){
+	//开启5550端口处理网页实时数据
+	public Runnable websocketstart = new Runnable(){
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			
+
 			EventLoopGroup bossGroup = new NioEventLoopGroup();
-	        EventLoopGroup workerGroup = new NioEventLoopGroup();
-	        
-	        try{
-	            ServerBootstrap serverBootstrap = new ServerBootstrap();
-	            serverBootstrap
-	            	.group(bossGroup, workerGroup)
-	            	.channel(NioServerSocketChannel.class)
-	            	.childHandler(new ChannelInitializer<SocketChannel>(){
+			EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-						@Override
-						protected void initChannel(SocketChannel chweb) throws Exception {
-							// TODO Auto-generated method stub
+			try{
+				ServerBootstrap serverBootstrap = new ServerBootstrap();
+				serverBootstrap
+				.group(bossGroup, workerGroup)
+				.channel(NioServerSocketChannel.class)
+				.childHandler(new ChannelInitializer<SocketChannel>(){
 
-							synchronized (websocketlist) {
-							/*try{
-		                        SSLContext sslContext = SslUtil.createSSLContext("PKCS12","/opt/tomcat/cert/cert-1542089844623_cms.cnec5.com.pfx","1qo8TcPw");
-		                        SSLEngine engine = sslContext.createSSLEngine(); 
-		                        engine.setUseClientMode(false);
-		                        chweb.pipeline().addLast(new SslHandler(engine));
-	                        }catch(Exception e){
-	                          System.out.println("wss链接失败");
-	                        }*/
-							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
-							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
-							chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-							chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://localhost:5550/SerialPortDemo/ws/张三"));
-							chweb.pipeline().addLast("myWebSocketHandler", NWS);
+					@Override
+					protected void initChannel(SocketChannel chweb) throws Exception {
+						// TODO Auto-generated method stub
+						chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
+						chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
+						chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
+						chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://localhost:5550/SerialPortDemo/ws/张三"));
+						chweb.pipeline().addLast("myWebSocketHandler", NWS);
+						synchronized (websocketlist) {
 							websocketcount++;
 							websocketlist.put(Integer.toString(websocketcount),chweb);
 							NS.websocketlist = websocketlist;
-							}
-							
-							//System.out.println(chweb);
 						}
-	            		
-	            	});
-	            
-	            Channel ch = serverBootstrap.bind(5550).sync().channel();
-	            ch.closeFuture().sync();
-	            
-	            /*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
+
+						//System.out.println(chweb);
+					}
+
+				});
+
+				Channel ch = serverBootstrap.bind(5550).sync().channel();
+				ch.closeFuture().sync();
+
+				/*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
 	            channelFuture.channel().closeFuture().sync();*/
-	            
-	        } catch (Exception ex) { 
-	 			 ex.printStackTrace();
-	        } finally{
-	            bossGroup.shutdownGracefully();
-	            workerGroup.shutdownGracefully();
-	        }
+
+			} catch (Exception ex) { 
+				ex.printStackTrace();
+			} finally{
+				bossGroup.shutdownGracefully();
+				workerGroup.shutdownGracefully();
+			}
 		}
-    };
-    
-    //多层级转发
-    public Runnable sockettran = new Runnable() {
+	};
+
+	//多层级转发
+	public Runnable sockettran = new Runnable() {
 
 		@Override
 		public void run() {
@@ -665,60 +661,60 @@ public class Server implements Runnable {
 				client.run();
 			}
 		}
-    };
+	};
 
-	 public static void main(String [] args) throws IOException 
-	 {  
-	     Thread desktopServerThread = new Thread(new Server());  
-	     desktopServerThread.start();  
-	 }
+	public static void main(String [] args) throws IOException 
+	{  
+		Thread desktopServerThread = new Thread(new Server());  
+		desktopServerThread.start();  
+	}
 
 }
-    
-    /*public Runnable websocketstart = new Runnable() {  
+
+/*public Runnable websocketstart = new Runnable() {  
         private PrintWriter getWriter(Socket socket) throws IOException {  
             OutputStream socketOut = socket.getOutputStream();  
             return new PrintWriter(socketOut, true);  
         }  
-        
+
         public Server server;
         public Thread workThread;
 		private HashMap<String, Socket> websocket = new HashMap<>();;
 		public void run() {
-		
+
 			while(true){
 				//建立websocket连接
 				try {
-				
+
 				    boolean hasHandshake = false;
-					
+
 					if(serverSocket==null){
-						
+
 						serverSocket = new ServerSocket(SERVERPORTWEB);
-						
+
 	                }  
-					
+
 					websocketlink = serverSocket.accept();
 
 					websocketcount++;
-		
+
 					//获取socket输入流信息  
 	                InputStream in = websocketlink.getInputStream(); 
-	                
+
 	                PrintWriter pw = getWriter(websocketlink);
-	                
+
 	                //读入缓存(定义一个1M的缓存区)  
 	                byte[] buf = new byte[1024]; 
-	                
+
 	                //读到字节（读取输入流数据到缓存）  
 	                int len = in.read(buf, 0, 1024);
-	                
+
 	                //读到字节数组（定义一个容纳数据大小合适缓存区）  
 	                byte[] res = new byte[len];  
-	                
+
 	                //将buf内中数据拷贝到res中  
 	                System.arraycopy(buf, 0, res, 0, len); 
-	                
+
 	                //打印res缓存内容  
 	                String key = new String(res);  
 	                if(!hasHandshake && key.indexOf("Key") > 0){  
@@ -749,13 +745,13 @@ public class Server implements Runnable {
 	                    pw.flush();  
 	                    //将握手标志更新，只握一次  
 	                    hasHandshake = true;  
-	
+
 	                }
 
 	                websocket.put(Integer.toString(websocketcount),websocketlink);
-	                
+
 	                NS.websocket = this.websocket;
-	                
+
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -763,32 +759,32 @@ public class Server implements Runnable {
 			}
 		}
  };*/
- 
- 
- 
- /*public Runnable websocketsend = new Runnable() {
+
+
+
+/*public Runnable websocketsend = new Runnable() {
         public Thread workThread;
 		public void run() {
 
 			while(true){
-			
+
 				synchronized(this) {  
-				
+
 				while(websendtype==1){
-				
+
 					Reciver reciver=new Reciver();
 	                reciver.setCallback(new Mysql(),new Websocket(),new Socketsend(),connet,listarray1,listarray2,listarray3,websocket,ip1,ssc,selector,false);
 	                reciver.reciver();
 				}
-				
+
 				}
 			}
 		}
  	};*/
 
-	 
-	/*class Handler implements Runnable {
-		
+
+/*class Handler implements Runnable {
+
 		public DB_Connectionmysql db_connection;
 	    public Socket websocketlink;
 		public String str;
@@ -801,7 +797,7 @@ public class Server implements Runnable {
 		public ArrayList<String> listarray2 = new ArrayList<String>();
 		public ArrayList<String> listarray3 = new ArrayList<String>();
 		public String limit;
-	    
+
 	    public Handler(Socket socket,String str,List<Handler> handlers,int i,int websendtype,String connet,ArrayList<String> listarray2,ArrayList<String> listarray3) {  
 	        this.websocketlink = socket; 
 	        this.str = str;
@@ -811,9 +807,9 @@ public class Server implements Runnable {
 	        this.connet = connet;
 	        this.listarray2 = listarray2;
 	        this.listarray3 = listarray3;
-	        
+
 	    }  
-	    
+
 	    public void run() {
 			String strdata = "";
 			String strsend = "";
@@ -821,25 +817,25 @@ public class Server implements Runnable {
 			Timestamp timesql2 = null;
 			Timestamp timesql3 = null;
 			try {
-						
+
 				if(str==""){
-					
+
 				}
 				else
 				{	
-					
+
 					byte[] str1=new byte[str.length()/2];
-	
+
 					for (int i = 0; i < str1.length; i++)
 					{
 						String tstr1=str.substring(i*2, i*2+2);
 						Integer k=Integer.valueOf(tstr1, 16);
 						str1[i]=(byte)k.byteValue();
 					}
-	            	
+
 					//串口数据处理
 					for(int i=0;i<str1.length;i++){
-	                 	
+
 	                 	//判断为数字还是字母，若为字母+256取正数
 	                 	if(str1[i]<0){
 	                 		String r = Integer.toHexString(str1[i]+256);
@@ -859,7 +855,7 @@ public class Server implements Runnable {
 	                 		strdata+=r;	
 	                 	}
 	                 }
-	                     
+
 					 strdata=str;
 					 int weldname1 = Integer.valueOf(strdata.subSequence(10, 14).toString(),16);
 					 String weldname = String.valueOf(weldname1);
@@ -881,7 +877,7 @@ public class Server implements Runnable {
 					 String electricity1=strdata.substring(26,30);
 					 String voltage1=strdata.substring(30,34);
 					 String status1=strdata.substring(38,40);
-					 
+
 					 long year1 = Integer.valueOf(str.subSequence(40, 42).toString(),16);
                      String yearstr1 = String.valueOf(year1);
                      long month1 = Integer.valueOf(str.subSequence(42, 44).toString(),16);
@@ -924,25 +920,25 @@ public class Server implements Runnable {
                     		 secondstr1="0"+secondstr1;
                     	 }
                      }
-       	    		 
+
                      String timestr1 = yearstr1+"-"+monthstr1+"-"+daystr1+" "+hourstr1+":"+minutestr1+":"+secondstr1;
                      SimpleDateFormat timeshow1 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
                      try {
-						
+
 						Date time1 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr1);
                     	//java.util.Date time4 = timeshow3.parse(timestr3);
 						timesql1 = new Timestamp(time1.getTime());
-						
+
 					 } catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					 }
-	                 
-					 
+
+
 					 String electricity2=strdata.substring(52,56);
 					 String voltage2=strdata.substring(56,60);
 					 String status2=strdata.substring(64,66);
-					 
+
 					 long year2 = Integer.valueOf(str.subSequence(66, 68).toString(),16);
                      String yearstr2 = String.valueOf(year2);
                      long month2 = Integer.valueOf(str.subSequence(68, 70).toString(),16);
@@ -985,7 +981,7 @@ public class Server implements Runnable {
                     		 secondstr2="0"+secondstr2;
                     	 }
                      }
-       	    		 
+
                      String timestr2 = yearstr2+"-"+monthstr2+"-"+daystr2+" "+hourstr2+":"+minutestr2+":"+secondstr2;
                      SimpleDateFormat timeshow2 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
                      try {
@@ -993,17 +989,17 @@ public class Server implements Runnable {
 						Date time2 = DateTools.parse("yy-MM-dd HH:mm:ss",timestr2);
                     	//java.util.Date time4 = timeshow3.parse(timestr3);
 						timesql2 = new Timestamp(time2.getTime());
-						
+
 					 } catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					 }
-					 
-					 
+
+
 					 String electricity3=strdata.substring(78,82);
 					 String voltage3=strdata.substring(82,86);
 					 String status3=strdata.substring(90,92);
-					 
+
 					 long year3 = Integer.valueOf(str.subSequence(92, 94).toString(),16);
                      String yearstr3 = String.valueOf(year3);
                      long month3 = Integer.valueOf(str.subSequence(94, 96).toString(),16);
@@ -1046,7 +1042,7 @@ public class Server implements Runnable {
                     		 secondstr3="0"+secondstr3;
                     	 }
                      }
-       	    		 
+
                      String timestr3 = yearstr3+"-"+monthstr3+"-"+daystr3+" "+hourstr3+":"+minutestr3+":"+secondstr3;
                      SimpleDateFormat timeshow3 = new SimpleDateFormat("yy-MM-dd hh:mm:ss");
                      try {
@@ -1057,15 +1053,15 @@ public class Server implements Runnable {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					 }
-					 
+
                      try{
-                    	 
+
 	                     DB_Connectionweb b =new DB_Connectionweb(connet);
 	                     DB_Connectioncode c =new DB_Connectioncode(code,connet);
 	                     DB_Connectioncode c =new DB_Connectioncode();
 		                 String dbdata = b.getId();
 		                 String limit = c.getId();
-                    	 
+
                     	 for(int i=0;i<listarray3.size();i+=5){
                     		 String weldjunction = listarray3.get(i);
                     		 if(weldjunction.equals(code)){
@@ -1074,11 +1070,11 @@ public class Server implements Runnable {
                     			 String maxv = listarray3.get(i+3);
                     			 String mixv = listarray3.get(i+4);
                     			 limit = maxe + mixe + maxv + mixv;
-                    			 
+
                     		 }
                     	 }
-                    	 
-                    	 
+
+
                     	 for(int i=0;i<listarray2.size();i+=3){
                     		 String fequipment_no = listarray2.get(i);
                     		 String fgather_no = listarray2.get(i+1);
@@ -1095,7 +1091,7 @@ public class Server implements Runnable {
 		                     }
                     	 }
 
-                    	 
+
 		                 for(int i=0;i<dbdata.length();i+=13){
 		                	 String status=dbdata.substring(0+i,2+i);
 		                	 String framework=dbdata.substring(2+i,4+i);
@@ -1118,33 +1114,33 @@ public class Server implements Runnable {
                     	 websendtype=0;
                     	 str="";
  					 }
-	    
+
 	                 datawritetype = true;
-	                 
+
 	                //数据发送
 	                byte[] bb3=strsend.getBytes();
-	                  
+
 					ByteBuffer byteBuf = ByteBuffer.allocate(bb3.length);
-					
+
 					for(int j=0;j<bb3.length;j++){
-						
+
 						byteBuf.put(bb3[j]);
-						
+
 					}
-					
+
 					byteBuf.flip();
-					
+
 	                //将内容返回给客户端  
 	                responseClient(byteBuf, true, websocketlink); 
-	                
+
 				}
-				
+
 			} catch (IOException e) {
-				
+
 				websendtype=0;
-				
+
 				if(datawritetype = true){
-					
+
 					try {
 						websendtype=0; 
 						websocketlink.close();
@@ -1157,24 +1153,24 @@ public class Server implements Runnable {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} 
-					
+
 				}
 			}
 		}  
-	    
+
 	    public void responseClient(ByteBuffer byteBuf, boolean finalFragment,Socket socket) throws IOException {  
-	        
+
 	    	OutputStream out = websocketlink.getOutputStream();  
 	        int first = 0x00;  
-	        
+
 	        //是否是输出最后的WebSocket响应片段  
 	            if (finalFragment) {  
 	                first = first + 0x80;  
 	                first = first + 0x1;  
 	            }  
-	            
+
 	            out.write(first); 
-	            
+
 	            if (byteBuf.limit() < 126) {  
 	                out.write(byteBuf.limit());  
 	            } else if (byteBuf.limit() < 65536) {  
@@ -1197,6 +1193,6 @@ public class Server implements Runnable {
 	            out.write(byteBuf.array(), 0, byteBuf.limit());  
 	            out.flush();  
 	    }  
-	    
+
 	}*/
 
