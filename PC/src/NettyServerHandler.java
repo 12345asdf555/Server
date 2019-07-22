@@ -156,7 +156,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						e.printStackTrace();
 					}
 				}
-			} else if(str.substring(0,2).equals("fe") && str.substring(str.length()-2, str.length()).equals("fe")){  //江南任务派发 任务号、焊工、焊机、状态
+			} else if(str.substring(0,2).equals("fe") && str.substring(str.length()-2, str.length()).equals("fe")){  //华域PLC
 				//System.out.println("1");
 				System.out.println("接收数据:"+str);
 				if(socketchannel!=null){
@@ -179,9 +179,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				}
 
 			} else{    //处理焊机下发和上传
-
-				//System.out.println(str);
-
 				synchronized (websocketlist) {
 					ArrayList<String> listarraybuf = new ArrayList<String>();
 					boolean ifdo = false;

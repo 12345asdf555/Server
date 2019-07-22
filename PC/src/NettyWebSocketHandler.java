@@ -134,6 +134,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 
 		String str = ((TextWebSocketFrame) frame).text();
 
+		//OTC、松下下发指令
 		if(str.substring(0,2).equals("7E") || str.substring(0,6).equals("FE5AA5")){
 
 			synchronized (socketlist) {
