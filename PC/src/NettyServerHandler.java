@@ -31,6 +31,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	public String ip;
     public String ip1;
     public String connet;
+    public String connetty;
     public Thread workThread;
     public java.sql.Statement stmt =null;
     public SocketChannel socketchannel = null;
@@ -178,6 +179,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 					}
 				}
 				mysql.Mysqlbase(str);
+				//通用实时数据时间加入毫秒、送死速度
 		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
 		        if(socketchannel!=null){
 			        try {

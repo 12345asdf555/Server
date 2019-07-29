@@ -17,6 +17,7 @@ public class DB_Connectioncode {
 	public ArrayList<String> listarray2 = new ArrayList<String>();
 	public ArrayList<String> listarray3 = new ArrayList<String>();
 	public ArrayList<String> listarray4 = new ArrayList<String>();
+	public ArrayList<String> listarray5 = new ArrayList<String>();
 
 	public String getId() {
 		return datasend;
@@ -373,6 +374,51 @@ public class DB_Connectioncode {
 			e.printStackTrace();
 
 		}
+
+		//查焊机与ip
+		inSql = "SELECT tb_welding_machine.fequipment_no,tb_welding_machine.fIP from tb_welding_machine";
+
+		try {
+
+			try {
+				if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+				{
+					try {
+						Class.forName("com.mysql.jdbc.Driver");
+						conn = DriverManager.getConnection(connet);
+						stmt = conn.createStatement();
+					} catch (ClassNotFoundException e) {  
+						System.out.println("Broken driver");
+						e.printStackTrace();
+						return;
+					} catch (SQLException e) {
+						System.out.println("Broken conn");
+						e.printStackTrace();
+						return;
+					}  
+				}
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			ResultSet rs =stmt.executeQuery(inSql);
+
+			while (rs.next()) {
+				String fequipment_no = rs.getString("fequipment_no");
+				String fip = rs.getString("fip");
+				listarray5.add(fequipment_no);
+				listarray5.add(fip);
+
+			}
+		}catch (SQLException e) {
+
+			System.out.println("Broken insert");
+
+			e.printStackTrace();
+
+		}
+
 		//重工Webservice调用返回焊机实时电流电压
 		/*inSql = "select tb_gather.fid,tb_welding_machine.fequipment_no from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
 
@@ -485,6 +531,10 @@ public class DB_Connectioncode {
 
 	public ArrayList<String> getId4() {
 		return listarray4;
+	}
+	
+	public ArrayList<String> getId5() {
+		return listarray5;
 	}
 }
 
