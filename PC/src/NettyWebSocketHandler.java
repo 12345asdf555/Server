@@ -133,9 +133,42 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 		}
 
 		String str = ((TextWebSocketFrame) frame).text();
+		
+		//福尼斯焊机处理
+		if(str.substring(0,1).equals("0") || str.substring(0,1).equals("1")){
+			synchronized (socketlist) {
+				ArrayList<String> listarraybuf = new ArrayList<String>();
+				boolean ifdo = false;
 
+				Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
+				while(webiter.hasNext()){
+					try{
+						Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+						socketfail = entry.getKey();
+						SocketChannel socketcon = entry.getValue();
+						String[] socketip1 = socketcon.toString().split("/");
+						String[] socketip2 = socketip1[1].split(":");
+						String socketip = socketip2[0];
+						//if(!socketip.equals("192.168.1.101")){
+						if(!socketip.equals("121.196.222.216")){
+							socketcon.writeAndFlush(str).sync();
+						}
+
+					}catch (Exception e) {
+						listarraybuf.add(socketfail);
+						ifdo = true;
+					}
+				}
+
+				if(ifdo){
+					for(int i=0;i<listarraybuf.size();i++){
+						socketlist.remove(listarraybuf.get(i));
+					}
+				}
+			}
+		}
 		//OTC、松下下发指令
-		if(str.substring(0,2).equals("7E") || str.substring(0,6).equals("FE5AA5")){
+		else if(str.substring(0,2).equals("7E") || str.substring(0,6).equals("FE5AA5")){
 
 			synchronized (socketlist) {
 				ArrayList<String> listarraybuf = new ArrayList<String>();
@@ -168,37 +201,6 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 				}
 			}
 
-		}else if(str.substring(0,1).equals("0") || str.substring(0,1).equals("1")){
-			synchronized (socketlist) {
-				ArrayList<String> listarraybuf = new ArrayList<String>();
-				boolean ifdo = false;
-
-				Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
-				while(webiter.hasNext()){
-					try{
-						Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-						socketfail = entry.getKey();
-						SocketChannel socketcon = entry.getValue();
-						String[] socketip1 = socketcon.toString().split("/");
-						String[] socketip2 = socketip1[1].split(":");
-						String socketip = socketip2[0];
-						//if(!socketip.equals("192.168.1.101")){
-						if(!socketip.equals("121.196.222.216")){
-							socketcon.writeAndFlush(str).sync();
-						}
-
-					}catch (Exception e) {
-						listarraybuf.add(socketfail);
-						ifdo = true;
-					}
-				}
-
-				if(ifdo){
-					for(int i=0;i<listarraybuf.size();i++){
-						socketlist.remove(listarraybuf.get(i));
-					}
-				}
-			}
 		}
 		// ctx.channel().write(new TextWebSocketFrame(request + " , 欢迎使用netty
 		// websocket 服务,现在时刻是: ")
