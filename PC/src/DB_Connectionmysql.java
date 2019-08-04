@@ -214,12 +214,12 @@ public class DB_Connectionmysql {
 						}
 					}
 					
-					String sql1 = "INSERT INTO Test.guest.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
+					String sql1 = "INSERT INTO Test.dbo.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
 							+ "VALUES('"+"通用','"+"TAYOR"+"','"+Integer.parseInt(gathernum)+"','"+statusName+"','"+cid+"','"+ip+"')";
 					PreparedStatement ptmt1 = conn1.prepareStatement(sql1);
 					ptmt1.execute();
 					
-					String sql = "INSERT INTO Test.guest.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
+					String sql = "INSERT INTO Test.dbo.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
 							+ "VALUES('"+"通用','"+Integer.parseInt(gathernum)+"','"+statusName+"','"+weldnum+"','"+electricity+"','"+voltage1+"','"+fwirefeedrate1+"','"+warnningName+"','"+diameName+"','"+frateofflow1+"')";
 					PreparedStatement ptmt = conn1.prepareStatement(sql);
 					ptmt.execute();
@@ -381,12 +381,12 @@ public class DB_Connectionmysql {
 						}
 					}
 					
-					String sql1 = "INSERT INTO Test.guest.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
+					String sql1 = "INSERT INTO Test.dbo.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
 							+ "VALUES('"+"通用','"+"TAYOR"+"','"+Integer.parseInt(gathernum)+"','"+statusName+"','"+cid+"','"+ip+"')";
 					PreparedStatement ptmt1 = conn1.prepareStatement(sql1);
 					ptmt1.execute();
 					
-					String sql = "INSERT INTO Test.guest.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
+					String sql = "INSERT INTO Test.dbo.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
 							+ "VALUES('"+"通用','"+Integer.parseInt(gathernum)+"','"+statusName+"','"+weldnum+"','"+electricity+"','"+voltage2+"','"+fwirefeedrate2+"','"+warnningName+"','"+diameName+"','"+frateofflow2+"')";
 					PreparedStatement ptmt = conn1.prepareStatement(sql);
 					ptmt.execute();
@@ -537,12 +537,12 @@ public class DB_Connectionmysql {
 						}
 					}
 					
-					String sql1 = "INSERT INTO Test.guest.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
+					String sql1 = "INSERT INTO Test.dbo.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
 							+ "VALUES('"+"通用','"+"TAYOR"+"','"+Integer.parseInt(gathernum)+"','"+statusName+"','"+cid+"','"+ip+"')";
 					PreparedStatement ptmt1 = conn1.prepareStatement(sql1);
 					ptmt1.execute();
 					
-					String sql = "INSERT INTO Test.guest.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
+					String sql = "INSERT INTO Test.dbo.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
 							+ "VALUES('"+"通用','"+Integer.parseInt(gathernum)+"','"+statusName+"','"+weldnum+"','"+electricity+"','"+voltage3+"','"+fwirefeedrate3+"','"+warnningName+"','"+diameName+"','"+frateofflow3+"')";
 					PreparedStatement ptmt = conn1.prepareStatement(sql);
 					ptmt.execute();
@@ -709,12 +709,12 @@ public class DB_Connectionmysql {
 						}
 					}
 					
-					String sql1 = "INSERT INTO Test.guest.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
+					String sql1 = "INSERT INTO Test.dbo.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
 							+ "VALUES('"+"通用','"+"TAYOR"+"','"+Integer.parseInt(gathernum)+"','"+statusName+"','"+cid+"','"+ip+"')";
 					PreparedStatement ptmt1 = conn1.prepareStatement(sql1);
 					ptmt1.execute();
 					
-					String sql = "INSERT INTO Test.guest.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
+					String sql = "INSERT INTO Test.dbo.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
 							+ "VALUES('"+"通用','"+Integer.parseInt(gathernum)+"','"+statusName+"','"+weldnum+"','"+electricity+"','"+voltage4+"','"+fwirefeedrate4+"','"+warnningName+"','"+diameName+"','"+frateofflow4+"')";
 					PreparedStatement ptmt = conn1.prepareStatement(sql);
 					ptmt.execute();

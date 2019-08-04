@@ -115,5 +115,6 @@
 	<classpathentry kind="lib" path="D:/myeclipse/project/CIWJN/WebRoot/WEB-INF/lib/wsdl4j-1.6.2.jar"/>
 	<classpathentry kind="lib" path="D:/myeclipse/project/CIWJN/WebRoot/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="lib" path="D:/myeclipse/project/CIWJN/WebRoot/WEB-INF/lib/xmlschema-core-2.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/myeclipse/mssql-jdbc-7.2.2.jre8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -453,7 +453,7 @@ public class Server implements Runnable {
 							cid = num + "0000000000000";
 						}
 						
-						String sql1 = "INSERT INTO Test.guest.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
+						String sql1 = "INSERT INTO Test.dbo.iWeld_WeldSetTable(COMPANYCODE,COMPANYNAME,WELDNUM,STATE,CID,IP) "
 								+ "VALUES('"+"通用','"+"TAYOR"+"','"+NS.mysql.db.checkOff.get(i-2)+"','关机','"+cid+"','"+"0.0.0.0"+"')";
 						PreparedStatement ptmt1;
 						try {
@@ -464,7 +464,7 @@ public class Server implements Runnable {
 							e1.printStackTrace();
 						}
 						
-						String sql = "INSERT INTO Test.guest.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
+						String sql = "INSERT INTO Test.dbo.WeldInfoTable(COMPANYCODE,WELDNUM,STATE,WELDNAME,D07,D08,D09,D10,D16,D25) "
 								+ "VALUES('"+"通用','"+NS.mysql.db.checkOff.get(i-2)+"','关机','"+NS.mysql.db.checkOff.get(i-1)+"','"+0+"','"+0+"','"+0+"','"+"无"+"','"+0+"','"+0+"')";
 		            	PreparedStatement ptmt;
 						try {
