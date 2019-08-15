@@ -623,8 +623,8 @@ public class Server implements Runnable {
 						// TODO Auto-generated method stub
 						chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 						chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
-						chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
-						chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://localhost:5550/SerialPortDemo/ws/张三"));
+						chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(1024*1024*1024));
+						chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://119.3.100.103:5550/SerialPortDemo/ws/张三",null,true,65535));
 						chweb.pipeline().addLast("myWebSocketHandler", NWS);
 						synchronized (websocketlist) {
 							websocketcount++;
