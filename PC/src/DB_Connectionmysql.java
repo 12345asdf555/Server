@@ -99,6 +99,12 @@ public class DB_Connectionmysql {
                 nowTime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
                 goodsC_date = Timestamp.valueOf(nowTime);
                 
+                if("137".equals(weldmodel)){
+                	electricity = new BigDecimal(((double)Integer.valueOf(electricity.toString()))/10);
+                	maxelectricity = new BigDecimal(((double)Integer.valueOf(maxelectricity.toString()))/10);
+                	minelectricity = new BigDecimal(((double)Integer.valueOf(minelectricity.toString()))/10);
+                }
+                
                 BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
                 BigDecimal maxvoltage1 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
                 BigDecimal minvoltage1 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
@@ -189,6 +195,12 @@ public class DB_Connectionmysql {
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
+
+                if("137".equals(weldmodel)){
+                	electricity = new BigDecimal(((double)Integer.valueOf(electricity.toString()))/10);
+                	maxelectricity = new BigDecimal(((double)Integer.valueOf(maxelectricity.toString()))/10);
+                	minelectricity = new BigDecimal(((double)Integer.valueOf(minelectricity.toString()))/10);
+                }
                 
                 BigDecimal voltage2 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
                 BigDecimal maxvoltage2 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
@@ -275,6 +287,12 @@ public class DB_Connectionmysql {
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
+
+                if("137".equals(weldmodel)){
+                	electricity = new BigDecimal(((double)Integer.valueOf(electricity.toString()))/10);
+                	maxelectricity = new BigDecimal(((double)Integer.valueOf(maxelectricity.toString()))/10);
+                	minelectricity = new BigDecimal(((double)Integer.valueOf(minelectricity.toString()))/10);
+                }
                 
                 BigDecimal voltage3 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
                 BigDecimal maxvoltage3 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
@@ -361,6 +379,12 @@ public class DB_Connectionmysql {
         		date = new Date();
                 nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
                 goodsC_date = Timestamp.valueOf(nowTime);
+
+                if("137".equals(weldmodel)){
+                	electricity = new BigDecimal(((double)Integer.valueOf(electricity.toString()))/10);
+                	maxelectricity = new BigDecimal(((double)Integer.valueOf(maxelectricity.toString()))/10);
+                	minelectricity = new BigDecimal(((double)Integer.valueOf(minelectricity.toString()))/10);
+                }
                 
                 BigDecimal voltage4 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
                 BigDecimal maxvoltage4 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);

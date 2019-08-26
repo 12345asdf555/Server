@@ -113,6 +113,13 @@ public class Websocket {
 		             			voltage="0"+voltage;
 		             		}
 		             	}
+		      	    	String speed = Integer.valueOf(str.subSequence(64+a, 68+a).toString(),16).toString();
+		      	    	if(speed.length()!=4){
+		             		int lenth=4-speed.length();
+		             		for(int i=0;i<lenth;i++){
+		             			speed="0"+speed;
+		             		}
+		             	}
 		      	    	String setelectricity = Integer.valueOf(str.subSequence(68+a, 72+a).toString(),16).toString();
 		      	    	if(setelectricity.length()!=4){
 		             		int lenth=4-setelectricity.length();
@@ -252,7 +259,8 @@ public class Websocket {
 		                	status = "03";
 		                }*/
 		                
-						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
+						//strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
+		                strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel + speed;
 	      	    	}catch(Exception e){
 	      	    		System.out.println(str);
       	    			System.out.println(str.substring(76+a, 84+a));
