@@ -167,6 +167,7 @@ public class Server implements Runnable {
 	    NS.ip = this.ip;
 	    NS.ip1 = this.ip1;
 	    NS.connet = this.connet;
+	    client.handler.connet = this.connet;
 		
 	    //连接数据库
 	    try {  
@@ -174,6 +175,10 @@ public class Server implements Runnable {
             Class.forName("com.mysql.jdbc.Driver");  
             conn = DriverManager.getConnection(connet);
             stmt = conn.createStatement();
+            NS.conn = conn;
+            NS.stmt = stmt;
+    	    client.handler.conn = this.conn;
+    	    client.handler.stmt = this.stmt;
             NS.mysql.db.conn = conn;
             NS.mysql.db.stmt = stmt;
             NS.android.db.conn = conn;
