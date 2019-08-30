@@ -178,6 +178,8 @@ public class Server implements Runnable {
 			Class.forName("com.mysql.jdbc.Driver");  
 			conn = DriverManager.getConnection(connet);
 			stmt = conn.createStatement();
+			NS.stmt = stmt;
+			NS.conn = conn;
 			NS.mysql.db.conn = conn;
 			NS.mysql.db.stmt = stmt;
 			NS.android.db.conn = conn;
@@ -224,6 +226,37 @@ public class Server implements Runnable {
 					conn = DriverManager.getConnection(connet);
 					stmt = conn.createStatement();
 
+					//华域统计到work表
+					/*Date date = new Date();
+					String nowtimefor = DateTools.format("yyyy-MM-dd",date);
+					String nowtime = DateTools.format("HH:mm:ss",date);
+					String[] timesplit = nowtime.split(":");
+					String hour = timesplit[0];
+					String time2 = nowtimefor+" "+hour+":00:00";
+					Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-3600000);
+					String time3 = DateTools.format("yyyy-MM-dd HH:mm:ss",d1);
+
+					String timework = null;
+					String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
+					ResultSet rs1 =stmt.executeQuery(sqlfirstwork);
+					while (rs1.next()) {
+						timework = rs1.getString("fUploadDataTime");
+					}
+					
+					if(timework == null || timework.equals("null")){
+						timework = "2000-01-01 01:01:01";
+					}
+					String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
+                    		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas,tb_work.fd1000,tb_work.fd1001,tb_work.fd1002,tb_work.fd1003,tb_work.fd1004,tb_work.fd1005,tb_work.fd1006,tb_work.fd1007,tb_work.fd1008,tb_work.fd1009,tb_work.fd1010,tb_work.fd1011,tb_work.fd1012,tb_work.fd1013,tb_work.fd1014,tb_work.fd1015,tb_work.fd1016,tb_work.fd1017,tb_work.fd1018,tb_work.fd1019,tb_work.fd1020,tb_work.fd1021,tb_work.fd1022,tb_work.fd1023,tb_work.fd1024,tb_work.fd1025,tb_work.fd1026,tb_work.fd1027,tb_work.fd1028,tb_work.fd1029,tb_work.fd1030,tb_work.fd1031,tb_work.fd1032,tb_work.fd1033,tb_work.fd1034,tb_work.fd1035,tb_work.fd1036,tb_work.fd1037,tb_work.fd1038,tb_work.fd1039,tb_work.fd1040,tb_work.fd1041,tb_work.fd1042,tb_work.fd1043,tb_work.fd1044,tb_work.fd1045,tb_work.fd1046,tb_work.fd1047,tb_work.fd1048,tb_work.fd1049,tb_work.fd1050,tb_work.fd1051,tb_work.fd1052,tb_work.fd1053,tb_work.fd1054,tb_work.fd1055,tb_work.fd1056,tb_work.fd1057,tb_work.fd1058,tb_work.fd1059,tb_work.fd1060,tb_work.fd1061,tb_work.fd1062,tb_work.fd1063,tb_work.fd1064,tb_work.fd1065,tb_work.fd1066,tb_work.fd1067,tb_work.fd1068,tb_work.fd1069,tb_work.fd1070,tb_work.fd1071,tb_work.fd1072) SELECT tb_live_data.fwelder_id,"
+                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
+                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fd1000,tb_live_data.fd1001,tb_live_data.fd1002,tb_live_data.fd1003,tb_live_data.fd1004,tb_live_data.fd1005,tb_live_data.fd1006,tb_live_data.fd1007,tb_live_data.fd1008,tb_live_data.fd1009,tb_live_data.fd1010,tb_live_data.fd1011,tb_live_data.fd1012,tb_live_data.fd1013,tb_live_data.fd1014,tb_live_data.fd1015,tb_live_data.fd1016,tb_live_data.fd1017,tb_live_data.fd1018,tb_live_data.fd1019,tb_live_data.fd1020,tb_live_data.fd1021,tb_live_data.fd1022,tb_live_data.fd1023,tb_live_data.fd1024,tb_live_data.fd1025,tb_live_data.fd1026,tb_live_data.fd1027,tb_live_data.fd1028,tb_live_data.fd1029,tb_live_data.fd1030,tb_live_data.fd1031,tb_live_data.fd1032,tb_live_data.fd1033,tb_live_data.fd1034,tb_live_data.fd1035,tb_live_data.fd1036,tb_live_data.fd1037,tb_live_data.fd1038,tb_live_data.fd1039,tb_live_data.fd1040,tb_live_data.fd1041,tb_live_data.fd1042,tb_live_data.fd1043,tb_live_data.fd1044,tb_live_data.fd1045,tb_live_data.fd1046,tb_live_data.fd1047,tb_live_data.fd1048,tb_live_data.fd1049,tb_live_data.fd1050,tb_live_data.fd1051,tb_live_data.fd1052,tb_live_data.fd1053,tb_live_data.fd1054,tb_live_data.fd1055,tb_live_data.fd1056,tb_live_data.fd1057,tb_live_data.fd1058,tb_live_data.fd1059,tb_live_data.fd1060,tb_live_data.fd1061,tb_live_data.fd1062,tb_live_data.fd1063,tb_live_data.fd1064,tb_live_data.fd1065,tb_live_data.fd1066,tb_live_data.fd1067,tb_live_data.fd1068,tb_live_data.fd1069,tb_live_data.fd1070,tb_live_data.fd1071,tb_live_data.fd1072 FROM tb_live_data "
+                    		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + timework + "' AND '" + time2 + "' "
+                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";
+					
+					stmt.executeUpdate(sqlwork);*/
+					
+					
+					//基本版
 					//获取上次统计时间，为空插入赋默认值
 					Date date = new Date();
 					String nowtimefor = DateTools.format("yyyy-MM-dd",date);
@@ -280,13 +313,6 @@ public class Server implements Runnable {
 							+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime BETWEEN '" + timestandby + "' AND '" + time2 + "' "
 							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
 
-					/*String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
-                    		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas) SELECT tb_live_data.fwelder_id,"
-                    		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
-                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas FROM tb_live_data "
-                    		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + timework + "' AND '" + time2 + "' "
-                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";*/
-
 					String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
 							+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas,tb_work.fstatus) SELECT tb_live_data.fwelder_id,"
 							+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
@@ -301,17 +327,6 @@ public class Server implements Runnable {
 							+ "WHERE tb_live_data.fstatus != '0' AND tb_live_data.fstatus != '3' AND tb_live_data.fstatus != '5' AND tb_live_data.fstatus != '7' AND tb_live_data.FWeldTime BETWEEN '" + timewarn + "' AND '" + time2 + "' "
 							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
 
-					/*String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
-                    		+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime,tb_alarm.fwelder_no,tb_alarm.fjunction_no,tb_alarm.fweld_no,tb_alarm.fchannel,tb_alarm.fmax_electricity,tb_alarm.fmin_electricity,tb_alarm.fmax_voltage,tb_alarm.fmin_voltage,tb_alarm.fwelder_itemid,tb_alarm.fjunction_itemid,tb_alarm.fmachine_itemid,tb_alarm.fwirefeedrate,tb_alarm.fmachinemodel,tb_alarm.fwirediameter,tb_alarm.fmaterialgas) SELECT tb_live_data.fwelder_id,"
-                    		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
-                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas FROM tb_live_data "
-                    		+ "INNER JOIN tb_welded_junction ON tb_live_data.fjunction_id = tb_welded_junction.fwelded_junction_no "
-                    		+ "WHERE fstatus= '3' and tb_welded_junction.fitemid = tb_live_data.fitemid and (tb_live_data.fvoltage > tb_welded_junction.fmax_valtage OR tb_live_data.felectricity > tb_welded_junction.fmax_electricity "
-                    		+ "OR tb_live_data.fvoltage < tb_welded_junction.fmin_valtage OR tb_live_data.felectricity < tb_welded_junction.fmin_electricity)"
-                    		+ " AND tb_live_data.FWeldTime BETWEEN '" + timealarm + "' AND '" + time2 + "' "
-                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id";*/
-
-					//大连
 					String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
 							+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime,tb_alarm.fwelder_no,tb_alarm.fjunction_no,tb_alarm.fweld_no,tb_alarm.fchannel,tb_alarm.fmax_electricity,tb_alarm.fmin_electricity,tb_alarm.fmax_voltage,tb_alarm.fmin_voltage,tb_alarm.fwelder_itemid,tb_alarm.fjunction_itemid,tb_alarm.fmachine_itemid,tb_alarm.fwirefeedrate,tb_alarm.fmachinemodel,tb_alarm.fwirediameter,tb_alarm.fmaterialgas,tb_alarm.fstatus) SELECT tb_live_data.fwelder_id,"
 							+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
@@ -628,6 +643,7 @@ public class Server implements Runnable {
 						chweb.pipeline().addLast("myWebSocketHandler", NWS);
 						synchronized (websocketlist) {
 							websocketcount++;
+							System.out.println(websocketlist.size()+1);
 							websocketlist.put(Integer.toString(websocketcount),chweb);
 							NS.websocketlist = websocketlist;
 						}

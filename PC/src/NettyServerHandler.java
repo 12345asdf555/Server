@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.Socket;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -33,12 +34,14 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public String connet;
     public Thread workThread;
     public java.sql.Statement stmt =null;
+	public java.sql.Connection conn = null;
     public SocketChannel socketchannel = null;
     public ArrayList<String> dbdata = new ArrayList<String>();
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
     public ArrayList<String> listarray4 = new ArrayList<String>();
+    public ArrayList<String> listarrayplc = new ArrayList<String>();  //焊工、工位对应
     public HashMap<String, SocketChannel> socketlist = new HashMap<>();
     public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
     public Mysql mysql = new Mysql();
@@ -87,6 +90,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		
 			//基本版
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
+				
+				//存webservice数据
 				synchronized (listarray4) {
 					long gatherid = Integer.valueOf(str.substring(16, 20));
 					for(int i=0;i<listarray4.size();i+=23){
@@ -177,6 +182,25 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						}
 					}
 				}
+				
+				//存华域对应plc焊工数据
+				synchronized (listarray4) {
+					if(listarrayplc.size() == 0){
+						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
+						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
+					}else{
+						if(listarrayplc.contains(Integer.toString(Integer.valueOf(str.substring(16, 20))))){
+							listarrayplc.remove(listarrayplc.indexOf(Integer.toString(Integer.valueOf(str.substring(16, 20)))));
+							listarrayplc.remove(listarrayplc.indexOf(Integer.toString(Integer.valueOf(str.substring(16, 20))))+1);
+							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
+							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
+						}else{
+							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
+							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
+						}
+					}
+				}
+				
 				mysql.Mysqlbase(str);
 		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
 		        if(socketchannel!=null){
@@ -292,7 +316,89 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	android.Androidrun(str);
 	        	
 	        }else if(str.substring(0,2).equals("JN")){  //江南任务派发 任务号、焊工、焊机、状态
+	        	String[] datainf = str.split(",");
+
+				String datasend = "";
+	        	String junction = "";
+	        	String cengdao = "";
+	            String gather = "";
+	        	int cengdaocount = 0;
 	        	
+	        	try{
+					if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+					{
+						try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+						} catch (ClassNotFoundException e) {  
+							System.out.println("Broken driver");
+							e.printStackTrace();
+							return;
+						} catch (SQLException e) {
+							System.out.println("Broken conn");
+							e.printStackTrace();
+							return;
+						}  
+					}
+					
+					String inSql = "SELECT tb_welded_junction.fwelded_junction_no,tb_specification.fsolder_layer,tb_specification.fweld_bead FROM tb_welded_junction INNER JOIN tb_specification ON tb_welded_junction.fwpslib_id = tb_specification.fwpslib_id WHERE tb_welded_junction.fid = '" + datainf[1] + "' ORDER BY tb_specification.fweld_bead asc";
+					ResultSet rs =stmt.executeQuery(inSql);
+		            
+		            while (rs.next()) {
+		            	junction = rs.getString("tb_welded_junction.fwelded_junction_no");
+		            	String ceng = Integer.toString(Integer.valueOf(rs.getString("tb_specification.fsolder_layer"),16));
+		            	if(ceng.length()!=2){
+	            			ceng = "0" + ceng;
+		            	}
+		            	String dao = Integer.toString(Integer.valueOf(rs.getString("tb_specification.fweld_bead"),16));
+		            	if(dao.length()!=2){
+		            		dao = "0" + dao;
+		            	}
+		            	cengdao = cengdao + ceng + dao;
+		            	cengdaocount++;
+		            }
+		            
+		            String inSql1 = "SELECT fgather_no FROM tb_gather INNER JOIN tb_welding_machine ON tb_gather.fid = tb_welding_machine.fgather_id WHERE tb_welding_machine.fid = '" + datainf[3] + "'";
+					ResultSet rs1 =stmt.executeQuery(inSql1);
+					while (rs1.next()) {
+		            	gather = Integer.toString(Integer.valueOf(rs.getString("fgather_no"),16));
+		            	if(gather.length()!=4){
+		            		for(int i=0;i<4-gather.length();i++){
+		            			gather = "0" + gather;
+		            		}
+		            	}
+		            }
+					
+	        	}catch (Exception e){
+	        		e.getStackTrace();
+	        	}
+
+	            if(cengdao.length() != 100){
+	            	for(int i=0;i<100-cengdao.length();i++){
+	            		cengdao = cengdao + "0";
+	            	}
+	            }
+	            
+	            if(junction.length() != 30){
+	            	for(int i=0;i<30-junction.length();i++){
+	            		cengdao = cengdao + "0";
+	            	}
+	            }
+	            
+	            String cdcount = Integer.toString(cengdaocount);
+	            if(cdcount.length() != 4){
+	            	for(int i=0;i<4-cdcount.length();i++){
+	            		cdcount = cdcount + "0";
+	            	}
+	            }
+	            
+				if(datainf[4].equals("0")){
+		            datasend = "7E0001010122" + gather + "00" + junction + cengdao + cdcount + "017D";
+	            }else if(datainf[4].equals("1")){
+		            datasend = "7E0001010122" + gather + "01" + junction + cengdao + cdcount + "017D";
+	            }
+	            
 	        	synchronized (socketlist) {
 	        	ArrayList<String> listarraybuf = new ArrayList<String>();
 	        	boolean ifdo = false;
@@ -308,6 +414,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 
         				SocketChannel socketcon = entry.getValue();
                     	socketcon.writeAndFlush(str).sync();
+                    	socketcon.writeAndFlush(datasend).sync();
                     	
                 	}catch (Exception e) {
                 		e.printStackTrace();
@@ -323,8 +430,13 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 }
 	        	}
                 
-	        //欧华纬华webservice调用
-	        } else if(str.equals("SS")){  //webservice获取实时数据
+	        
+	        } else if(str.substring(0,2).equals("fe") && str.length() == 298){
+	        	
+	        	mysql.Mysqlplc(str,listarrayplc);
+	        	System.out.println(str);
+	        	
+	        } else if(str.equals("SS")){  //欧华纬华调用webservice获取实时数据
 	        	
 	        	synchronized (listarray4) {
 	        	synchronized (socketlist) {

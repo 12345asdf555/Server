@@ -48,15 +48,25 @@ public class DB_Connectionmysql {
 	public final String inSql = "insert into tb_live_data(felectricity,fvoltage,frateofflow,fgather_no,fwelder_id,fjunction_id,fstatus,fitemid,FUploadDateTime,FWeldTime,fmachine_id) values";
 	
 	public int workbase = 1;
+	public int workplc = 1;
 	public int countbase1 = 1;
 	public int countbase2 = 1;
 	public int countbase3 = 1;
 	public int countbase4 = 1;
+	public int countplc1 = 1;
+	public int countplc2 = 1;
+	public int countplc3 = 1;
+	public int countplc4 = 1;
 	public String inSqlbase1 = "";
 	public String inSqlbase2 = "";
 	public String inSqlbase3 = "";
 	public String inSqlbase4 = "";
+	public String inSqlplc1 = "";
+	public String inSqlplc2 = "";
+	public String inSqlplc3 = "";
+	public String inSqlplc4 = "";
 	public final String inSqlbase = "insert into tb_live_data(fwelder_id,fgather_no,fmachine_id,fjunction_id,fitemid,felectricity,fvoltage,fstatus,fwirefeedrate,FUploadDateTime,FWeldTime,fwelder_no,fjunction_no,fweld_no,fchannel,fmax_electricity,fmin_electricity,fmax_voltage,fmin_voltage,fwelder_itemid,fjunction_itemid,fmachine_itemid,fmachinemodel,fwirediameter,fmaterialgas,frateofflow) values";
+	public final String inSqlplc = "insert into tb_live_data(fwelder_id,fgather_no,fjunction_id,felectricity,fvoltage,fstatus,FUploadDateTime,FWeldTime,fd1000,fd1001,fd1002,fd1003,fd1004,fd1005,fd1006,fd1007,fd1008,fd1009,fd1010,fd1011,fd1012,fd1013,fd1014,fd1015,fd1016,fd1017,fd1018,fd1019,fd1020,fd1021,fd1022,fd1023,fd1024,fd1025,fd1026,fd1027,fd1028,fd1029,fd1030,fd1031,fd1032,fd1033,fd1034,fd1035,fd1036,fd1037,fd1038,fd1039,fd1040,fd1041,fd1042,fd1043,fd1044,fd1045,fd1046,fd1047,fd1048,fd1049,fd1050,fd1051,fd1052,fd1053,fd1054,fd1055,fd1056,fd1057,fd1058,fd1059,fd1060,fd1061,fd1062,fd1063,fd1064,fd1065,fd1066,fd1067,fd1068,fd1069,fd1070,fd1071,fd1072) values";
 	
 
 	public DB_Connectionmysql(){
@@ -468,6 +478,240 @@ public class DB_Connectionmysql {
                 break;
             }
 		}
+	}
+	
+	public void DB_Connectionmysqlplc(ArrayList<String> listarrayplc, int machine, int d1000, int d1001, int d1002, int d1003, int d1004, int d1005, int d1006, int d1007, int d1008, int d1009, int d1010, int d1011, int d1012, int d1013, int d1014, int d1015, int d1016, int d1017, int d1018, int d1019, int d1020, int d1021, int d1022, int d1023, int d1024, int d1025, int d1026, int d1027, int d1028, int d1029, int d1030, int d1031, int d1032, int d1033, int d1034, int d1035, int d1036, int d1037, int d1038, int d1039, int d1040, int d1041, int d1042, int d1043, int d1044, int d1045, int d1046, int d1047, int d1048, int d1049, int d1050, int d1051, int d1052, int d1053, int d1054, int d1055, int d1056, int d1057, int d1058, int d1059, int d1060, int d1061, int d1062, int d1063, int d1064, int d1065, int d1066, int d1067, int d1068, int d1069, int d1070, int d1071, int d1072) {
+
+	 	Date date;
+		String nowTime;
+		Timestamp goodsC_date;
+		Integer welderid = null;
+		switch(Integer.valueOf(workplc)){
+    	case 1:
+    		date = new Date();
+            nowTime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
+            goodsC_date = Timestamp.valueOf(nowTime);
+            
+        	if(listarrayplc.contains(Integer.toString(machine))){
+        		welderid = Integer.valueOf(listarrayplc.get(listarrayplc.indexOf(Integer.toString(machine))+1));
+        	}else{
+        		welderid = 0;
+        	}
+        	
+            if(countplc1==1){
+       	 		inSqlplc1 = inSqlplc + "('"+ welderid +"','" + machine + "','"  + "0" + "','"  + "0" + "','" + "0" + "','" + "3" + "','" + goodsC_date + "','" + goodsC_date + "','" + d1000 + "','" + d1001 + "','" + d1002 + "','" + d1003 + "','" + d1004 + "','" + d1005 + "','" + d1006 + "','" + d1007 + "','" + d1008 + "','" + d1009 + "','" + d1010 + "','" + d1011 + "','" + d1012 + "','" + d1013 + "','" + d1014 + "','" + d1015 + "','" + d1016 + "','" + d1017 + "','" + d1018 + "','" + d1019 + "','" + d1020 + "','" + d1021 + "','" + d1022 + "','" + d1023 + "','" + d1024 + "','" + d1025 + "','" + d1026 + "','" + d1027 + "','" + d1028 + "','" + d1029 + "','" + d1030 + "','" + d1031 + "','" + d1032 + "','" + d1033 + "','" + d1034 + "','" + d1035 + "','" + d1036 + "','" + d1037 + "','" + d1038 + "','" + d1039 + "','" + d1040 + "','" + d1041 + "','" + d1042 + "','" + d1043 + "','" + d1044 + "','" + d1045 + "','" + d1046 + "','" + d1047 + "','" + d1048 + "','" + d1049 + "','" + d1050 + "','" + d1051 + "','" + d1052 + "','" + d1053 + "','" + d1054 + "','" + d1055 + "','" + d1056 + "','" + d1057 + "','" + d1058 + "','" + d1059 + "','" + d1060 + "','" + d1061 + "','" + d1062 + "','" + d1063 + "','" + d1064 + "','" + d1065 + "','" + d1066 + "','" + d1067 + "','" + d1068 + "','" + d1069 + "','" + d1070 + "','" + d1071 + "','" + d1072 + "')";
+       	 	}else{
+       	 		inSqlplc1 = inSqlplc1 + ",('"+ welderid +"','" + machine + "','" + "0" + "','"  + "0" + "','" + "0" + "','" + "3" + "','" + goodsC_date + "','" + goodsC_date + "','" + d1000 + "','" + d1001 + "','" + d1002 + "','" + d1003 + "','" + d1004 + "','" + d1005 + "','" + d1006 + "','" + d1007 + "','" + d1008 + "','" + d1009 + "','" + d1010 + "','" + d1011 + "','" + d1012 + "','" + d1013 + "','" + d1014 + "','" + d1015 + "','" + d1016 + "','" + d1017 + "','" + d1018 + "','" + d1019 + "','" + d1020 + "','" + d1021 + "','" + d1022 + "','" + d1023 + "','" + d1024 + "','" + d1025 + "','" + d1026 + "','" + d1027 + "','" + d1028 + "','" + d1029 + "','" + d1030 + "','" + d1031 + "','" + d1032 + "','" + d1033 + "','" + d1034 + "','" + d1035 + "','" + d1036 + "','" + d1037 + "','" + d1038 + "','" + d1039 + "','" + d1040 + "','" + d1041 + "','" + d1042 + "','" + d1043 + "','" + d1044 + "','" + d1045 + "','" + d1046 + "','" + d1047 + "','" + d1048 + "','" + d1049 + "','" + d1050 + "','" + d1051 + "','" + d1052 + "','" + d1053 + "','" + d1054 + "','" + d1055 + "','" + d1056 + "','" + d1057 + "','" + d1058 + "','" + d1059 + "','" + d1060 + "','" + d1061 + "','" + d1062 + "','" + d1063 + "','" + d1064 + "','" + d1065 + "','" + d1066 + "','" + d1067 + "','" + d1068 + "','" + d1069 + "','" + d1070 + "','" + d1071 + "','" + d1072 + "')";
+       	 	}
+            
+            countplc1++;
+            
+            if(countplc1 == 100){
+            	
+            	try {
+            		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+                    stmt.executeUpdate(inSqlplc1);
+                    workplc = workplc + 1;
+                    if(workplc==5){
+                		workplc = 1;
+                	}
+                    
+                    countplc1 = 1;
+                    inSqlplc1 = "";
+                    
+                } catch (SQLException e) {
+                	countplc1 = 1;
+                    inSqlplc1 = "";
+                    System.out.println("Broken insert");
+                    e.printStackTrace();
+                } 
+            }
+            break;
+            
+    	case 2:
+    		date = new Date();
+            nowTime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
+            goodsC_date = Timestamp.valueOf(nowTime);
+            
+        	if(listarrayplc.contains(Integer.toString(machine))){
+        		welderid = Integer.valueOf(listarrayplc.get(listarrayplc.indexOf(Integer.toString(machine))+1));
+        	}else{
+        		welderid = 0;
+        	}
+        	
+            if(countplc2==1){
+       	 		inSqlplc2 = inSqlplc + "('"+ welderid +"','" + machine + "','"  + "0" + "','"  + "0" + "','" + "0" + "','" + "3" + "','" + goodsC_date + "','" + goodsC_date + "','" + d1000 + "','" + d1001 + "','" + d1002 + "','" + d1003 + "','" + d1004 + "','" + d1005 + "','" + d1006 + "','" + d1007 + "','" + d1008 + "','" + d1009 + "','" + d1010 + "','" + d1011 + "','" + d1012 + "','" + d1013 + "','" + d1014 + "','" + d1015 + "','" + d1016 + "','" + d1017 + "','" + d1018 + "','" + d1019 + "','" + d1020 + "','" + d1021 + "','" + d1022 + "','" + d1023 + "','" + d1024 + "','" + d1025 + "','" + d1026 + "','" + d1027 + "','" + d1028 + "','" + d1029 + "','" + d1030 + "','" + d1031 + "','" + d1032 + "','" + d1033 + "','" + d1034 + "','" + d1035 + "','" + d1036 + "','" + d1037 + "','" + d1038 + "','" + d1039 + "','" + d1040 + "','" + d1041 + "','" + d1042 + "','" + d1043 + "','" + d1044 + "','" + d1045 + "','" + d1046 + "','" + d1047 + "','" + d1048 + "','" + d1049 + "','" + d1050 + "','" + d1051 + "','" + d1052 + "','" + d1053 + "','" + d1054 + "','" + d1055 + "','" + d1056 + "','" + d1057 + "','" + d1058 + "','" + d1059 + "','" + d1060 + "','" + d1061 + "','" + d1062 + "','" + d1063 + "','" + d1064 + "','" + d1065 + "','" + d1066 + "','" + d1067 + "','" + d1068 + "','" + d1069 + "','" + d1070 + "','" + d1071 + "','" + d1072 + "')";
+       	 	}else{
+       	 		inSqlplc2 = inSqlplc2 + ",('"+ welderid +"','" + machine + "','" + "0" + "','"  + "0" + "','" + "0" + "','" + "3" + "','" + goodsC_date + "','" + goodsC_date + "','" + d1000 + "','" + d1001 + "','" + d1002 + "','" + d1003 + "','" + d1004 + "','" + d1005 + "','" + d1006 + "','" + d1007 + "','" + d1008 + "','" + d1009 + "','" + d1010 + "','" + d1011 + "','" + d1012 + "','" + d1013 + "','" + d1014 + "','" + d1015 + "','" + d1016 + "','" + d1017 + "','" + d1018 + "','" + d1019 + "','" + d1020 + "','" + d1021 + "','" + d1022 + "','" + d1023 + "','" + d1024 + "','" + d1025 + "','" + d1026 + "','" + d1027 + "','" + d1028 + "','" + d1029 + "','" + d1030 + "','" + d1031 + "','" + d1032 + "','" + d1033 + "','" + d1034 + "','" + d1035 + "','" + d1036 + "','" + d1037 + "','" + d1038 + "','" + d1039 + "','" + d1040 + "','" + d1041 + "','" + d1042 + "','" + d1043 + "','" + d1044 + "','" + d1045 + "','" + d1046 + "','" + d1047 + "','" + d1048 + "','" + d1049 + "','" + d1050 + "','" + d1051 + "','" + d1052 + "','" + d1053 + "','" + d1054 + "','" + d1055 + "','" + d1056 + "','" + d1057 + "','" + d1058 + "','" + d1059 + "','" + d1060 + "','" + d1061 + "','" + d1062 + "','" + d1063 + "','" + d1064 + "','" + d1065 + "','" + d1066 + "','" + d1067 + "','" + d1068 + "','" + d1069 + "','" + d1070 + "','" + d1071 + "','" + d1072 + "')";
+       	 	}
+            
+            countplc2++;
+            
+            if(countplc2 == 100){
+            	
+            	try {
+            		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+                    stmt.executeUpdate(inSqlplc2);
+                    workplc = workplc + 1;
+                    if(workplc==5){
+                		workplc = 1;
+                	}
+                    
+                    countplc2 = 1;
+                    inSqlplc2 = "";
+                    
+                } catch (SQLException e) {
+                	countplc2 = 1;
+                    inSqlplc2 = "";
+                    System.out.println("Broken insert");
+                    e.printStackTrace();
+                } 
+            }
+            break;
+            
+    	case 3:
+    		date = new Date();
+            nowTime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
+            goodsC_date = Timestamp.valueOf(nowTime);
+            
+        	if(listarrayplc.contains(Integer.toString(machine))){
+        		welderid = Integer.valueOf(listarrayplc.get(listarrayplc.indexOf(Integer.toString(machine))+1));
+        	}else{
+        		welderid = 0;
+        	}
+        	
+            if(countplc3==1){
+       	 		inSqlplc3 = inSqlplc + "('"+ welderid +"','" + machine + "','"  + "0" + "','"  + "0" + "','" + "0" + "','" + "3" + "','" + goodsC_date + "','" + goodsC_date + "','" + d1000 + "','" + d1001 + "','" + d1002 + "','" + d1003 + "','" + d1004 + "','" + d1005 + "','" + d1006 + "','" + d1007 + "','" + d1008 + "','" + d1009 + "','" + d1010 + "','" + d1011 + "','" + d1012 + "','" + d1013 + "','" + d1014 + "','" + d1015 + "','" + d1016 + "','" + d1017 + "','" + d1018 + "','" + d1019 + "','" + d1020 + "','" + d1021 + "','" + d1022 + "','" + d1023 + "','" + d1024 + "','" + d1025 + "','" + d1026 + "','" + d1027 + "','" + d1028 + "','" + d1029 + "','" + d1030 + "','" + d1031 + "','" + d1032 + "','" + d1033 + "','" + d1034 + "','" + d1035 + "','" + d1036 + "','" + d1037 + "','" + d1038 + "','" + d1039 + "','" + d1040 + "','" + d1041 + "','" + d1042 + "','" + d1043 + "','" + d1044 + "','" + d1045 + "','" + d1046 + "','" + d1047 + "','" + d1048 + "','" + d1049 + "','" + d1050 + "','" + d1051 + "','" + d1052 + "','" + d1053 + "','" + d1054 + "','" + d1055 + "','" + d1056 + "','" + d1057 + "','" + d1058 + "','" + d1059 + "','" + d1060 + "','" + d1061 + "','" + d1062 + "','" + d1063 + "','" + d1064 + "','" + d1065 + "','" + d1066 + "','" + d1067 + "','" + d1068 + "','" + d1069 + "','" + d1070 + "','" + d1071 + "','" + d1072 + "')";
+       	 	}else{
+       	 		inSqlplc3 = inSqlplc3 + ",('"+ welderid +"','" + machine + "','" + "0" + "','"  + "0" + "','" + "0" + "','" + "3" + "','" + goodsC_date + "','" + goodsC_date + "','" + d1000 + "','" + d1001 + "','" + d1002 + "','" + d1003 + "','" + d1004 + "','" + d1005 + "','" + d1006 + "','" + d1007 + "','" + d1008 + "','" + d1009 + "','" + d1010 + "','" + d1011 + "','" + d1012 + "','" + d1013 + "','" + d1014 + "','" + d1015 + "','" + d1016 + "','" + d1017 + "','" + d1018 + "','" + d1019 + "','" + d1020 + "','" + d1021 + "','" + d1022 + "','" + d1023 + "','" + d1024 + "','" + d1025 + "','" + d1026 + "','" + d1027 + "','" + d1028 + "','" + d1029 + "','" + d1030 + "','" + d1031 + "','" + d1032 + "','" + d1033 + "','" + d1034 + "','" + d1035 + "','" + d1036 + "','" + d1037 + "','" + d1038 + "','" + d1039 + "','" + d1040 + "','" + d1041 + "','" + d1042 + "','" + d1043 + "','" + d1044 + "','" + d1045 + "','" + d1046 + "','" + d1047 + "','" + d1048 + "','" + d1049 + "','" + d1050 + "','" + d1051 + "','" + d1052 + "','" + d1053 + "','" + d1054 + "','" + d1055 + "','" + d1056 + "','" + d1057 + "','" + d1058 + "','" + d1059 + "','" + d1060 + "','" + d1061 + "','" + d1062 + "','" + d1063 + "','" + d1064 + "','" + d1065 + "','" + d1066 + "','" + d1067 + "','" + d1068 + "','" + d1069 + "','" + d1070 + "','" + d1071 + "','" + d1072 + "')";
+       	 	}
+            
+            countplc3++;
+            
+            if(countplc3 == 100){
+            	
+            	try {
+            		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+                    stmt.executeUpdate(inSqlplc3);
+                    workplc = workplc + 1;
+                    if(workplc==5){
+                		workplc = 1;
+                	}
+                    
+                    countplc3 = 1;
+                    inSqlplc3 = "";
+                    
+                } catch (SQLException e) {
+                	countplc3 = 1;
+                    inSqlplc3 = "";
+                    System.out.println("Broken insert");
+                    e.printStackTrace();
+                } 
+            }
+            break;
+            
+    	case 4:
+    		date = new Date();
+            nowTime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
+            goodsC_date = Timestamp.valueOf(nowTime);
+            
+        	if(listarrayplc.contains(Integer.toString(machine))){
+        		welderid = Integer.valueOf(listarrayplc.get(listarrayplc.indexOf(Integer.toString(machine))+1));
+        	}else{
+        		welderid = 0;
+        	}
+        	
+            if(countplc1==1){
+       	 		inSqlplc4 = inSqlplc + "('"+ welderid +"','" + machine + "','"  + "0" + "','"  + "0" + "','" + "0" + "','" + "3" + "','" + goodsC_date + "','" + goodsC_date + "','" + d1000 + "','" + d1001 + "','" + d1002 + "','" + d1003 + "','" + d1004 + "','" + d1005 + "','" + d1006 + "','" + d1007 + "','" + d1008 + "','" + d1009 + "','" + d1010 + "','" + d1011 + "','" + d1012 + "','" + d1013 + "','" + d1014 + "','" + d1015 + "','" + d1016 + "','" + d1017 + "','" + d1018 + "','" + d1019 + "','" + d1020 + "','" + d1021 + "','" + d1022 + "','" + d1023 + "','" + d1024 + "','" + d1025 + "','" + d1026 + "','" + d1027 + "','" + d1028 + "','" + d1029 + "','" + d1030 + "','" + d1031 + "','" + d1032 + "','" + d1033 + "','" + d1034 + "','" + d1035 + "','" + d1036 + "','" + d1037 + "','" + d1038 + "','" + d1039 + "','" + d1040 + "','" + d1041 + "','" + d1042 + "','" + d1043 + "','" + d1044 + "','" + d1045 + "','" + d1046 + "','" + d1047 + "','" + d1048 + "','" + d1049 + "','" + d1050 + "','" + d1051 + "','" + d1052 + "','" + d1053 + "','" + d1054 + "','" + d1055 + "','" + d1056 + "','" + d1057 + "','" + d1058 + "','" + d1059 + "','" + d1060 + "','" + d1061 + "','" + d1062 + "','" + d1063 + "','" + d1064 + "','" + d1065 + "','" + d1066 + "','" + d1067 + "','" + d1068 + "','" + d1069 + "','" + d1070 + "','" + d1071 + "','" + d1072 + "')";
+       	 	}else{
+       	 		inSqlplc4 = inSqlplc4 + ",('"+ welderid +"','" + machine + "','" + "0" + "','"  + "0" + "','" + "0" + "','" + "3" + "','" + goodsC_date + "','" + goodsC_date + "','" + d1000 + "','" + d1001 + "','" + d1002 + "','" + d1003 + "','" + d1004 + "','" + d1005 + "','" + d1006 + "','" + d1007 + "','" + d1008 + "','" + d1009 + "','" + d1010 + "','" + d1011 + "','" + d1012 + "','" + d1013 + "','" + d1014 + "','" + d1015 + "','" + d1016 + "','" + d1017 + "','" + d1018 + "','" + d1019 + "','" + d1020 + "','" + d1021 + "','" + d1022 + "','" + d1023 + "','" + d1024 + "','" + d1025 + "','" + d1026 + "','" + d1027 + "','" + d1028 + "','" + d1029 + "','" + d1030 + "','" + d1031 + "','" + d1032 + "','" + d1033 + "','" + d1034 + "','" + d1035 + "','" + d1036 + "','" + d1037 + "','" + d1038 + "','" + d1039 + "','" + d1040 + "','" + d1041 + "','" + d1042 + "','" + d1043 + "','" + d1044 + "','" + d1045 + "','" + d1046 + "','" + d1047 + "','" + d1048 + "','" + d1049 + "','" + d1050 + "','" + d1051 + "','" + d1052 + "','" + d1053 + "','" + d1054 + "','" + d1055 + "','" + d1056 + "','" + d1057 + "','" + d1058 + "','" + d1059 + "','" + d1060 + "','" + d1061 + "','" + d1062 + "','" + d1063 + "','" + d1064 + "','" + d1065 + "','" + d1066 + "','" + d1067 + "','" + d1068 + "','" + d1069 + "','" + d1070 + "','" + d1071 + "','" + d1072 + "')";
+       	 	}
+            
+            countplc4++;
+            
+            if(countplc4 == 100){
+            	
+            	try {
+            		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+                    stmt.executeUpdate(inSqlplc4);
+                    workplc = workplc + 1;
+                    if(workplc==5){
+                		workplc = 1;
+                	}
+                    
+                    countplc4 = 1;
+                    inSqlplc4 = "";
+                    
+                } catch (SQLException e) {
+                	countplc4 = 1;
+                    inSqlplc4 = "";
+                    System.out.println("Broken insert");
+                    e.printStackTrace();
+                } 
+            }
+            break;
+        }
+	
 	}
 	
     public void DB_Connectionmysqlrun(BigDecimal electricity,BigDecimal voltage,String sensor_Num,String machine_id,String welder_id,String code,int status,String fitemid,Timestamp timesql,ArrayList<String> listarray1,ArrayList<String> listarray2,ArrayList<String> listarray3){
