@@ -675,8 +675,8 @@ public class Server implements Runnable {
 		public void run() {
 			// TODO Auto-generated method stub
 
-			EventLoopGroup bossGroup = new NioEventLoopGroup();
-			EventLoopGroup workerGroup = new NioEventLoopGroup();
+			EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+			EventLoopGroup workerGroup = new NioEventLoopGroup(128);
 
 			try{
 				ServerBootstrap serverBootstrap = new ServerBootstrap();
@@ -691,6 +691,7 @@ public class Server implements Runnable {
 						chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 						chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 						chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(8192));
+						chweb.pipeline().addLast(new ReadTimeoutHandler(100),new WriteTimeoutHandler(100));
 						chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://localhost:5550/SerialPortDemo/ws/张三"));
 						chweb.pipeline().addLast("myWebSocketHandler", NWS);
 						synchronized (websocketlist) {
