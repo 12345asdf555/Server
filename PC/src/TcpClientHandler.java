@@ -96,7 +96,7 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
 	            String inSql1 = "SELECT fgather_no FROM tb_gather INNER JOIN tb_welding_machine ON tb_gather.fid = tb_welding_machine.fgather_id WHERE tb_welding_machine.fid = '" + datainf[3] + "'";
 				ResultSet rs1 =stmt.executeQuery(inSql1);
 				while (rs1.next()) {
-	            	gather = Integer.toHexString(Integer.valueOf(rs.getString("fgather_no")));
+	            	gather = Integer.toHexString(Integer.valueOf(rs1.getString("fgather_no")));
 	            	if(gather.length()!=4){
 	            		for(int i=0;i<4-gather.length();i++){
 	            			gather = "0" + gather;
@@ -112,13 +112,6 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
             	int count = cengdao.length();
             	for(int i=0;i<200-count;i++){
             		cengdao = cengdao + "0";
-            	}
-            }
-            
-            if(junction.length() != 30){
-            	int count = junction.length();
-            	for(int i=0;i<30-count;i++){
-            		junction = junction + "0";
             	}
             }
             
@@ -140,13 +133,21 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
             char[] buf = junction.toCharArray();
             for(int i=0;i<buf.length;i++){
             	int buf1 = buf[i];
-            	junctionsend = junctionsend + Integer.toString(buf1);
+            	junctionsend = junctionsend + Integer.toString(buf1,16);
+            }
+            
+
+            if(junctionsend.length() != 60){
+            	int count = junctionsend.length();
+            	for(int i=0;i<60-count;i++){
+            		junctionsend = junctionsend + "0";
+            	}
             }
             
 			if(datainf[4].equals("0")){
-	            datasend = "7E8D01010122" + gather + "00" + junctionsend + cengdao + cdcount + "017D";
+	            datasend = "7E8D01010102" + gather + "00" + junctionsend + cengdao + cdcount + "017D";
             }else if(datainf[4].equals("1")){
-	            datasend = "7E8D01010122" + gather + "01" + junctionsend + cengdao + cdcount + "017D";
+	            datasend = "7E8D01010102" + gather + "01" + junctionsend + cengdao + cdcount + "017D";
             }
             
         	synchronized (socketlist) {
