@@ -190,8 +190,9 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
 					}else{
 						if(listarrayplc.contains(Integer.toString(Integer.valueOf(str.substring(16, 20))))){
-							listarrayplc.remove(listarrayplc.indexOf(Integer.toString(Integer.valueOf(str.substring(16, 20)))));
-							listarrayplc.remove(listarrayplc.indexOf(Integer.toString(Integer.valueOf(str.substring(16, 20))))+1);
+							int index = listarrayplc.indexOf(Integer.toString(Integer.valueOf(str.substring(16, 20))));
+							listarrayplc.remove(index);
+							listarrayplc.remove(index);
 							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
 							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
 						}else{
