@@ -603,7 +603,7 @@ public class Server implements Runnable {
 
 				//绑定端口，等待同步成功  
 				ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5571).sync();
 				//等待服务端关闭监听端口  
 				f.channel().closeFuture().sync(); 
 			} catch (InterruptedException e) {
@@ -653,7 +653,7 @@ public class Server implements Runnable {
 
 				});
 
-				Channel ch = serverBootstrap.bind(5550).sync().channel();
+				Channel ch = serverBootstrap.bind(5573).sync().channel();
 				ch.closeFuture().sync();
 
 				/*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();
