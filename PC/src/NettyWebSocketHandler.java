@@ -109,116 +109,116 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
         }
     }*/
 
-	
+
 	private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
 		// 判断链路是否关闭
-	    if (frame instanceof CloseWebSocketFrame) {
-	      handsharker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
-	      return;
-	    }
-	    if (frame instanceof PingWebSocketFrame) {
-	      new PongWebSocketFrame(frame.content().retain());
-	      return;
-	    }
-	 // 只支持文本消息,不支持二进制消息
-	    if (!(frame instanceof TextWebSocketFrame)) {
-	      throw new UnsupportedOperationException(
-	          String.format("%s frame type not supported", frame.getClass().getName()));
-	    }
-	      
-	    String str = ((TextWebSocketFrame) frame).text();
-	    if (str.length()<2)
-	    {
-	      return ;
-	    }
-	    HashMap<String, SocketChannel> socketlist_cl;
-	    synchronized (socketlist){
-	     socketlist_cl = (HashMap<String, SocketChannel>) socketlist.clone();
-	    }
-	    if(str.substring(0,2).equals("7E")){
-	      
-	      //synchronized (socketlist)
-	      //{
-	        ArrayList<String> listarraybuf = new ArrayList<String>();
-	        boolean ifdo = false;
+		if (frame instanceof CloseWebSocketFrame) {
+			handsharker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
+			return;
+		}
+		if (frame instanceof PingWebSocketFrame) {
+			new PongWebSocketFrame(frame.content().retain());
+			return;
+		}
+		// 只支持文本消息,不支持二进制消息
+		if (!(frame instanceof TextWebSocketFrame)) {
+			throw new UnsupportedOperationException(
+					String.format("%s frame type not supported", frame.getClass().getName()));
+		}
 
-	        Iterator<Entry<String, SocketChannel>> webiter = socketlist_cl.entrySet().iterator();
-	        while(webiter.hasNext())
-	        {
-	          try{
-	            Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-	            socketfail = entry.getKey();
-	            SocketChannel socketcon = entry.getValue();
-	            String[] socketip1 = socketcon.toString().split("/");
-	            String[] socketip2 = socketip1[1].split(":");
-	            String socketip = socketip2[0];
-	            //if(!socketip.equals("192.168.1.101")){
-	            if(!socketip.equals("121.196.222.216")){
-	              //socketcon.writeAndFlush(str).sync();
-	              socketcon.writeAndFlush(str);
-	            }
+		String str = ((TextWebSocketFrame) frame).text();
+		if (str.length()<2)
+		{
+			return ;
+		}
+		HashMap<String, SocketChannel> socketlist_cl;
+		synchronized (socketlist){
+			socketlist_cl = (HashMap<String, SocketChannel>) socketlist.clone();
+		}
+		if(str.substring(0,2).equals("7E")){
 
-	          }catch (Exception e) {
-	            listarraybuf.add(socketfail);
-	            ifdo = true;
-	          }
-	        }
+			//synchronized (socketlist)
+			//{
+			ArrayList<String> listarraybuf = new ArrayList<String>();
+			boolean ifdo = false;
 
-	        if(ifdo){
-	          synchronized (socketlist){
-	             //socketlist_cl = (HashMap<String, SocketChannel>) socketlist.clone();
-	              for(int i=0;i<listarraybuf.size();i++){
-	                socketlist.remove(listarraybuf.get(i));
-	              }
-	            }
-	          
-	        }
-	      //}
+			Iterator<Entry<String, SocketChannel>> webiter = socketlist_cl.entrySet().iterator();
+			while(webiter.hasNext())
+			{
+				try{
+					Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+					socketfail = entry.getKey();
+					SocketChannel socketcon = entry.getValue();
+					String[] socketip1 = socketcon.toString().split("/");
+					String[] socketip2 = socketip1[1].split(":");
+					String socketip = socketip2[0];
+					//if(!socketip.equals("192.168.1.101")){
+					if(!socketip.equals("121.196.222.216")){
+						//socketcon.writeAndFlush(str).sync();
+						socketcon.writeAndFlush(str);
+					}
 
-	    }else if(str.substring(0,1).equals("0") || str.substring(0,1).equals("1")){
-	      
-	      //synchronized (socketlist)
-	      //{
-	        ArrayList<String> listarraybuf = new ArrayList<String>();
-	        boolean ifdo = false;
+				}catch (Exception e) {
+					listarraybuf.add(socketfail);
+					ifdo = true;
+				}
+			}
 
-	        Iterator<Entry<String, SocketChannel>> webiter = socketlist_cl.entrySet().iterator();
-	        while(webiter.hasNext()){
-	          try{
-	            Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-	            socketfail = entry.getKey();
-	            SocketChannel socketcon = entry.getValue();
-	            String[] socketip1 = socketcon.toString().split("/");
-	            String[] socketip2 = socketip1[1].split(":");
-	            String socketip = socketip2[0];
-	            //if(!socketip.equals("192.168.1.101")){
-	            if(!socketip.equals("121.196.222.216")){
-	              socketcon.writeAndFlush(str).sync();
-	            }
+			if(ifdo){
+				synchronized (socketlist){
+					//socketlist_cl = (HashMap<String, SocketChannel>) socketlist.clone();
+					for(int i=0;i<listarraybuf.size();i++){
+						socketlist.remove(listarraybuf.get(i));
+					}
+				}
 
-	          }catch (Exception e) {
-	            listarraybuf.add(socketfail);
-	            ifdo = true;
-	          }
-	        }
+			}
+			//}
 
-	        if(ifdo){
-	          synchronized (socketlist){
-	             //socketlist_cl = (HashMap<String, SocketChannel>) socketlist.clone();
-	              for(int i=0;i<listarraybuf.size();i++){
-	                socketlist.remove(listarraybuf.get(i));
-	              }
-	            }
-	        }
-	      //}
-	    }
+		}else if(str.substring(0,1).equals("0") || str.substring(0,1).equals("1")){
+
+			//synchronized (socketlist)
+			//{
+			ArrayList<String> listarraybuf = new ArrayList<String>();
+			boolean ifdo = false;
+
+			Iterator<Entry<String, SocketChannel>> webiter = socketlist_cl.entrySet().iterator();
+			while(webiter.hasNext()){
+				try{
+					Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+					socketfail = entry.getKey();
+					SocketChannel socketcon = entry.getValue();
+					String[] socketip1 = socketcon.toString().split("/");
+					String[] socketip2 = socketip1[1].split(":");
+					String socketip = socketip2[0];
+					//if(!socketip.equals("192.168.1.101")){
+					if(!socketip.equals("121.196.222.216")){
+						socketcon.writeAndFlush(str).sync();
+					}
+
+				}catch (Exception e) {
+					listarraybuf.add(socketfail);
+					ifdo = true;
+				}
+			}
+
+			if(ifdo){
+				synchronized (socketlist){
+					//socketlist_cl = (HashMap<String, SocketChannel>) socketlist.clone();
+					for(int i=0;i<listarraybuf.size();i++){
+						socketlist.remove(listarraybuf.get(i));
+					}
+				}
+			}
+			//}
+		}
 
 		// ctx.channel().write(new TextWebSocketFrame(request + " , 欢迎使用netty
 		// websocket 服务,现在时刻是: ")
 		// + new java.util.Date().toString());
-	  }
-	
-	
+	}
+
+
 
 	/**
 	 * 处理WEBSOCKET请求
