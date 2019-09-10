@@ -184,7 +184,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				}
 				
 				//存华域对应plc焊工数据
-				synchronized (listarray4) {
+				synchronized (listarrayplc) {
 					if(listarrayplc.size() == 0){
 						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
 						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
@@ -286,16 +286,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						}
 					}
 				}
-				/*mysql.Mysqlbase(str);
-		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
-		        if(socketchannel!=null){
-			        try {
-						socketchannel.writeAndFlush(str).sync();
-					} catch (Exception e) {
-						socketchannel = null;
-						e.printStackTrace();
-					}
-		        }*/
+				mysql.Mysqlohwh(str);
+		        websocket.Websocketohwh(str,listarray2,listarray3,websocketlist);
 				
 			}else if(str.substring(0,2).equals("FA")){  //处理实时数据
 				
