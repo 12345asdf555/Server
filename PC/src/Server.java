@@ -647,6 +647,7 @@ public class Server implements Runnable {
 				ServerBootstrap serverBootstrap = new ServerBootstrap();
 				serverBootstrap
 				.group(bossGroup, workerGroup)
+				.option(ChannelOption.SO_BACKLOG,1024)
 				.channel(NioServerSocketChannel.class)
 				.childHandler(new ChannelInitializer<SocketChannel>(){
 

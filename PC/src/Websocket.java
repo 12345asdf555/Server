@@ -266,7 +266,40 @@ public class Websocket {
 							System.out.println(str.substring(76+a, 84+a));
 						}
 					}
-					synchronized (websocketlist) {
+					
+					HashMap<String, SocketChannel> socketlist_cl;
+					synchronized (websocketlist){
+						socketlist_cl = (HashMap<String, SocketChannel>) websocketlist.clone();
+					}
+					ArrayList<String> listarraybuf = new ArrayList<String>();
+					boolean ifdo = false;
+
+					Iterator<Entry<String, SocketChannel>> webiter = socketlist_cl.entrySet().iterator();
+					while(webiter.hasNext())
+					{
+						try{
+							Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+							websocketfail = entry.getKey();
+							SocketChannel websocketcon = entry.getValue();
+							websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+
+						}catch (Exception e) {
+							listarraybuf.add(websocketfail);
+							ifdo = true;
+						}
+					}
+
+					if(ifdo){
+						synchronized (websocketlist){
+							//socketlist_cl = (HashMap<String, SocketChannel>) socketlist.clone();
+							for(int i=0;i<listarraybuf.size();i++){
+								websocketlist.remove(listarraybuf.get(i));
+							}
+						}
+
+					}
+					
+					/*synchronized (websocketlist) {
 
 						ArrayList<String> listarraybuf = new ArrayList<String>();
 						boolean ifdo= false;
@@ -288,7 +321,7 @@ public class Websocket {
 							for(int i=0;i<listarraybuf.size();i++){
 								websocketlist.remove(listarraybuf.get(i));
 							}
-						}
+						}*/
 						strsend = "";
 					}
 				}
