@@ -657,7 +657,6 @@ public class Server implements Runnable {
 						chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 						chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 						chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(1024*1024*1024));
-						chweb.pipeline().addLast(new ReadTimeoutHandler(100),new WriteTimeoutHandler(100));
 						chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://119.3.100.103:5550/SerialPortDemo/ws/张三",null,true,65535));
 						chweb.pipeline().addLast("myWebSocketHandler", NWS);
 						synchronized (websocketlist) {
