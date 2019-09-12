@@ -298,6 +298,7 @@ public class Websocket {
 						}
 
 					}
+					strsend = "";
 					
 					/*synchronized (websocketlist) {
 
@@ -321,9 +322,9 @@ public class Websocket {
 							for(int i=0;i<listarraybuf.size();i++){
 								websocketlist.remove(listarraybuf.get(i));
 							}
-						}*/
+						}
 						strsend = "";
-					}
+					}*/
 				}
 			}
 		}
