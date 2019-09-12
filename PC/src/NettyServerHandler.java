@@ -289,7 +289,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				mysql.Mysqlohwh(str);
 		        websocket.Websocketohwh(str,listarray2,listarray3,websocketlist);
 				
-			}else if(str.substring(0,2).equals("FA")){  //处理实时数据
+			} else if(str.substring(0,2).equals("FA")){  //处理实时数据
 				
 				synchronized (websocketlist) {
 				mysql.Mysqlrun(str);
@@ -428,6 +428,25 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	
 	        	mysql.Mysqlplc(str,listarrayplc);
 	        	System.out.println(str);
+	        	
+	        	if(socketchannel!=null){
+					//System.out.println(socketchannel);
+					synchronized (socketchannel) {
+						try {
+							socketchannel.writeAndFlush(str).sync();
+							System.out.println("发送成功:"+str);
+						} catch (Exception e) {
+							try {
+								socketchannel.close().sync();
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							socketchannel = null;
+							e.printStackTrace();
+						}
+					}
+				}
 	        	
 	        } else if(str.equals("SS")){  //欧华纬华调用webservice获取实时数据
 	        	
