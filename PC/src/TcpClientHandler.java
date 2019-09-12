@@ -147,6 +147,8 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
 			if(datainf[4].equals("0")){
 	            datasend = "7E8D01010102" + gather + "00" + junctionsend + cengdao + cdcount + "017D";
             }else if(datainf[4].equals("1")){
+            	client.server.NS.mysql.db.ceng = 0;
+            	client.server.NS.mysql.db.dao = 0;
 	            datasend = "7E8D01010102" + gather + "01" + junctionsend + cengdao + cdcount + "017D";
             }
             
