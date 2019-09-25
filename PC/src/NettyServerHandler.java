@@ -93,7 +93,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				
 				//存webservice数据
 				synchronized (listarray4) {
-					long gatherid = Integer.valueOf(str.substring(16, 20));
+					long gatherid = Integer.valueOf(str.substring(16, 20),16);
 					for(int i=0;i<listarray4.size();i+=23){
 						if(gatherid == Integer.valueOf(listarray4.get(i))){
 							String electricity = Integer.toString(Integer.valueOf(str.subSequence(56, 60).toString(),16));
@@ -184,7 +184,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				}
 				
 				//存华域对应plc焊工数据
-				synchronized (listarrayplc) {
+				/*synchronized (listarrayplc) {
 					if(listarrayplc.size() == 0){
 						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
 						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
@@ -200,7 +200,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
 						}
 					}
-				}
+				}*/
 				
 				mysql.Mysqlbase(str);
 		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
