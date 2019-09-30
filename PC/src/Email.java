@@ -16,6 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -34,6 +35,7 @@ public class Email {
     public java.sql.Statement stmt =null;
 
 	public void run(){
+		
 		//开启线程每天查询邮件
         Calendar calendarmail = Calendar.getInstance();
         

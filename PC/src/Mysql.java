@@ -417,6 +417,69 @@ public class Mysql {
 		}
 	}
 
+	public void Mysqlbaseoutline(String str, Server server) {
+		// TODO Auto-generated method stub
+		Date time;
+		Timestamp timesql = null;
+		if (str.length() == 290) {
+
+			try{
+				//校验第一位是否为FA末位是否为F5
+				String check1 =str.substring(0,2);
+				String check11=str.substring(288,290);
+				if(check1.equals("7E") && check11.equals("7D")){
+
+					long welderid = Integer.valueOf(str.substring(40, 44));
+					long weldid = Integer.valueOf(str.substring(20, 24));
+					long gatherid = Integer.valueOf(str.substring(16, 20));
+					long itemid = Integer.valueOf(str.substring(286, 288));
+					String weldmodel = Integer.valueOf(str.subSequence(12, 14).toString(),16).toString();
+
+					for(int a=0;a<161;a+=80){
+						try{
+							long junctionid = Integer.valueOf(str.substring(76+a, 84+a));
+							BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(56+a, 60+a).toString(),16));
+							BigDecimal voltage = new BigDecimal(Integer.valueOf(str.subSequence(60+a, 64+a).toString(),16));
+							int status = Integer.parseInt(str.subSequence(84+a, 86+a).toString(),16);
+							BigDecimal fwirefeedrate = new BigDecimal(Integer.valueOf(str.subSequence(64+a, 68+a).toString(),16));
+							String year = Integer.valueOf(str.subSequence(44+a, 46+a).toString(),16).toString();
+							String month = Integer.valueOf(str.subSequence(46+a, 48+a).toString(),16).toString();
+							String day = Integer.valueOf(str.subSequence(48+a, 50+a).toString(),16).toString();
+							String hour = Integer.valueOf(str.subSequence(50+a, 52+a).toString(),16).toString();
+							String minute = Integer.valueOf(str.subSequence(52+a, 54+a).toString(),16).toString();
+							String second = Integer.valueOf(str.subSequence(54+a, 56+a).toString(),16).toString();
+							String strdate = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
+
+							try {
+								time = DateTools.parse("yy-MM-dd HH:mm:ss",strdate);
+								timesql = new Timestamp(time.getTime());
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+							int channel = Integer.valueOf(str.subSequence(106+a, 108+a).toString(),16);
+							BigDecimal maxelectricity = new BigDecimal(Integer.valueOf(str.subSequence(90+a, 94+a).toString(),16));
+							BigDecimal minelectricity = new BigDecimal(Integer.valueOf(str.subSequence(94+a, 98+a).toString(),16));
+							BigDecimal maxvoltage = new BigDecimal(Integer.valueOf(str.subSequence(98+a, 102+a).toString(),16));
+							BigDecimal minvoltage = new BigDecimal(Integer.valueOf(str.subSequence(102+a, 106+a).toString(),16));
+							BigDecimal frateofflow = new BigDecimal(Integer.valueOf(str.subSequence(108+a, 112+a).toString(),16));
+							BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(86+a, 88+a).toString(),16));
+							int fmaterialgas = Integer.parseInt(str.subSequence(88+a, 90+a).toString(),16);
+
+							db.DB_Connectionmysqloutline(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow,server);	 
+						}catch(Exception e){
+							System.out.println(str);
+							System.out.println(str.substring(76+a, 84+a));
+						}
+					}
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/*@Override
 	public void taskResult(String str,String connet,ArrayList<String> listarray1,ArrayList<String> listarray2,ArrayList<String> listarray3,HashMap<String, Socket> websocket,String ip1) {
 		// TODO Auto-generated method stub

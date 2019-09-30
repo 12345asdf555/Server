@@ -210,7 +210,16 @@ public class Websocket {
 								}
 							}
 
-							for(int i=0;i<listarray3.size();i+=7){
+							//junctionins切换为工作模式
+							junctionins = Integer.valueOf(str.subSequence(86+a, 88+a).toString(),16).toString();
+							if(status.length()!=4){
+								int lenth=4-junctionins.length();
+								for(int i=0;i<lenth;i++){
+									junctionins="0"+junctionins;
+								}
+							}
+							
+							/*for(int i=0;i<listarray3.size();i+=7){
 								if(Integer.valueOf(junctionid) == Integer.valueOf(listarray3.get(i+5))){
 									junctionins = listarray3.get(i+6);
 									if(junctionins.equals(null) || junctionins.equals("null")){
@@ -225,7 +234,7 @@ public class Websocket {
 										break;
 									}
 								}
-							}
+							}*/
 
 							for(int i=0;i<listarray2.size();i+=4){
 								if(Integer.valueOf(gatherid) == Integer.valueOf(listarray2.get(i))){
@@ -247,9 +256,9 @@ public class Websocket {
 							if(ins == null || ins.equals("null")){
 								ins = "0000";
 							}
-							if(junctionins.equals(null) || junctionins.equals("null")){
+							/*if(junctionins.equals(null) || junctionins.equals("null")){
 								junctionins = "0000";
-							}
+							}*/
 							if(welderins.equals(null) || welderins.equals("null")){
 								welderins = "0000";
 							}
@@ -267,7 +276,8 @@ public class Websocket {
 						}
 					}
 					
-					HashMap<String, SocketChannel> socketlist_cl;
+					//基本版2处理
+					/*HashMap<String, SocketChannel> socketlist_cl;
 					synchronized (websocketlist){
 						socketlist_cl = (HashMap<String, SocketChannel>) websocketlist.clone();
 					}
@@ -297,7 +307,46 @@ public class Websocket {
 							}
 						}
 
+					}*/
+					
+					
+					//测试处理
+					HashMap<String, SocketChannel> socketlist_cl;
+					synchronized (websocketlist){
+						socketlist_cl = (HashMap<String, SocketChannel>) websocketlist.clone();
 					}
+					ArrayList<String> listarraybuf = new ArrayList<String>();
+					boolean ifdo = false;
+
+					Iterator<Entry<String, SocketChannel>> webiter = socketlist_cl.entrySet().iterator();
+					while(webiter.hasNext())
+					{
+						try{
+							Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+							websocketfail = entry.getKey();
+							SocketChannel websocketcon = entry.getValue();
+							if(websocketcon.isActive() && websocketcon.isOpen()){
+								websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+							}else{
+								listarraybuf.add(websocketfail);
+							}
+
+						}catch (Exception e) {
+							listarraybuf.add(websocketfail);
+							ifdo = true;
+						}
+					}
+
+					if(ifdo){
+						synchronized (websocketlist){
+							//socketlist_cl = (HashMap<String, SocketChannel>) socketlist.clone();
+							for(int i=0;i<listarraybuf.size();i++){
+								websocketlist.remove(listarraybuf.get(i));
+							}
+						}
+
+					}
+					
 					strsend = "";
 					
 					/*synchronized (websocketlist) {

@@ -27,12 +27,11 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 @Sharable 
-public class NettyServerHandler extends ChannelHandlerAdapter{
+public class NettyServerHandlerTest extends ChannelHandlerAdapter{
 	
 	public String ip;
     public String ip1;
     public String connet;
-    public Server server;
     public Thread workThread;
     public java.sql.Statement stmt =null;
 	public java.sql.Connection conn = null;
@@ -51,10 +50,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	public byte[] b;
     public int a=0;
     
-	public NettyServerHandler(Server server) {
-		// TODO Auto-generated constructor stub
-		this.server = server;
-	}
 	@Override  
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		 
@@ -207,9 +202,9 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 					}
 				}*/
 				
-				websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
-		        mysql.Mysqlbase(str);
-		        /*if(socketchannel!=null){
+		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+				/*mysql.Mysqlbase(str);
+		        if(socketchannel!=null){
 			        try {
 						socketchannel.writeAndFlush(str).sync();
 					} catch (Exception e) {
@@ -217,11 +212,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						e.printStackTrace();
 					}
 		        }*/
-				
-		    //处理断网续传数据
-			}else if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("23")) && str.length()==290){
-				
-		        mysql.Mysqlbaseoutline(str,server);
 				
 		    //欧华纬华
 			}else if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==320){
