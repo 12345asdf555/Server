@@ -548,8 +548,8 @@ public class Server implements Runnable {
 				}*/
 				
 			}  
-		//}, time1 , 1000*60*60*24);
-		}, 60000,600000);
+		}, time1 , 1000*60*60*24);
+		//}, 60000,600000);
 
 		//获取最新焊口和焊机统计时间
 		check = new DB_Connectioncode(stmt,conn,connet);
@@ -642,7 +642,7 @@ public class Server implements Runnable {
 		new Thread(socketstarttest).start();
 		new Thread(websocketstart).start();
 		//new Thread(sockettran).start();
-		//new Email().run();
+		new Email().run();
 		//new EMessage().run();
 		//new UpReport();
 

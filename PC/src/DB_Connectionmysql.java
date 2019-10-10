@@ -1118,27 +1118,27 @@ public class DB_Connectionmysql {
 				BigDecimal fwirefeedrate1 = new BigDecimal(((double)Integer.valueOf(fwirefeedrate.toString()))/10);
 				BigDecimal frateofflow1 = new BigDecimal(((double)Integer.valueOf(frateofflow.toString()))/10);
 
-				for(int a=0;a<listarray1.size();a+=3){
-					if(welderid == Integer.valueOf(listarray1.get(a))){
-						weldernum = listarray1.get(a+1);
-						welderins = listarray1.get(a+2);
+				for(int a=0;a<listarray12.size();a+=3){
+					if(welderid == Integer.valueOf(listarray12.get(a))){
+						weldernum = listarray12.get(a+1);
+						welderins = listarray12.get(a+2);
 						break;
 					}
 				}
 
-				for(int a=0;a<listarray3.size();a+=7){
-					if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-						junctionnum = listarray3.get(a);
-						junctionins = listarray3.get(a+6);
+				for(int a=0;a<listarray32.size();a+=7){
+					if(junctionid == Integer.valueOf(listarray32.get(a+5))){
+						junctionnum = listarray32.get(a);
+						junctionins = listarray32.get(a+6);
 						break;
 					}
 				}
 
-				for(int a=0;a<listarray2.size();a+=4){
-					if(gatherid == Integer.valueOf(listarray2.get(a))){
-						gathernum = listarray2.get(a+2);
-						weldnum = listarray2.get(a+1);
-						ins = listarray2.get(a+3);
+				for(int a=0;a<listarray22.size();a+=4){
+					if(gatherid == Integer.valueOf(listarray22.get(a))){
+						gathernum = listarray22.get(a+2);
+						weldnum = listarray22.get(a+1);
+						ins = listarray22.get(a+3);
 						break;
 					}
 				}
@@ -1239,25 +1239,25 @@ public class DB_Connectionmysql {
 				BigDecimal fwirefeedrate2 = new BigDecimal(((double)Integer.valueOf(fwirefeedrate.toString()))/10);
 				BigDecimal frateofflow2 = new BigDecimal(((double)Integer.valueOf(frateofflow.toString()))/10);
 
-				for(int a=0;a<listarray1.size();a+=3){
-					if(welderid == Integer.valueOf(listarray1.get(a))){
-						weldernum = listarray1.get(a+1);
-						welderins = listarray1.get(a+2);
+				for(int a=0;a<listarray12.size();a+=3){
+					if(welderid == Integer.valueOf(listarray12.get(a))){
+						weldernum = listarray12.get(a+1);
+						welderins = listarray12.get(a+2);
 					}
 				}
 
-				for(int a=0;a<listarray3.size();a+=7){
-					if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-						junctionnum = listarray3.get(a);
-						junctionins = listarray3.get(a+6);
+				for(int a=0;a<listarray32.size();a+=7){
+					if(junctionid == Integer.valueOf(listarray32.get(a+5))){
+						junctionnum = listarray32.get(a);
+						junctionins = listarray32.get(a+6);
 					}
 				}
 
-				for(int a=0;a<listarray2.size();a+=4){
-					if(gatherid == Integer.valueOf(listarray2.get(a))){
-						gathernum = listarray2.get(a+2);
-						weldnum = listarray2.get(a+1);
-						ins = listarray2.get(a+3);
+				for(int a=0;a<listarray22.size();a+=4){
+					if(gatherid == Integer.valueOf(listarray22.get(a))){
+						gathernum = listarray22.get(a+2);
+						weldnum = listarray22.get(a+1);
+						ins = listarray22.get(a+3);
 					}
 				}
 
@@ -1354,25 +1354,25 @@ public class DB_Connectionmysql {
 				BigDecimal fwirefeedrate3 = new BigDecimal(((double)Integer.valueOf(fwirefeedrate.toString()))/10);
 				BigDecimal frateofflow3 = new BigDecimal(((double)Integer.valueOf(frateofflow.toString()))/10);
 
-				for(int a=0;a<listarray1.size();a+=3){
-					if(welderid == Integer.valueOf(listarray1.get(a))){
-						weldernum = listarray1.get(a+1);
-						welderins = listarray1.get(a+2);
+				for(int a=0;a<listarray12.size();a+=3){
+					if(welderid == Integer.valueOf(listarray12.get(a))){
+						weldernum = listarray12.get(a+1);
+						welderins = listarray12.get(a+2);
 					}
 				}
 
-				for(int a=0;a<listarray3.size();a+=7){
-					if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-						junctionnum = listarray3.get(a);
-						junctionins = listarray3.get(a+6);
+				for(int a=0;a<listarray32.size();a+=7){
+					if(junctionid == Integer.valueOf(listarray32.get(a+5))){
+						junctionnum = listarray32.get(a);
+						junctionins = listarray32.get(a+6);
 					}
 				}
 
-				for(int a=0;a<listarray2.size();a+=4){
-					if(gatherid == Integer.valueOf(listarray2.get(a))){
-						gathernum = listarray2.get(a+2);
-						weldnum = listarray2.get(a+1);
-						ins = listarray2.get(a+3);
+				for(int a=0;a<listarray22.size();a+=4){
+					if(gatherid == Integer.valueOf(listarray22.get(a))){
+						gathernum = listarray22.get(a+2);
+						weldnum = listarray22.get(a+1);
+						ins = listarray22.get(a+3);
 					}
 				}
 
@@ -1470,25 +1470,25 @@ public class DB_Connectionmysql {
 				BigDecimal fwirefeedrate4 = new BigDecimal(((double)Integer.valueOf(fwirefeedrate.toString()))/10);
 				BigDecimal frateofflow4 = new BigDecimal(((double)Integer.valueOf(frateofflow.toString()))/10);
 
-				for(int a=0;a<listarray1.size();a+=3){
-					if(welderid == Integer.valueOf(listarray1.get(a))){
-						weldernum = listarray1.get(a+1);
-						welderins = listarray1.get(a+2);
+				for(int a=0;a<listarray12.size();a+=3){
+					if(welderid == Integer.valueOf(listarray12.get(a))){
+						weldernum = listarray12.get(a+1);
+						welderins = listarray12.get(a+2);
 					}
 				}
 
-				for(int a=0;a<listarray3.size();a+=7){
-					if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-						junctionnum = listarray3.get(a);
-						junctionins = listarray3.get(a+6);
+				for(int a=0;a<listarray32.size();a+=7){
+					if(junctionid == Integer.valueOf(listarray32.get(a+5))){
+						junctionnum = listarray32.get(a);
+						junctionins = listarray32.get(a+6);
 					}
 				}
 
-				for(int a=0;a<listarray2.size();a+=4){
-					if(gatherid == Integer.valueOf(listarray2.get(a))){
-						gathernum = listarray2.get(a+2);
-						weldnum = listarray2.get(a+1);
-						ins = listarray2.get(a+3);
+				for(int a=0;a<listarray22.size();a+=4){
+					if(gatherid == Integer.valueOf(listarray22.get(a))){
+						gathernum = listarray22.get(a+2);
+						weldnum = listarray22.get(a+1);
+						ins = listarray22.get(a+3);
 					}
 				}
 

@@ -39,8 +39,7 @@ public class Email {
 		//开启线程每天查询邮件
         Calendar calendarmail = Calendar.getInstance();
         
-        calendarmail.set(Calendar.DAY_OF_MONTH, +1); // 控制天
-        calendarmail.set(Calendar.HOUR_OF_DAY, 07); // 控制时
+        calendarmail.set(Calendar.HOUR_OF_DAY, 00); // 控制时
         calendarmail.set(Calendar.MINUTE, 00);    // 控制分
         calendarmail.set(Calendar.SECOND, 00);    // 控制秒
         time = calendarmail.getTime(); 
@@ -105,378 +104,99 @@ public class Email {
 					e.printStackTrace();
 				}
 				
-	    		ArrayList<String> listarraymail = new ArrayList<String>();
-	    		ArrayList<String> listarraymailer = new ArrayList<String>();
-	    		String sqlmail = "SELECT fname,fcheckintime,ficworkime FROM tb_welder";
-	    		String sqlmailer = "SELECT femailname,femailaddress,femailtype FROM tb_catemailinf";
-	    		ResultSet rs;
 	    		try {
-	    			rs = stmt.executeQuery(sqlmail);
-	            	while (rs.next()) {
-	            		listarraymail.add(rs.getString("fname"));
-	            		listarraymail.add(rs.getString("fcheckintime"));
-	            		listarraymail.add(rs.getString("ficworkime"));
-	            	}
-	            	rs = stmt.executeQuery(sqlmailer);
-	            	while (rs.next()) {
-	            		listarraymailer.add(rs.getString("femailname"));
-	            		listarraymailer.add(rs.getString("femailaddress"));
-	            		listarraymailer.add(rs.getString("femailtype"));
-	            	}
-	    		} catch (SQLException e) {
-	    			// TODO Auto-generated catch block
-	    			e.printStackTrace();
-	    		}
-				
-	    		String halfyearname = "";
-	    		
-	    		for(int i=0;i<listarraymail.size();i+=3){
-	    			
-	    			//半年提醒
-	    			Calendar canow = Calendar.getInstance();
-	    			Calendar ca = Calendar.getInstance();
-	    			ca.setTime(new Date());
-	    			ca.add(Calendar.MONTH, -5);
-	    			ca.add(Calendar.DAY_OF_MONTH, -15);
-	    			Date resultDate = ca.getTime(); // 结果  
-	    			String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",resultDate);
-	    			
-	    			String[] nowtimebuf = nowtime.split(" ");
-	    			String[] checkintimebuf = listarraymail.get(i+1).split(" ");
-	    			
-	    			nowtime = nowtimebuf[0];
-	    			String checkintime = checkintimebuf[0];
-	    					
-	    			if(nowtime.equals(checkintime)){
-	    				if(halfyearname.equals("")){
-	    					halfyearname = listarraymail.get(i);
-	    				}else{
-	    					halfyearname = listarraymail.get(i) + "、" + halfyearname ;
-	    				}
-	    				
-	    				String sqlmailcheck2 = "update tb_welder set fhalfyearsure = '" + DateTools.format("yyyy-MM-dd HH:mm:ss",new Date()) + "' WHERE fname = '" + listarraymail.get(i) + "'";
-	    			    try {
-	    					stmt.execute(sqlmailcheck2);
-	    				} catch (SQLException e) {
-	    					// TODO Auto-generated catch block
-	    					e.printStackTrace();
-	    				}
-	    				
-	    			}
-	    			
-	    		}
-				
-				if(!halfyearname.equals("")){
-					try{
-						
-						for(int j=0;j<listarraymailer.size();j+=3){
-							if(listarraymailer.get(j+2).equals("1")){
-								Properties props = new Properties();
-							    props.setProperty("mail.smtp.auth", "true");
-							    props.setProperty("mail.transport.protocol", "smtp");
-							    props.put("mail.smtp.host","smtp.qq.com");// smtp服务器地址
-							    
-							    Session session = Session.getInstance(props);
-							    session.setDebug(true);
-							    
-							    Message msg = new MimeMessage(session);
-							    msg.setSubject("员工入职半年提醒");
-							    msg.setText(halfyearname + " 入职已满半年");
-							    msg.setSentDate(new Date());
-							    msg.setFrom(new InternetAddress("512836904@qq.com"));//发件人邮箱
-							    msg.setRecipient(Message.RecipientType.TO,
-							            new InternetAddress(listarraymailer.get(j+1))); //收件人邮箱
-							    //msg.addRecipient(Message.RecipientType.CC, 
-					    		//new InternetAddress("XXXXXXXXXXX@qq.com")); //抄送人邮箱
-							    msg.saveChanges();
+	    			ArrayList<String> listarraymail = new ArrayList<String>();
+					ArrayList<String> listarraymailer = new ArrayList<String>();
 
-							    Transport transport = session.getTransport();
-							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//发件人邮箱,授权码
-							    
-							    transport.sendMessage(msg, msg.getAllRecipients());
-							    transport.close();
-							    
-							    String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",new Date());
-							    String sqlmailcheck1 = "INSERT INTO tb_catemailcheck (femailname, femailaddress, femailtext, femailstatus, femailtime) VALUES ('" + listarraymailer.get(j) + "' , '" + listarraymailer.get(j+1) + "' , '" + halfyearname + " 入职已满半年" + "' , '1' , '" + nowtime + "')";
-							    stmt.execute(sqlmailcheck1);
-							}
-						}
-						
-				    }catch(Exception e){
-				    	e.getStackTrace();
-				    }
-				}
-					
-				//ic卡有效期提醒
-				String icworktime = "";
-				
-				for(int i=0;i<listarraymail.size();i+=3){
-					
-					//ic卡有效期提醒
-					Date dateic;
-					try {
-						dateic = DateTools.parse("yyyy-MM-dd HH:mm:ss",listarraymail.get(i+2));
-						Calendar canow = Calendar.getInstance();
-						Calendar ca = Calendar.getInstance();
-						ca.setTime(dateic);
-						ca.add(Calendar.DAY_OF_MONTH, -60);
-						Date resultDate = ca.getTime(); // 结果  
-						String ictime = DateTools.format("yyyy-MM-dd HH:mm:ss",resultDate);
-						
-						String[] timebuf = ictime.split(" ");
-						String[] checkictimebuf = DateTools.format("yyyy-MM-dd HH:mm:ss",canow.getTime()).split(" ");
-						
-						ictime = timebuf[0];
-						String checkictime = checkictimebuf[0];
-								
-						if(ictime.equals(checkictime)){
-							if(icworktime.equals("")){
-								icworktime = listarraymail.get(i);
-							}else{
-								icworktime = listarraymail.get(i) + "、" + icworktime ;
-							}
-						}
-					} catch (java.text.ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+
+					String sql = "SELECT ftest,fequipment_no FROM tb_welding_machine WHERE DateDiff(DATE(now()),DATE(ftest)) = 30";
+					String sqlmail = "SELECT fid,femailname,femailaddress,femailtype FROM tb_catemailinf";
+					String sqltime = "UPDATE tb_welding_machine SET ftest = now() WHERE fequipment_no = " ;		            
+					String now = "SELECT Now() sendtime";
+
+					ResultSet rs;
+					rs = stmt.executeQuery(sqlmail);	        
+					// 展开结果集数据库
+					while(rs.next()){
+						// 通过字段检索	
+						listarraymailer.add(rs.getString("femailname"));
+						listarraymailer.add(rs.getString("femailtype"));
+						listarraymailer.add(rs.getString("femailaddress"));
+						// 输出数据
 					}
-				}
-				
-				if(!icworktime.equals("")){
-					try{
-						
-						for(int j=0;j<listarraymailer.size();j+=3){
-							if(listarraymailer.get(j+2).equals("2")){
-								Properties props = new Properties();
-							    props.setProperty("mail.smtp.auth", "true");
-							    props.setProperty("mail.transport.protocol", "smtp");
-							    props.put("mail.smtp.host","smtp.qq.com");// smtp服务器地址
-							    
-							    Session session = Session.getInstance(props);
-							    session.setDebug(true);
-							    
-							    Message msg = new MimeMessage(session);
-							    msg.setSubject("员工ic卡到期提醒");
-							    msg.setText(icworktime + " ic卡将要过期");
-							    msg.setSentDate(new Date());
-							    msg.setFrom(new InternetAddress("512836904@qq.com"));//发件人邮箱
-							    msg.setRecipient(Message.RecipientType.TO,
-							            new InternetAddress(listarraymailer.get(j+1))); //收件人邮箱
-										
-							    //msg.addRecipient(Message.RecipientType.CC, 
-					    		//new InternetAddress("XXXXXXXXXXX@qq.com")); //抄送人邮箱
-							    msg.saveChanges();
 
-							    Transport transport = session.getTransport();
-							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//发件人邮箱,授权码
-							    
-							    transport.sendMessage(msg, msg.getAllRecipients());
-							    transport.close();
-							    
-							    String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",new Date());
-							    String sqlmailcheck = "INSERT INTO tb_catemailcheck (femailname, femailaddress, femailtext, femailstatus, femailtime) VALUES ('" + listarraymailer.get(j) + "' , '" + listarraymailer.get(j+1) + "' , '" + icworktime + " ic卡将要过期" + "' , '2' , '" + nowtime + "')";
-							    stmt.execute(sqlmailcheck);
+
+					rs = stmt.executeQuery(sql);	        
+					// 展开结果集数据库
+					while(rs.next()){
+						// 通过字段检索
+						listarraymail.add(rs.getString("fequipment_no"));
+					}
+					for(int k=0;k<listarraymail.size();k++)
+					{
+						stmt.executeUpdate(sqltime+"'"+listarraymail.get(k)+"'");
+					}	            	
+
+					for(int i=0;i<listarraymailer.size();i+=3) 
+					{
+
+						if(listarraymail.size()!=0 && listarraymailer.get(i+1).equals("5"))//发送保养邮件
+						{
+							Properties props = new Properties(); props.setProperty("mail.smtp.auth","true"); 
+							props.setProperty("mail.transport.protocol", "smtp");
+							props.put("mail.smtp.host","smtp.qq.com");				              
+							Session session = Session.getInstance(props); session.setDebug(true);				              
+							Message msg = new MimeMessage(session); 
+							msg.setSubject("设备保养提醒");	            
+							String message = "";
+							for(int j=0;j<listarraymail.size();j++)
+							{
+								if(j==listarraymail.size()-1)
+								{message += listarraymail.get(j);  }
+								else
+								{message += listarraymail.get(j)+"、";  }
+
 							}
-						}
-						
-				    }catch(Exception e){
-				    	e.getStackTrace();
-				    }
-				
-				}
-				
-				//长时间未工作提醒
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		        Calendar c = Calendar.getInstance();
-		        c.setTime(new Date());
-		        Date cd = c.getTime();
-		        String cday = format.format(cd);
-		        c.add(Calendar.DATE, - 5);
-		        Date d = c.getTime();
-		        String five_day = format.format(d);
-				String fwelder = "SELECT fwelder_no,fname FROM tb_welder WHERE fid NOT IN (SELECT DISTINCT fwelder_id FROM tb_live_data WHERE FWeldTime>'"+five_day+"')";
-//				ArrayList<String> welder_list = new ArrayList<String>();
-				ResultSet fwelder_rs;
-				String fwelder_str="";
-				try {
-					fwelder_rs = stmt.executeQuery(fwelder);
-		        	while (fwelder_rs.next()) {
-		/*	            		welder_list.add(fwelder_rs.getString("fwelder_no"));
-		        		welder_list.add(fwelder_rs.getString("fname"));*/
-		        		fwelder_str=fwelder_str+fwelder_rs.getString("fname")+",";
-		        	}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 
-				if(!fwelder_str.equals("")){
-					try{
-						for(int j=0;j<listarraymailer.size();j+=3){
-							if(listarraymailer.get(j+2).equals("3")){
-								Properties props = new Properties();
-							    props.setProperty("mail.smtp.auth", "true");
-							    props.setProperty("mail.transport.protocol", "smtp");
-							    props.put("mail.smtp.host","smtp.qq.com");// smtp服务器地址
-							    
-							    Session session = Session.getInstance(props);
-							    session.setDebug(true);
-							    
-							    Message msg = new MimeMessage(session);
-							    msg.setSubject("员工长时间未工作提醒");
-							    msg.setText(fwelder_str.substring(0, fwelder_str.length()-1) + " 超过5天未工作");
-							    msg.setSentDate(new Date());
-							    msg.setFrom(new InternetAddress("512836904@qq.com"));//发件人邮箱
-							    msg.setRecipient(Message.RecipientType.TO,
-							            new InternetAddress(listarraymailer.get(j+1))); //收件人邮箱
-										
-							    //msg.addRecipient(Message.RecipientType.CC, 
-					    		//new InternetAddress("XXXXXXXXXXX@qq.com")); //抄送人邮箱
-							    msg.saveChanges();
+							String Text ="设备"+message+"入场超过一个月，需要进行检修，检修项目如下："+"\n"+"1.定期除尘"+"\n"+"2.除尘后，检查机内接插线是否牢固可靠"+"\n"+"3.机壳可靠性接地"+"\n"+"4.电源三相网电是否正常"+"\n"+"5.定期清理送丝轮下焊丝渣";	
 
-							    Transport transport = session.getTransport();
-							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//发件人邮箱,授权码
-							    
-							    transport.sendMessage(msg, msg.getAllRecipients());
-							    transport.close();
-							    
-							    String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",new Date());
-							    String sqlmailcheck = "INSERT INTO tb_catemailcheck (femailname, femailaddress, femailtext, femailstatus, femailtime) VALUES ('" + listarraymailer.get(j) + "' , '" + listarraymailer.get(j+1) + "' , '" + fwelder_str.substring(0, fwelder_str.length()-1) + " 超过5天未工作" + "' , '4' , '" + nowtime + "')";
-							    stmt.execute(sqlmailcheck);
+							msg.setText(Text); 
+
+
+							msg.setSentDate(new Date()); 
+							msg.setFrom(new InternetAddress("614895019@qq.com"));
+
+							msg.setRecipient(Message.RecipientType.TO, new
+									InternetAddress(listarraymailer.get(i+2))); 
+
+							Transport transport = session.getTransport();
+							transport.connect("614895019@qq.com","tmqbcxjismumbbca");
+
+							transport.sendMessage(msg, msg.getAllRecipients()); 
+							transport.close();
+							String sendtime = "";
+							rs = stmt.executeQuery(now);  
+							while(rs.next())
+							{
+								sendtime = rs.getString("sendtime");
 							}
-						}
-						
-				    }catch(Exception e){
-				    	e.getStackTrace();
-				    }
-				}
-			
-				//焊机校验
-				String catmachine = "SELECT fid,fequipment_no,DATE_FORMAT(ftest,'%Y-%m-%d') testtime,DATE_FORMAT(fprevention,'%Y-%m-%d') pretime FROM tb_welding_machine WHERE 1=1";
-				ArrayList<String> test_machineid_list = new ArrayList<String>();
-				ArrayList<String> pre_machineid_list = new ArrayList<String>();
-				ResultSet machine_rs;
-				String test_machine_str="";
-				String test_machine_id="";
-				String pre_machine_str="";
-				String pre_machine_id="";
-				try {
-					machine_rs = stmt.executeQuery(catmachine);
-		        	while (machine_rs.next()) {
-		        		if(machine_rs.getString("testtime").equals(cday)){
-		        			test_machine_str = test_machine_str + machine_rs.getString("fequipment_no") + ",";
-		        			test_machineid_list.add(machine_rs.getString("fid"));
-		        		}
-		        		if(machine_rs.getString("pretime").equals(cday)){
-		        			pre_machine_str = pre_machine_str + machine_rs.getString("fequipment_no") + ",";
-		        			pre_machineid_list.add(machine_rs.getString("fid"));
-		        		}
-		        	}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				
-				if(!test_machine_str.equals("")){
-					try{
-						for(int j=0;j<listarraymailer.size();j+=3){
-							if(listarraymailer.get(j+2).equals("4")){
-								Properties props = new Properties();
-							    props.setProperty("mail.smtp.auth", "true");
-							    props.setProperty("mail.transport.protocol", "smtp");
-							    props.put("mail.smtp.host","smtp.qq.com");// smtp服务器地址
-							    
-							    Session session = Session.getInstance(props);
-							    session.setDebug(true);
-							    
-							    Message msg = new MimeMessage(session);
-							    msg.setSubject("焊机校验提醒");
-							    msg.setText(test_machine_str.substring(0, test_machine_str.length()-1) + " 焊机需要校验");
-							    msg.setSentDate(new Date());
-							    msg.setFrom(new InternetAddress("512836904@qq.com"));//发件人邮箱
-							    msg.setRecipient(Message.RecipientType.TO,
-							            new InternetAddress(listarraymailer.get(j+1))); //收件人邮箱
-										
-							    //msg.addRecipient(Message.RecipientType.CC, 
-					    		//new InternetAddress("XXXXXXXXXXX@qq.com")); //抄送人邮箱
-							    msg.saveChanges();
+							// 展开结果集数据库					         
+							String sqlsave = "INSERT INTO tb_catemailcheck (femailname,femailaddress,femailtext,femailstatus,femailtime) VALUES('"+listarraymailer.get(i)+"'"+","+"'"+listarraymailer.get(i+2)+"'"+","+"'"+Text+"'"+","+"'"+listarraymailer.get(i+1)+"'"+","+"'"+sendtime+"'"+")";
+							stmt.executeUpdate(sqlsave); 
 
-							    Transport transport = session.getTransport();
-							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//发件人邮箱,授权码
-							    
-							    transport.sendMessage(msg, msg.getAllRecipients());
-							    transport.close();
-							    
-							    test_machine_id = String.join(" or fid=", test_machineid_list);
-							    c.setTime(new Date());
-							    c.add(Calendar.MONTH, +4);
-						        Date md = c.getTime();
-						        String test_day = format.format(md);
-						        String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",new Date());
-							    String sqlmailcheck = "UPDATE tb_welding_machine SET ftest='" + test_day + "' WHERE fid="+test_machine_id ;
-							    stmt.execute(sqlmailcheck);
-							    sqlmailcheck = "INSERT INTO tb_catemailcheck (femailname, femailaddress, femailtext, femailstatus, femailtime) VALUES ('" + listarraymailer.get(j) + "' , '" + listarraymailer.get(j+1) + "' , '" + test_machine_str.substring(0, test_machine_str.length()-1) + " 焊机需要校验" + "' , '5' , '" + nowtime + "')";
-							    stmt.execute(sqlmailcheck);
-							}
 						}
-						
-				    }catch(Exception e){
-				    	e.getStackTrace();
-				    }
-				}
-				
-				//焊机保养
-				if(!pre_machine_str.equals("")){
-					try{
-						for(int j=0;j<listarraymailer.size();j+=3){
-							if(listarraymailer.get(j+2).equals("5")){
-								Properties props = new Properties();
-							    props.setProperty("mail.smtp.auth", "true");
-							    props.setProperty("mail.transport.protocol", "smtp");
-							    props.put("mail.smtp.host","smtp.qq.com");// smtp服务器地址
-							    
-							    Session session = Session.getInstance(props);
-							    session.setDebug(true);
-							    
-							    Message msg = new MimeMessage(session);
-							    msg.setSubject("焊机保养提醒");
-							    msg.setText(pre_machine_str.substring(0, pre_machine_str.length()-1) + " 焊机需要保养");
-							    msg.setSentDate(new Date());
-							    msg.setFrom(new InternetAddress("512836904@qq.com"));//发件人邮箱
-							    msg.setRecipient(Message.RecipientType.TO,
-							            new InternetAddress(listarraymailer.get(j+1))); //收件人邮箱
-										
-							    //msg.addRecipient(Message.RecipientType.CC, 
-					    		//new InternetAddress("XXXXXXXXXXX@qq.com")); //抄送人邮箱
-							    msg.saveChanges();
 
-							    Transport transport = session.getTransport();
-							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//发件人邮箱,授权码
-							    
-							    transport.sendMessage(msg, msg.getAllRecipients());
-							    transport.close();
-							    
-							    pre_machine_id = String.join(" or fid=", pre_machineid_list);
-							    c.setTime(new Date());
-							    c.add(Calendar.MONTH, +6);
-						        Date pd = c.getTime();
-						        String pre_day = format.format(pd);
-						        String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",new Date());
-							    String sqlmailcheck = "UPDATE tb_welding_machine SET fprevention='" + pre_day + "' WHERE fid="+pre_machine_id ;
-							    stmt.execute(sqlmailcheck);
-							    sqlmailcheck = "INSERT INTO tb_catemailcheck (femailname, femailaddress, femailtext, femailstatus, femailtime) VALUES ('" + listarraymailer.get(j) + "' , '" + listarraymailer.get(j+1) + "' , '" + pre_machine_str.substring(0, pre_machine_str.length()-1) + " 焊机需要保养" + "' , '6' , '" + nowtime + "')";
-							    stmt.execute(sqlmailcheck);
-							}
-						}
-						
-				    }catch(Exception e){
-				    	e.getStackTrace();
-				    }
-				}
-				
-			}  
-        	
-				
-        }, time,86400000);
+					}
+					// 完成后关闭,换位置了
+					rs.close();
+					stmt.close();
+					conn.close();
+	    		}catch(Exception e) {
+	    			e.getStackTrace();
+	    		}
+	    		
+			}
+        }, time, 1000 * 60 * 60 * 24);
 	}
 }
 

@@ -279,100 +279,99 @@ public class DB_Connectioncode {
 		} 
 
 		//Webservice调用返回焊机实时电流电压
-
-		try {
-			try {
-				if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
-				{
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-						conn = DriverManager.getConnection(connet);
-						stmt = conn.createStatement();
-					} catch (ClassNotFoundException e) {  
-						System.out.println("Broken driver");
-						e.printStackTrace();
-						return;
-					} catch (SQLException e) {
-						System.out.println("Broken conn");
-						e.printStackTrace();
-						return;
-					}  
-				}
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-			inSql = "SELECT fair_flow_volume from tb_parameter";
-
-			try {
-				if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
-				{
-					try {
-						Class.forName("com.mysql.jdbc.Driver");
-						conn = DriverManager.getConnection(connet);
-						stmt = conn.createStatement();
-					} catch (ClassNotFoundException e) {  
-						System.out.println("Broken driver");
-						e.printStackTrace();
-						return;
-					} catch (SQLException e) {
-						System.out.println("Broken conn");
-						e.printStackTrace();
-						return;
-					}  
-				}
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-			ResultSet rs1 =stmt.executeQuery(inSql);
-			String airflow = "";
-			while(rs1.next()){
-				airflow = rs1.getString("fair_flow_volume");
-			}
-
-			inSql = "select tb_gather.fid,tb_welding_machine.fequipment_no from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
-
-
-			ResultSet rs =stmt.executeQuery(inSql);
-
-			while (rs.next()) {
-				String fid = rs.getString("fid");
-				String fequipment_no = rs.getString("fequipment_no");
-				listarray4.add(fid);
-				listarray4.add(fequipment_no);
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add(airflow);
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add(airflow);
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add("0");
-				listarray4.add(airflow);
-			}
-
-		} catch (SQLException e) {
-
-			System.out.println("Broken insert");
-
-			e.printStackTrace();
-
-		}
+//		try {
+//			try {
+//				if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+//				{
+//					try {
+//						Class.forName("com.mysql.jdbc.Driver");
+//						conn = DriverManager.getConnection(connet);
+//						stmt = conn.createStatement();
+//					} catch (ClassNotFoundException e) {  
+//						System.out.println("Broken driver");
+//						e.printStackTrace();
+//						return;
+//					} catch (SQLException e) {
+//						System.out.println("Broken conn");
+//						e.printStackTrace();
+//						return;
+//					}  
+//				}
+//			} catch (SQLException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//
+//			inSql = "SELECT fair_flow_volume from tb_parameter";
+//
+//			try {
+//				if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+//				{
+//					try {
+//						Class.forName("com.mysql.jdbc.Driver");
+//						conn = DriverManager.getConnection(connet);
+//						stmt = conn.createStatement();
+//					} catch (ClassNotFoundException e) {  
+//						System.out.println("Broken driver");
+//						e.printStackTrace();
+//						return;
+//					} catch (SQLException e) {
+//						System.out.println("Broken conn");
+//						e.printStackTrace();
+//						return;
+//					}  
+//				}
+//			} catch (SQLException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//
+//			ResultSet rs1 =stmt.executeQuery(inSql);
+//			String airflow = "";
+//			while(rs1.next()){
+//				airflow = rs1.getString("fair_flow_volume");
+//			}
+//
+//			inSql = "select tb_gather.fid,tb_welding_machine.fequipment_no from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
+//
+//
+//			ResultSet rs =stmt.executeQuery(inSql);
+//
+//			while (rs.next()) {
+//				String fid = rs.getString("fid");
+//				String fequipment_no = rs.getString("fequipment_no");
+//				listarray4.add(fid);
+//				listarray4.add(fequipment_no);
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add(airflow);
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add(airflow);
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add("0");
+//				listarray4.add(airflow);
+//			}
+//
+//		} catch (SQLException e) {
+//
+//			System.out.println("Broken insert");
+//
+//			e.printStackTrace();
+//
+//		}
 		//重工Webservice调用返回焊机实时电流电压
 		/*inSql = "select tb_gather.fid,tb_welding_machine.fequipment_no from tb_gather left join tb_welding_machine on tb_gather.fid=tb_welding_machine.fgather_id where tb_gather.fgather_no";
 

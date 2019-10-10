@@ -47,6 +47,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
     public Mysql mysql = new Mysql();
     public Android android = new Android();
+	public AlertEmail alert = new AlertEmail();
     public Websocket websocket = new Websocket();
 	public byte[] b;
     public int a=0;
@@ -209,6 +210,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				
 				websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
 		        mysql.Mysqlbase(str);
+		        alert.Alert(str);
 		        /*if(socketchannel!=null){
 			        try {
 						socketchannel.writeAndFlush(str).sync();
