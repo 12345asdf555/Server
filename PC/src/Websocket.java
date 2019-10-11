@@ -210,7 +210,16 @@ public class Websocket {
 								}
 							}
 
-							for(int i=0;i<listarray3.size();i+=7){
+							//junctionins切换为工作模式
+							junctionins = Integer.valueOf(str.subSequence(88+a, 90+a).toString(),16).toString();
+							if(status.length()!=4){
+								int lenth=4-junctionins.length();
+								for(int i=0;i<lenth;i++){
+									junctionins="0"+junctionins;
+								}
+							}
+							
+							/*for(int i=0;i<listarray3.size();i+=7){
 								if(Integer.valueOf(junctionid) == Integer.valueOf(listarray3.get(i+5))){
 									junctionins = listarray3.get(i+6);
 									if(junctionins.equals(null) || junctionins.equals("null")){
@@ -225,7 +234,7 @@ public class Websocket {
 										break;
 									}
 								}
-							}
+							}*/
 
 							for(int i=0;i<listarray2.size();i+=4){
 								if(Integer.valueOf(gatherid) == Integer.valueOf(listarray2.get(i))){
