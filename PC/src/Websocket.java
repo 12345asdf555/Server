@@ -210,16 +210,7 @@ public class Websocket {
 								}
 							}
 
-							//junctionins切换为工作模式
-							junctionins = Integer.valueOf(str.subSequence(86+a, 88+a).toString(),16).toString();
-							if(status.length()!=4){
-								int lenth=4-junctionins.length();
-								for(int i=0;i<lenth;i++){
-									junctionins="0"+junctionins;
-								}
-							}
-							
-							/*for(int i=0;i<listarray3.size();i+=7){
+							for(int i=0;i<listarray3.size();i+=7){
 								if(Integer.valueOf(junctionid) == Integer.valueOf(listarray3.get(i+5))){
 									junctionins = listarray3.get(i+6);
 									if(junctionins.equals(null) || junctionins.equals("null")){
@@ -234,7 +225,7 @@ public class Websocket {
 										break;
 									}
 								}
-							}*/
+							}
 
 							for(int i=0;i<listarray2.size();i+=4){
 								if(Integer.valueOf(gatherid) == Integer.valueOf(listarray2.get(i))){
@@ -263,13 +254,26 @@ public class Websocket {
 								welderins = "0000";
 							}
 
-							//南通去除报警
-							/*if(status.equals("98") || status.equals("99")){
-		                	status = "03";
-		                }*/
 
-							//strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
-							strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel + speed;
+							//工作模式是否为碳弧气刨
+							String workmodel = Integer.valueOf(str.subSequence(86+a, 88+a).toString(),16).toString();
+							if(workmodel.length()!=4){
+								int lenth=4-workmodel.length();
+								for(int i=0;i<lenth;i++){
+									workmodel="0"+workmodel;
+								}
+							}
+
+							//气体流量
+							String gasfare = Integer.valueOf(str.subSequence(108+a, 112+a).toString(),16).toString();
+							if(gasfare.length()!=4){
+								int lenth=4-gasfare.length();
+								for(int i=0;i<lenth;i++){
+									gasfare="0"+gasfare;
+								}
+							}
+							
+							strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel + speed + workmodel + gasfare;
 						}catch(Exception e){
 							System.out.println(str);
 							System.out.println(str.substring(76+a, 84+a));

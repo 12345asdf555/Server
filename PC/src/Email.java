@@ -142,10 +142,12 @@ public class Email {
 
 						if(listarraymail.size()!=0 && listarraymailer.get(i+1).equals("5"))//发送保养邮件
 						{
-							Properties props = new Properties(); props.setProperty("mail.smtp.auth","true"); 
+							Properties props = new Properties(); 
+							props.setProperty("mail.smtp.auth","true"); 
 							props.setProperty("mail.transport.protocol", "smtp");
 							props.put("mail.smtp.host","smtp.qq.com");				              
-							Session session = Session.getInstance(props); session.setDebug(true);				              
+							Session session = Session.getInstance(props); 
+							session.setDebug(true);				              
 							Message msg = new MimeMessage(session); 
 							msg.setSubject("设备保养提醒");	            
 							String message = "";

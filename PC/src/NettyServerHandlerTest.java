@@ -622,7 +622,7 @@ public class NettyServerHandlerTest extends ChannelHandlerAdapter{
 	 } 
      @Override  
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {  
-         ctx.close().sync();  
+         //ctx.close().sync();  
     }
 	 
 }

@@ -66,7 +66,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();
-		ctx.close();
+		//ctx.close();
 	}
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {

@@ -207,10 +207,10 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						}
 					}
 				}*/
-				
-				websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+
 		        mysql.Mysqlbase(str);
 		        alert.Alert(str);
+				//websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
 		        /*if(socketchannel!=null){
 			        try {
 						socketchannel.writeAndFlush(str).sync();
@@ -634,7 +634,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	 } 
      @Override  
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {  
-         ctx.close().sync();  
+         //ctx.close().sync();  
     }
 	 
 }
