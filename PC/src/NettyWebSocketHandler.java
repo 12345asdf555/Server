@@ -59,6 +59,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 		// 移除
 		//group.remove(ctx.channel());
 		//System.out.println("客户端与服务端连接关闭：" + ctx.channel().remoteAddress().toString());
+		ctx.close();
 	}
 	/**
 	 * exception 异常 Caught 抓住 抓住异常，当发生异常的时候，可以做一些相应的处理，比如打印日志、关闭链接
@@ -66,7 +67,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();
-		//ctx.close();
+		ctx.close();
 	}
 	@Override
 	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {

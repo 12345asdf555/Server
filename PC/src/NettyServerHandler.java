@@ -598,32 +598,45 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			//处理焊机下发和上传
 	        else{    
 	        	
-	        	//System.out.println(str);
+				/*
+				 * HashMap<String, SocketChannel> socketlist_cl; synchronized (websocketlist){
+				 * socketlist_cl = (HashMap<String, SocketChannel>) websocketlist.clone(); }
+				 * ArrayList<String> listarraybuf = new ArrayList<String>(); boolean ifdo =
+				 * false;
+				 * 
+				 * Iterator<Entry<String, SocketChannel>> webiter =
+				 * socketlist_cl.entrySet().iterator(); while(webiter.hasNext()) { try{
+				 * Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>)
+				 * webiter.next(); websocketfail = entry.getKey(); SocketChannel websocketcon =
+				 * entry.getValue(); if(websocketcon.isActive() && websocketcon.isOpen()){
+				 * websocketcon.writeAndFlush(new TextWebSocketFrame(str)).sync(); }else{
+				 * listarraybuf.add(websocketfail); }
+				 * 
+				 * }catch (Exception e) { listarraybuf.add(websocketfail); ifdo = true; } }
+				 * 
+				 * if(ifdo){ synchronized (websocketlist){ //socketlist_cl = (HashMap<String,
+				 * SocketChannel>) socketlist.clone(); for(int i=0;i<listarraybuf.size();i++){
+				 * websocketlist.remove(listarraybuf.get(i)); } }
+				 * 
+				 * }
+				 */
 	        	
-	        	synchronized (websocketlist) {
-	        	ArrayList<String> listarraybuf = new ArrayList<String>();
-	        	boolean ifdo = false;
-	        	
-	        	Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
-                while(webiter.hasNext()){
-                	try{
-                    	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-                    	websocketfail = entry.getKey();
-                    	SocketChannel websocketcon = entry.getValue();
-                    	websocketcon.writeAndFlush(new TextWebSocketFrame(str)).sync();
-                	}catch (Exception e) {
-                		
-                		listarraybuf.add(websocketfail);
-                		ifdo = true;
-   					 }
-                }
-                
-                if(ifdo){
-                	for(int i=0;i<listarraybuf.size();i++){
-                		websocketlist.remove(listarraybuf.get(i));
-                	}
-                }
-	        	}
+				/*
+				 * synchronized (websocketlist) { ArrayList<String> listarraybuf = new
+				 * ArrayList<String>(); boolean ifdo = false;
+				 * 
+				 * Iterator<Entry<String, SocketChannel>> webiter =
+				 * websocketlist.entrySet().iterator(); while(webiter.hasNext()){ try{
+				 * Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>)
+				 * webiter.next(); websocketfail = entry.getKey(); SocketChannel websocketcon =
+				 * entry.getValue(); websocketcon.writeAndFlush(new
+				 * TextWebSocketFrame(str)).sync(); }catch (Exception e) {
+				 * 
+				 * listarraybuf.add(websocketfail); ifdo = true; } }
+				 * 
+				 * if(ifdo){ for(int i=0;i<listarraybuf.size();i++){
+				 * websocketlist.remove(listarraybuf.get(i)); } } }
+				 */
 	        }
 		}
 	 }

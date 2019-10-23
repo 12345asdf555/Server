@@ -163,6 +163,7 @@ public class AlertEmail {
 							if(listarraymail.size()!=0 && listarraymailer.get(i+1).equals("2"))//发送报警邮件
 							{
 								Properties props = new Properties(); 
+								props.setProperty("mail.smtp.host", "smtp.qq.com");
 								props.setProperty("mail.smtp.auth","true"); 
 								props.setProperty("mail.transport.protocol", "smtp");
 								props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
@@ -180,14 +181,20 @@ public class AlertEmail {
 									{message += listarraymail.get(j)+"、";  }
 
 								}
-								String Text ="设备"+message+index;										
-								msg.setText(Text); 
+								String Text = "";
+								if(index.equals("")) {
+									Text ="设备"+message+"故障";										
+									msg.setText(Text); 
+								}else {
+									Text ="设备"+message+index;										
+									msg.setText(Text); 
+								}
 								msg.setSentDate(new Date()); 
 								msg.setFrom(new InternetAddress("614895019@qq.com"));
 								msg.setRecipient(Message.RecipientType.TO, new
 										InternetAddress(listarraymailer.get(i+2))); 
 								Transport transport = session.getTransport();
-								transport.connect("614895019@qq.com","tmqbcxjismumbbca");
+								transport.connect("614895019@qq.com","ojbvhhdmalribefg");
 								transport.sendMessage(msg, msg.getAllRecipients()); 
 								transport.close();
 

@@ -46,6 +46,7 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -138,8 +139,7 @@ public class Server implements Runnable {
 		return listarray1;
 	}
 
-	public void run() {
-
+	public void run() {  
 		//读取IPconfig配置文件获取ip地址和数据库配置
 		try {
 			FileInputStream in = new FileInputStream("IPconfig.txt");  
@@ -646,6 +646,23 @@ public class Server implements Runnable {
 		//new EMessage().run();
 		//new UpReport();
 
+		MyMqttClient mqc = new MyMqttClient();
+		mqc.init("MQTT_FX_Client");
+		mqc.publishMessage("api", "{\n" + 
+				"  \"cmd\": {\n" + 
+				"    \"command\": \"property.publish\",\n" + 
+				"    \"params\": {\n" + 
+				"      \"thingKey\": \"thing_welder_1\",\n" + 
+				"      \"key\": \"vv\",\n" + 
+				"      \"value\": 30\n" + 
+				"    }\n" + 
+				"  }\n" + 
+				"}", 0);
+		/*
+		 * MyMqttRecieveMessage mqrc = new MyMqttRecieveMessage();
+		 * mqrc.init("MQTT_FX_Client"); mqrc.recieve("api");
+		 */
+		
 	}  
 
 	//开启5551端口获取焊机数据(mysql)
@@ -660,7 +677,7 @@ public class Server implements Runnable {
 				ServerBootstrap b=new ServerBootstrap();  
 				b.group(bossGroup,workerGroup)
 				.channel(NioServerSocketChannel.class)
-				.option(ChannelOption.SO_BACKLOG,1024)
+				.option(ChannelOption.SO_BACKLOG,1)
 				.childHandler(NS);  
 
 				b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
@@ -755,8 +772,8 @@ public class Server implements Runnable {
 		public void run() {
 			// TODO Auto-generated method stub
 
-			EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-			EventLoopGroup workerGroup = new NioEventLoopGroup(128);
+			EventLoopGroup bossGroup = new NioEventLoopGroup(128);
+			EventLoopGroup workerGroup = new NioEventLoopGroup(256);
 
 			try{
 				ServerBootstrap serverBootstrap = new ServerBootstrap();
@@ -772,7 +789,7 @@ public class Server implements Runnable {
 						chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 						chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
 						chweb.pipeline().addLast("httpObjectAggregator", new HttpObjectAggregator(1024*1024*1024));
-						chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://119.3.100.103:5550/SerialPortDemo/ws/张三",null,true,65535));
+						chweb.pipeline().addLast("webSocketServerProtocolHandler", new WebSocketServerProtocolHandler("ws://119.3.10.156:5563/SerialPortDemo/ws/张三",null,true,65535));
 						chweb.pipeline().addLast("myWebSocketHandler", NWS);
 						synchronized (websocketlist) {
 							websocketcount++;

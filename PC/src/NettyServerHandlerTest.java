@@ -448,72 +448,8 @@ public class NettyServerHandlerTest extends ChannelHandlerAdapter{
 					}
 				}
 	        	
-	        } else if(str.equals("SS")){  //欧华纬华调用webservice获取实时数据
+	        }else if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("23")) && str.length()==290){
 	        	
-	        	synchronized (listarray4) {
-	        	synchronized (socketlist) {
-	        	ArrayList<String> listarraybuf = new ArrayList<String>();
-	        	boolean ifdo = false;
-	        	
-	        	Iterator<Entry<String, SocketChannel>> iter = socketlist.entrySet().iterator();
-                while(iter.hasNext()){
-                	try{
-                    	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
-                    	
-                    	socketfail = entry.getKey();
-
-        				SocketChannel socketcon = entry.getValue();
-        				
-        				JSONArray ja = new JSONArray();
-        				JSONObject jo = new JSONObject();
-        				for(int i=0;i<listarray4.size();i+=23){
-        					if(listarray4.get(i+1) == null){
-            					jo.put("num", "0000");
-        					}else if(listarray4.get(i+1) != null){
-            					jo.put("num", listarray4.get(i+1));
-        					}
-        					jo.put("ele1", listarray4.get(i+2));
-        					jo.put("vol1", listarray4.get(i+3));
-        					jo.put("time1", listarray4.get(i+4));
-        					jo.put("status1", listarray4.get(i+5));
-        					jo.put("code1", listarray4.get(i+6));
-        					jo.put("speed1", listarray4.get(i+7));
-        					jo.put("airflow1", listarray4.get(i+8));
-        					jo.put("ele2", listarray4.get(i+9));
-        					jo.put("vol2", listarray4.get(i+10));
-        					jo.put("time2", listarray4.get(i+11));
-        					jo.put("status2", listarray4.get(i+12));
-        					jo.put("code2", listarray4.get(i+13));
-        					jo.put("speed2", listarray4.get(i+14));
-        					jo.put("airflow2", listarray4.get(i+15));
-        					jo.put("ele3", listarray4.get(i+16));
-        					jo.put("vol3", listarray4.get(i+17));
-        					jo.put("time3", listarray4.get(i+18));
-        					jo.put("status3", listarray4.get(i+19));
-        					jo.put("code3", listarray4.get(i+20));
-        					jo.put("speed3", listarray4.get(i+21));
-        					jo.put("airflow3", listarray4.get(i+22));
-        					ja.add(jo);
-        				}
-        				
-        				data = ja.toString();
-        				
-                    	socketcon.writeAndFlush(data).sync();
-                    	
-                	}catch (Exception e) {
-                		listarraybuf.add(socketfail);
-                		ifdo = true;
-   					 }
-                }
-	        	
-                if(ifdo){
-                	for(int i=0;i<listarraybuf.size();i++){
-                    	socketlist.remove(listarraybuf.get(i));
-                	}
-                }
-	        	}
-	        	}
-                
 	        }
 			//重工webservice获取实时数据
 			/*else if(str.equals("SS")){  
@@ -586,32 +522,58 @@ public class NettyServerHandlerTest extends ChannelHandlerAdapter{
 			//处理焊机下发和上传
 	        else{    
 	        	
-	        	//System.out.println(str);
+	        	HashMap<String, SocketChannel> socketlist_cl;
+				synchronized (websocketlist){
+					socketlist_cl = (HashMap<String, SocketChannel>) websocketlist.clone();
+				}
+				ArrayList<String> listarraybuf = new ArrayList<String>();
+				boolean ifdo = false;
+
+				Iterator<Entry<String, SocketChannel>> webiter = socketlist_cl.entrySet().iterator();
+				while(webiter.hasNext())
+				{
+					try{
+						Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+						websocketfail = entry.getKey();
+						SocketChannel websocketcon = entry.getValue();
+						if(websocketcon.isActive() && websocketcon.isOpen()){
+							websocketcon.writeAndFlush(new TextWebSocketFrame(str)).sync();
+						}else{
+							listarraybuf.add(websocketfail);
+						}
+
+					}catch (Exception e) {
+						listarraybuf.add(websocketfail);
+						ifdo = true;
+					}
+				}
+
+				if(ifdo){
+					synchronized (websocketlist){
+						//socketlist_cl = (HashMap<String, SocketChannel>) socketlist.clone();
+						for(int i=0;i<listarraybuf.size();i++){
+							websocketlist.remove(listarraybuf.get(i));
+						}
+					}
+
+				}
 	        	
-	        	synchronized (websocketlist) {
-	        	ArrayList<String> listarraybuf = new ArrayList<String>();
-	        	boolean ifdo = false;
-	        	
-	        	Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
-                while(webiter.hasNext()){
-                	try{
-                    	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-                    	websocketfail = entry.getKey();
-                    	SocketChannel websocketcon = entry.getValue();
-                    	websocketcon.writeAndFlush(new TextWebSocketFrame(str)).sync();
-                	}catch (Exception e) {
-                		
-                		listarraybuf.add(websocketfail);
-                		ifdo = true;
-   					 }
-                }
-                
-                if(ifdo){
-                	for(int i=0;i<listarraybuf.size();i++){
-                		websocketlist.remove(listarraybuf.get(i));
-                	}
-                }
-	        	}
+				/*
+				 * synchronized (websocketlist) { ArrayList<String> listarraybuf = new
+				 * ArrayList<String>(); boolean ifdo = false;
+				 * 
+				 * Iterator<Entry<String, SocketChannel>> webiter =
+				 * websocketlist.entrySet().iterator(); while(webiter.hasNext()){ try{
+				 * Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>)
+				 * webiter.next(); websocketfail = entry.getKey(); SocketChannel websocketcon =
+				 * entry.getValue(); websocketcon.writeAndFlush(new
+				 * TextWebSocketFrame(str)).sync(); }catch (Exception e) {
+				 * 
+				 * listarraybuf.add(websocketfail); ifdo = true; } }
+				 * 
+				 * if(ifdo){ for(int i=0;i<listarraybuf.size();i++){
+				 * websocketlist.remove(listarraybuf.get(i)); } } }
+				 */
 	        }
 		}
 	 }
