@@ -85,7 +85,8 @@ import io.netty.util.CharsetUtil;
 
 public class Server implements Runnable {  
 
-	//private List<Handler> handlers = new ArrayList<Handler>();  
+	//private List<Handler> handlers = new ArrayList<Handler>(); 
+	public MyMqttClient mqtt = new MyMqttClient();
 	public static final String SERVERIP = "121.196.222.216"; 
 	public static final int SERVERPORT = 5555;
 	public static final int SERVERPORTWEB = 5554;
@@ -640,28 +641,16 @@ public class Server implements Runnable {
 		//工作线程
 		new Thread(socketstart).start();
 		new Thread(socketstarttest).start();
-		new Thread(websocketstart).start();
 		new Email().run();
+		//new Thread(websocketstart).start();
 		//new Thread(sockettran).start();
 		//new EMessage().run();
 		//new UpReport();
 
-		MyMqttClient mqc = new MyMqttClient();
-		mqc.init("MQTT_FX_Client");
-		mqc.publishMessage("api", "{\n" + 
-				"  \"cmd\": {\n" + 
-				"    \"command\": \"property.publish\",\n" + 
-				"    \"params\": {\n" + 
-				"      \"thingKey\": \"thing_welder_1\",\n" + 
-				"      \"key\": \"vv\",\n" + 
-				"      \"value\": 30\n" + 
-				"    }\n" + 
-				"  }\n" + 
-				"}", 0);
-		/*
-		 * MyMqttRecieveMessage mqrc = new MyMqttRecieveMessage();
-		 * mqrc.init("MQTT_FX_Client"); mqrc.recieve("api");
-		 */
+		mqtt.init("");
+		NStest.mqtt = mqtt;
+		NStest.websocket.mqtt = mqtt;
+		mqtt.subTopic("webdatadown");
 		
 	}  
 
@@ -691,11 +680,11 @@ public class Server implements Runnable {
 								new ReadTimeoutHandler(100),
 								new WriteTimeoutHandler(100),
 								NS);
-						synchronized (socketlist) {
-							socketcount++;
-							socketlist.put(Integer.toString(socketcount),chsoc);
-							NS.socketlist = socketlist;
-						}
+						/*
+						 * synchronized (socketlist) { socketcount++;
+						 * socketlist.put(Integer.toString(socketcount),chsoc); NS.socketlist =
+						 * socketlist; }
+						 */
 					}
 				});
 
@@ -745,7 +734,7 @@ public class Server implements Runnable {
 							socketcount++;
 							socketlist.put(Integer.toString(socketcount),chsoc);
 							NStest.socketlist = socketlist;
-							NWS.socketlist = socketlist;
+							mqtt.socketlist = socketlist;
 						}
 					}
 				});
