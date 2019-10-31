@@ -99,7 +99,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
 
 		        mysql.Mysqlbase(str);
-		        alert.Alert(str);
+		        //alert.Alert(str);
 		        
 				//存webservice数据
 				/*synchronized (listarray4) {
