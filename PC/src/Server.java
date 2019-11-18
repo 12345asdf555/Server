@@ -369,7 +369,7 @@ public class Server implements Runnable {
 				}
 
 			}  
-		}, 0 , 1000*60);
+		}, time , 1000*60*60);
 		
 		//断网续传数据每天更新三张状态表
 		Date date1 = new Date();
@@ -538,7 +538,7 @@ public class Server implements Runnable {
 				} catch (SQLException e) {
 					System.out.println("Broken conn");
 					e.printStackTrace();
-				} catch (ParseException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
