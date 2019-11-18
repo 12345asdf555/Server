@@ -204,14 +204,14 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				
 //				mysql.Mysqlbase(str);
 //		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
-		        if(socketchannel!=null){
-			        try {
-						socketchannel.writeAndFlush(str).sync();
-					} catch (Exception e) {
-						socketchannel = null;
-						e.printStackTrace();
-					}
-		        }
+//		        if(socketchannel!=null){
+//			        try {
+//						socketchannel.writeAndFlush(str).sync();
+//					} catch (Exception e) {
+//						socketchannel = null;
+//						e.printStackTrace();
+//					}
+//		        }
 				
 		    //欧华纬华
 			}else if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==320){
@@ -427,7 +427,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        } else if(str.substring(0,2).equals("fe") && str.length() == 298){
 	        	
 	        	mysql.Mysqlplc(str,listarrayplc);
-	        	System.out.println(str);
 	        	
 	        	if(socketchannel!=null){
 					//System.out.println(socketchannel);
