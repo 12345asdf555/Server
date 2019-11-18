@@ -363,7 +363,7 @@ public class Server implements Runnable {
 				} catch (SQLException e) {
 					System.out.println("Broken conn");
 					e.printStackTrace();
-				} catch (ParseException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
