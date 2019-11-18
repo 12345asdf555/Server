@@ -289,6 +289,7 @@ public class Server implements Runnable {
 					e.printStackTrace();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
+					System.out.println("SqlBroken");
 					e.printStackTrace();
 					return;
 				}
@@ -384,8 +385,8 @@ public class Server implements Runnable {
 
 		//工作线程
 		new Thread(socketstart).start();
+		new Thread(socketstarttest).start();
 		new Thread(websocketstart).start();
-		//new Thread(socketstarttest).start();
 		//new Email().run();
 		//new Thread(sockettran).start();
 		//new EMessage().run();
@@ -430,7 +431,7 @@ public class Server implements Runnable {
 
 				//绑定端口，等待同步成功  
 				ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5561).sync();
 				//等待服务端关闭监听端口  
 				f.channel().closeFuture().sync(); 
 			} catch (InterruptedException e) {
@@ -470,18 +471,17 @@ public class Server implements Runnable {
 								new ReadTimeoutHandler(100),
 								new WriteTimeoutHandler(100),
 								NStest);
-						synchronized (socketlist) {
-							socketcount++;
-							socketlist.put(Integer.toString(socketcount),chsoc);
-							NStest.socketlist = socketlist;
-							NWS.socketlist = socketlist;
-						}
+//						synchronized (socketlist) {
+//							socketcount++;
+//							socketlist.put(Integer.toString(socketcount),chsoc);
+//							NStest.socketlist = socketlist;
+//						}
 					}
 				});
 
 				//绑定端口，等待同步成功  
 				ChannelFuture f;
-				f = b.bind(5552).sync();
+				f = b.bind(5562).sync();
 				//等待服务端关闭监听端口  
 				f.channel().closeFuture().sync(); 
 			} catch (InterruptedException e) {
@@ -532,7 +532,7 @@ public class Server implements Runnable {
 
 				});
 
-				Channel ch = serverBootstrap.bind(5550).sync().channel();
+				Channel ch = serverBootstrap.bind(5563).sync().channel();
 				ch.closeFuture().sync();
 
 				/*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();

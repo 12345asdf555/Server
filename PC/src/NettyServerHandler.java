@@ -209,7 +209,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				}*/
 
 		        mysql.Mysqlbase(str);
-				websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+				//websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
 		        //alert.Alert(str);
 		        /*if(socketchannel!=null){
 			        try {
