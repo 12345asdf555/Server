@@ -218,13 +218,7 @@ public class Server implements Runnable {
 			@Override  
 			public void run() {
 
-				try {  
-
-					Class.forName("com.mysql.jdbc.Driver");  
-					conn = DriverManager.getConnection(connet);
-					stmt= conn.createStatement();
-					NS.stmt = stmt;
-					
+				try {
 					//基本版
 					//获取上次统计时间，为空插入赋默认值
 					/*
@@ -242,45 +236,7 @@ public class Server implements Runnable {
 					String time2 = nowtimefor;
 					Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-60000);
 					String time3 = DateTools.format("yyyy-MM-dd HH:mm:ss",d1);
-
-					String timework = null;
-					String timestandby = null;
-					String timealarm = null;
-					String timewarn = null;
-					String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
-					String sqlfirststandby = "SELECT tb_standby.fUploadDataTime FROM tb_standby ORDER BY tb_standby.fUploadDataTime DESC LIMIT 0,1";
-					String sqlfirstalarm = "SELECT tb_alarm.fUploadDataTime FROM tb_alarm ORDER BY tb_alarm.fUploadDataTime DESC LIMIT 0,1";
-					String sqlfirstwarn = "SELECT tb_warn.fUploadDataTime FROM tb_warn ORDER BY tb_warn.fUploadDataTime DESC LIMIT 0,1";
-					ResultSet rs1 =stmt.executeQuery(sqlfirstwork);
-					while (rs1.next()) {
-						timework = rs1.getString("fUploadDataTime");
-					}
-					ResultSet rs2 =stmt.executeQuery(sqlfirststandby);
-					while (rs2.next()) {
-						timestandby = rs2.getString("fUploadDataTime");
-					}
-					ResultSet rs3 =stmt.executeQuery(sqlfirstalarm);
-					while (rs3.next()) {
-						timealarm = rs3.getString("fUploadDataTime");
-					}
-					ResultSet rs4 =stmt.executeQuery(sqlfirstwarn);
-					while (rs4.next()) {
-						timewarn = rs4.getString("fUploadDataTime");
-					}
-
-					if(timework == null || timework.equals("null")){
-						timework = "2000-01-01 01:01:01";
-					}
-					if(timestandby == null || timestandby.equals("null")){
-						timestandby = "2000-01-01 01:01:01";
-					}
-					if(timealarm == null || timealarm.equals("null")){
-						timealarm = "2000-01-01 01:01:01";
-					}
-					if(timewarn == null || timewarn.equals("null")){
-						timewarn = "2000-01-01 01:01:01";
-					}
-
+					
 					//统计四张状态表
 					String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
 							+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime,tb_standby.fwelder_no,tb_standby.fjunction_no,tb_standby.fweld_no,tb_standby.fchannel,tb_standby.fmax_electricity,tb_standby.fmin_electricity,tb_standby.fmax_voltage,tb_standby.fmin_voltage,tb_standby.fwelder_itemid,tb_standby.fjunction_itemid,tb_standby.fmachine_itemid,tb_standby.fwirefeedrate,tb_standby.fmachinemodel,tb_standby.fwirediameter,tb_standby.fmaterialgas,tb_standby.fstatus) SELECT "
@@ -312,10 +268,18 @@ public class Server implements Runnable {
 							+ " AND tb_live_data.FWeldTime BETWEEN '" + time3  + "' AND '" + time2 + "' "
 							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id,tb_live_data.fwirediameter";
 
+					Class.forName("com.mysql.jdbc.Driver");  
+					conn = DriverManager.getConnection(connet);
+					stmt = conn.createStatement();
+					NS.stmt = stmt;
+					
 					stmt.executeUpdate(sqlstandby);
 					stmt.executeUpdate(sqlwork);
 					stmt.executeUpdate(sqlwarn);
 					stmt.executeUpdate(sqlalarm);
+					
+					stmt.close();
+					conn.close();
 
 				} catch (ClassNotFoundException e) {  
 					System.out.println("Broken driver");
@@ -323,194 +287,15 @@ public class Server implements Runnable {
 				} catch (SQLException e) {
 					System.out.println("Broken conn");
 					e.printStackTrace();
-				} catch (ParseException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					return;
 				}
 
 			}  
 		}, 0 , 1000*60);
 		
-		//断网续传数据每天更新三张状态表
-		Date date1 = new Date();
-		String nowtime1 = DateTools.format("yyyy-MM-dd",date);
-		String[] timesplit1 = nowtime1.split("-");
-		String day1 = timesplit1[2];
-
-		Calendar calendar1 = Calendar.getInstance();
-
-		calendar1.set(Calendar.DAY_OF_MONTH, Integer.valueOf(day1)+1); // 控制天
-		calendar1.set(Calendar.HOUR_OF_DAY, 00); // 控制时
-		calendar1.set(Calendar.MINUTE, 00);    // 控制分
-		calendar1.set(Calendar.SECOND, 00);    // 控制秒
-		time1 = calendar1.getTime(); 
-
-		Timer tExit11 = null; 
-		tExit11 = new Timer();  
-		tExit11.schedule(new TimerTask() {  
-
-			@Override  
-			public void run() {
-
-				String Afirsttime = null;
-				String Bfirsttime = null;
-				String Alasttime = null;
-				String Blasttime = null;
-				
-				try {  
-
-					Class.forName("com.mysql.jdbc.Driver");  
-					conn = DriverManager.getConnection(connet);
-					stmt= conn.createStatement();
-					NS.stmt = stmt;
-
-					//基本版
-					//获取上次统计时间，为空插入赋默认值
-					Date date = new Date();
-					String nowtimefor = DateTools.format("yyyy-MM-dd",date);
-					String nowtime = DateTools.format("HH:mm:ss",date);
-					String[] timesplit = nowtime.split(":");
-					String hour = timesplit[0];
-					String time2 = nowtimefor+" "+hour+":00:00";
-					Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-3600000);
-					
-					String sqlAfirst = "SELECT DATE_FORMAT(tb_dataA.FWeldTime,'%Y-%m-%d') FROM tb_dataA ORDER BY tb_dataA.FWeldTime desc LIMIT 0,1 ";
-					String sqlBfirst = "SELECT DATE_FORMAT(tb_dataB.FWeldTime,'%Y-%m-%d') FROM tb_dataB ORDER BY tb_dataB.FWeldTime desc LIMIT 0,1 ";
-					String sqlAlast = "SELECT DATE_FORMAT(tb_dataA.FWeldTime,'%Y-%m-%d') FROM tb_dataA ORDER BY tb_dataA.FWeldTime asc LIMIT 0,1 ";
-					String sqlBlast = "SELECT DATE_FORMAT(tb_dataB.FWeldTime,'%Y-%m-%d') FROM tb_dataB ORDER BY tb_dataB.FWeldTime asc LIMIT 0,1 ";
-					String sqlAtrun = "TRUNCATE TABLE tb_dataA";
-					String sqlBtrun = "TRUNCATE TABLE tb_dataB";
-					
-					if(outlinestatus.equals("A")){
-						ResultSet rs1 =stmt.executeQuery(sqlAfirst);
-						while (rs1.next()) {
-							Alasttime = rs1.getString("DATE_FORMAT(tb_dataA.FWeldTime,'%Y-%m-%d')") + " 23:59:59";
-						}
-						ResultSet rs3 =stmt.executeQuery(sqlAlast);
-						while (rs3.next()) {
-							Afirsttime = rs3.getString("DATE_FORMAT(tb_dataA.FWeldTime,'%Y-%m-%d')") + " 06:00:00";
-						}
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						if(null != Alasttime && !"null".equals(Alasttime) && null != Afirsttime && !"null".equals(Afirsttime)) {
-							long Alast = sdf.parse(Alasttime).getTime()+1000;
-							long Afirst = sdf.parse(Afirsttime).getTime();
-							//统计四张状态表
-							for(long i=Afirst;i<Alast;i+=3600000){
-								String datebuf1 = DateTools.format("yyyy-MM-dd HH:mm:ss", new Date(i));
-								String datebuf2 = DateTools.format("yyyy-MM-dd HH:mm:ss", new Date(i+3600000));
-								String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
-										+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime,tb_standby.fwelder_no,tb_standby.fjunction_no,tb_standby.fweld_no,tb_standby.fchannel,tb_standby.fmax_electricity,tb_standby.fmin_electricity,tb_standby.fmax_voltage,tb_standby.fmin_voltage,tb_standby.fwelder_itemid,tb_standby.fjunction_itemid,tb_standby.fmachine_itemid,tb_standby.fwirefeedrate,tb_standby.fmachinemodel,tb_standby.fwirediameter,tb_standby.fmaterialgas,tb_standby.fstatus) SELECT "
-										+ "tb_dataA.fwelder_id,tb_dataA.fgather_no,tb_dataA.fmachine_id,tb_dataA.fjunction_id,tb_dataA.fitemid,"
-										+ "AVG(tb_dataA.felectricity),AVG(tb_dataA.fvoltage),AVG(tb_dataA.frateofflow),COUNT(tb_dataA.fid),'" + datebuf1 + "','" + datebuf2 + "',tb_dataA.fwelder_no,tb_dataA.fjunction_no,tb_dataA.fweld_no,tb_dataA.fchannel,tb_dataA.fmax_electricity,tb_dataA.fmin_electricity,tb_dataA.fmax_voltage,tb_dataA.fmin_voltage,tb_dataA.fwelder_itemid,tb_dataA.fjunction_itemid,tb_dataA.fmachine_itemid,AVG(tb_dataA.fwirefeedrate),tb_dataA.fmachinemodel,tb_dataA.fwirediameter,tb_dataA.fmaterialgas,tb_dataA.fstatus FROM tb_dataA "
-										+ "WHERE tb_dataA.fstatus = '0' AND tb_dataA.FWeldTime BETWEEN '" + datebuf1 + "' AND '" + datebuf2 + "' "
-										+ "GROUP BY tb_dataA.fwelder_id,tb_dataA.fgather_no,tb_dataA.fjunction_id,tb_dataA.fstatus,tb_dataA.fmachine_id,tb_dataA.fwirediameter";
-
-								String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
-										+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas,tb_work.fstatus) SELECT tb_dataA.fwelder_id,"
-										+ "tb_dataA.fgather_no,tb_dataA.fmachine_id,tb_dataA.fjunction_id,tb_dataA.fitemid,AVG(tb_dataA.felectricity),"
-										+ "AVG(tb_dataA.fvoltage),AVG(tb_dataA.frateofflow),COUNT(tb_dataA.fid),'" + datebuf1 + "','" + datebuf2 + "',tb_dataA.fwelder_no,tb_dataA.fjunction_no,tb_dataA.fweld_no,tb_dataA.fchannel,tb_dataA.fmax_electricity,tb_dataA.fmin_electricity,tb_dataA.fmax_voltage,tb_dataA.fmin_voltage,tb_dataA.fwelder_itemid,tb_dataA.fjunction_itemid,tb_dataA.fmachine_itemid,AVG(tb_dataA.fwirefeedrate),tb_dataA.fmachinemodel,tb_dataA.fwirediameter,tb_dataA.fmaterialgas,tb_dataA.fstatus FROM tb_dataA "
-										+ "WHERE (tb_dataA.fstatus = '3' OR fstatus= '5' OR fstatus= '7' OR fstatus= '99') AND tb_dataA.FWeldTime BETWEEN '" + datebuf1 + "' AND '" + datebuf2 + "' "
-										+ "GROUP BY tb_dataA.fwelder_id,tb_dataA.fgather_no,tb_dataA.fjunction_id,tb_dataA.fstatus,tb_dataA.fmachine_id,tb_dataA.fwirediameter";
-
-								String sqlwarn = "INSERT INTO tb_warn(tb_warn.fwelder_id,tb_warn.fgather_no,tb_warn.fmachine_id,tb_warn.fjunction_id,"
-										+ "tb_warn.fitemid,tb_warn.felectricity,tb_warn.fvoltage,tb_warn.frateofflow,tb_warn.fwarntime,tb_warn.fstarttime,tb_warn.fendtime,tb_warn.fwelder_no,tb_warn.fjunction_no,tb_warn.fweld_no,tb_warn.fchannel,tb_warn.fmax_electricity,tb_warn.fmin_electricity,tb_warn.fmax_voltage,tb_warn.fmin_voltage,tb_warn.fwelder_itemid,tb_warn.fjunction_itemid,tb_warn.fmachine_itemid,tb_warn.fwirefeedrate,tb_warn.fmachinemodel,tb_warn.fwirediameter,tb_warn.fmaterialgas,tb_warn.fstatus) SELECT "
-										+ "tb_dataA.fwelder_id,tb_dataA.fgather_no,tb_dataA.fmachine_id,tb_dataA.fjunction_id,tb_dataA.fitemid,"
-										+ "AVG(tb_dataA.felectricity),AVG(tb_dataA.fvoltage),AVG(tb_dataA.frateofflow),COUNT(tb_dataA.fid),'" + datebuf1 + "','" + datebuf2 + "',tb_dataA.fwelder_no,tb_dataA.fjunction_no,tb_dataA.fweld_no,tb_dataA.fchannel,tb_dataA.fmax_electricity,tb_dataA.fmin_electricity,tb_dataA.fmax_voltage,tb_dataA.fmin_voltage,tb_dataA.fwelder_itemid,tb_dataA.fjunction_itemid,tb_dataA.fmachine_itemid,AVG(tb_dataA.fwirefeedrate),tb_dataA.fmachinemodel,tb_dataA.fwirediameter,tb_dataA.fmaterialgas,tb_dataA.fstatus FROM tb_dataA "
-										+ "WHERE tb_dataA.fstatus != '0' AND tb_dataA.fstatus != '3' AND tb_dataA.fstatus != '5' AND tb_dataA.fstatus != '7' AND tb_dataA.FWeldTime BETWEEN '" + datebuf1 + "' AND '" + datebuf2 + "' "
-										+ "GROUP BY tb_dataA.fwelder_id,tb_dataA.fgather_no,tb_dataA.fjunction_id,tb_dataA.fstatus,tb_dataA.fmachine_id,tb_dataA.fwirediameter";
-
-								String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
-										+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime,tb_alarm.fwelder_no,tb_alarm.fjunction_no,tb_alarm.fweld_no,tb_alarm.fchannel,tb_alarm.fmax_electricity,tb_alarm.fmin_electricity,tb_alarm.fmax_voltage,tb_alarm.fmin_voltage,tb_alarm.fwelder_itemid,tb_alarm.fjunction_itemid,tb_alarm.fmachine_itemid,tb_alarm.fwirefeedrate,tb_alarm.fmachinemodel,tb_alarm.fwirediameter,tb_alarm.fmaterialgas,tb_alarm.fstatus) SELECT tb_dataA.fwelder_id,"
-										+ "tb_dataA.fgather_no,tb_dataA.fmachine_id,tb_dataA.fjunction_id,tb_dataA.fitemid,AVG(tb_dataA.felectricity),"
-										+ "AVG(tb_dataA.fvoltage),AVG(tb_dataA.frateofflow),COUNT(tb_dataA.fid),'" + datebuf1 + "','" + datebuf2 + "',tb_dataA.fwelder_no,tb_dataA.fjunction_no,tb_dataA.fweld_no,tb_dataA.fchannel,tb_dataA.fmax_electricity,tb_dataA.fmin_electricity,tb_dataA.fmax_voltage,tb_dataA.fmin_voltage,tb_dataA.fwelder_itemid,tb_dataA.fjunction_itemid,tb_dataA.fmachine_itemid,AVG(tb_dataA.fwirefeedrate),tb_dataA.fmachinemodel,tb_dataA.fwirediameter,tb_dataA.fmaterialgas,tb_dataA.fstatus FROM tb_dataA "
-										+ "INNER JOIN tb_welded_junction ON tb_dataA.fjunction_id = tb_welded_junction.fwelded_junction_no "
-										+ "WHERE (fstatus= '98' OR fstatus= '99')"
-										+ " AND tb_dataA.FWeldTime BETWEEN '" + datebuf1 + "' AND '" + datebuf2 + "' "
-										+ "GROUP BY tb_dataA.fwelder_id,tb_dataA.fgather_no,tb_dataA.fjunction_id,tb_dataA.fstatus,tb_dataA.fmachine_id,tb_dataA.fwirediameter";
-
-								stmt.executeUpdate(sqlstandby);
-								stmt.executeUpdate(sqlwork);
-								stmt.executeUpdate(sqlwarn);
-								stmt.executeUpdate(sqlalarm);
-							}
-							stmt.executeUpdate(sqlAtrun);
-						}
-						outlinestatus = "B";
-					}else if(outlinestatus.equals("B")){
-						ResultSet rs2 =stmt.executeQuery(sqlBfirst);
-						while (rs2.next()) {
-							Blasttime = rs2.getString("DATE_FORMAT(tb_dataB.FWeldTime,'%Y-%m-%d')") + " 23:59:59";
-						}
-						ResultSet rs4 =stmt.executeQuery(sqlBlast);
-						while (rs4.next()) {
-							Bfirsttime = rs4.getString("DATE_FORMAT(tb_dataB.FWeldTime,'%Y-%m-%d')") + " 06:00:00";
-						}
-						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						if(null != Blasttime && !"null".equals(Blasttime) && null != Bfirsttime || !"null".equals(Bfirsttime)) {
-							long Blast = sdf.parse(Blasttime).getTime()+1000;
-							long Bfirst = sdf.parse(Bfirsttime).getTime();
-							//统计四张状态表
-							for(long i=Bfirst;i<Blast;i+=3600000){
-								String datebuf1 = DateTools.format("yyyy-MM-dd HH:mm:ss", new Date(i));
-								String datebuf2 = DateTools.format("yyyy-MM-dd HH:mm:ss", new Date(i+3600000));
-								String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
-										+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime,tb_standby.fwelder_no,tb_standby.fjunction_no,tb_standby.fweld_no,tb_standby.fchannel,tb_standby.fmax_electricity,tb_standby.fmin_electricity,tb_standby.fmax_voltage,tb_standby.fmin_voltage,tb_standby.fwelder_itemid,tb_standby.fjunction_itemid,tb_standby.fmachine_itemid,tb_standby.fwirefeedrate,tb_standby.fmachinemodel,tb_standby.fwirediameter,tb_standby.fmaterialgas,tb_standby.fstatus) SELECT "
-										+ "tb_dataB.fwelder_id,tb_dataB.fgather_no,tb_dataB.fmachine_id,tb_dataB.fjunction_id,tb_dataB.fitemid,"
-										+ "AVG(tb_dataB.felectricity),AVG(tb_dataB.fvoltage),AVG(tb_dataB.frateofflow),COUNT(tb_dataB.fid),'" + datebuf1 + "','" + datebuf2 + "',tb_dataB.fwelder_no,tb_dataB.fjunction_no,tb_dataB.fweld_no,tb_dataB.fchannel,tb_dataB.fmax_electricity,tb_dataB.fmin_electricity,tb_dataB.fmax_voltage,tb_dataB.fmin_voltage,tb_dataB.fwelder_itemid,tb_dataB.fjunction_itemid,tb_dataB.fmachine_itemid,AVG(tb_dataB.fwirefeedrate),tb_dataB.fmachinemodel,tb_dataB.fwirediameter,tb_dataB.fmaterialgas,tb_dataB.fstatus FROM tb_dataB "
-										+ "WHERE tb_dataB.fstatus = '0' AND tb_dataB.FWeldTime BETWEEN '" + datebuf1 + "' AND '" + datebuf2 + "' "
-										+ "GROUP BY tb_dataB.fwelder_id,tb_dataB.fgather_no,tb_dataB.fjunction_id,tb_dataB.fstatus,tb_dataB.fmachine_id,tb_dataB.fwirediameter";
-
-								String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
-										+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas,tb_work.fstatus) SELECT tb_dataB.fwelder_id,"
-										+ "tb_dataB.fgather_no,tb_dataB.fmachine_id,tb_dataB.fjunction_id,tb_dataB.fitemid,AVG(tb_dataB.felectricity),"
-										+ "AVG(tb_dataB.fvoltage),AVG(tb_dataB.frateofflow),COUNT(tb_dataB.fid),'" + datebuf1 + "','" + datebuf2 + "',tb_dataB.fwelder_no,tb_dataB.fjunction_no,tb_dataB.fweld_no,tb_dataB.fchannel,tb_dataB.fmax_electricity,tb_dataB.fmin_electricity,tb_dataB.fmax_voltage,tb_dataB.fmin_voltage,tb_dataB.fwelder_itemid,tb_dataB.fjunction_itemid,tb_dataB.fmachine_itemid,AVG(tb_dataB.fwirefeedrate),tb_dataB.fmachinemodel,tb_dataB.fwirediameter,tb_dataB.fmaterialgas,tb_dataB.fstatus FROM tb_dataB "
-										+ "WHERE (tb_dataB.fstatus = '3' OR fstatus= '5' OR fstatus= '7' OR fstatus= '99') AND tb_dataB.FWeldTime BETWEEN '" + datebuf1 + "' AND '" + datebuf2 + "' "
-										+ "GROUP BY tb_dataB.fwelder_id,tb_dataB.fgather_no,tb_dataB.fjunction_id,tb_dataB.fstatus,tb_dataB.fmachine_id,tb_dataB.fwirediameter";
-
-								String sqlwarn = "INSERT INTO tb_warn(tb_warn.fwelder_id,tb_warn.fgather_no,tb_warn.fmachine_id,tb_warn.fjunction_id,"
-										+ "tb_warn.fitemid,tb_warn.felectricity,tb_warn.fvoltage,tb_warn.frateofflow,tb_warn.fwarntime,tb_warn.fstarttime,tb_warn.fendtime,tb_warn.fwelder_no,tb_warn.fjunction_no,tb_warn.fweld_no,tb_warn.fchannel,tb_warn.fmax_electricity,tb_warn.fmin_electricity,tb_warn.fmax_voltage,tb_warn.fmin_voltage,tb_warn.fwelder_itemid,tb_warn.fjunction_itemid,tb_warn.fmachine_itemid,tb_warn.fwirefeedrate,tb_warn.fmachinemodel,tb_warn.fwirediameter,tb_warn.fmaterialgas,tb_warn.fstatus) SELECT "
-										+ "tb_dataB.fwelder_id,tb_dataB.fgather_no,tb_dataB.fmachine_id,tb_dataB.fjunction_id,tb_dataB.fitemid,"
-										+ "AVG(tb_dataB.felectricity),AVG(tb_dataB.fvoltage),AVG(tb_dataB.frateofflow),COUNT(tb_dataB.fid),'" + datebuf1 + "','" + datebuf2 + "',tb_dataB.fwelder_no,tb_dataB.fjunction_no,tb_dataB.fweld_no,tb_dataB.fchannel,tb_dataB.fmax_electricity,tb_dataB.fmin_electricity,tb_dataB.fmax_voltage,tb_dataB.fmin_voltage,tb_dataB.fwelder_itemid,tb_dataB.fjunction_itemid,tb_dataB.fmachine_itemid,AVG(tb_dataB.fwirefeedrate),tb_dataB.fmachinemodel,tb_dataB.fwirediameter,tb_dataB.fmaterialgas,tb_dataB.fstatus FROM tb_dataB "
-										+ "WHERE tb_dataB.fstatus != '0' AND tb_dataB.fstatus != '3' AND tb_dataB.fstatus != '5' AND tb_dataB.fstatus != '7' AND tb_dataB.FWeldTime BETWEEN '" + datebuf1 + "' AND '" + datebuf2 + "' "
-										+ "GROUP BY tb_dataB.fwelder_id,tb_dataB.fgather_no,tb_dataB.fjunction_id,tb_dataB.fstatus,tb_dataB.fmachine_id,tb_dataB.fwirediameter";
-
-								String sqlalarm = "INSERT INTO tb_alarm(tb_alarm.fwelder_id,tb_alarm.fgather_no,tb_alarm.fmachine_id,tb_alarm.fjunction_id,tb_alarm.fitemid,"
-										+ "tb_alarm.felectricity,tb_alarm.fvoltage,tb_alarm.frateofflow,tb_alarm.falarmtime,tb_alarm.fstarttime,tb_alarm.fendtime,tb_alarm.fwelder_no,tb_alarm.fjunction_no,tb_alarm.fweld_no,tb_alarm.fchannel,tb_alarm.fmax_electricity,tb_alarm.fmin_electricity,tb_alarm.fmax_voltage,tb_alarm.fmin_voltage,tb_alarm.fwelder_itemid,tb_alarm.fjunction_itemid,tb_alarm.fmachine_itemid,tb_alarm.fwirefeedrate,tb_alarm.fmachinemodel,tb_alarm.fwirediameter,tb_alarm.fmaterialgas,tb_alarm.fstatus) SELECT tb_dataB.fwelder_id,"
-										+ "tb_dataB.fgather_no,tb_dataB.fmachine_id,tb_dataB.fjunction_id,tb_dataB.fitemid,AVG(tb_dataB.felectricity),"
-										+ "AVG(tb_dataB.fvoltage),AVG(tb_dataB.frateofflow),COUNT(tb_dataB.fid),'" + datebuf1 + "','" + datebuf2 + "',tb_dataB.fwelder_no,tb_dataB.fjunction_no,tb_dataB.fweld_no,tb_dataB.fchannel,tb_dataB.fmax_electricity,tb_dataB.fmin_electricity,tb_dataB.fmax_voltage,tb_dataB.fmin_voltage,tb_dataB.fwelder_itemid,tb_dataB.fjunction_itemid,tb_dataB.fmachine_itemid,AVG(tb_dataB.fwirefeedrate),tb_dataB.fmachinemodel,tb_dataB.fwirediameter,tb_dataB.fmaterialgas,tb_dataB.fstatus FROM tb_dataB "
-										+ "INNER JOIN tb_welded_junction ON tb_dataB.fjunction_id = tb_welded_junction.fwelded_junction_no "
-										+ "WHERE (fstatus= '98' OR fstatus= '99')"
-										+ " AND tb_dataB.FWeldTime BETWEEN '" + datebuf1 + "' AND '" + datebuf2 + "' "
-										+ "GROUP BY tb_dataB.fwelder_id,tb_dataB.fgather_no,tb_dataB.fjunction_id,tb_dataB.fstatus,tb_dataB.fmachine_id,tb_dataB.fwirediameter";
-
-								stmt.executeUpdate(sqlstandby);
-								stmt.executeUpdate(sqlwork);
-								stmt.executeUpdate(sqlwarn);
-								stmt.executeUpdate(sqlalarm);
-							}
-							stmt.executeUpdate(sqlBtrun);
-						}
-						outlinestatus = "A";
-					}
-				} catch (ClassNotFoundException e) {  
-					System.out.println("Broken driver");
-					e.printStackTrace();  
-				} catch (SQLException e) {
-					System.out.println("Broken conn");
-					e.printStackTrace();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				/*if(outlinestatus.equals("A")){
-				}else if(outlinestatus.equals("B")){
-				}*/
-				
-			}  
-		}, time1 , 1000*60*60*24);
-		//}, 60000,600000);
-
 		//获取最新焊口和焊机统计时间
 		check = new DB_Connectioncode(stmt,conn,connet);
 		NS.websocket.dbdata = this.dbdata;
@@ -595,13 +380,13 @@ public class Server implements Runnable {
 					return;
 				}
 			}  
-		}, 0,60000);
+		}, 0,600000);
 
 		//工作线程
 		new Thread(socketstart).start();
-		new Thread(socketstarttest).start();
 		new Thread(websocketstart).start();
-		new Email().run();
+		//new Thread(socketstarttest).start();
+		//new Email().run();
 		//new Thread(sockettran).start();
 		//new EMessage().run();
 		//new UpReport();
@@ -638,6 +423,7 @@ public class Server implements Runnable {
 							socketcount++;
 							socketlist.put(Integer.toString(socketcount),chsoc);
 							NS.socketlist = socketlist;
+							NWS.socketlist = socketlist;
 						}
 					}
 				});
@@ -695,7 +481,7 @@ public class Server implements Runnable {
 
 				//绑定端口，等待同步成功  
 				ChannelFuture f;
-				f = b.bind(5562).sync();
+				f = b.bind(5552).sync();
 				//等待服务端关闭监听端口  
 				f.channel().closeFuture().sync(); 
 			} catch (InterruptedException e) {
