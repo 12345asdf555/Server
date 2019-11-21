@@ -67,7 +67,6 @@ public class DB_Connectionmysql {
 	public String inSqlplc4 = "";
 	public final String inSqlbase = "insert into tb_live_data(fwelder_id,fgather_no,fmachine_id,fjunction_id,fitemid,felectricity,fvoltage,fstatus,fwirefeedrate,FUploadDateTime,FWeldTime,fwelder_no,fjunction_no,fweld_no,fchannel,fmax_electricity,fmin_electricity,fmax_voltage,fmin_voltage,fwelder_itemid,fjunction_itemid,fmachine_itemid,fmachinemodel,fwirediameter,fmaterialgas,frateofflow) values";
 	public final String inSqlplc = "insert into tb_live_data(fwelder_id,fgather_no,fjunction_id,felectricity,fvoltage,fstatus,FUploadDateTime,FWeldTime,fd1000,fd1001,fd1002,fd1003,fd1004,fd1005,fd1006,fd1007,fd1008,fd1009,fd1010,fd1011,fd1012,fd1013,fd1014,fd1015,fd1016,fd1017,fd1018,fd1019,fd1020,fd1021,fd1022,fd1023,fd1024,fd1025,fd1026,fd1027,fd1028,fd1029,fd1030,fd1031,fd1032,fd1033,fd1034,fd1035,fd1036,fd1037,fd1038,fd1039,fd1040,fd1041,fd1042,fd1043,fd1044,fd1045,fd1046,fd1047,fd1048,fd1049,fd1050,fd1051,fd1052,fd1053,fd1054,fd1055,fd1056,fd1057,fd1058,fd1059,fd1060,fd1061,fd1062,fd1063,fd1064,fd1065,fd1066,fd1067,fd1068,fd1069,fd1070,fd1071,fd1072) values";
-	
 
 	public DB_Connectionmysql(){
 		/*try {
@@ -154,6 +153,36 @@ public class DB_Connectionmysql {
                 }
                 if(welderins.equals(null) || welderins.equals("null")){
                 	welderins = "00";
+                }
+                
+                try {
+            		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+
+                    String sqlby = "";
+                    if(status != 0) {
+                    	sqlby = "update tb_intermediate a INNER JOIN ( SELECT '" + weldnum + "' fequipment_no,'" + electricity + "' b1,'" + voltage1 + "' b2,'" + timesql + "' b3,'" + status + "' b4,tb_intermediate.fwirefeedrate_full+'" + fwirefeedrate1 + "' b5,tb_intermediate.fweldenergy_frull+'" + Float.toString((electricity.floatValue()*voltage1.floatValue())/1000) + "' b6,tb_intermediate.fweldTime_full+'1' b7 FROM tb_intermediate WHERE tb_intermediate.fequipment_no = '"+weldnum+"') b ON a.fequipment_no = b.fequipment_no SET a.felectricity = b.b1,a.fvoltage = b.b2,a.FWeldTime = b.b3,a.fstatus = b.b4,a.fwirefeedrate_full = b.b5,a.fweldenergy_frull = b.b6,a.fweldTime_full = b.b7";
+                    }else {
+                    	sqlby = "update tb_intermediate a INNER JOIN ( SELECT '" + weldnum + "' fequipment_no,'" + electricity + "' b1,'" + voltage1 + "' b2,'" + timesql + "' b3,'" + status + "' b4,tb_intermediate.fwirefeedrate_full b5,tb_intermediate.fweldenergy_frull b6,tb_intermediate.fweldTime_full b7 FROM tb_intermediate WHERE tb_intermediate.fequipment_no = '"+weldnum+"') b ON a.fequipment_no = b.fequipment_no SET a.felectricity = b.b1,a.fvoltage = b.b2,a.FWeldTime = b.b3,a.fstatus = b.b4,a.fwirefeedrate_full = b.b5,a.fweldenergy_frull = b.b6,a.fweldTime_full = b.b7";
+                    }
+                    stmt.executeUpdate(sqlby);
+                    
+                } catch (SQLException e) {
+                    System.out.println("Broken insert");
                 }
                 
                 if(countbase1==1){
@@ -248,6 +277,36 @@ public class DB_Connectionmysql {
                 	welderins = "00";
                 }
                 
+                try {
+            		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+
+                    String sqlby = "";
+                    if(status != 0) {
+                    	sqlby = "update tb_intermediate a INNER JOIN ( SELECT '" + weldnum + "' fequipment_no,'" + electricity + "' b1,'" + voltage2 + "' b2,'" + timesql + "' b3,'" + status + "' b4,tb_intermediate.fwirefeedrate_full+'" + fwirefeedrate2 + "' b5,tb_intermediate.fweldenergy_frull+'" + Float.toString((electricity.floatValue()*voltage2.floatValue())/1000) + "' b6,tb_intermediate.fweldTime_full+'1' b7 FROM tb_intermediate WHERE tb_intermediate.fequipment_no = '"+weldnum+"') b ON a.fequipment_no = b.fequipment_no SET a.felectricity = b.b1,a.fvoltage = b.b2,a.FWeldTime = b.b3,a.fstatus = b.b4,a.fwirefeedrate_full = b.b5,a.fweldenergy_frull = b.b6,a.fweldTime_full = b.b7";
+                    }else {
+                    	sqlby = "update tb_intermediate a INNER JOIN ( SELECT '" + weldnum + "' fequipment_no,'" + electricity + "' b1,'" + voltage2 + "' b2,'" + timesql + "' b3,'" + status + "' b4,tb_intermediate.fwirefeedrate_full b5,tb_intermediate.fweldenergy_frull b6,tb_intermediate.fweldTime_full b7 FROM tb_intermediate WHERE tb_intermediate.fequipment_no = '"+weldnum+"') b ON a.fequipment_no = b.fequipment_no SET a.felectricity = b.b1,a.fvoltage = b.b2,a.FWeldTime = b.b3,a.fstatus = b.b4,a.fwirefeedrate_full = b.b5,a.fweldenergy_frull = b.b6,a.fweldTime_full = b.b7";
+                    }
+                    stmt.executeUpdate(sqlby);
+                    
+                } catch (SQLException e) {
+                    System.out.println("Broken insert");
+                }
+                
                 if(countbase2==1){
            	 		inSqlbase2 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate2 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow2 + "')";
            	 	}else{
@@ -340,6 +399,36 @@ public class DB_Connectionmysql {
                 	welderins = "00";
                 }
                 
+                try {
+            		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+
+                    String sqlby = "";
+                    if(status != 0) {
+                    	sqlby = "update tb_intermediate a INNER JOIN ( SELECT '" + weldnum + "' fequipment_no,'" + electricity + "' b1,'" + voltage3 + "' b2,'" + timesql + "' b3,'" + status + "' b4,tb_intermediate.fwirefeedrate_full+'" + fwirefeedrate3 + "' b5,tb_intermediate.fweldenergy_frull+'" + Float.toString((electricity.floatValue()*voltage3.floatValue())/1000) + "' b6,tb_intermediate.fweldTime_full+'1' b7 FROM tb_intermediate WHERE tb_intermediate.fequipment_no = '"+weldnum+"') b ON a.fequipment_no = b.fequipment_no SET a.felectricity = b.b1,a.fvoltage = b.b2,a.FWeldTime = b.b3,a.fstatus = b.b4,a.fwirefeedrate_full = b.b5,a.fweldenergy_frull = b.b6,a.fweldTime_full = b.b7";
+                    }else {
+                    	sqlby = "update tb_intermediate a INNER JOIN ( SELECT '" + weldnum + "' fequipment_no,'" + electricity + "' b1,'" + voltage3 + "' b2,'" + timesql + "' b3,'" + status + "' b4,tb_intermediate.fwirefeedrate_full b5,tb_intermediate.fweldenergy_frull b6,tb_intermediate.fweldTime_full b7 FROM tb_intermediate WHERE tb_intermediate.fequipment_no = '"+weldnum+"') b ON a.fequipment_no = b.fequipment_no SET a.felectricity = b.b1,a.fvoltage = b.b2,a.FWeldTime = b.b3,a.fstatus = b.b4,a.fwirefeedrate_full = b.b5,a.fweldenergy_frull = b.b6,a.fweldTime_full = b.b7";
+                    }
+                    stmt.executeUpdate(sqlby);
+                    
+                } catch (SQLException e) {
+                    System.out.println("Broken insert");
+                }
+                
                 if(countbase3==1){
            	 		inSqlbase3 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate3 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow3 + "')";
            	 	}else{
@@ -430,6 +519,36 @@ public class DB_Connectionmysql {
                 	junctionins = "00";
                 }else if(welderins.equals(null) || welderins.equals("null")){
                 	welderins = "00";
+                }
+                
+                try {
+            		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+		        	{
+		        		try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+		        	    } catch (ClassNotFoundException e) {  
+		                    System.out.println("Broken driver");
+		                    e.printStackTrace();
+		                    return;
+		                } catch (SQLException e) {
+		                    System.out.println("Broken conn");
+		                    e.printStackTrace();
+		                    return;
+		                }  
+		        	}
+
+                    String sqlby = "";
+                    if(status != 0) {
+                    	sqlby = "update tb_intermediate a INNER JOIN ( SELECT '" + weldnum + "' fequipment_no,'" + electricity + "' b1,'" + voltage4 + "' b2,'" + timesql + "' b3,'" + status + "' b4,tb_intermediate.fwirefeedrate_full+'" + fwirefeedrate4 + "' b5,tb_intermediate.fweldenergy_frull+'" + Float.toString((electricity.floatValue()*voltage4.floatValue())/1000) + "' b6,tb_intermediate.fweldTime_full+'1' b7 FROM tb_intermediate WHERE tb_intermediate.fequipment_no = '"+weldnum+"') b ON a.fequipment_no = b.fequipment_no SET a.felectricity = b.b1,a.fvoltage = b.b2,a.FWeldTime = b.b3,a.fstatus = b.b4,a.fwirefeedrate_full = b.b5,a.fweldenergy_frull = b.b6,a.fweldTime_full = b.b7";
+                    }else {
+                    	sqlby = "update tb_intermediate a INNER JOIN ( SELECT '" + weldnum + "' fequipment_no,'" + electricity + "' b1,'" + voltage4 + "' b2,'" + timesql + "' b3,'" + status + "' b4,tb_intermediate.fwirefeedrate_full b5,tb_intermediate.fweldenergy_frull b6,tb_intermediate.fweldTime_full b7 FROM tb_intermediate WHERE tb_intermediate.fequipment_no = '"+weldnum+"') b ON a.fequipment_no = b.fequipment_no SET a.felectricity = b.b1,a.fvoltage = b.b2,a.FWeldTime = b.b3,a.fstatus = b.b4,a.fwirefeedrate_full = b.b5,a.fweldenergy_frull = b.b6,a.fweldTime_full = b.b7";
+                    }
+                    stmt.executeUpdate(sqlby);
+                    
+                } catch (SQLException e) {
+                    System.out.println("Broken insert");
                 }
                 
                 if(countbase4==1){
