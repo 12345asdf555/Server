@@ -268,23 +268,30 @@ public class Server implements Runnable {
 							+ " AND tb_live_data.FWeldTime BETWEEN '" + time3  + "' AND '" + time2 + "' "
 							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id,tb_live_data.fwirediameter";
 
-					Class.forName("com.mysql.jdbc.Driver");  
-					conn = DriverManager.getConnection(connet);
-					stmt = conn.createStatement();
-					NS.stmt = stmt;
+					if(stmt==null || stmt.isClosed()==true || !conn.isValid(1) || conn.isClosed()==true)
+					{
+						try {
+							Class.forName("com.mysql.jdbc.Driver");
+							conn = DriverManager.getConnection(connet);
+							stmt = conn.createStatement();
+							NS.stmt = stmt;
+						} catch (ClassNotFoundException e) {  
+							System.out.println("Broken driver");
+							e.printStackTrace();
+							return;
+						} catch (SQLException e) {
+							System.out.println("Broken conn");
+							e.printStackTrace();
+							return;
+						}  
+					}
 					
 					stmt.executeUpdate(sqlstandby);
 					stmt.executeUpdate(sqlwork);
 					stmt.executeUpdate(sqlwarn);
 					stmt.executeUpdate(sqlalarm);
 					
-					stmt.close();
-					conn.close();
-
-				} catch (ClassNotFoundException e) {  
-					System.out.println("Broken driver");
-					e.printStackTrace();  
-				} catch (SQLException e) {
+				}catch (SQLException e) {
 					System.out.println("Broken conn");
 					e.printStackTrace();
 				} catch (Exception e) {
@@ -295,9 +302,15 @@ public class Server implements Runnable {
 				}
 
 			}  
-		}, 0 , 1000*60);
+		}, 0 , 1500*60);
 		
 		//获取最新焊口和焊机统计时间
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		check = new DB_Connectioncode(stmt,conn,connet);
 		NS.websocket.dbdata = this.dbdata;
 
@@ -332,7 +345,7 @@ public class Server implements Runnable {
 		NStest.listarray4 = this.listarray4;
 
 		//开启线程每分钟更新焊口数据
-		Timer tExit2 = null; 
+		/*Timer tExit2 = null; 
 		tExit2 = new Timer();  
 		tExit2.schedule(new TimerTask() {  
 			@Override  
@@ -381,7 +394,7 @@ public class Server implements Runnable {
 					return;
 				}
 			}  
-		}, 0,600000);
+		}, 0,600000);*/
 
 		//工作线程
 		new Thread(socketstart).start();
