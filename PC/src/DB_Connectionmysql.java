@@ -179,10 +179,12 @@ public class DB_Connectionmysql {
                     }else {
                     	sqlby = "update tb_intermediate a INNER JOIN ( SELECT '" + weldnum + "' fequipment_no,'" + electricity + "' b1,'" + voltage1 + "' b2,'" + timesql + "' b3,'" + status + "' b4,tb_intermediate.fwirefeedrate_full b5,tb_intermediate.fweldenergy_frull b6,tb_intermediate.fweldTime_full b7 FROM tb_intermediate WHERE tb_intermediate.fequipment_no = '"+weldnum+"') b ON a.fequipment_no = b.fequipment_no SET a.felectricity = b.b1,a.fvoltage = b.b2,a.FWeldTime = b.b3,a.fstatus = b.b4,a.fwirefeedrate_full = b.b5,a.fweldenergy_frull = b.b6,a.fweldTime_full = b.b7";
                     }
+                    System.out.println(sqlby);
                     stmt.executeUpdate(sqlby);
                     
                 } catch (SQLException e) {
                     System.out.println("Broken insert");
+                    e.printStackTrace();
                 }
                 
                 if(countbase1==1){

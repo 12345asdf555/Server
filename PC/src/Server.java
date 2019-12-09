@@ -196,7 +196,7 @@ public class Server implements Runnable {
 		}  
 
 		//开启线程每小时更新三张状态表
-		Date date = new Date();
+		/*Date date = new Date();
 		String nowtime = DateTools.format("HH:mm:ss",date);
 		String[] timesplit = nowtime.split(":");
 		String hour = timesplit[0];
@@ -227,7 +227,7 @@ public class Server implements Runnable {
 					stmt = conn.createStatement();
 
 					//华域统计到work表
-					/*Date date = new Date();
+					Date date = new Date();
 					String nowtimefor = DateTools.format("yyyy-MM-dd",date);
 					String nowtime = DateTools.format("HH:mm:ss",date);
 					String[] timesplit = nowtime.split(":");
@@ -270,7 +270,7 @@ public class Server implements Runnable {
 							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
 					
 					stmt.executeUpdate(sqlwork);
-					stmt.executeUpdate(sqlstandby);*/
+					stmt.executeUpdate(sqlstandby);
 					
 					
 					//基本版
@@ -370,7 +370,7 @@ public class Server implements Runnable {
 				}
 
 			}  
-		}, time , 1000*60*60);
+		}, time , 1000*60*60);*/
 
 		//获取最新焊口和焊机统计时间
 		check = new DB_Connectioncode(stmt,conn,connet);
@@ -400,7 +400,7 @@ public class Server implements Runnable {
 		NS.listarray4 = this.listarray4;
 
 		//开启线程每分钟更新焊口数据
-		Timer tExit2 = null; 
+		/*Timer tExit2 = null; 
 		tExit2 = new Timer();  
 		tExit2.schedule(new TimerTask() {  
 			@Override  
@@ -445,7 +445,7 @@ public class Server implements Runnable {
 					return;
 				}
 			}  
-		}, 0,60000);
+		}, 0,60000);*/
 
 		//工作线程
 		new Thread(socketstart).start();
