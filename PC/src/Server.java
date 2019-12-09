@@ -290,6 +290,8 @@ public class Server implements Runnable {
 					stmt.executeUpdate(sqlwork);
 					stmt.executeUpdate(sqlwarn);
 					stmt.executeUpdate(sqlalarm);
+
+					Thread.sleep(1000);	
 					
 				}catch (SQLException e) {
 					System.out.println("Broken conn");
@@ -300,9 +302,9 @@ public class Server implements Runnable {
 					e.printStackTrace();
 					return;
 				}
-
+				
 			}  
-		}, 0 , 1500*60);
+		}, 0 , 1400*60);
 		
 		//获取最新焊口和焊机统计时间
 		try {
