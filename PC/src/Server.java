@@ -357,6 +357,8 @@ public class Server implements Runnable {
 					stmt.executeUpdate(sqlwork);
 					stmt.executeUpdate(sqlwarn);
 					stmt.executeUpdate(sqlalarm);
+					
+					Thread.sleep(1000);
 
 				} catch (ClassNotFoundException e) {  
 					System.out.println("Broken driver");
@@ -364,7 +366,7 @@ public class Server implements Runnable {
 				} catch (SQLException e) {
 					System.out.println("Broken conn");
 					e.printStackTrace();
-				} catch (ParseException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
