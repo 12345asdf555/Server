@@ -535,6 +535,9 @@ public class Server implements Runnable {
 						}
 						outlinestatus = "A";
 					}
+					
+					Thread.sleep(1000);
+					
 				} catch (ClassNotFoundException e) {  
 					System.out.println("Broken driver");
 					e.printStackTrace();  
@@ -632,6 +635,9 @@ public class Server implements Runnable {
 					NStest.listarray2 = listarray2;
 					NStest.listarray3 = listarray3;
 					NStest.listarray4 = listarray4;
+					
+					Thread.sleep(1000);
+					
 				}catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
