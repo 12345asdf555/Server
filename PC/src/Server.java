@@ -56,6 +56,9 @@ import javax.net.ssl.SSLEngine;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -129,6 +132,8 @@ public class Server implements Runnable {
 	private Date time1;
 	private ArrayList<String> dbdata;
 	public String outlinestatus = "A";
+	public static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
+
 
 	public String getconnet(){
 		return connet;
@@ -210,10 +215,8 @@ public class Server implements Runnable {
 		calendar.set(Calendar.MINUTE, 00);    // 控制分
 		calendar.set(Calendar.SECOND, 00);    // 控制秒
 		time = calendar.getTime(); 
-
-		Timer tExit1 = null; 
-		tExit1 = new Timer();  
-		tExit1.schedule(new TimerTask() {  
+  
+		executorService.scheduleAtFixedRate(new Runnable() {
 
 			@Override  
 			public void run() {
@@ -234,7 +237,7 @@ public class Server implements Runnable {
 					Date date = new Date();
 					String nowtimefor = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
 					String time2 = nowtimefor;
-					Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-60000);
+					Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-1000);
 					String time3 = DateTools.format("yyyy-MM-dd HH:mm:ss",d1);
 					
 					//统计四张状态表
@@ -304,11 +307,11 @@ public class Server implements Runnable {
 				}
 				
 			}  
-		}, 0 , 1400*60);
+		}, 0 , 1, TimeUnit.SECONDS);
 		
 		//获取最新焊口和焊机统计时间
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
