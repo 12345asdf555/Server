@@ -41,7 +41,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
     public ArrayList<String> listarray4 = new ArrayList<String>();
-    public ArrayList<String> listarrayplc = new ArrayList<String>();  //焊工、工位对应
+    public ArrayList<String> listarrayplc = new ArrayList<String>();  //鐒婂伐銆佸伐浣嶅搴�
     public HashMap<String, SocketChannel> socketlist = new HashMap<>();
     public HashMap<String, SocketChannel> websocketlist = new HashMap<>();
     public Mysql mysql = new Mysql();
@@ -49,6 +49,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public Websocket websocket = new Websocket();
 	public byte[] b;
     public int a=0;
+	public MyMqttClient mqtt;
     
 	@Override  
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
@@ -88,11 +89,22 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		public void run() {
 			// TODO Auto-generated method stub
 		
-			//基本版
+			//鍩烘湰鐗�
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
-				
-				//存webservice数据
-				synchronized (listarray4) {
+
+				mysql.Mysqlbase(str);
+		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+		        if(socketchannel!=null){
+			        try {
+						socketchannel.writeAndFlush(str).sync();
+					} catch (Exception e) {
+						socketchannel = null;
+						e.printStackTrace();
+					}
+		        }
+		        
+				//瀛榳ebservice鏁版嵁
+				/*synchronized (listarray4) {
 					long gatherid = Integer.valueOf(str.substring(16, 20));
 					for(int i=0;i<listarray4.size();i+=23){
 						if(gatherid == Integer.valueOf(listarray4.get(i))){
@@ -183,7 +195,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 					}
 				}
 				
-				//存华域对应plc焊工数据
+				//瀛樺崕鍩熷搴攑lc鐒婂伐鏁版嵁
 				synchronized (listarrayplc) {
 					if(listarrayplc.size() == 0){
 						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
@@ -200,20 +212,9 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
 						}
 					}
-				}
+				}*/
 				
-				mysql.Mysqlbase(str);
-		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
-		        if(socketchannel!=null){
-			        try {
-						socketchannel.writeAndFlush(str).sync();
-					} catch (Exception e) {
-						socketchannel = null;
-						e.printStackTrace();
-					}
-		        }
-				
-		    //欧华纬华
+		    //娆у崕绾崕
 			}else if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==320){
 				synchronized (listarray4) {
 					long gatherid = Integer.valueOf(str.substring(16, 20));
@@ -289,7 +290,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 				mysql.Mysqlohwh(str);
 		        websocket.Websocketohwh(str,listarray2,listarray3,websocketlist);
 				
-			} else if(str.substring(0,2).equals("FA")){  //处理实时数据
+			} else if(str.substring(0,2).equals("FA")){  //澶勭悊瀹炴椂鏁版嵁
 				
 				synchronized (websocketlist) {
 				mysql.Mysqlrun(str);
@@ -304,11 +305,11 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		        }
 				}
 		        
-	        }else if(str.substring(0,2).equals("þ")){   //处理android数据
+	        }else if(str.substring(0,2).equals("镁")){   //澶勭悊android鏁版嵁
 	        	
 	        	android.Androidrun(str);
 	        	
-	        }else if(str.substring(0,2).equals("JN")){  //江南任务派发 任务号、焊工、焊机、状态
+	        }else if(str.substring(0,2).equals("JN")){  //姹熷崡浠诲姟娲惧彂 浠诲姟鍙枫�佺剨宸ャ�佺剨鏈恒�佺姸鎬�
 	        	String[] datainf = str.split(",");
 
 				String datasend = "";
@@ -434,7 +435,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 					synchronized (socketchannel) {
 						try {
 							socketchannel.writeAndFlush(str).sync();
-							System.out.println("发送成功:"+str);
+							System.out.println("鍙戦�佹垚鍔�:"+str);
 						} catch (Exception e) {
 							try {
 								socketchannel.close().sync();
@@ -448,7 +449,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 					}
 				}
 	        	
-	        } else if(str.equals("SS")){  //欧华纬华调用webservice获取实时数据
+	        } else if(str.equals("SS")){  //娆у崕绾崕璋冪敤webservice鑾峰彇瀹炴椂鏁版嵁
 	        	
 	        	synchronized (listarray4) {
 	        	synchronized (socketlist) {
@@ -515,7 +516,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	}
                 
 	        }
-			//重工webservice获取实时数据
+			//閲嶅伐webservice鑾峰彇瀹炴椂鏁版嵁
 			/*else if(str.equals("SS")){  
 	        	
 	        	synchronized (listarray4) {
@@ -583,11 +584,14 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	}
                 
 	        }*/
-			//处理焊机下发和上传
+			//澶勭悊鐒婃満涓嬪彂鍜屼笂浼�
 	        else{    
 	        	
-	        	//System.out.println(str);
+	        	//mqtt处理
+	        	//mqtt.publishMessage("weldmeswebdataup", str, 0);
 	        	
+	        	
+	        	//基本版2处理
 	        	synchronized (websocketlist) {
 	        	ArrayList<String> listarraybuf = new ArrayList<String>();
 	        	boolean ifdo = false;
