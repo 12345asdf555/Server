@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,12 +25,41 @@ public class MyMqttClient {
 	private static MqttConnectOptions mqttConnectOptions = null;
 	private String socketfail;
 	public HashMap<String, SocketChannel> socketlist = new HashMap<>();
+	private String ip;
+	private String ip1;
 
 	/*
 	 * static { init("MQTT_FX_Client"); }
 	 */
 
 	public void init(String clientId) {
+		try {
+			FileInputStream in = new FileInputStream("IPconfig.txt");  
+			InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
+			BufferedReader bufReader = new BufferedReader(inReader);  
+			String line = null; 
+			int writetime=0;
+
+			while((line = bufReader.readLine()) != null){ 
+				if(writetime==0){
+					ip=line;
+					writetime++;
+				}
+				else{
+					ip1=line;
+					writetime=0;
+				}
+			}  
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		String[] values = ip.split(",");
+		
 		//初始化连接设置对象
 		mqttConnectOptions = new MqttConnectOptions();
 		//初始化MqttClient
@@ -43,7 +77,7 @@ public class MyMqttClient {
 			memoryPersistence = new MemoryPersistence();
 			if(null != memoryPersistence && null != clientId) {
 				try {
-					mqttClient = new MqttClient("tcp://119.3.100.103:1883", clientId,memoryPersistence);
+					mqttClient = new MqttClient("tcp://" + values[0] + ":1883", clientId,memoryPersistence);
 				} catch (MqttException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
