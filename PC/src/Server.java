@@ -57,6 +57,9 @@ import javax.net.ssl.SSLEngine;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -127,10 +130,11 @@ public class Server implements Runnable {
 	private Connection c;
 	public java.sql.Connection conn = null;
 	public java.sql.Statement stmt =null;
-	private Date time;
-	private Date time1;
+	private long time;
+	private long time1;
 	private ArrayList<String> dbdata;
 	public String outlinestatus = "A";
+	public static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
 
 	public String getconnet(){
 		return connet;
@@ -210,11 +214,13 @@ public class Server implements Runnable {
 		calendar.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hour)+1); // 控制时
 		calendar.set(Calendar.MINUTE, 00);    // 控制分
 		calendar.set(Calendar.SECOND, 00);    // 控制秒
-		time = calendar.getTime(); 
+		Date a = new Date();
+		time = (calendar.getTime().getTime() - a.getTime())/1000; 
 
-		Timer tExit1 = null; 
+		/*Timer tExit1 = null; 
 		tExit1 = new Timer();  
-		tExit1.schedule(new TimerTask() {  
+		tExit1.schedule(new TimerTask() {  */
+		executorService.scheduleAtFixedRate(new Runnable() {
 
 			@Override  
 			public void run() {
@@ -226,53 +232,6 @@ public class Server implements Runnable {
 					stmt= conn.createStatement();
 					NS.stmt = stmt;
 
-					//华域统计到work表
-					/*Date date = new Date();
-					String nowtimefor = DateTools.format("yyyy-MM-dd",date);
-					String nowtime = DateTools.format("HH:mm:ss",date);
-					String[] timesplit = nowtime.split(":");
-					String hour = timesplit[0];
-					String time2 = nowtimefor+" "+hour+":00:00";
-					Date d1 = new Date((DateTools.parse("yyyy-MM-dd HH:mm:ss",time2).getTime())-3600000);
-					String time3 = DateTools.format("yyyy-MM-dd HH:mm:ss",d1);
-
-					String timestandby = null;
-					String timework = null;
-					String sqlfirststandby = "SELECT tb_standby.fUploadDataTime FROM tb_standby ORDER BY tb_standby.fUploadDataTime DESC LIMIT 0,1";
-					String sqlfirstwork = "SELECT tb_work.fUploadDataTime FROM tb_work ORDER BY tb_work.fUploadDataTime DESC LIMIT 0,1";
-					ResultSet rs1 =stmt.executeQuery(sqlfirstwork);
-					while (rs1.next()) {
-						timework = rs1.getString("fUploadDataTime");
-					}
-					ResultSet rs2 =stmt.executeQuery(sqlfirststandby);
-					while (rs2.next()) {
-						timestandby = rs2.getString("fUploadDataTime");
-					}
-					
-					if(timework == null || timework.equals("null")){
-						timework = "2000-01-01 01:01:01";
-					}
-					if(timestandby == null || timestandby.equals("null")){
-						timestandby = "2000-01-01 01:01:01";
-					}
-					String sqlwork = "INSERT INTO tb_work(tb_work.fwelder_id,tb_work.fgather_no,tb_work.fmachine_id,tb_work.fjunction_id,tb_work.fitemid,"
-                    		+ "tb_work.felectricity,tb_work.fvoltage,tb_work.frateofflow,tb_work.fworktime,tb_work.fstarttime,tb_work.fendtime,tb_work.fwelder_no,tb_work.fjunction_no,tb_work.fweld_no,tb_work.fchannel,tb_work.fmax_electricity,tb_work.fmin_electricity,tb_work.fmax_voltage,tb_work.fmin_voltage,tb_work.fwelder_itemid,tb_work.fjunction_itemid,tb_work.fmachine_itemid,tb_work.fwirefeedrate,tb_work.fmachinemodel,tb_work.fwirediameter,tb_work.fmaterialgas,tb_work.fstatus,tb_work.fd1000,tb_work.fd1001,tb_work.fd1002,tb_work.fd1003,tb_work.fd1004,tb_work.fd1005,tb_work.fd1006,tb_work.fd1007,tb_work.fd1008,tb_work.fd1009,tb_work.fd1010,tb_work.fd1011,tb_work.fd1012,tb_work.fd1013,tb_work.fd1014,tb_work.fd1015,tb_work.fd1016,tb_work.fd1017,tb_work.fd1018,tb_work.fd1019,tb_work.fd1020,tb_work.fd1021,tb_work.fd1022,tb_work.fd1023,tb_work.fd1024,tb_work.fd1025,tb_work.fd1026,tb_work.fd1027,tb_work.fd1028,tb_work.fd1029,tb_work.fd1030,tb_work.fd1031,tb_work.fd1032,tb_work.fd1033,tb_work.fd1034,tb_work.fd1035,tb_work.fd1036,tb_work.fd1037,tb_work.fd1038,tb_work.fd1039,tb_work.fd1040,tb_work.fd1041,tb_work.fd1042,tb_work.fd1043,tb_work.fd1044,tb_work.fd1045,tb_work.fd1046,tb_work.fd1047,tb_work.fd1048,tb_work.fd1049,tb_work.fd1050,tb_work.fd1051,tb_work.fd1052,tb_work.fd1053,tb_work.fd1054,tb_work.fd1055,tb_work.fd1056,tb_work.fd1057,tb_work.fd1058,tb_work.fd1059,tb_work.fd1060,tb_work.fd1061,tb_work.fd1062,tb_work.fd1063,tb_work.fd1064,tb_work.fd1065,tb_work.fd1066,tb_work.fd1067,tb_work.fd1068,tb_work.fd1069,tb_work.fd1070,tb_work.fd1071,tb_work.fd1072) SELECT tb_live_data.fwelder_id,"
-                     		+ "tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,AVG(tb_live_data.felectricity),"
-                    		+ "AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fd1000,tb_live_data.fd1001,tb_live_data.fd1002,tb_live_data.fd1003,tb_live_data.fd1004,tb_live_data.fd1005,tb_live_data.fd1006,tb_live_data.fd1007,tb_live_data.fd1008,tb_live_data.fd1009,tb_live_data.fd1010,tb_live_data.fd1011,tb_live_data.fd1012,tb_live_data.fd1013,tb_live_data.fd1014,tb_live_data.fd1015,tb_live_data.fd1016,tb_live_data.fd1017,tb_live_data.fd1018,tb_live_data.fd1019,tb_live_data.fd1020,tb_live_data.fd1021,tb_live_data.fd1022,tb_live_data.fd1023,tb_live_data.fd1024,tb_live_data.fd1025,tb_live_data.fd1026,tb_live_data.fd1027,tb_live_data.fd1028,tb_live_data.fd1029,tb_live_data.fd1030,tb_live_data.fd1031,tb_live_data.fd1032,tb_live_data.fd1033,tb_live_data.fd1034,tb_live_data.fd1035,tb_live_data.fd1036,tb_live_data.fd1037,tb_live_data.fd1038,tb_live_data.fd1039,tb_live_data.fd1040,tb_live_data.fd1041,tb_live_data.fd1042,tb_live_data.fd1043,tb_live_data.fd1044,tb_live_data.fd1045,tb_live_data.fd1046,tb_live_data.fd1047,tb_live_data.fd1048,tb_live_data.fd1049,tb_live_data.fd1050,tb_live_data.fd1051,tb_live_data.fd1052,tb_live_data.fd1053,tb_live_data.fd1054,tb_live_data.fd1055,tb_live_data.fd1056,tb_live_data.fd1057,tb_live_data.fd1058,tb_live_data.fd1059,tb_live_data.fd1060,tb_live_data.fd1061,tb_live_data.fd1062,tb_live_data.fd1063,tb_live_data.fd1064,tb_live_data.fd1065,tb_live_data.fd1066,tb_live_data.fd1067,tb_live_data.fd1068,tb_live_data.fd1069,tb_live_data.fd1070,tb_live_data.fd1071,tb_live_data.fd1072 FROM tb_live_data "
-                    		+ "WHERE tb_live_data.fstatus = '3' AND tb_live_data.FWeldTime BETWEEN '" + timework + "' AND '" + time2 + "' "
-                    		+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
-					
-					String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
-							+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime,tb_standby.fwelder_no,tb_standby.fjunction_no,tb_standby.fweld_no,tb_standby.fchannel,tb_standby.fmax_electricity,tb_standby.fmin_electricity,tb_standby.fmax_voltage,tb_standby.fmin_voltage,tb_standby.fwelder_itemid,tb_standby.fjunction_itemid,tb_standby.fmachine_itemid,tb_standby.fwirefeedrate,tb_standby.fmachinemodel,tb_standby.fwirediameter,tb_standby.fmaterialgas,tb_standby.fstatus,tb_standby.fd1000,tb_standby.fd1001,tb_standby.fd1002,tb_standby.fd1003,tb_standby.fd1004,tb_standby.fd1005,tb_standby.fd1006,tb_standby.fd1007,tb_standby.fd1008,tb_standby.fd1009,tb_standby.fd1010,tb_standby.fd1011,tb_standby.fd1012,tb_standby.fd1013,tb_standby.fd1014,tb_standby.fd1015,tb_standby.fd1016,tb_standby.fd1017,tb_standby.fd1018,tb_standby.fd1019,tb_standby.fd1020,tb_standby.fd1021,tb_standby.fd1022,tb_standby.fd1023,tb_standby.fd1024,tb_standby.fd1025,tb_standby.fd1026,tb_standby.fd1027,tb_standby.fd1028,tb_standby.fd1029,tb_standby.fd1030,tb_standby.fd1031,tb_standby.fd1032,tb_standby.fd1033,tb_standby.fd1034,tb_standby.fd1035,tb_standby.fd1036,tb_standby.fd1037,tb_standby.fd1038,tb_standby.fd1039,tb_standby.fd1040,tb_standby.fd1041,tb_standby.fd1042,tb_standby.fd1043,tb_standby.fd1044,tb_standby.fd1045,tb_standby.fd1046,tb_standby.fd1047,tb_standby.fd1048,tb_standby.fd1049,tb_standby.fd1050,tb_standby.fd1051,tb_standby.fd1052,tb_standby.fd1053,tb_standby.fd1054,tb_standby.fd1055,tb_standby.fd1056,tb_standby.fd1057,tb_standby.fd1058,tb_standby.fd1059,tb_standby.fd1060,tb_standby.fd1061,tb_standby.fd1062,tb_standby.fd1063,tb_standby.fd1064,tb_standby.fd1065,tb_standby.fd1066,tb_standby.fd1067,tb_standby.fd1068,tb_standby.fd1069,tb_standby.fd1070,tb_standby.fd1071,tb_standby.fd1072) SELECT "
-							+ "tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fmachine_id,tb_live_data.fjunction_id,tb_live_data.fitemid,"
-							+ "AVG(tb_live_data.felectricity),AVG(tb_live_data.fvoltage),AVG(tb_live_data.frateofflow),COUNT(tb_live_data.fid),'" + time3 + "','" + time2 + "',tb_live_data.fwelder_no,tb_live_data.fjunction_no,tb_live_data.fweld_no,tb_live_data.fchannel,tb_live_data.fmax_electricity,tb_live_data.fmin_electricity,tb_live_data.fmax_voltage,tb_live_data.fmin_voltage,tb_live_data.fwelder_itemid,tb_live_data.fjunction_itemid,tb_live_data.fmachine_itemid,AVG(tb_live_data.fwirefeedrate),tb_live_data.fmachinemodel,tb_live_data.fwirediameter,tb_live_data.fmaterialgas,tb_live_data.fstatus,tb_live_data.fd1000,tb_live_data.fd1001,tb_live_data.fd1002,tb_live_data.fd1003,tb_live_data.fd1004,tb_live_data.fd1005,tb_live_data.fd1006,tb_live_data.fd1007,tb_live_data.fd1008,tb_live_data.fd1009,tb_live_data.fd1010,tb_live_data.fd1011,tb_live_data.fd1012,tb_live_data.fd1013,tb_live_data.fd1014,tb_live_data.fd1015,tb_live_data.fd1016,tb_live_data.fd1017,tb_live_data.fd1018,tb_live_data.fd1019,tb_live_data.fd1020,tb_live_data.fd1021,tb_live_data.fd1022,tb_live_data.fd1023,tb_live_data.fd1024,tb_live_data.fd1025,tb_live_data.fd1026,tb_live_data.fd1027,tb_live_data.fd1028,tb_live_data.fd1029,tb_live_data.fd1030,tb_live_data.fd1031,tb_live_data.fd1032,tb_live_data.fd1033,tb_live_data.fd1034,tb_live_data.fd1035,tb_live_data.fd1036,tb_live_data.fd1037,tb_live_data.fd1038,tb_live_data.fd1039,tb_live_data.fd1040,tb_live_data.fd1041,tb_live_data.fd1042,tb_live_data.fd1043,tb_live_data.fd1044,tb_live_data.fd1045,tb_live_data.fd1046,tb_live_data.fd1047,tb_live_data.fd1048,tb_live_data.fd1049,tb_live_data.fd1050,tb_live_data.fd1051,tb_live_data.fd1052,tb_live_data.fd1053,tb_live_data.fd1054,tb_live_data.fd1055,tb_live_data.fd1056,tb_live_data.fd1057,tb_live_data.fd1058,tb_live_data.fd1059,tb_live_data.fd1060,tb_live_data.fd1061,tb_live_data.fd1062,tb_live_data.fd1063,tb_live_data.fd1064,tb_live_data.fd1065,tb_live_data.fd1066,tb_live_data.fd1067,tb_live_data.fd1068,tb_live_data.fd1069,tb_live_data.fd1070,tb_live_data.fd1071,tb_live_data.fd1072 FROM tb_live_data "
-							+ "WHERE tb_live_data.fstatus = '0' AND tb_live_data.FWeldTime BETWEEN '" + timestandby + "' AND '" + time2 + "' "
-							+ "GROUP BY tb_live_data.fwelder_id,tb_live_data.fgather_no,tb_live_data.fjunction_id,tb_live_data.fstatus,tb_live_data.fmachine_id";
-					
-					stmt.executeUpdate(sqlwork);
-					stmt.executeUpdate(sqlstandby);*/
-					
-					
 					//基本版
 					//获取上次统计时间，为空插入赋默认值
 					Date date = new Date();
@@ -372,7 +331,7 @@ public class Server implements Runnable {
 				}
 
 			}  
-		}, time , 1000*60*60);
+		}, time , 60*60, TimeUnit.SECONDS);
 		
 		//断网续传数据每天更新三张状态表
 		Date date1 = new Date();
@@ -386,11 +345,13 @@ public class Server implements Runnable {
 		calendar1.set(Calendar.HOUR_OF_DAY, 00); // 控制时
 		calendar1.set(Calendar.MINUTE, 00);    // 控制分
 		calendar1.set(Calendar.SECOND, 00);    // 控制秒
-		time1 = calendar1.getTime(); 
+		Date a1 = new Date();
+		time1 = (calendar1.getTime().getTime() - a1.getTime())/1000; 
 
-		Timer tExit11 = null; 
+		/*Timer tExit11 = null; 
 		tExit11 = new Timer();  
-		tExit11.schedule(new TimerTask() {  
+		tExit11.schedule(new TimerTask() {*/  
+		executorService.scheduleAtFixedRate(new Runnable() {
 
 			@Override  
 			public void run() {
@@ -554,7 +515,7 @@ public class Server implements Runnable {
 				}*/
 				
 			}  
-		}, time1 , 1000*60*60*24);
+		}, time1 , 60*60*24, TimeUnit.SECONDS);
 		//}, 60000,600000);
 
 		//获取最新焊口和焊机统计时间
@@ -592,9 +553,10 @@ public class Server implements Runnable {
 		NStest.listarray4 = this.listarray4;
 
 		//开启线程每分钟更新焊口数据
-		Timer tExit2 = null; 
+		/*Timer tExit2 = null; 
 		tExit2 = new Timer();  
-		tExit2.schedule(new TimerTask() {  
+		tExit2.schedule(new TimerTask() { */ 
+		executorService.scheduleAtFixedRate(new Runnable() {
 			@Override  
 			public void run() {
 
@@ -644,7 +606,7 @@ public class Server implements Runnable {
 					return;
 				}
 			}  
-		}, 0,60000);
+		}, 0,600, TimeUnit.SECONDS);
 
 		//工作线程
 		new Thread(socketstart).start();

@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,30 +25,59 @@ public class MyMqttClient {
 	private static MqttConnectOptions mqttConnectOptions = null;
 	private String socketfail;
 	public HashMap<String, SocketChannel> socketlist = new HashMap<>();
+	private String ip;
+	private String ip1;
 
 	/*
 	 * static { init("MQTT_FX_Client"); }
 	 */
 
 	public void init(String clientId) {
-		//初始化连接设置对象
+		try {
+			FileInputStream in = new FileInputStream("IPconfig.txt");  
+			InputStreamReader inReader = new InputStreamReader(in, "UTF-8");  
+			BufferedReader bufReader = new BufferedReader(inReader);  
+			String line = null; 
+			int writetime=0;
+
+			while((line = bufReader.readLine()) != null){ 
+				if(writetime==0){
+					ip=line;
+					writetime++;
+				}
+				else{
+					ip1=line;
+					writetime=0;
+				}
+			}  
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		String[] values = ip.split(",");
+		
+		//鍒濆鍖栬繛鎺ヨ缃璞�
 		mqttConnectOptions = new MqttConnectOptions();
-		//初始化MqttClient
+		//鍒濆鍖朚qttClient
 		if(null != mqttConnectOptions) {
 			/*
 			 * mqttConnectOptions.setUserName("815137651@qq.com");
 			 * mqttConnectOptions.setPassword("shgwth4916.".toCharArray());
 			 */
-			//			true可以安全地使用内存持久性作为客户端断开连接时清除的所有状态
+			//			true鍙互瀹夊叏鍦颁娇鐢ㄥ唴瀛樻寔涔呮�т綔涓哄鎴风鏂紑杩炴帴鏃舵竻闄ょ殑鎵�鏈夌姸鎬�
 			mqttConnectOptions.setCleanSession(true);
-			//			设置连接超时、心跳
+			//			璁剧疆杩炴帴瓒呮椂銆佸績璺�
 			mqttConnectOptions.setConnectionTimeout(3000);
 			mqttConnectOptions.setKeepAliveInterval(3000);
-			//			设置持久化方式
+			//			璁剧疆鎸佷箙鍖栨柟寮�
 			memoryPersistence = new MemoryPersistence();
 			if(null != memoryPersistence && null != clientId) {
 				try {
-					mqttClient = new MqttClient("tcp://119.3.100.103:1883", clientId,memoryPersistence);
+					mqttClient = new MqttClient("tcp://" + values[0] + ":1883", clientId,memoryPersistence);
 				} catch (MqttException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -52,18 +86,18 @@ public class MyMqttClient {
 
 			}
 		}else {
-			System.out.println("mqttConnectOptions对象为空");
+			System.out.println("mqttConnectOptions瀵硅薄涓虹┖");
 		}
 
-		//设置连接和回调
+		//璁剧疆杩炴帴鍜屽洖璋�
 		if(null != mqttClient) {
 			if(!mqttClient.isConnected()) {
 
-				//			创建回调函数对象
+				//			鍒涘缓鍥炶皟鍑芥暟瀵硅薄
 				MqttReceriveCallback mqttReceriveCallback = new MqttReceriveCallback(this);
-				//			客户端添加回调函数
+				//			瀹㈡埛绔坊鍔犲洖璋冨嚱鏁�
 				mqttClient.setCallback(mqttReceriveCallback);
-				//			创建连接
+				//			鍒涘缓杩炴帴
 				try {
 					mqttClient.connect(mqttConnectOptions);
 				} catch (MqttException e) {
@@ -73,14 +107,14 @@ public class MyMqttClient {
 
 			}
 		}else {
-			System.out.println("mqttClient为空");
+			System.out.println("mqttClient涓虹┖");
 		}
 		System.out.println(mqttClient.isConnected());
 	}
 
-	//	关闭连接
+	//	鍏抽棴杩炴帴
 	public void closeConnect() {
-		//关闭存储方式
+		//鍏抽棴瀛樺偍鏂瑰紡
 		if(null != memoryPersistence) {
 			try {
 				memoryPersistence.close();
@@ -92,7 +126,7 @@ public class MyMqttClient {
 			System.out.println("memoryPersistence is null");
 		}
 
-		//		关闭连接
+		//		鍏抽棴杩炴帴
 		if(null != mqttClient) {
 			if(mqttClient.isConnected()) {
 				try {
@@ -110,7 +144,7 @@ public class MyMqttClient {
 		}
 	}
 
-	//	发布消息
+	//	鍙戝竷娑堟伅
 	public void publishMessage(String pubTopic,String message,int qos) {
 		if(null != mqttClient&& mqttClient.isConnected()) {
 			MqttMessage mqttMessage = new MqttMessage();
@@ -123,7 +157,7 @@ public class MyMqttClient {
 				try {
 					MqttDeliveryToken publish = topic.publish(mqttMessage);
 					if(!publish.isComplete()) {
-						//System.out.println("消息发布成功:"+message);
+						//System.out.println("娑堟伅鍙戝竷鎴愬姛:"+message);
 					}
 				} catch (MqttException e) {
 					// TODO Auto-generated catch block
@@ -136,7 +170,7 @@ public class MyMqttClient {
 		}
 
 	}
-	//	重新连接
+	//	閲嶆柊杩炴帴
 	public void reConnect() {
 		if(null != mqttClient) {
 			if(!mqttClient.isConnected()) {
@@ -158,7 +192,7 @@ public class MyMqttClient {
 		}
 
 	}
-	//	订阅主题
+	//	璁㈤槄涓婚
 	public void subTopic(String topic) {
 		if(null != mqttClient&& mqttClient.isConnected()) {
 			try {
@@ -172,7 +206,7 @@ public class MyMqttClient {
 		}
 	}
 
-	//	清空主题
+	//	娓呯┖涓婚
 	public void cleanTopic(String topic) {
 		if(null != mqttClient&& !mqttClient.isConnected()) {
 			try {
@@ -186,7 +220,7 @@ public class MyMqttClient {
 		}
 	}
 	
-	//  处理上传下发数据
+	//  澶勭悊涓婁紶涓嬪彂鏁版嵁
 	public void webdata(String str) {
 		
 		ArrayList<String> listarraybuf = new ArrayList<String>();
