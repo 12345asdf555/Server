@@ -588,11 +588,11 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        else{    
 	        	
 	        	//mqtt处理
-	        	//mqtt.publishMessage("weldmeswebdataup", str, 0);
+	        	mqtt.publishMessage("weldmeswebdataup", str, 0);
 	        	
 	        	
 	        	//基本版2处理
-	        	synchronized (websocketlist) {
+	        	/*synchronized (websocketlist) {
 	        	ArrayList<String> listarraybuf = new ArrayList<String>();
 	        	boolean ifdo = false;
 	        	
@@ -615,7 +615,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
                 		websocketlist.remove(listarraybuf.get(i));
                 	}
                 }
-	        	}
+	        	}*/
 	        }
 		}
 	 }

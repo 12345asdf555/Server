@@ -411,10 +411,10 @@ public class Server implements Runnable {
 		//new Email().run();
 		//new UpReport();
 		
-		/*mqtt.init("");
+		mqtt.init("");
 		NS.mqtt = mqtt;
 		NS.websocket.mqtt = mqtt;
-		mqtt.subTopic("weldmeswebdatadown");*/
+		mqtt.subTopic("weldmeswebdatadown");
 	}  
 
 	//开启5551端口获取焊机数据

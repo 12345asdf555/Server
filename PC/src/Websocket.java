@@ -269,11 +269,10 @@ public class Websocket {
 					}
 					
 					//MQTT处理
-					/*mqtt.publishMessage("weldmesrealdata", strsend, 0);
-					strsend = "";*/
+					mqtt.publishMessage("weldmesrealdata", strsend, 0);
 					
 					//基本版2处理
-					HashMap<String, SocketChannel> socketlist_cl;
+					/*HashMap<String, SocketChannel> socketlist_cl;
 					synchronized (websocketlist){
 						socketlist_cl = (HashMap<String, SocketChannel>) websocketlist.clone();
 					}
@@ -303,7 +302,7 @@ public class Websocket {
 							}
 						}
 
-					}
+					}*/
 					strsend = "";
 					
 				}
