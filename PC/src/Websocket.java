@@ -40,7 +40,7 @@ public class Websocket {
 		Date time;
 		Timestamp timesql = null;
 
-		if(websocketlist==null || websocketlist.isEmpty()){
+		if(!(websocketlist==null || websocketlist.isEmpty())){
 		}
 		else
 		{	

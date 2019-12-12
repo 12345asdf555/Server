@@ -406,7 +406,7 @@ public class Server implements Runnable {
 
 		//工作线程
 		new Thread(socketstart).start();
-		new Thread(websocketstart).start();
+		//new Thread(websocketstart).start();
 		//new Thread(sockettran).start();
 		//new Email().run();
 		//new UpReport();
@@ -448,6 +448,7 @@ public class Server implements Runnable {
 							socketlist.put(Integer.toString(socketcount),chsoc);
 							NS.socketlist = socketlist;
 							NWS.socketlist = socketlist;
+							mqtt.socketlist = socketlist;
 						}
 					}
 				});
