@@ -88,7 +88,6 @@ import io.netty.util.CharsetUtil;
 public class Server implements Runnable {  
 
 	//private List<Handler> handlers = new ArrayList<Handler>();
-	public MyMqttClient mqtt = new MyMqttClient();
 	public static final String SERVERIP = "121.196.222.216"; 
 	public static final int SERVERPORT = 5555;
 	public static final int SERVERPORTWEB = 5554;
@@ -407,7 +406,7 @@ public class Server implements Runnable {
 		//工作线程
 		new Thread(socketstart).start();
 		new Thread(websocketstart).start();
-		new Thread(sockettran).start();
+		//new Thread(sockettran).start();
 		//new Email().run();
 		//new UpReport();
 		
@@ -454,7 +453,7 @@ public class Server implements Runnable {
 
 				//绑定端口，等待同步成功  
 				ChannelFuture f;
-				f = b.bind(5571).sync();
+				f = b.bind(5551).sync();
 				//等待服务端关闭监听端口  
 				f.channel().closeFuture().sync(); 
 			} catch (InterruptedException e) {
@@ -504,7 +503,7 @@ public class Server implements Runnable {
 
 				});
 
-				Channel ch = serverBootstrap.bind(5573).sync().channel();
+				Channel ch = serverBootstrap.bind(5550).sync().channel();
 				ch.closeFuture().sync();
 
 				/*ChannelFuture channelFuture = serverBootstrap.bind(5550).sync();

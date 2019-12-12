@@ -33,7 +33,6 @@ public class Websocket {
 	private HashMap<String, Socket> websocket;
 	private HashMap<String, SocketChannel> websocketlist = null;
 	public ArrayList<String> dbdata = new ArrayList<String>();
-	public MyMqttClient mqtt;
 
 	public void Websocketbase(String str, ArrayList<String> listarray2, ArrayList<String> listarray3,HashMap<String, SocketChannel> websocketlist) {
 		// TODO Auto-generated method stub

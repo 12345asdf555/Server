@@ -49,7 +49,6 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
     public Websocket websocket = new Websocket();
 	public byte[] b;
     public int a=0;
-	public MyMqttClient mqtt;
     
 	@Override  
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
