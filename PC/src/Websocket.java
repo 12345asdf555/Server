@@ -268,8 +268,12 @@ public class Websocket {
 						}
 					}
 					
-					//MQTT处理
-					mqtt.publishMessage("weldmesrealdata", strsend, 0);
+					try{
+						//MQTT处理
+						mqtt.publishMessage("weldmes-realdata", strsend, 0);
+					}catch(Exception e){
+						e.printStackTrace();
+					}
 					
 					//基本版2处理
 					/*HashMap<String, SocketChannel> socketlist_cl;

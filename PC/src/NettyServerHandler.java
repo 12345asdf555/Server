@@ -586,9 +586,12 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        }*/
 			//澶勭悊鐒婃満涓嬪彂鍜屼笂浼�
 	        else{    
-	        	
-	        	//mqtt处理
-	        	mqtt.publishMessage("weldmeswebdataup", str, 0);
+	        	try{
+		        	//mqtt处理
+		        	mqtt.publishMessage("weldmes-webdataup", str, 0);
+	        	}catch(Exception e){
+	        		e.printStackTrace();
+	        	}
 	        	
 	        	
 	        	//基本版2处理
