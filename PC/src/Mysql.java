@@ -29,7 +29,7 @@ public class Mysql {
 		if (str.length() == 290) {
 
 			try{
-				//校验第一位是否为FA末位是否为F5
+				//鏍￠獙绗竴浣嶆槸鍚︿负FA鏈綅鏄惁涓篎5
 				String check1 =str.substring(0,2);
 				String check11=str.substring(288,290);
 				if(check1.equals("7E") && check11.equals("7D")){
@@ -39,7 +39,6 @@ public class Mysql {
 					long gatherid = Integer.valueOf(str.substring(16, 20));
 					long itemid = Integer.valueOf(str.substring(286, 288));
 					String weldmodel = Integer.valueOf(str.subSequence(12, 14).toString(),16).toString();
-
 					for(int a=0;a<161;a+=80){
 						try{
 							long junctionid = Integer.valueOf(str.substring(76+a, 84+a));
@@ -71,8 +70,10 @@ public class Mysql {
 							BigDecimal frateofflow = new BigDecimal(Integer.valueOf(str.subSequence(108+a, 112+a).toString(),16));
 							BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(86+a, 88+a).toString(),16));
 							int fmaterialgas = Integer.parseInt(str.subSequence(88+a, 90+a).toString(),16);
+							//瑞凌埋弧焊行走速度
+							BigDecimal walkingspeed = new BigDecimal(Integer.parseInt(str.subSequence(112+a, 116+a).toString(),16));
 
-							db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow);	 
+							db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow,walkingspeed);	 
 						}catch(Exception e){
 							System.out.println(str);
 							System.out.println(str.substring(76+a, 84+a));
@@ -169,16 +170,16 @@ public class Mysql {
 
 			if (str.length() == 110) {  
 
-				//校验第一位是否为FA末位是否为F5
+				//鏍￠獙绗竴浣嶆槸鍚︿负FA鏈綅鏄惁涓篎5
 				String check1 =str.substring(0,2);
 				String check11=str.substring(108,110);
 				if(check1.equals("FA") && check11.equals("F5")){
 
-					//校验长度
+					//鏍￠獙闀垮害
 					int check2=str.length();
 					if(check2==110){
 
-						//校验位校验
+						//鏍￠獙浣嶆牎楠�
 						String check3=str.substring(2,104);
 						String check5="";
 						int check4=0;
@@ -283,24 +284,24 @@ public class Mysql {
 						}
 
 						else{
-							//У��λ����
-							System.out.print("数据接收校验位错误");
+							//校锟斤拷位锟斤拷锟斤拷
+							System.out.print("鏁版嵁鎺ユ敹鏍￠獙浣嶉敊璇�");
 							str="";
 						}
 
 					}
 
 					else{
-						//���ȴ���
-						System.out.print("数据接收长度错误");
+						//锟斤拷锟饺达拷锟斤拷
+						System.out.print("鏁版嵁鎺ユ敹闀垮害閿欒");
 						str="";
 					}
 
 				}
 				else{
-					//��λ����FA
+					//锟斤拷位锟斤拷锟斤拷FA
 					System.out.println("11");
-					System.out.print("数据接收首末位错误");
+					System.out.print("鏁版嵁鎺ユ敹棣栨湯浣嶉敊璇�");
 					str="";
 				}
 
@@ -310,11 +311,11 @@ public class Mysql {
 
                 for(int i =0;i < stringArr.length;i++)
 		        {
-	        	     //校验第一位是否为FE
+	        	     //鏍￠獙绗竴浣嶆槸鍚︿负FE
 		       	     String check1 =stringArr[i].substring(0,2);
 		       	     if(check1.equals("FE")){
 
-		       	    	 //校验长度
+		       	    	 //鏍￠獙闀垮害
 		           	     int check2=stringArr[i].length();
 		           	     if(check2==54){
 
@@ -341,15 +342,15 @@ public class Mysql {
 
 		           	     }   
 		           	     else{
-		           	    //���ȴ���
-		           	    	 System.out.print("数据接收长度错误");
+		           	    //锟斤拷锟饺达拷锟斤拷
+		           	    	 System.out.print("鏁版嵁鎺ユ敹闀垮害閿欒");
 		           	    	 str="";
 		           	     }
 	       	         }
 		       	     else{
-		       	    	 //��λ����FE
+		       	    	 //锟斤拷位锟斤拷锟斤拷FE
 		       	    	System.out.println("12");
-		   	        	 System.out.print("数据接收首末位错误");
+		   	        	 System.out.print("鏁版嵁鎺ユ敹棣栨湯浣嶉敊璇�");
 		   	        	 str="";
 		       	     }
 	       	     }
@@ -409,7 +410,7 @@ public class Mysql {
 				BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(116+a, 118+a).toString(),16));
 				int fmaterialgas = Integer.parseInt(str.subSequence(118+a, 120+a).toString(),16);
 
-				db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow);	 
+				//db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow);	 
 			}catch(Exception e){
 				System.out.println(str);
 				System.out.println(str.substring(76+a, 84+a));
@@ -424,7 +425,7 @@ public class Mysql {
 		if (str.length() == 290) {
 
 			try{
-				//校验第一位是否为FA末位是否为F5
+				//鏍￠獙绗竴浣嶆槸鍚︿负FA鏈綅鏄惁涓篎5
 				String check1 =str.substring(0,2);
 				String check11=str.substring(288,290);
 				if(check1.equals("7E") && check11.equals("7D")){
@@ -466,8 +467,10 @@ public class Mysql {
 							BigDecimal frateofflow = new BigDecimal(Integer.valueOf(str.subSequence(108+a, 112+a).toString(),16));
 							BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(86+a, 88+a).toString(),16));
 							int fmaterialgas = Integer.parseInt(str.subSequence(88+a, 90+a).toString(),16);
+							//瑞凌埋弧焊行走速度
+							BigDecimal walkingspeed = new BigDecimal(Integer.parseInt(str.subSequence(112+a, 116+a).toString(),16));
 
-							db.DB_Connectionmysqloutline(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow,server);	 
+							db.DB_Connectionmysqloutline(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow,server,walkingspeed);	 
 						}catch(Exception e){
 							System.out.println(str);
 							System.out.println(str.substring(76+a, 84+a));
@@ -492,16 +495,16 @@ public class Mysql {
 
             if (str.length() == 110) {  
 
-            //У���һλ�Ƿ�ΪFAĩλ�Ƿ�ΪF5
+            //校锟斤拷锟揭晃伙拷欠锟轿狥A末位锟角凤拷为F5
        	     String check1 =str.substring(0,2);
        	     String check11=str.substring(108,110);
        	     if(check1.equals("FA") && check11.equals("F5")){
 
-           	     //У�鳤��
+           	     //校锟介长锟斤拷
            	     int check2=str.length();
            	     if(check2==110){
 
-               	     //У��λУ��
+               	     //校锟斤拷位校锟斤拷
                	     String check3=str.substring(2,104);
                	     String check5="";
                	     int check4=0;
@@ -603,24 +606,24 @@ public class Mysql {
                	     }
 
                	     else{
-               	        //У��λ����
-               	    	 System.out.print("���ݽ���У��λ����");
+               	        //校锟斤拷位锟斤拷锟斤拷
+               	    	 System.out.print("锟斤拷锟捷斤拷锟斤拷校锟斤拷位锟斤拷锟斤拷");
                	    	 str="";
                	     }
 
            	     }
 
            	     else{
-           	        //���ȴ���
-           	    	 System.out.print("���ݽ��ճ��ȴ���");
+           	        //锟斤拷锟饺达拷锟斤拷
+           	    	 System.out.print("锟斤拷锟捷斤拷锟秸筹拷锟饺达拷锟斤拷");
            	    	 str="";
            	     }
 
    	        	}
    	        	else{
-   	        		//��λ����FA
+   	        		//锟斤拷位锟斤拷锟斤拷FA
    	        		System.out.println("11");
-   	        		System.out.print("���ݽ�����ĩλ����");
+   	        		System.out.print("锟斤拷锟捷斤拷锟斤拷锟斤拷末位锟斤拷锟斤拷");
    	        		str="";
    	        	}
 
@@ -630,11 +633,11 @@ public class Mysql {
 
                 for(int i =0;i < stringArr.length;i++)
 		        {
-	        	     //У���һλ�Ƿ�ΪFE
+	        	     //校锟斤拷锟揭晃伙拷欠锟轿狥E
 		       	     String check1 =stringArr[i].substring(0,2);
 		       	     if(check1.equals("FE")){
 
-		       	    	 //У�鳤��
+		       	    	 //校锟介长锟斤拷
 		           	     int check2=stringArr[i].length();
 		           	     if(check2==54){
 
@@ -661,15 +664,15 @@ public class Mysql {
 
 		           	     }   
 		           	     else{
-		           	    //���ȴ���
-		           	    	 System.out.print("���ݽ��ճ��ȴ���");
+		           	    //锟斤拷锟饺达拷锟斤拷
+		           	    	 System.out.print("锟斤拷锟捷斤拷锟秸筹拷锟饺达拷锟斤拷");
 		           	    	 str="";
 		           	     }
 	       	         }
 		       	     else{
-		       	    	 //��λ����FE
+		       	    	 //锟斤拷位锟斤拷锟斤拷FE
 		       	    	System.out.println("12");
-		   	        	 System.out.print("���ݽ�����ĩλ����");
+		   	        	 System.out.print("锟斤拷锟捷斤拷锟斤拷锟斤拷末位锟斤拷锟斤拷");
 		   	        	 str="";
 		       	     }
 	       	     }

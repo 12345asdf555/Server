@@ -36,12 +36,12 @@ public class Email {
 
 	public void run(){
 		
-		//开启线程每天查询邮件
+		//寮�鍚嚎绋嬫瘡澶╂煡璇㈤偖浠�
         Calendar calendarmail = Calendar.getInstance();
         
-        calendarmail.set(Calendar.HOUR_OF_DAY, 00); // 控制时
-        calendarmail.set(Calendar.MINUTE, 00);    // 控制分
-        calendarmail.set(Calendar.SECOND, 00);    // 控制秒
+        calendarmail.set(Calendar.HOUR_OF_DAY, 00); // 鎺у埗鏃�
+        calendarmail.set(Calendar.MINUTE, 00);    // 鎺у埗鍒�
+        calendarmail.set(Calendar.SECOND, 00);    // 鎺у埗绉�
         time = calendarmail.getTime(); 
         
 	    Timer tExit3 = null; 
@@ -54,7 +54,7 @@ public class Email {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				//获取焊工以及管理员信息
+				//鑾峰彇鐒婂伐浠ュ強绠＄悊鍛樹俊鎭�
 				try {
 					FileInputStream in;
 					in = new FileInputStream("IPconfig.txt");
@@ -118,18 +118,15 @@ public class Email {
 					rs = stmt.executeQuery(sqlmail);	        
 					// 展开结果集数据库
 					while(rs.next()){
-						// 通过字段检索	
+						// 通过字段检索
 						listarraymailer.add(rs.getString("femailname"));
 						listarraymailer.add(rs.getString("femailtype"));
 						listarraymailer.add(rs.getString("femailaddress"));
-						// 输出数据
 					}
 
 
 					rs = stmt.executeQuery(sql);	        
-					// 展开结果集数据库
 					while(rs.next()){
-						// 通过字段检索
 						listarraymail.add(rs.getString("fequipment_no"));
 					}
 					for(int k=0;k<listarraymail.size();k++)
@@ -181,15 +178,13 @@ public class Email {
 							while(rs.next())
 							{
 								sendtime = rs.getString("sendtime");
-							}
-							// 展开结果集数据库					         
+							}		         
 							String sqlsave = "INSERT INTO tb_catemailcheck (femailname,femailaddress,femailtext,femailstatus,femailtime) VALUES('"+listarraymailer.get(i)+"'"+","+"'"+listarraymailer.get(i+2)+"'"+","+"'"+Text+"'"+","+"'"+listarraymailer.get(i+1)+"'"+","+"'"+sendtime+"'"+")";
 							stmt.executeUpdate(sqlsave); 
 
 						}
 
 					}
-					// 完成后关闭,换位置了
 					rs.close();
 					stmt.close();
 					conn.close();
@@ -202,7 +197,7 @@ public class Email {
 	}
 }
 
-//旧版
+//鏃х増
 /*public class Email {
 	private Date time;
 	public String connet1 = "jdbc:mysql://";
@@ -215,12 +210,12 @@ public class Email {
     public java.sql.Statement stmt =null;
 
 	public void run(){
-		//开启线程每天查询邮件
+		//寮�鍚嚎绋嬫瘡澶╂煡璇㈤偖浠�
         Calendar calendarmail = Calendar.getInstance();
         
-        calendarmail.set(Calendar.HOUR_OF_DAY, 17); // 控制时
-        calendarmail.set(Calendar.MINUTE, 50);    // 控制分
-        calendarmail.set(Calendar.SECOND, 00);    // 控制秒
+        calendarmail.set(Calendar.HOUR_OF_DAY, 17); // 鎺у埗鏃�
+        calendarmail.set(Calendar.MINUTE, 50);    // 鎺у埗鍒�
+        calendarmail.set(Calendar.SECOND, 00);    // 鎺у埗绉�
         time = calendarmail.getTime(); 
         
 	    Timer tExit3 = null; 
@@ -233,7 +228,7 @@ public class Email {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				//获取焊工以及管理员信息
+				//鑾峰彇鐒婂伐浠ュ強绠＄悊鍛樹俊鎭�
 				try {
 					FileInputStream in;
 					in = new FileInputStream("IPconfig.txt");
@@ -310,13 +305,13 @@ public class Email {
 				
 				for(int i=0;i<listarraymail.size();i+=3){
 					
-					//半年提醒
+					//鍗婂勾鎻愰啋
 					Calendar canow = Calendar.getInstance();
 					Calendar ca = Calendar.getInstance();
 					ca.setTime(new Date());
 					ca.add(Calendar.MONTH, -5);
 					ca.add(Calendar.DAY_OF_MONTH, -15);
-					Date resultDate = ca.getTime(); // 结果  
+					Date resultDate = ca.getTime(); // 缁撴灉  
 					String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",resultDate);
 					
 					String[] nowtimebuf = nowtime.split(" ");
@@ -329,7 +324,7 @@ public class Email {
 						if(halfyearname.equals("")){
 							halfyearname = listarraymail.get(i);
 						}else{
-							halfyearname = listarraymail.get(i) + "、" + halfyearname ;
+							halfyearname = listarraymail.get(i) + "銆�" + halfyearname ;
 						}
 						
 						String sqlmailcheck2 = "update tb_catweldinf set fhalfyearsure = '" + DateTools.format("yyyy-MM-dd HH:mm:ss",new Date()) + "' WHERE fweldername = '" + listarraymail.get(i) + "'";
@@ -352,30 +347,30 @@ public class Email {
 								Properties props = new Properties();
 							    props.setProperty("mail.smtp.auth", "true");
 							    props.setProperty("mail.transport.protocol", "smtp");
-							    props.put("mail.smtp.host","smtp.qq.com");// smtp服务器地址
+							    props.put("mail.smtp.host","smtp.qq.com");// smtp鏈嶅姟鍣ㄥ湴鍧�
 							    
 							    Session session = Session.getInstance(props);
 							    session.setDebug(true);
 							    
 							    Message msg = new MimeMessage(session);
-							    msg.setSubject("员工入职半年提醒");
-							    msg.setText(halfyearname + " 入职已满半年");
+							    msg.setSubject("鍛樺伐鍏ヨ亴鍗婂勾鎻愰啋");
+							    msg.setText(halfyearname + " 鍏ヨ亴宸叉弧鍗婂勾");
 							    msg.setSentDate(new Date());
-							    msg.setFrom(new InternetAddress("512836904@qq.com"));//发件人邮箱
+							    msg.setFrom(new InternetAddress("512836904@qq.com"));//鍙戜欢浜洪偖绠�
 							    msg.setRecipient(Message.RecipientType.TO,
-							            new InternetAddress(listarraymailer.get(j+1))); //收件人邮箱
+							            new InternetAddress(listarraymailer.get(j+1))); //鏀朵欢浜洪偖绠�
 							    //msg.addRecipient(Message.RecipientType.CC, 
-					    		//new InternetAddress("XXXXXXXXXXX@qq.com")); //抄送人邮箱
+					    		//new InternetAddress("XXXXXXXXXXX@qq.com")); //鎶勯�佷汉閭
 							    msg.saveChanges();
 
 							    Transport transport = session.getTransport();
-							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//发件人邮箱,授权码
+							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//鍙戜欢浜洪偖绠�,鎺堟潈鐮�
 							    
 							    transport.sendMessage(msg, msg.getAllRecipients());
 							    transport.close();
 							    
 							    String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",new Date());
-							    String sqlmailcheck1 = "INSERT INTO tb_catemailcheck (femailname, femailaddress, femailtext, femailstatus, femailtime) VALUES ('" + listarraymailer.get(j) + "' , '" + listarraymailer.get(j+1) + "' , '" + halfyearname + " 入职已满半年" + "' , '1' , '" + nowtime + "')";
+							    String sqlmailcheck1 = "INSERT INTO tb_catemailcheck (femailname, femailaddress, femailtext, femailstatus, femailtime) VALUES ('" + listarraymailer.get(j) + "' , '" + listarraymailer.get(j+1) + "' , '" + halfyearname + " 鍏ヨ亴宸叉弧鍗婂勾" + "' , '1' , '" + nowtime + "')";
 							    stmt.execute(sqlmailcheck1);
 							}
 						}
@@ -385,12 +380,12 @@ public class Email {
 				    }
 				}
 					
-				//ic卡有效期提醒
+				//ic鍗℃湁鏁堟湡鎻愰啋
 				String icworktime = "";
 					
 				for(int i=0;i<listarraymail.size();i+=3){
 					
-					//ic卡有效期提醒
+					//ic鍗℃湁鏁堟湡鎻愰啋
 					
 					Date dateic;
 					try {
@@ -399,7 +394,7 @@ public class Email {
 						Calendar ca = Calendar.getInstance();
 						ca.setTime(dateic);
 						ca.add(Calendar.DAY_OF_MONTH, -60);
-						Date resultDate = ca.getTime(); // 结果  
+						Date resultDate = ca.getTime(); // 缁撴灉  
 						String ictime = DateTools.format("yyyy-MM-dd HH:mm:ss",resultDate);
 						
 						String[] timebuf = ictime.split(" ");
@@ -412,7 +407,7 @@ public class Email {
 							if(icworktime.equals("")){
 								icworktime = listarraymail.get(i);
 							}else{
-								icworktime = listarraymail.get(i) + "、" + icworktime ;
+								icworktime = listarraymail.get(i) + "銆�" + icworktime ;
 							}
 						}
 					} catch (java.text.ParseException e) {
@@ -429,30 +424,30 @@ public class Email {
 								Properties props = new Properties();
 							    props.setProperty("mail.smtp.auth", "true");
 							    props.setProperty("mail.transport.protocol", "smtp");
-							    props.put("mail.smtp.host","smtp.qq.com");// smtp服务器地址
+							    props.put("mail.smtp.host","smtp.qq.com");// smtp鏈嶅姟鍣ㄥ湴鍧�
 							    
 							    Session session = Session.getInstance(props);
 							    session.setDebug(true);
 							    
 							    Message msg = new MimeMessage(session);
-							    msg.setSubject("员工ic卡到期提醒");
-							    msg.setText(icworktime + " ic卡将要过期");
+							    msg.setSubject("鍛樺伐ic鍗″埌鏈熸彁閱�");
+							    msg.setText(icworktime + " ic鍗″皢瑕佽繃鏈�");
 							    msg.setSentDate(new Date());
-							    msg.setFrom(new InternetAddress("512836904@qq.com"));//发件人邮箱
+							    msg.setFrom(new InternetAddress("512836904@qq.com"));//鍙戜欢浜洪偖绠�
 							    msg.setRecipient(Message.RecipientType.TO,
-							            new InternetAddress(listarraymailer.get(j+1))); //收件人邮箱
+							            new InternetAddress(listarraymailer.get(j+1))); //鏀朵欢浜洪偖绠�
 							    //msg.addRecipient(Message.RecipientType.CC, 
-					    		//new InternetAddress("XXXXXXXXXXX@qq.com")); //抄送人邮箱
+					    		//new InternetAddress("XXXXXXXXXXX@qq.com")); //鎶勯�佷汉閭
 							    msg.saveChanges();
 
 							    Transport transport = session.getTransport();
-							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//发件人邮箱,授权码
+							    transport.connect("512836904@qq.com","sbmqftbsitpecaef");//鍙戜欢浜洪偖绠�,鎺堟潈鐮�
 							    
 							    transport.sendMessage(msg, msg.getAllRecipients());
 							    transport.close();
 							    
 							    String nowtime = DateTools.format("yyyy-MM-dd HH:mm:ss",new Date());
-							    String sqlmailcheck = "INSERT INTO tb_catemailcheck (femailname, femailaddress, femailtext, femailstatus, femailtime) VALUES ('" + listarraymailer.get(j) + "' , '" + listarraymailer.get(j+1) + "' , '" + icworktime + " ic卡将要过期" + "' , '2' , '" + nowtime + "')";
+							    String sqlmailcheck = "INSERT INTO tb_catemailcheck (femailname, femailaddress, femailtext, femailstatus, femailtime) VALUES ('" + listarraymailer.get(j) + "' , '" + listarraymailer.get(j+1) + "' , '" + icworktime + " ic鍗″皢瑕佽繃鏈�" + "' , '2' , '" + nowtime + "')";
 							    stmt.execute(sqlmailcheck);
 							}
 						}

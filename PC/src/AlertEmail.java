@@ -132,7 +132,7 @@ public class AlertEmail {
 							e.printStackTrace();
 						}
 
-						//发邮件
+						//鍙戦偖浠�
 						stmt = conn.createStatement();
 
 						ArrayList<String> listarraymail = new ArrayList<String>();
@@ -145,9 +145,9 @@ public class AlertEmail {
 
 						ResultSet rs;
 						rs = stmt.executeQuery(sqlmail);	        
-						// 展开结果集数据库
+						// 灞曞紑缁撴灉闆嗘暟鎹簱
 						while(rs.next()){
-							// 通过字段检索邮件地址
+							// 閫氳繃瀛楁妫�绱㈤偖浠跺湴鍧�
 							listarraymailer.add(rs.getString("femailname"));
 							listarraymailer.add(rs.getString("femailtype"));
 							listarraymailer.add(rs.getString("femailaddress"));
@@ -160,7 +160,7 @@ public class AlertEmail {
 
 						for(int i=0;i<listarraymailer.size();i+=3) 
 						{
-							if(listarraymail.size()!=0 && listarraymailer.get(i+1).equals("2"))//发送报警邮件
+							if(listarraymail.size()!=0 && listarraymailer.get(i+1).equals("2"))//鍙戦�佹姤璀﹂偖浠�
 							{
 								Properties props = new Properties(); 
 								props.setProperty("mail.smtp.host", "smtp.qq.com");
@@ -186,7 +186,7 @@ public class AlertEmail {
 									Text ="设备"+message+"故障";										
 									msg.setText(Text); 
 								}else {
-									Text ="设备"+message+index;										
+									Text ="设备"+message+index;									
 									msg.setText(Text); 
 								}
 								msg.setSentDate(new Date()); 
@@ -204,12 +204,12 @@ public class AlertEmail {
 								{
 									sendtime = rs.getString("sendtime");
 								}
-								// 展开结果集数据库					         
+								// 灞曞紑缁撴灉闆嗘暟鎹簱					         
 								String sqlsave = "INSERT INTO tb_catemailcheck (femailname,femailaddress,femailtext,femailstatus,femailtime) VALUES('"+listarraymailer.get(i)+"'"+","+"'"+listarraymailer.get(i+2)+"'"+","+"'"+Text+"'"+","+"'"+listarraymailer.get(i+1)+"'"+","+"'"+sendtime+"'"+")";
 								stmt.executeUpdate(sqlsave);  
 							}
 						}
-						// 完成后关闭,换位置了
+						// 瀹屾垚鍚庡叧闂�,鎹綅缃簡
 						rs.close();
 						stmt.close();
 						conn.close();
