@@ -88,8 +88,8 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		public void run() {
 			// TODO Auto-generated method stub
 		
-			//鍩烘湰鐗�
-			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
+			//西安处理
+			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==596){
 
 				mysql.Mysqlbase(str);
 		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
@@ -101,118 +101,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 						e.printStackTrace();
 					}
 		        }
-		        
-				//瀛榳ebservice鏁版嵁
-				/*synchronized (listarray4) {
-					long gatherid = Integer.valueOf(str.substring(16, 20));
-					for(int i=0;i<listarray4.size();i+=23){
-						if(gatherid == Integer.valueOf(listarray4.get(i))){
-							String electricity = Integer.toString(Integer.valueOf(str.subSequence(56, 60).toString(),16));
-		                    String voltage = Integer.toString(Integer.valueOf(str.subSequence(60, 64).toString(),16)/10);
-		                    String electricity1 = Integer.toString(Integer.valueOf(str.subSequence(56+80, 60+80).toString(),16));
-		                    String voltage1 = Integer.toString(Integer.valueOf(str.subSequence(60+80, 64+80).toString(),16)/10);
-		                    String electricity2 = Integer.toString(Integer.valueOf(str.subSequence(56+80+80, 60+80+80).toString(),16));
-		                    String voltage2 = Integer.toString(Integer.valueOf(str.subSequence(60+80+80, 64+80+80).toString(),16)/10);
-		                    
-		                    String year = Integer.valueOf(str.subSequence(44, 46).toString(),16).toString();
-		      	    		String month = Integer.valueOf(str.subSequence(46, 48).toString(),16).toString();
-		      	    		String day = Integer.valueOf(str.subSequence(48, 50).toString(),16).toString();
-		      	    		String hour = Integer.valueOf(str.subSequence(50, 52).toString(),16).toString();
-		      	    		String minute = Integer.valueOf(str.subSequence(52, 54).toString(),16).toString();
-		      	    		String second = Integer.valueOf(str.subSequence(54, 56).toString(),16).toString();
-		      	    		String strdate = year+"-"+month+"-"+day+" "+hour+":"+minute+":"+second;
-		      	    		String year1 = Integer.valueOf(str.subSequence(44+80, 46+80).toString(),16).toString();
-		      	    		String month1 = Integer.valueOf(str.subSequence(46+80, 48+80).toString(),16).toString();
-		      	    		String day1 = Integer.valueOf(str.subSequence(48+80, 50+80).toString(),16).toString();
-		      	    		String hour1 = Integer.valueOf(str.subSequence(50+80, 52+80).toString(),16).toString();
-		      	    		String minute1 = Integer.valueOf(str.subSequence(52+80, 54+80).toString(),16).toString();
-		      	    		String second1 = Integer.valueOf(str.subSequence(54+80, 56+80).toString(),16).toString();
-		      	    		String strdate1 = year1+"-"+month1+"-"+day1+" "+hour1+":"+minute1+":"+second1;
-		      	    		String year2 = Integer.valueOf(str.subSequence(44+80+80, 46+80+80).toString(),16).toString();
-		      	    		String month2 = Integer.valueOf(str.subSequence(46+80+80, 48+80+80).toString(),16).toString();
-		      	    		String day2 = Integer.valueOf(str.subSequence(48+80+80, 50+80+80).toString(),16).toString();
-		      	    		String hour2 = Integer.valueOf(str.subSequence(50+80+80, 52+80+80).toString(),16).toString();
-		      	    		String minute2 = Integer.valueOf(str.subSequence(52+80+80, 54+80+80).toString(),16).toString();
-		      	    		String second2 = Integer.valueOf(str.subSequence(54+80+80, 56+80+80).toString(),16).toString();
-		      	    		String strdate2 = year2+"-"+month2+"-"+day2+" "+hour2+":"+minute2+":"+second2;
-		      	    		
-		      	    		String status = Integer.toString(Integer.parseInt(str.subSequence(84, 86).toString(),16));
-		      	    		String status1 = Integer.toString(Integer.parseInt(str.subSequence(84+80, 86+80).toString(),16));
-		      	    		String status2 = Integer.toString(Integer.parseInt(str.subSequence(84+80+80, 86+80+80).toString(),16));
-							
-		      	    		String setelectricity = Integer.toString(Integer.valueOf(str.subSequence(68, 72).toString(),16));
-		                    String setvoltage = Integer.toString(Integer.valueOf(str.subSequence(72, 76).toString(),16)/10);
-		                    String setelectricity1 = Integer.toString(Integer.valueOf(str.subSequence(68+80, 72+80).toString(),16));
-		                    String setvoltage1 = Integer.toString(Integer.valueOf(str.subSequence(72+80, 76+80).toString(),16)/10);
-		                    String setelectricity2 = Integer.toString(Integer.valueOf(str.subSequence(68+80+80, 72+80+80).toString(),16));
-		                    String setvoltage2 = Integer.toString(Integer.valueOf(str.subSequence(72+80+80, 76+80+80).toString(),16)/10);
-		      	    		
-		                    String warn = "0";
-		                    if(status.equals("0") || status.equals("3") || status.equals("5") || status.equals("7")){
-		                    	warn = "0";
-		                    }else{
-		                    	warn = Integer.toString(Integer.parseInt(str.subSequence(84, 86).toString(),16));
-		                    	status = "0";
-		                    }
-		                    String warn1 = "0";
-		                    if(status1.equals("0") || status1.equals("3") || status1.equals("5") || status1.equals("7")){
-		                    	warn1 = "0";
-		                    }else{
-		                    	warn1 = Integer.toString(Integer.parseInt(str.subSequence(84+80, 86+80).toString(),16));
-		                    	status1 = "0";
-		                    }
-		                    String warn2 = "0";
-		                    if(status2.equals("0") || status2.equals("3") || status2.equals("5") || status2.equals("7")){
-		                    	warn2 = "0";
-		                    }else{
-		                    	warn2 = Integer.toString(Integer.parseInt(str.subSequence(84+80+80, 86+80+80).toString(),16));
-		                    	status2 = "0";
-		                    }
-		                    
-		                    listarray4.set(i+2, electricity);
-		                    listarray4.set(i+3, voltage);
-		                    listarray4.set(i+4, strdate);
-		                    listarray4.set(i+5, status);
-		                    listarray4.set(i+6, setelectricity);
-		                    listarray4.set(i+7, setvoltage);
-		                    listarray4.set(i+8, warn);
-		                    listarray4.set(i+9, electricity1);
-		                    listarray4.set(i+10, voltage1);
-		                    listarray4.set(i+11, strdate1);
-		                    listarray4.set(i+12, status1);
-		                    listarray4.set(i+13, setelectricity1);
-		                    listarray4.set(i+14, setvoltage1);
-		                    listarray4.set(i+15, warn1);
-		                    listarray4.set(i+16, electricity2);
-		                    listarray4.set(i+17, voltage2);
-		                    listarray4.set(i+18, strdate2);
-		                    listarray4.set(i+19, status2);
-		                    listarray4.set(i+20, setelectricity2);
-		                    listarray4.set(i+21, setvoltage2);
-		                    listarray4.set(i+22, warn2);
-						}
-					}
-				}
-				
-				//瀛樺崕鍩熷搴攑lc鐒婂伐鏁版嵁
-				synchronized (listarrayplc) {
-					if(listarrayplc.size() == 0){
-						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
-						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
-					}else{
-						if(listarrayplc.contains(Integer.toString(Integer.valueOf(str.substring(16, 20))))){
-							int index = listarrayplc.indexOf(Integer.toString(Integer.valueOf(str.substring(16, 20))));
-							listarrayplc.remove(index);
-							listarrayplc.remove(index);
-							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
-							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
-						}else{
-							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
-							listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
-						}
-					}
-				}*/
-				
+		       
 		    //娆у崕绾崕
 			}else if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==320){
 				synchronized (listarray4) {

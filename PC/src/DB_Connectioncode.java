@@ -109,13 +109,6 @@ public class DB_Connectioncode {
 
 			while (rs.next()) {
 				String welderid = rs.getString("fid");
-				if(welderid.length()!=4){
-					int lenth=4-welderid.length();
-					for(int i=0;i<lenth;i++){
-						welderid="0"+welderid;
-					}
-				} 
-
 				String fwelder_no = rs.getString("fwelder_no");
 				String Fowner = rs.getString("Fowner");
 
@@ -217,12 +210,6 @@ public class DB_Connectioncode {
 
 			while (rs.next()) {
 				String weldjunctionid = rs.getString("fid");
-				if(weldjunctionid.length()!=8){
-					int lenth=8-weldjunctionid.length();
-					for(int i=0;i<lenth;i++){
-						weldjunctionid="0"+weldjunctionid;
-					}
-				} 
 
 				int fmax_electricity1 = rs.getInt("fmax_electricity");
 				String fmax_electricity = String.valueOf(fmax_electricity1);

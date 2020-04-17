@@ -29,6 +29,7 @@ public class Websocket {
 	public ArrayList<String> listarray1;
 	public ArrayList<String> listarray2;
 	public ArrayList<String> listarray3;
+	public ArrayList<String> taskarray;
 	private boolean datawritetype = false;
 	private HashMap<String, Socket> websocket;
 	private HashMap<String, SocketChannel> websocketlist = null;
@@ -38,16 +39,21 @@ public class Websocket {
 		// TODO Auto-generated method stub
 		Date time;
 		Timestamp timesql = null;
+		String cardid = "0000";
+		String wpsid = "0000";
+		String productid = "0000";
+		String workprocedureid = "0000";
+		String workstepid = "0000";
 
 		if(websocketlist==null || websocketlist.isEmpty()){
 		}
 		else
 		{	
-			if (str.length() == 290) {
+			if (str.length() == 596) {
 
 				//鏍￠獙绗竴浣嶆槸鍚︿负FA鏈綅鏄惁涓篎5
 				String check1 =str.substring(0,2);
-				String check11=str.substring(288,290);
+				String check11=str.substring(594,596);
 				if(check1.equals("7E") && check11.equals("7D")){
 
 					String welderid = Integer.valueOf(str.substring(40,44)).toString();
@@ -71,7 +77,7 @@ public class Websocket {
 							gatherid="0"+gatherid;
 						}
 					}
-					String itemins = Integer.valueOf(str.substring(286,288)).toString();
+					String itemins = Integer.valueOf(str.substring(592,594)).toString();
 					if(itemins.length()!=4){
 						int lenth=4-itemins.length();
 						for(int i=0;i<lenth;i++){
@@ -86,7 +92,7 @@ public class Websocket {
 						}
 					}
 
-					for(int a=0;a<161;a+=80){
+					for(int a=0;a<365;a+=182){
 						try{
 							String welderins = "0000";
 							String junctionins = "0000";
@@ -193,42 +199,10 @@ public class Websocket {
 								}
 							}
 
-							for(int i=0;i<listarray1.size();i+=3){
-								if(Integer.valueOf(welderid) == Integer.valueOf(listarray1.get(i))){
-									welderins = listarray1.get(i+2);
-									if(welderins.equals(null) || welderins.equals("null")){
-										break;
-									}else{
-										if(welderins.length()!=4){
-											int lenth=4-welderins.length();
-											for(int i1=0;i1<lenth;i1++){
-												welderins="0"+welderins;
-											}
-										}
-										break;
-									}
-								}
-							}
-
-							for(int i=0;i<listarray3.size();i+=7){
-								if(Integer.valueOf(junctionid) == Integer.valueOf(listarray3.get(i+5))){
-									junctionins = listarray3.get(i+6);
-									if(junctionins.equals(null) || junctionins.equals("null")){
-										break;
-									}else{
-										if(junctionins.length()!=4){
-											int lenth=4-junctionins.length();
-											for(int i1=0;i1<lenth;i1++){
-												junctionins="0"+junctionins;
-											}
-										}
-										break;
-									}
-								}
-							}
-
+							String gathernum = "";
 							for(int i=0;i<listarray2.size();i+=4){
 								if(Integer.valueOf(gatherid) == Integer.valueOf(listarray2.get(i))){
+			                		gathernum = listarray2.get(i+2);
 									ins = listarray2.get(i+3);
 									if(ins == null || ins.equals("null")){
 										break;
@@ -241,6 +215,104 @@ public class Websocket {
 										}
 										break;
 									}
+								}
+							}
+							
+							if(taskarray.isEmpty()){
+			            		welderins = "0000";
+			            		junctionid = "0000";
+			            		junctionins = "0000";
+			                }else{
+			                	if(taskarray.contains(gathernum)){
+			                		int index = taskarray.indexOf(gathernum);
+			                		welderid = taskarray.get(index+1);
+									for(int i=0;i<listarray1.size();i+=3){
+									 	if(welderid.equals(listarray1.get(i))){
+									 		welderins = listarray1.get(i+2);
+									 		break;
+									 	}
+								 	}
+									junctionid = taskarray.get(index+7);
+									 for(int a1=0;a1<listarray3.size();a1+=7){
+									 	if(junctionid.equals(listarray3.get(a1+5))){
+									 		junctionins = listarray3.get(a1+6);
+									 		break;
+									 	}
+							    	}
+									
+									cardid = taskarray.get(index+2);
+					            	wpsid = taskarray.get(index+3);
+					            	productid = taskarray.get(index+4);
+					            	workprocedureid = taskarray.get(index+5);
+					            	workstepid = taskarray.get(index+6);
+									
+			                	}else{
+			                		welderins = "0000";
+			                		junctionid = "0000";
+			                		junctionins = "0000";
+			                	}
+			                }
+
+							if(welderid.length()!=4){
+								int lenth=4-welderid.length();
+								for(int i1=0;i1<lenth;i1++){
+									welderid="0"+welderid;
+								}
+							}
+
+							if(junctionid.length()!=4){
+								int lenth=4-junctionid.length();
+								for(int i1=0;i1<lenth;i1++){
+									junctionid="0"+junctionid;
+								}
+							}
+							
+							if(cardid.length()!=4){
+								int lenth=4-cardid.length();
+								for(int i1=0;i1<lenth;i1++){
+									cardid="0"+cardid;
+								}
+							}
+
+							if(wpsid.length()!=4){
+								int lenth=4-wpsid.length();
+								for(int i1=0;i1<lenth;i1++){
+									wpsid="0"+wpsid;
+								}
+							}
+
+							if(productid.length()!=4){
+								int lenth=4-productid.length();
+								for(int i1=0;i1<lenth;i1++){
+									productid="0"+productid;
+								}
+							}
+
+							if(workprocedureid.length()!=4){
+								int lenth=4-workprocedureid.length();
+								for(int i1=0;i1<lenth;i1++){
+									workprocedureid="0"+workprocedureid;
+								}
+							}
+
+							if(workstepid.length()!=4){
+								int lenth=4-workstepid.length();
+								for(int i1=0;i1<lenth;i1++){
+									workstepid="0"+workstepid;
+								}
+							}
+							
+							if(welderins.length()!=4){
+								int lenth=4-welderins.length();
+								for(int i1=0;i1<lenth;i1++){
+									welderins="0"+welderins;
+								}
+							}
+
+							if(junctionins.length()!=4){
+								int lenth=4-junctionins.length();
+								for(int i1=0;i1<lenth;i1++){
+									junctionins="0"+junctionins;
 								}
 							}
 
@@ -258,9 +330,8 @@ public class Websocket {
 							/*if(status.equals("98") || status.equals("99")){
 		                	status = "03";
 		                }*/
-
 							//strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
-							strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel + speed;
+							strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel + speed + cardid + wpsid + productid + workprocedureid + workstepid;
 						}catch(Exception e){
 							System.out.println(str);
 							System.out.println(str.substring(76+a, 84+a));
@@ -287,6 +358,7 @@ public class Websocket {
 							websocketfail = entry.getKey();
 							SocketChannel websocketcon = entry.getValue();
 							websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+							strsend = "";
 
 						}catch (Exception e) {
 							listarraybuf.add(websocketfail);

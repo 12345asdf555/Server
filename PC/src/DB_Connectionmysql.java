@@ -24,6 +24,7 @@ public class DB_Connectionmysql {
     public ArrayList<String> listarray1 = new ArrayList<String>();
     public ArrayList<String> listarray2 = new ArrayList<String>();
     public ArrayList<String> listarray3 = new ArrayList<String>();
+    public ArrayList<String> taskarray = new ArrayList<String>();
 	
 	public String getId() {
 		return datasend;
@@ -65,10 +66,11 @@ public class DB_Connectionmysql {
 	public String inSqlplc2 = "";
 	public String inSqlplc3 = "";
 	public String inSqlplc4 = "";
-	public final String inSqlbase = "insert into tb_live_data(fwelder_id,fgather_no,fmachine_id,fjunction_id,fitemid,felectricity,fvoltage,fstatus,fwirefeedrate,FUploadDateTime,FWeldTime,fwelder_no,fjunction_no,fweld_no,fchannel,fmax_electricity,fmin_electricity,fmax_voltage,fmin_voltage,fwelder_itemid,fjunction_itemid,fmachine_itemid,fmachinemodel,fwirediameter,fmaterialgas,frateofflow) values";
+	public final String inSqlbase = "insert into tb_live_data(fwelder_id,fgather_no,fmachine_id,fjunction_id,fitemid,felectricity,fvoltage,fstatus,fwirefeedrate,FUploadDateTime,FWeldTime,fwelder_no,fjunction_no,fweld_no,fchannel,fmax_electricity,fmin_electricity,fmax_voltage,fmin_voltage,fwelder_itemid,fjunction_itemid,fmachine_itemid,fmachinemodel,fwirediameter,fmaterialgas,frateofflow"
+			+ ",flon_air_flow,fhatwirecurrent,fpreheating_temperature,fswing,fvibrafrequency,flaser_power,fdefocus_amount,fdefocus_quantity,fpeak_electricity"
+			+ ",fbase_electricity,fpeak_time,fbase_time,faccelerat_voltage,ffocus_current,felectron_beam,fscan_frequency,fscan_amplitude,fswing_speed,fcard_id,fwps_lib_id,fproduct_number_id,femployee_id,fstep_id) values";
 	public final String inSqlplc = "insert into tb_live_data(fwelder_id,fgather_no,fjunction_id,felectricity,fvoltage,fstatus,FUploadDateTime,FWeldTime,fd1000,fd1001,fd1002,fd1003,fd1004,fd1005,fd1006,fd1007,fd1008,fd1009,fd1010,fd1011,fd1012,fd1013,fd1014,fd1015,fd1016,fd1017,fd1018,fd1019,fd1020,fd1021,fd1022,fd1023,fd1024,fd1025,fd1026,fd1027,fd1028,fd1029,fd1030,fd1031,fd1032,fd1033,fd1034,fd1035,fd1036,fd1037,fd1038,fd1039,fd1040,fd1041,fd1042,fd1043,fd1044,fd1045,fd1046,fd1047,fd1048,fd1049,fd1050,fd1051,fd1052,fd1053,fd1054,fd1055,fd1056,fd1057,fd1058,fd1059,fd1060,fd1061,fd1062,fd1063,fd1064,fd1065,fd1066,fd1067,fd1068,fd1069,fd1070,fd1071,fd1072) values";
 	
-
 	public DB_Connectionmysql(){
 		/*try {
 
@@ -89,7 +91,7 @@ public class DB_Connectionmysql {
        } */
 	}
 
-	public void DB_Connectionmysqlrun(long welderid, long weldid, long gatherid, long itemid, long weldid2, String weldmodel, long junctionid, BigDecimal electricity, BigDecimal voltage, int status, BigDecimal fwirefeedrate, Timestamp timesql, int channel, BigDecimal maxelectricity, BigDecimal minelectricity, BigDecimal maxvoltage, BigDecimal minvoltage, BigDecimal fwirediameter, int fmaterialgas, ArrayList<String> listarray1, ArrayList<String> listarray2, ArrayList<String> listarray3, BigDecimal frateofflow) {
+	public void DB_Connectionmysqlrun(long welderid, long weldid, long gatherid, long itemid, long weldid2, String weldmodel, long junctionid, BigDecimal electricity, BigDecimal voltage, int status, BigDecimal fwirefeedrate, Timestamp timesql, int channel, BigDecimal maxelectricity, BigDecimal minelectricity, BigDecimal maxvoltage, BigDecimal minvoltage, BigDecimal fwirediameter, int fmaterialgas, ArrayList<String> listarray1, ArrayList<String> listarray2, ArrayList<String> listarray3, BigDecimal frateofflow, BigDecimal flon_air_flow, BigDecimal fhatwirecurrent, String fpreheating_temperature, String fswing, BigDecimal fvibrafrequency, String flaser_power, String fdefocus_amount, String fdefocus_quantity, BigDecimal fpeak_electricity, BigDecimal fbase_electricity, String fpeak_time, String fbase_time, BigDecimal faccelerat_voltage, BigDecimal ffocus_current, BigDecimal felectron_beam, String fscan_frequency, String fscan_amplitude, String fswing_speed) {
 		// TODO Auto-generated method stub
 		Date date;
     	String nowTime;
@@ -101,6 +103,11 @@ public class DB_Connectionmysql {
     	String gathernum = "0000";
     	String weldnum = "0000";
     	String ins = "00";
+    	Integer cardid = 0;
+		Integer wpsid = 0;
+		Integer productid = 0;
+		Integer workprocedureid = 0;
+		Integer workstepid = 0;
     	
 		synchronized (this) {
     	 	switch(Integer.valueOf(workbase)){
@@ -120,23 +127,7 @@ public class DB_Connectionmysql {
                 BigDecimal minvoltage1 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
                 BigDecimal fwirefeedrate1 = new BigDecimal(((double)Integer.valueOf(fwirefeedrate.toString()))/10);
                 BigDecimal frateofflow1 = new BigDecimal(((double)Integer.valueOf(frateofflow.toString()))/10);
-                
-                for(int a=0;a<listarray1.size();a+=3){
-                	if(welderid == Integer.valueOf(listarray1.get(a))){
-                		weldernum = listarray1.get(a+1);
-                		welderins = listarray1.get(a+2);
-                		break;
-                	}
-                }
-                
-                for(int a=0;a<listarray3.size();a+=7){
-                	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-                		junctionnum = listarray3.get(a);
-                		junctionins = listarray3.get(a+6);
-                		break;
-                	}
-                }
-                
+
                 for(int a=0;a<listarray2.size();a+=4){
                 	if(gatherid == Integer.valueOf(listarray2.get(a))){
                 		gathernum = listarray2.get(a+2);
@@ -146,6 +137,47 @@ public class DB_Connectionmysql {
                 	}
                 }
                 
+                if(taskarray.isEmpty()){
+                	weldernum = "";
+            		welderins = "00";
+            		junctionid = 0;
+            		junctionnum = "";
+            		junctionins = "00";
+                }else{
+                	if(taskarray.contains(gathernum)){
+                		int index = taskarray.indexOf(gathernum);
+                		welderid = Integer.valueOf(taskarray.get(index+1));
+						for(int a=0;a<listarray1.size();a+=3){
+						 	if(welderid == Integer.valueOf(listarray1.get(a))){
+						 		weldernum = listarray1.get(a+1);
+						 		welderins = listarray1.get(a+2);
+						 		break;
+						 	}
+					 	}
+						junctionid = Integer.valueOf(taskarray.get(index+7));
+						 for(int a=0;a<listarray3.size();a+=7){
+						 	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
+						 		junctionnum = listarray3.get(a);
+						 		junctionins = listarray3.get(a+6);
+						 		break;
+						 	}
+				    	}
+						
+						cardid = Integer.valueOf(taskarray.get(index+2));
+		            	wpsid = Integer.valueOf(taskarray.get(index+3));
+		            	productid = Integer.valueOf(taskarray.get(index+4));
+		            	workprocedureid = Integer.valueOf(taskarray.get(index+5));
+		            	workstepid = Integer.valueOf(taskarray.get(index+6));
+						
+                	}else{
+                		weldernum = "";
+                		welderins = "00";
+                		junctionid = 0;
+                		junctionnum = "";
+                		junctionins = "00";
+                	}
+                }
+		   	    
                 if(ins == null || ins.equals("null")){
                 	ins = "00";
                 }
@@ -157,14 +189,14 @@ public class DB_Connectionmysql {
                 }
                 
                 if(countbase1==1){
-           	 		inSqlbase1 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate1 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow1 + "')";
+           	 		inSqlbase1 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate1 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow1 + "','" + flon_air_flow + "','" + fhatwirecurrent + "','" + fpreheating_temperature + "','" + fswing + "','" + fvibrafrequency + "','" + flaser_power + "','" + fdefocus_amount + "','" + fdefocus_quantity + "','" + fpeak_electricity + "','" + fbase_electricity + "','" + fpeak_time + "','" + fbase_time + "','" + faccelerat_voltage + "','" + ffocus_current + "','" + felectron_beam + "','" + fscan_frequency + "','" + fscan_amplitude + "','" + fswing_speed + "','" + cardid + "','" + wpsid + "','" + productid + "','" + workprocedureid + "','" + workstepid + "')";
            	 	}else{
-           	 		inSqlbase1 = inSqlbase1 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate1 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow1 + "')";
+           	 		inSqlbase1 = inSqlbase1 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate1 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow1 + "','" + flon_air_flow + "','" + fhatwirecurrent + "','" + fpreheating_temperature + "','" + fswing + "','" + fvibrafrequency + "','" + flaser_power + "','" + fdefocus_amount + "','" + fdefocus_quantity + "','" + fpeak_electricity + "','" + fbase_electricity + "','" + fpeak_time + "','" + fbase_time + "','" + faccelerat_voltage + "','" + ffocus_current + "','" + felectron_beam + "','" + fscan_frequency + "','" + fscan_amplitude + "','" + fswing_speed + "','" + cardid + "','" + wpsid + "','" + productid + "','" + workprocedureid + "','" + workstepid + "')";
            	 	}
                 
                 countbase1++;
                 
-                if(countbase1 == 100){
+                if(countbase1 == 2){
                 	
                 	try {
                 		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
@@ -218,25 +250,52 @@ public class DB_Connectionmysql {
                 BigDecimal fwirefeedrate2 = new BigDecimal(((double)Integer.valueOf(fwirefeedrate.toString()))/10);
                 BigDecimal frateofflow2 = new BigDecimal(((double)Integer.valueOf(frateofflow.toString()))/10);
                 
-                for(int a=0;a<listarray1.size();a+=3){
-                	if(welderid == Integer.valueOf(listarray1.get(a))){
-                		weldernum = listarray1.get(a+1);
-                		welderins = listarray1.get(a+2);
-                	}
-                }
-                
-                for(int a=0;a<listarray3.size();a+=7){
-                	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-                		junctionnum = listarray3.get(a);
-                		junctionins = listarray3.get(a+6);
-                	}
-                }
-                
                 for(int a=0;a<listarray2.size();a+=4){
                 	if(gatherid == Integer.valueOf(listarray2.get(a))){
                 		gathernum = listarray2.get(a+2);
                 		weldnum = listarray2.get(a+1);
                 		ins = listarray2.get(a+3);
+                	}
+                }
+                
+                if(taskarray.isEmpty()){
+                	weldernum = "";
+            		welderins = "00";
+            		junctionid = 0;
+            		junctionnum = "";
+            		junctionins = "00";
+                }else{
+                	if(taskarray.contains(gathernum)){
+                		int index = taskarray.indexOf(gathernum);
+                		welderid = Integer.valueOf(taskarray.get(index+1));
+						for(int a=0;a<listarray1.size();a+=3){
+						 	if(welderid == Integer.valueOf(listarray1.get(a))){
+						 		weldernum = listarray1.get(a+1);
+						 		welderins = listarray1.get(a+2);
+						 		break;
+						 	}
+					 	}
+						junctionid = Integer.valueOf(taskarray.get(index+7));
+						 for(int a=0;a<listarray3.size();a+=7){
+						 	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
+						 		junctionnum = listarray3.get(a);
+						 		junctionins = listarray3.get(a+6);
+						 		break;
+						 	}
+				    	}
+						
+						cardid = Integer.valueOf(taskarray.get(index+2));
+		            	wpsid = Integer.valueOf(taskarray.get(index+3));
+		            	productid = Integer.valueOf(taskarray.get(index+4));
+		            	workprocedureid = Integer.valueOf(taskarray.get(index+5));
+		            	workstepid = Integer.valueOf(taskarray.get(index+6));
+						
+                	}else{
+                		weldernum = "";
+                		welderins = "00";
+                		junctionid = 0;
+                		junctionnum = "";
+                		junctionins = "00";
                 	}
                 }
                 
@@ -249,14 +308,14 @@ public class DB_Connectionmysql {
                 }
                 
                 if(countbase2==1){
-           	 		inSqlbase2 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate2 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow2 + "')";
+           	 		inSqlbase2 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate2 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow2 + "','" + flon_air_flow + "','" + fhatwirecurrent + "','" + fpreheating_temperature + "','" + fswing + "','" + fvibrafrequency + "','" + flaser_power + "','" + fdefocus_amount + "','" + fdefocus_quantity + "','" + fpeak_electricity + "','" + fbase_electricity + "','" + fpeak_time + "','" + fbase_time + "','" + faccelerat_voltage + "','" + ffocus_current + "','" + felectron_beam + "','" + fscan_frequency + "','" + fscan_amplitude + "','" + fswing_speed + "','" + cardid + "','" + wpsid + "','" + productid + "','" + workprocedureid + "','" + workstepid + "')";
            	 	}else{
-           	 		inSqlbase2 = inSqlbase2 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate2 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow2 + "')";
+           	 		inSqlbase2 = inSqlbase2 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate2 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow2 + "','" + flon_air_flow + "','" + fhatwirecurrent + "','" + fpreheating_temperature + "','" + fswing + "','" + fvibrafrequency + "','" + flaser_power + "','" + fdefocus_amount + "','" + fdefocus_quantity + "','" + fpeak_electricity + "','" + fbase_electricity + "','" + fpeak_time + "','" + fbase_time + "','" + faccelerat_voltage + "','" + ffocus_current + "','" + felectron_beam + "','" + fscan_frequency + "','" + fscan_amplitude + "','" + fswing_speed + "','" + cardid + "','" + wpsid + "','" + productid + "','" + workprocedureid + "','" + workstepid + "')";
            	 	}
                 
                 countbase2++;
                 
-                if(countbase2 == 100){
+                if(countbase2 == 2){
                 	
                 	try {
                 		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
@@ -310,25 +369,52 @@ public class DB_Connectionmysql {
                 BigDecimal fwirefeedrate3 = new BigDecimal(((double)Integer.valueOf(fwirefeedrate.toString()))/10);
                 BigDecimal frateofflow3 = new BigDecimal(((double)Integer.valueOf(frateofflow.toString()))/10);
                 
-                for(int a=0;a<listarray1.size();a+=3){
-                	if(welderid == Integer.valueOf(listarray1.get(a))){
-                		weldernum = listarray1.get(a+1);
-                		welderins = listarray1.get(a+2);
-                	}
-                }
-                
-                for(int a=0;a<listarray3.size();a+=7){
-                	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-                		junctionnum = listarray3.get(a);
-                		junctionins = listarray3.get(a+6);
-                	}
-                }
-                
                 for(int a=0;a<listarray2.size();a+=4){
                 	if(gatherid == Integer.valueOf(listarray2.get(a))){
                 		gathernum = listarray2.get(a+2);
                 		weldnum = listarray2.get(a+1);
                 		ins = listarray2.get(a+3);
+                	}
+                }
+                
+                if(taskarray.isEmpty()){
+                	weldernum = "";
+            		welderins = "00";
+            		junctionid = 0;
+            		junctionnum = "";
+            		junctionins = "00";
+                }else{
+                	if(taskarray.contains(gathernum)){
+                		int index = taskarray.indexOf(gathernum);
+                		welderid = Integer.valueOf(taskarray.get(index+1));
+						for(int a=0;a<listarray1.size();a+=3){
+						 	if(welderid == Integer.valueOf(listarray1.get(a))){
+						 		weldernum = listarray1.get(a+1);
+						 		welderins = listarray1.get(a+2);
+						 		break;
+						 	}
+					 	}
+						junctionid = Integer.valueOf(taskarray.get(index+7));
+						 for(int a=0;a<listarray3.size();a+=7){
+						 	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
+						 		junctionnum = listarray3.get(a);
+						 		junctionins = listarray3.get(a+6);
+						 		break;
+						 	}
+				    	}
+						
+						cardid = Integer.valueOf(taskarray.get(index+2));
+		            	wpsid = Integer.valueOf(taskarray.get(index+3));
+		            	productid = Integer.valueOf(taskarray.get(index+4));
+		            	workprocedureid = Integer.valueOf(taskarray.get(index+5));
+		            	workstepid = Integer.valueOf(taskarray.get(index+6));
+						
+                	}else{
+                		weldernum = "";
+                		welderins = "00";
+                		junctionid = 0;
+                		junctionnum = "";
+                		junctionins = "00";
                 	}
                 }
                 
@@ -341,14 +427,14 @@ public class DB_Connectionmysql {
                 }
                 
                 if(countbase3==1){
-           	 		inSqlbase3 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate3 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow3 + "')";
+           	 		inSqlbase3 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate3 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow3 + "','" + flon_air_flow + "','" + fhatwirecurrent + "','" + fpreheating_temperature + "','" + fswing + "','" + fvibrafrequency + "','" + flaser_power + "','" + fdefocus_amount + "','" + fdefocus_quantity + "','" + fpeak_electricity + "','" + fbase_electricity + "','" + fpeak_time + "','" + fbase_time + "','" + faccelerat_voltage + "','" + ffocus_current + "','" + felectron_beam + "','" + fscan_frequency + "','" + fscan_amplitude + "','" + fswing_speed + "','" + cardid + "','" + wpsid + "','" + productid + "','" + workprocedureid + "','" + workstepid + "')";
            	 	}else{
-           	 		inSqlbase3 = inSqlbase3 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate3 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow3 + "')";
+           	 		inSqlbase3 = inSqlbase3 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate3 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow3 + "','" + flon_air_flow + "','" + fhatwirecurrent + "','" + fpreheating_temperature + "','" + fswing + "','" + fvibrafrequency + "','" + flaser_power + "','" + fdefocus_amount + "','" + fdefocus_quantity + "','" + fpeak_electricity + "','" + fbase_electricity + "','" + fpeak_time + "','" + fbase_time + "','" + faccelerat_voltage + "','" + ffocus_current + "','" + felectron_beam + "','" + fscan_frequency + "','" + fscan_amplitude + "','" + fswing_speed + "','" + cardid + "','" + wpsid + "','" + productid + "','" + workprocedureid + "','" + workstepid + "')";
            	 	}
                 
                 countbase3++;
                 
-                if(countbase3 == 100){
+                if(countbase3 == 2){
                 	
                 	try {
                 		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
@@ -402,25 +488,52 @@ public class DB_Connectionmysql {
                 BigDecimal fwirefeedrate4 = new BigDecimal(((double)Integer.valueOf(fwirefeedrate.toString()))/10);
                 BigDecimal frateofflow4 = new BigDecimal(((double)Integer.valueOf(frateofflow.toString()))/10);
                 
-                for(int a=0;a<listarray1.size();a+=3){
-                	if(welderid == Integer.valueOf(listarray1.get(a))){
-                		weldernum = listarray1.get(a+1);
-                		welderins = listarray1.get(a+2);
-                	}
-                }
-                
-                for(int a=0;a<listarray3.size();a+=7){
-                	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-                		junctionnum = listarray3.get(a);
-                		junctionins = listarray3.get(a+6);
-                	}
-                }
-                
                 for(int a=0;a<listarray2.size();a+=4){
                 	if(gatherid == Integer.valueOf(listarray2.get(a))){
                 		gathernum = listarray2.get(a+2);
                 		weldnum = listarray2.get(a+1);
                 		ins = listarray2.get(a+3);
+                	}
+                }
+                
+                if(taskarray.isEmpty()){
+                	weldernum = "";
+            		welderins = "00";
+            		junctionid = 0;
+            		junctionnum = "";
+            		junctionins = "00";
+                }else{
+                	if(taskarray.contains(gathernum)){
+                		int index = taskarray.indexOf(gathernum);
+                		welderid = Integer.valueOf(taskarray.get(index+1));
+						for(int a=0;a<listarray1.size();a+=3){
+						 	if(welderid == Integer.valueOf(listarray1.get(a))){
+						 		weldernum = listarray1.get(a+1);
+						 		welderins = listarray1.get(a+2);
+						 		break;
+						 	}
+					 	}
+						junctionid = Integer.valueOf(taskarray.get(index+7));
+						 for(int a=0;a<listarray3.size();a+=7){
+						 	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
+						 		junctionnum = listarray3.get(a);
+						 		junctionins = listarray3.get(a+6);
+						 		break;
+						 	}
+				    	}
+						
+						cardid = Integer.valueOf(taskarray.get(index+2));
+		            	wpsid = Integer.valueOf(taskarray.get(index+3));
+		            	productid = Integer.valueOf(taskarray.get(index+4));
+		            	workprocedureid = Integer.valueOf(taskarray.get(index+5));
+		            	workstepid = Integer.valueOf(taskarray.get(index+6));
+						
+                	}else{
+                		weldernum = "";
+                		welderins = "00";
+                		junctionid = 0;
+                		junctionnum = "";
+                		junctionins = "00";
                 	}
                 }
                 
@@ -433,14 +546,14 @@ public class DB_Connectionmysql {
                 }
                 
                 if(countbase4==1){
-           	 		inSqlbase4 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate4 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow4 + "')";
+           	 		inSqlbase4 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate4 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow4 + "','" + flon_air_flow + "','" + fhatwirecurrent + "','" + fpreheating_temperature + "','" + fswing + "','" + fvibrafrequency + "','" + flaser_power + "','" + fdefocus_amount + "','" + fdefocus_quantity + "','" + fpeak_electricity + "','" + fbase_electricity + "','" + fpeak_time + "','" + fbase_time + "','" + faccelerat_voltage + "','" + ffocus_current + "','" + felectron_beam + "','" + fscan_frequency + "','" + fscan_amplitude + "','" + fswing_speed + "','" + cardid + "','" + wpsid + "','" + productid + "','" + workprocedureid + "','" + workstepid + "')";
            	 	}else{
-           	 		inSqlbase4 = inSqlbase4 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate4 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow4 + "')";
+           	 		inSqlbase4 = inSqlbase4 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate4 + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + frateofflow4 + "','" + flon_air_flow + "','" + fhatwirecurrent + "','" + fpreheating_temperature + "','" + fswing + "','" + fvibrafrequency + "','" + flaser_power + "','" + fdefocus_amount + "','" + fdefocus_quantity + "','" + fpeak_electricity + "','" + fbase_electricity + "','" + fpeak_time + "','" + fbase_time + "','" + faccelerat_voltage + "','" + ffocus_current + "','" + felectron_beam + "','" + fscan_frequency + "','" + fscan_amplitude + "','" + fswing_speed + "','" + cardid + "','" + wpsid + "','" + productid + "','" + workprocedureid + "','" + workstepid + "')";
            	 	}
                 
                 countbase4++;
                 
-                if(countbase4 == 100){
+                if(countbase4 == 2){
                 	
                 	try {
                 		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))

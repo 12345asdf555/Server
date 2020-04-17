@@ -26,21 +26,21 @@ public class Mysql {
 		// TODO Auto-generated method stub
 		Date time;
 		Timestamp timesql = null;
-		if (str.length() == 290) {
+		if (str.length() == 596) {
 
 			try{
-				//鏍￠獙绗竴浣嶆槸鍚︿负FA鏈綅鏄惁涓篎5
+				//西安数据验证
 				String check1 =str.substring(0,2);
-				String check11=str.substring(288,290);
+				String check11=str.substring(594,596);
 				if(check1.equals("7E") && check11.equals("7D")){
 
 					long welderid = Integer.valueOf(str.substring(40, 44));
 					long weldid = Integer.valueOf(str.substring(20, 24));
 					long gatherid = Integer.valueOf(str.substring(16, 20));
-					long itemid = Integer.valueOf(str.substring(286, 288));
+					long itemid = Integer.valueOf(str.substring(592, 594));
 					String weldmodel = Integer.valueOf(str.subSequence(12, 14).toString(),16).toString();
 
-					for(int a=0;a<161;a+=80){
+					for(int a=0;a<367;a+=182){
 						try{
 							long junctionid = Integer.valueOf(str.substring(76+a, 84+a));
 							BigDecimal electricity = new BigDecimal(Integer.valueOf(str.subSequence(56+a, 60+a).toString(),16));
@@ -71,8 +71,30 @@ public class Mysql {
 							BigDecimal frateofflow = new BigDecimal(Integer.valueOf(str.subSequence(108+a, 112+a).toString(),16));
 							BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(86+a, 88+a).toString(),16));
 							int fmaterialgas = Integer.parseInt(str.subSequence(88+a, 90+a).toString(),16);
+							
+							//西安新增
+							BigDecimal flon_air_flow = new BigDecimal(Integer.valueOf(str.subSequence(116+a, 120+a).toString(),16));
+							BigDecimal fhatwirecurrent = new BigDecimal(Integer.valueOf(str.subSequence(120+a, 124+a).toString(),16));
+							String fpreheating_temperature = Integer.valueOf(str.subSequence(124+a, 128+a).toString(),16).toString();
+							String fswing = Integer.valueOf(str.subSequence(128+a, 132+a).toString(),16).toString();
+							BigDecimal fvibrafrequency = new BigDecimal(Integer.valueOf(str.subSequence(132+a, 136+a).toString(),16));
+							String flaser_power = Integer.valueOf(str.subSequence(136+a, 140+a).toString(),16).toString();
+							String fdefocus_amount = Integer.valueOf(str.subSequence(140+a, 144+a).toString(),16).toString();
+							String fdefocus_quantity = Integer.valueOf(str.subSequence(144+a, 148+a).toString(),16).toString();
+							BigDecimal fpeak_electricity = new BigDecimal(Integer.valueOf(str.subSequence(148+a, 152+a).toString(),16));
+							BigDecimal fbase_electricity = new BigDecimal(Integer.valueOf(str.subSequence(152+a, 156+a).toString(),16));
+							String fpeak_time = Integer.valueOf(str.subSequence(156+a, 160+a).toString(),16).toString();
+							String fbase_time = Integer.valueOf(str.subSequence(160+a, 164+a).toString(),16).toString();
+							BigDecimal faccelerat_voltage = new BigDecimal(Integer.valueOf(str.subSequence(164+a, 168+a).toString(),16));
+							BigDecimal ffocus_current = new BigDecimal(Integer.valueOf(str.subSequence(168+a, 172+a).toString(),16));
+							BigDecimal felectron_beam = new BigDecimal(Integer.valueOf(str.subSequence(172+a, 176+a).toString(),16));
+							String fscan_frequency = Integer.valueOf(str.subSequence(176+a, 180+a).toString(),16).toString();
+							String fscan_amplitude = Integer.valueOf(str.subSequence(180+a, 184+a).toString(),16).toString();
+							String fswing_speed = Integer.valueOf(str.subSequence(184+a, 188+a).toString(),16).toString();
 
-							db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow);	 
+							db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow
+									,flon_air_flow,fhatwirecurrent,fpreheating_temperature,fswing,fvibrafrequency,flaser_power,fdefocus_amount,fdefocus_quantity
+									,fpeak_electricity,fbase_electricity,fpeak_time,fbase_time,faccelerat_voltage,ffocus_current,felectron_beam,fscan_frequency,fscan_amplitude,fswing_speed);	 
 						}catch(Exception e){
 							System.out.println(str);
 							System.out.println(str.substring(76+a, 84+a));
@@ -409,7 +431,7 @@ public class Mysql {
 				BigDecimal fwirediameter = new BigDecimal(Integer.valueOf(str.subSequence(116+a, 118+a).toString(),16));
 				int fmaterialgas = Integer.parseInt(str.subSequence(118+a, 120+a).toString(),16);
 
-				db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow);	 
+				//db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,frateofflow);	 
 			}catch(Exception e){
 				System.out.println(str);
 				System.out.println(str.substring(76+a, 84+a));
