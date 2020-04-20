@@ -164,7 +164,7 @@ public class DB_Connectionmysql {
                 
                 countbase1++;
                 
-                if(countbase1 == 100){
+                if(countbase1 == 5){
                 	
                 	try {
                 		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
@@ -256,7 +256,7 @@ public class DB_Connectionmysql {
                 
                 countbase2++;
                 
-                if(countbase2 == 100){
+                if(countbase2 == 5){
                 	
                 	try {
                 		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
@@ -348,7 +348,7 @@ public class DB_Connectionmysql {
                 
                 countbase3++;
                 
-                if(countbase3 == 100){
+                if(countbase3 == 5){
                 	
                 	try {
                 		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
@@ -440,7 +440,7 @@ public class DB_Connectionmysql {
                 
                 countbase4++;
                 
-                if(countbase4 == 100){
+                if(countbase4 == 5){
                 	
                 	try {
                 		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))

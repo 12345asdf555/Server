@@ -50,14 +50,19 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	public byte[] b;
     public int a=0;
 	public MyMqttClient mqtt;
+	public Server server;
     
+	public NettyServerHandler(Server server) {
+		// TODO Auto-generated constructor stub
+		this.server = server;
+	}
 	@Override  
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
 		 
 		String str = "";
 		try{
 			str = (String) msg;
-			Workspace ws = new Workspace(str);
+			Workspace ws = new Workspace(str,server);
 	        workThread = new Thread(ws);  
 	        workThread.start();
 	        
@@ -77,11 +82,13 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		private String socketfail;
 		private String websocketfail;
 		private String data;
+		public Server server;
 
-		public Workspace(String str) {
+		public Workspace(String str,Server server) {
 			// TODO Auto-generated constructor stub
 			
 			this.str=str;
+			this.server = server;
 			
 		}
 
@@ -93,7 +100,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 			if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && str.length()==290){
 
 				mysql.Mysqlbase(str);
-		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
+		        websocket.Websocketbase(str,listarray2,listarray3,websocketlist,this.server.mqttversion);
 		        if(socketchannel!=null){
 			        try {
 						socketchannel.writeAndFlush(str).sync();
@@ -588,7 +595,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        else{    
 	        	try{
 		        	//mqtt处理
-		        	mqtt.publishMessage("weldmes-webdataup", str, 0);
+		        	mqtt.publishMessage(this.server.mqttversion + "-webdataup", str, 0);
 	        	}catch(Exception e){
 	        		e.printStackTrace();
 	        	}

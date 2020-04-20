@@ -34,9 +34,11 @@ public class Websocket {
 	private HashMap<String, SocketChannel> websocketlist = null;
 	public ArrayList<String> dbdata = new ArrayList<String>();
 	public MyMqttClient mqtt;
+	public String mqttversion;
 
-	public void Websocketbase(String str, ArrayList<String> listarray2, ArrayList<String> listarray3,HashMap<String, SocketChannel> websocketlist) {
+	public void Websocketbase(String str, ArrayList<String> listarray2, ArrayList<String> listarray3,HashMap<String, SocketChannel> websocketlist,String mqttversion) {
 		// TODO Auto-generated method stub
+		this.mqttversion = mqttversion;
 		Date time;
 		Timestamp timesql = null;
 
@@ -261,7 +263,7 @@ public class Websocket {
 		                }*/
 
 							//strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel;
-							strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel + speed;
+							strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel + speed + "00000000";
 						}catch(Exception e){
 							System.out.println(str);
 							System.out.println(str.substring(76+a, 84+a));
@@ -270,7 +272,7 @@ public class Websocket {
 					
 					try{
 						//MQTT处理
-						mqtt.publishMessage("weldmes-realdata", strsend, 0);
+						mqtt.publishMessage(this.mqttversion + "-realdata", strsend, 0);
 					}catch(Exception e){
 						e.printStackTrace();
 					}

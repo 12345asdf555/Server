@@ -123,7 +123,7 @@ public class Server implements Runnable {
 	public Selector selector = null;
 	public ServerSocketChannel ssc = null;
 	public Client client = new Client(this);
-	public NettyServerHandler NS = new NettyServerHandler();
+	public NettyServerHandler NS = new NettyServerHandler(this);
 	private NettyWebSocketHandler NWS = new NettyWebSocketHandler();
 	private Connection c;
 	public java.sql.Connection conn = null;
@@ -131,7 +131,8 @@ public class Server implements Runnable {
 	private long time;
 	private ArrayList<String> dbdata;
 	public static ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
-
+	public String mqttversion = "";
+	
 	public String getconnet(){
 		return connet;
 	}
@@ -170,7 +171,7 @@ public class Server implements Runnable {
 		} 
 
 		String[] values = ip.split(",");
-
+		this.mqttversion = values[4];
 		connet=connet1+values[0]+connet2+values[1]+connet3+values[2]+connet4+values[3]+connet5;
 
 		NS.ip = this.ip;
@@ -414,7 +415,7 @@ public class Server implements Runnable {
 		mqtt.init("");
 		NS.mqtt = mqtt;
 		NS.websocket.mqtt = mqtt;
-		mqtt.subTopic("weldmes-webdatadown");
+		mqtt.subTopic(this.mqttversion + "-webdatadown");
 	}  
 
 	//开启5551端口获取焊机数据
@@ -455,7 +456,7 @@ public class Server implements Runnable {
 
 				//绑定端口，等待同步成功  
 				ChannelFuture f;
-				f = b.bind(5551).sync();
+				f = b.bind(5581).sync();
 				//等待服务端关闭监听端口  
 				f.channel().closeFuture().sync(); 
 			} catch (InterruptedException e) {
