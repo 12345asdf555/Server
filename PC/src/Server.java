@@ -55,6 +55,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelId;
@@ -68,6 +69,7 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
@@ -82,6 +84,7 @@ import io.netty.util.CharsetUtil;
 public class Server implements Runnable {  
 	
  	//private List<Handler> handlers = new ArrayList<Handler>();  
+	public MyMqttClient mqtt = new MyMqttClient();
     public static final String SERVERIP = "121.196.222.216"; 
     public static final int SERVERPORT = 5555;
     public static final int SERVERPORTWEB = 5554;
@@ -154,10 +157,10 @@ public class Server implements Runnable {
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		} 
 		
 		String[] values = ip.split(",");
@@ -187,11 +190,11 @@ public class Server implements Runnable {
             NS.android.db.connet = connet;
 
         } catch (ClassNotFoundException e) {  
-            System.out.println("Broken driver");
-            e.printStackTrace();  
+            //System.out.println("Broken driver");
+            //e.printStackTrace();  
         } catch (SQLException e) {
-            System.out.println("Broken conn");
-            e.printStackTrace();
+            //System.out.println("Broken conn");
+            //e.printStackTrace();
         }  
         
 	    //开启线程每小时更新三张状态表
@@ -309,14 +312,14 @@ public class Server implements Runnable {
                 	stmt.executeUpdate(sqlalarm);
                 	
                 } catch (ClassNotFoundException e) {  
-                    System.out.println("Broken driver");
-                    e.printStackTrace();  
+                    //System.out.println("Broken driver");
+                    //e.printStackTrace();  
                 } catch (SQLException e) {
-                    System.out.println("Broken conn");
-                    e.printStackTrace();
+                    //System.out.println("Broken conn");
+                    //e.printStackTrace();
                 } catch (ParseException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
             	
             }  
@@ -330,9 +333,9 @@ public class Server implements Runnable {
 		listarray2 = check.getId2();
 		listarray3 = check.getId3();
 		
-		System.out.println(listarray1);
-		System.out.println(listarray2);
-		System.out.println(listarray3);
+		//System.out.println(listarray1);
+		//System.out.println(listarray2);
+		//System.out.println(listarray3);
 		
 		NS.mysql.listarray1 = this.listarray1;
 		NS.mysql.listarray2 = this.listarray2;
@@ -361,12 +364,12 @@ public class Server implements Runnable {
 							conn = DriverManager.getConnection(connet);
 							stmt = conn.createStatement();
 		        	    } catch (ClassNotFoundException e) {  
-		                    System.out.println("Broken driver");
-		                    e.printStackTrace();
+		                    //System.out.println("Broken driver");
+		                    //e.printStackTrace();
 		                    return;
 		                } catch (SQLException e) {
-		                    System.out.println("Broken conn");
-		                    e.printStackTrace();
+		                    //System.out.println("Broken conn");
+		                    //e.printStackTrace();
 		                    return;
 		                }  
 		        	}
@@ -387,18 +390,24 @@ public class Server implements Runnable {
 	        		NS.listarray3 = listarray3;
 	        	}catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 					return;
 				}
             }  
-        }, 0,60000);
+        }, 0,6000000);
+        
         
         //工作线程
         new Thread(socketstart).start();
-		new Thread(websocketstart).start();
-		new Thread(sockettran).start();
+		//new Thread(websocketstart).start();
+		//new Thread(sockettran).start();
     	//new Email();
 		//new UpReport();
+        
+        mqtt.init("");
+		NS.mqtt = mqtt;
+		NS.websocket.mqtt = mqtt;
+		mqtt.subTopic("weldmes-webdatadown");
 
     }  
     
@@ -415,7 +424,9 @@ public class Server implements Runnable {
 	            b.group(bossGroup,workerGroup)
 	            	.channel(NioServerSocketChannel.class)
 	            	.option(ChannelOption.SO_BACKLOG,1024)
-	            	.childHandler(NS);  
+	            	.option(ChannelOption.SO_KEEPALIVE, true);
+	            	//.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+	            //b.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 	            
 	            b = b.childHandler(new ChannelInitializer<SocketChannel>() { // (4)
 	                @Override
@@ -434,6 +445,7 @@ public class Server implements Runnable {
 						NS.socketlist = socketlist;
 						NWS.socketlist = socketlist;
 						client.handler.socketlist = socketlist;
+						mqtt.socketlist = socketlist;
 	                	}
 	                }
 	            });
@@ -445,7 +457,7 @@ public class Server implements Runnable {
 	            f.channel().closeFuture().sync(); 
 	        } catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}  finally {  
 	            //释放线程池资源  
 	            bossGroup.shutdownGracefully();  
@@ -468,6 +480,7 @@ public class Server implements Runnable {
 	            serverBootstrap
 	            	.group(bossGroup, workerGroup)
 	            	.channel(NioServerSocketChannel.class)
+	            	.childOption(ChannelOption.SO_KEEPALIVE, true)
 	            	.childHandler(new ChannelInitializer<SocketChannel>(){
 
 						@Override
@@ -481,7 +494,7 @@ public class Server implements Runnable {
 		                        engine.setUseClientMode(false);
 		                        chweb.pipeline().addLast(new SslHandler(engine));
 	                        }catch(Exception e){
-	                          System.out.println("wss链接失败");
+	                          //System.out.println("wss链接失败");
 	                        }*/
 							chweb.pipeline().addLast("httpServerCodec", new HttpServerCodec());
 							chweb.pipeline().addLast("chunkedWriteHandler", new ChunkedWriteHandler());
@@ -493,7 +506,7 @@ public class Server implements Runnable {
 							NS.websocketlist = websocketlist;
 							}
 							
-							//System.out.println(chweb);
+							////System.out.println(chweb);
 						}
 	            		
 	            	});
@@ -591,7 +604,7 @@ public class Server implements Runnable {
 							md = MessageDigest.getInstance("SHA-1");
 						} catch (NoSuchAlgorithmException e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							//e.printStackTrace();
 						}    
 	                    md.update(key.getBytes("utf-8"), 0, key.length());  
 	                    byte[] sha1Hash = md.digest();    
@@ -792,7 +805,7 @@ public class Server implements Runnable {
 						
 					 } catch (ParseException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					 }
 	                 
 					 
@@ -853,7 +866,7 @@ public class Server implements Runnable {
 						
 					 } catch (ParseException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					 }
 					 
 					 
@@ -912,7 +925,7 @@ public class Server implements Runnable {
 						timesql3 = new Timestamp(time3.getTime());
 					 } catch (ParseException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					 }
 					 
                      try{
@@ -970,8 +983,8 @@ public class Server implements Runnable {
 		                 }
                      }catch (Exception e) {
  						// TODO Auto-generated catch block
-                    	 System.out.println("数据库读取数据错误");
-                    	 e.printStackTrace();
+                    	 //System.out.println("数据库读取数据错误");
+                    	 //e.printStackTrace();
                     	 websendtype=0;
                     	 str="";
  					 }

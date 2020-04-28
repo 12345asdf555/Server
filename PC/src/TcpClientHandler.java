@@ -53,12 +53,12 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
 					conn = DriverManager.getConnection(connet);
 					stmt = conn.createStatement();
 				} catch (ClassNotFoundException e) {  
-					System.out.println("Broken driver");
-					e.printStackTrace();
+					//System.out.println("Broken driver");
+					//e.printStackTrace();
 					return;
 				} catch (SQLException e) {
-					System.out.println("Broken conn");
-					e.printStackTrace();
+					//System.out.println("Broken conn");
+					//e.printStackTrace();
 					return;
 				} 
 				
@@ -84,12 +84,12 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
 					conn = DriverManager.getConnection(connet);
 					stmt = conn.createStatement();
 				} catch (ClassNotFoundException e) {  
-					System.out.println("Broken driver");
-					e.printStackTrace();
+					//System.out.println("Broken driver");
+					//e.printStackTrace();
 					return;
 				} catch (SQLException e) {
-					System.out.println("Broken conn");
-					e.printStackTrace();
+					//System.out.println("Broken conn");
+					//e.printStackTrace();
 					return;
 				} 
 	            
@@ -161,7 +161,7 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
             	try{
                 	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
                 	
-                	System.out.println(entry);
+                	//System.out.println(entry);
                 	
                 	socketfail = entry.getKey();
 
@@ -170,7 +170,7 @@ public class TcpClientHandler extends SimpleChannelInboundHandler{
                 	socketcon.writeAndFlush(datasend).sync();
                 	
             	}catch (Exception e) {
-            		e.printStackTrace();
+            		//e.printStackTrace();
             		listarraybuf.add(socketfail);
             		ifdo = true;
 					 }

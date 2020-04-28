@@ -75,7 +75,7 @@ public class Email {
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					}  
 		    		
 		    	    String[] values = ip.split(",");
@@ -86,7 +86,7 @@ public class Email {
 					e2.printStackTrace();
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}  
 	    	    
 	    		try {
@@ -98,7 +98,7 @@ public class Email {
 					e1.printStackTrace();
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 				
 				ArrayList<String> listarraymail = new ArrayList<String>();
@@ -121,7 +121,7 @@ public class Email {
 	            	}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 				
 				String halfyearname = "";
@@ -155,7 +155,7 @@ public class Email {
 							stmt.execute(sqlmailcheck2);
 						} catch (SQLException e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							//e.printStackTrace();
 						}
 						
 					}
@@ -235,7 +235,7 @@ public class Email {
 						}
 					} catch (java.text.ParseException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
 				}
 				

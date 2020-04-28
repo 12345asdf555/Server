@@ -21,7 +21,7 @@ public class ConnectionListener implements ChannelFutureListener {
 	public void operationComplete(ChannelFuture channelFuture) throws Exception {
 		// TODO Auto-generated method stub
 		if (!channelFuture.isSuccess()) {  
-		      //System.out.println("Reconnect");
+		      ////System.out.println("Reconnect");
 			  final EventLoop loop = channelFuture.channel().eventLoop();  
 		      loop.schedule(new Runnable() {  
 		        @Override  

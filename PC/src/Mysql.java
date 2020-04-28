@@ -58,7 +58,7 @@ public class Mysql {
 						timesql = new Timestamp(time.getTime());
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
       	    		
 					int channel = Integer.valueOf(str.subSequence(100+a, 102+a).toString(),16);
@@ -124,7 +124,7 @@ public class Mysql {
 					timesql = new Timestamp(time.getTime());
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
   	    		
 				int channel = Integer.valueOf(str.subSequence(100, 102).toString(),16);
@@ -163,6 +163,7 @@ public class Mysql {
 
 				db.DB_Connectionmysqlrun(welderid,weldid,gatherid,itemid,weldid,weldmodel,junctionid,electricity,voltage,status,fwirefeedrate,timesql,channel,maxelectricity,minelectricity,maxvoltage,minvoltage,fwirediameter,fmaterialgas,listarray1,listarray2,listarray3,wmaxelectricity,wminelectricity,wmaxvoltage,wminvoltage);
       	    }
+        }else{
         }
     }
 	
@@ -271,15 +272,15 @@ public class Mysql {
 								 String fitemid = str.substring(106, 108);
 							 
 								 db.DB_Connectionmysqlrun(electricity,voltage,sensor_Num,machine_id,welder_id,code,status,fitemid,timesql,listarray1,listarray2,listarray3);
-								 //System.out.println(str);
+								 ////System.out.println(str);
                              } catch (Exception e) {
 								str="";
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								//e.printStackTrace();
 							}
 
                	    	 }
- 	                     //System.out.println(str);
+ 	                     ////System.out.println(str);
                	    	 //db=null;
                	    	 //System.gc();
                    	     str="";
@@ -302,7 +303,7 @@ public class Mysql {
    	        	}
    	        	else{
    	        		//��λ����FA
-   	        		System.out.println("11");
+   	        		//System.out.println("11");
    	        		System.out.print("数据接收首末位错误");
    	        		str="";
    	        	}
@@ -351,7 +352,7 @@ public class Mysql {
 	       	         }
 		       	     else{
 		       	    	 //��λ����FE
-		       	    	System.out.println("12");
+		       	    	//System.out.println("12");
 		   	        	 System.out.print("数据接收首末位错误");
 		   	        	 str="";
 		       	     }
@@ -365,8 +366,8 @@ public class Mysql {
             
 		} catch (Exception e) {
 			str="";
-            System.out.println("S: Error 2");  
-            e.printStackTrace();  
+            //System.out.println("S: Error 2");  
+            //e.printStackTrace();  
         } 
 	}
 	
@@ -484,11 +485,11 @@ public class Mysql {
 							} catch (Exception e) {
 								str="";
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								//e.printStackTrace();
 							}
 
                	    	 }
- 	                    //System.out.println(str);
+ 	                    ////System.out.println(str);
                    	    str="";
                	     }
                	        			
@@ -509,7 +510,7 @@ public class Mysql {
    	        	}
    	        	else{
    	        		//��λ����FA
-   	        		System.out.println("11");
+   	        		//System.out.println("11");
    	        		System.out.print("���ݽ�����ĩλ����");
    	        		str="";
    	        	}
@@ -558,7 +559,7 @@ public class Mysql {
 	       	         }
 		       	     else{
 		       	    	 //��λ����FE
-		       	    	System.out.println("12");
+		       	    	//System.out.println("12");
 		   	        	 System.out.print("���ݽ�����ĩλ����");
 		   	        	 str="";
 		       	     }
@@ -572,8 +573,8 @@ public class Mysql {
             
 		} catch (Exception e) {
 			str="";
-            System.out.println("S: Error 2");  
-            e.printStackTrace();  
+            //System.out.println("S: Error 2");  
+            //e.printStackTrace();  
         }  
 		
 	}*/

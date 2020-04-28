@@ -77,12 +77,12 @@ public class DB_Connectionandroid {
         	stmt.executeUpdate(sqlstart);
         	
         } catch (ClassNotFoundException e) {  
-            System.out.println("Broken driver");
-            e.printStackTrace();
+            //System.out.println("Broken driver");
+            //e.printStackTrace();
             return;
         } catch (SQLException e) {
-            System.out.println("Broken conn");
-            e.printStackTrace();
+            //System.out.println("Broken conn");
+            //e.printStackTrace();
             return;
         }  
 	}
@@ -106,12 +106,12 @@ public class DB_Connectionandroid {
         	endtime = "";
         	
         } catch (ClassNotFoundException e) {  
-            System.out.println("Broken driver");
-            e.printStackTrace();
+            //System.out.println("Broken driver");
+            //e.printStackTrace();
             return;
         } catch (SQLException e) {
-            System.out.println("Broken conn");
-            e.printStackTrace();
+            //System.out.println("Broken conn");
+            //e.printStackTrace();
             return;
         }  
 	}
@@ -213,16 +213,16 @@ public class DB_Connectionandroid {
             		*/
 	        
         } catch (ClassNotFoundException e) {  
-            System.out.println("Broken driver");
-            e.printStackTrace();
+            //System.out.println("Broken driver");
+            //e.printStackTrace();
             return;
         } catch (SQLException e) {
-            System.out.println("Broken conn");
-            e.printStackTrace();
+            //System.out.println("Broken conn");
+            //e.printStackTrace();
             return;
         } catch (ParseException e){
-        	System.out.println("Broken change");
-        	e.printStackTrace();
+        	//System.out.println("Broken change");
+        	//e.printStackTrace();
         }
 	}
 	
@@ -282,12 +282,12 @@ public class DB_Connectionandroid {
     							conn = DriverManager.getConnection(connet);
     							stmt = conn.createStatement();
     		        	    } catch (ClassNotFoundException e) {  
-    		                    System.out.println("Broken driver");
-    		                    e.printStackTrace();
+    		                    //System.out.println("Broken driver");
+    		                    //e.printStackTrace();
     		                    return;
     		                } catch (SQLException e) {
-    		                    System.out.println("Broken conn");
-    		                    e.printStackTrace();
+    		                    //System.out.println("Broken conn");
+    		                    //e.printStackTrace();
     		                    return;
     		                }  
     		        	}
@@ -304,8 +304,8 @@ public class DB_Connectionandroid {
                     } catch (SQLException e) {
                     	count1 = 0;
                         inSql1 = "";
-                        System.out.println("Broken insert");
-                        e.printStackTrace();
+                        //System.out.println("Broken insert");
+                        //e.printStackTrace();
                     } 
                  }
          
@@ -360,12 +360,12 @@ public class DB_Connectionandroid {
     							conn = DriverManager.getConnection(connet);
     							stmt = conn.createStatement();
     		        	    } catch (ClassNotFoundException e) {  
-    		                    System.out.println("Broken driver");
-    		                    e.printStackTrace();
+    		                    //System.out.println("Broken driver");
+    		                    //e.printStackTrace();
     		                    return;
     		                } catch (SQLException e) {
-    		                    System.out.println("Broken conn");
-    		                    e.printStackTrace();
+    		                    //System.out.println("Broken conn");
+    		                    //e.printStackTrace();
     		                    return;
     		                }  
     		        	}
@@ -382,8 +382,8 @@ public class DB_Connectionandroid {
                     } catch (SQLException e) {
                     	count2 = 0;
                         inSql2 = "";
-                        System.out.println("Broken insert");
-                        e.printStackTrace();
+                        //System.out.println("Broken insert");
+                        //e.printStackTrace();
                     } 
                  }
         		
@@ -438,12 +438,12 @@ public class DB_Connectionandroid {
     							conn = DriverManager.getConnection(connet);
     							stmt = conn.createStatement();
     		        	    } catch (ClassNotFoundException e) {  
-    		                    System.out.println("Broken driver");
-    		                    e.printStackTrace();
+    		                    //System.out.println("Broken driver");
+    		                    //e.printStackTrace();
     		                    return;
     		                } catch (SQLException e) {
-    		                    System.out.println("Broken conn");
-    		                    e.printStackTrace();
+    		                    //System.out.println("Broken conn");
+    		                    //e.printStackTrace();
     		                    return;
     		                }  
     		        	}
@@ -460,8 +460,8 @@ public class DB_Connectionandroid {
                     } catch (SQLException e) {
                     	count3 = 0;
                         inSql3 = "";
-                        System.out.println("Broken insert");
-                        e.printStackTrace();
+                        //System.out.println("Broken insert");
+                        //e.printStackTrace();
                     } 
                  }
         		
@@ -516,12 +516,12 @@ public class DB_Connectionandroid {
     							conn = DriverManager.getConnection(connet);
     							stmt = conn.createStatement();
     		        	    } catch (ClassNotFoundException e) {  
-    		                    System.out.println("Broken driver");
-    		                    e.printStackTrace();
+    		                    //System.out.println("Broken driver");
+    		                    //e.printStackTrace();
     		                    return;
     		                } catch (SQLException e) {
-    		                    System.out.println("Broken conn");
-    		                    e.printStackTrace();
+    		                    //System.out.println("Broken conn");
+    		                    //e.printStackTrace();
     		                    return;
     		                }  
     		        	}
@@ -538,8 +538,8 @@ public class DB_Connectionandroid {
                     } catch (SQLException e) {
                     	count4 = 0;
                         inSql4 = "";
-                        System.out.println("Broken insert");
-                        e.printStackTrace();
+                        //System.out.println("Broken insert");
+                        //e.printStackTrace();
                     } 
                  }
                 
@@ -558,7 +558,7 @@ public class DB_Connectionandroid {
 			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}*/
     

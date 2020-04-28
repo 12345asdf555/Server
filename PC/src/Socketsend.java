@@ -63,7 +63,7 @@ public class Socketsend implements Callback{
 		     		                SendAndReceiveUtil.sendData(socketChannel, str); 
 
 		     		            } catch (Exception ex) {    
-		     		                System.out.println("转发过程中服务器连接失败");  
+		     		                //System.out.println("转发过程中服务器连接失败");  
 		     		            }
 		               	    	 
 		               	    	 
@@ -166,15 +166,15 @@ public class Socketsend implements Callback{
 		           }
 				else {
 	        	   str="";
-	               System.out.println("Not receiver anything from client!");  
+	               //System.out.println("Not receiver anything from client!");  
 	           }
 				
 			}
 			
 		} catch (Exception e) {
 			str="";
-            System.out.println("S: Error 2");  
-            e.printStackTrace();  
+            //System.out.println("S: Error 2");  
+            //e.printStackTrace();  
         }  
 		
 	}
@@ -311,13 +311,13 @@ public class Socketsend implements Callback{
        	     
            }else {
 	        	   str="";
-	               System.out.println("Not receiver anything from client!");  
+	               //System.out.println("Not receiver anything from client!");  
 	           }
             
 		} catch (Exception e) {
 			str="";
-            System.out.println("S: Error 2");  
-            e.printStackTrace();  
+            //System.out.println("S: Error 2");  
+            //e.printStackTrace();  
         }  
 		
 	}

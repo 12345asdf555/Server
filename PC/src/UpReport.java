@@ -62,7 +62,7 @@ public class UpReport {
             String[] values1 = ip1.split("to");
             
         	long datetime1 = DateTools.parse("yy-MM-dd HH:mm:ss",values1[0]).getTime();
-            System.out.println(datetime1);
+            //System.out.println(datetime1);
             
             String sqlfirstwork2 = "SELECT tb_live_data.fWeldTime FROM tb_live_data ORDER BY tb_live_data.fWeldTime DESC LIMIT 0,1";
             ResultSet rs2 =stmt.executeQuery(sqlfirstwork2);
@@ -71,7 +71,7 @@ public class UpReport {
         	}
         	
         	long datetime2 = DateTools.parse("yy-MM-dd HH:mm:ss",values1[1]).getTime();
-            System.out.println(datetime2);
+            //System.out.println(datetime2);
         	
             for(long i=datetime1;i<=datetime2;i+=3600000){
             	
@@ -79,8 +79,8 @@ public class UpReport {
             	String t1 = DateTools.format("yy-MM-dd HH:mm:ss", d1);
             	Date d2 = new Date(i+3600000);
             	String t2 = DateTools.format("yy-MM-dd HH:mm:ss", d2);
-            	System.out.println(t1);
-            	System.out.println(t2);
+            	//System.out.println(t1);
+            	//System.out.println(t2);
             	
             	String sqlstandby = "INSERT INTO tb_standby(tb_standby.fwelder_id,tb_standby.fgather_no,tb_standby.fmachine_id,tb_standby.fjunction_id,"
                 		+ "tb_standby.fitemid,tb_standby.felectricity,tb_standby.fvoltage,tb_standby.frateofflow,tb_standby.fstandbytime,tb_standby.fstarttime,tb_standby.fendtime) SELECT "
@@ -114,26 +114,26 @@ public class UpReport {
     				
             }
             
-            System.out.println("Done");
+            //System.out.println("Done");
             
     	} catch (ClassNotFoundException e) {
     		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	} catch (SQLException e) {
     		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	} catch (ParseException e) {
     		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	} catch (FileNotFoundException e) {
     		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	} catch (IOException e) {
     		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	} catch (InterruptedException e) {
     		// TODO Auto-generated catch block
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	}
     }
 }

@@ -72,13 +72,13 @@ public class DB_Connectionmysql {
 
        } catch (SQLException e) {
 
-           System.out.println("Broken conn");
-           e.printStackTrace();
+           //System.out.println("Broken conn");
+           //e.printStackTrace();
 
        } catch (ClassNotFoundException e) {  
 
-           System.out.println("Broken driver");
-           e.printStackTrace();  
+           //System.out.println("Broken driver");
+           //e.printStackTrace();  
 
        } */
 	}
@@ -98,361 +98,359 @@ public class DB_Connectionmysql {
     	
     	if(weldstatus == 0){     //焊层焊道不为停止
     		
-    		synchronized (this) {
-        	 	switch(Integer.valueOf(workbase)){
-            	case 1:
-            		date = new Date();
-                    nowTime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
-                    goodsC_date = Timestamp.valueOf(nowTime);
-                    
-                    BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
-                    BigDecimal maxvoltage1 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
-                    BigDecimal minvoltage1 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
-                    BigDecimal wmaxvoltage1 = new BigDecimal(((double)Integer.valueOf(wmaxvoltage.toString()))/10);
-                    BigDecimal wminvoltage1 = new BigDecimal(((double)Integer.valueOf(wminvoltage.toString()))/10);
-                    
-                    for(int a=0;a<listarray1.size();a+=3){
-                    	if(welderid == Integer.valueOf(listarray1.get(a))){
-                    		weldernum = listarray1.get(a+1);
-                    		welderins = listarray1.get(a+2);
-                    		break;
-                    	}
-                    }
-                    
-                    for(int a=0;a<listarray3.size();a+=7){
-                    	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-                    		junctionnum = listarray3.get(a);
-                    		junctionins = listarray3.get(a+6);
-                    		break;
-                    	}
-                    }
-                    
-                    for(int a=0;a<listarray2.size();a+=4){
-                    	if(gatherid == Integer.valueOf(listarray2.get(a))){
-                    		gathernum = listarray2.get(a+2);
-                    		weldnum = listarray2.get(a+1);
-                    		ins = listarray2.get(a+3);
-                    		break;
-                    	}
-                    }
-                    
-                    if(ins == null || ins.equals("null")){
-                    	ins = "00";
-                    }
-                    if(junctionins == null || junctionins.equals(null) || junctionins.equals("null") ){
-                    	junctionins = "00";
-                    }
-                    if(junctionins == null || welderins.equals(null) || welderins.equals("null")){
-                    	welderins = "00";
-                    }
-                    
-                    if(countbase1==1){
-               	 		inSqlbase1 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage1 + "','" + wminvoltage1 + "','" + ceng + "','" + dao + "')";
-               	 	}else{
-               	 		inSqlbase1 = inSqlbase1 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage1 + "','" + wminvoltage1 + "','" + ceng + "','" + dao + "')";
-               	 	}
-                    
-                    countbase1++;
-                    
-                    if(countbase1 == 5){
-                    	
-                    	try {
-                    		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
-        		        	{
-        		        		try {
-        							Class.forName("com.mysql.jdbc.Driver");
-        							conn = DriverManager.getConnection(connet);
-        							stmt = conn.createStatement();
-        		        	    } catch (ClassNotFoundException e) {  
-        		                    System.out.println("Broken driver");
-        		                    e.printStackTrace();
-        		                    return;
-        		                } catch (SQLException e) {
-        		                    System.out.println("Broken conn");
-        		                    e.printStackTrace();
-        		                    return;
-        		                }  
-        		        	}
-                            stmt.executeUpdate(inSqlbase1);
-                            workbase = workbase + 1;
-                            if(workbase==5){
-                        		workbase = 1;
-                        	}
-                            
-                            countbase1 = 1;
-                            inSqlbase1 = "";
-                            
-                        } catch (SQLException e) {
-                        	countbase1 = 1;
-                            inSqlbase1 = "";
-                            System.out.println("Broken insert");
-                            e.printStackTrace();
-                        } 
-                    }
-                    break;
-                    
-            	case 2:
-            		date = new Date();
-                    nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-                    goodsC_date = Timestamp.valueOf(nowTime);
-                    
-                    BigDecimal voltage2 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
-                    BigDecimal maxvoltage2 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
-                    BigDecimal minvoltage2 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
-                    BigDecimal wmaxvoltage2 = new BigDecimal(((double)Integer.valueOf(wmaxvoltage.toString()))/10);
-                    BigDecimal wminvoltage2 = new BigDecimal(((double)Integer.valueOf(wminvoltage.toString()))/10);
-                    
-                    for(int a=0;a<listarray1.size();a+=3){
-                    	if(welderid == Integer.valueOf(listarray1.get(a))){
-                    		weldernum = listarray1.get(a+1);
-                    		welderins = listarray1.get(a+2);
-                    		break;
-                    	}
-                    }
-                    
-                    for(int a=0;a<listarray3.size();a+=7){
-                    	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-                    		junctionnum = listarray3.get(a);
-                    		junctionins = listarray3.get(a+6);
-                    		break;
-                    	}
-                    }
-                    
-                    for(int a=0;a<listarray2.size();a+=4){
-                    	if(gatherid == Integer.valueOf(listarray2.get(a))){
-                    		gathernum = listarray2.get(a+2);
-                    		weldnum = listarray2.get(a+1);
-                    		ins = listarray2.get(a+3);
-                    		break;
-                    	}
-                    }
-                    
-                    if(ins == null || ins.equals("null")){
-                    	ins = "00";
-                    }else if(junctionins == null || junctionins.equals(null) || junctionins.equals("null")){
-                    	junctionins = "00";
-                    }else if(welderins == null || welderins.equals(null) || welderins.equals("null")){
-                    	welderins = "00";
-                    }
-                    
-                    if(countbase2==1){
-               	 		inSqlbase2 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage2 + "','" + wminvoltage2 + "','" + ceng + "','" + dao + "')";
-               	 	}else{
-               	 		inSqlbase2 = inSqlbase2 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage2 + "','" + wminvoltage2 + "','" + ceng + "','" + dao + "')";
-               	 	}
-                    
-                    countbase2++;
-                    
-                    if(countbase2 == 5){
-                    	
-                    	try {
-                    		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
-        		        	{
-        		        		try {
-        							Class.forName("com.mysql.jdbc.Driver");
-        							conn = DriverManager.getConnection(connet);
-        							stmt = conn.createStatement();
-        		        	    } catch (ClassNotFoundException e) {  
-        		                    System.out.println("Broken driver");
-        		                    e.printStackTrace();
-        		                    return;
-        		                } catch (SQLException e) {
-        		                    System.out.println("Broken conn");
-        		                    e.printStackTrace();
-        		                    return;
-        		                }  
-        		        	}
-                            stmt.executeUpdate(inSqlbase2);
-                            workbase = workbase + 1;
-                            if(workbase==5){
-                        		workbase = 1;
-                        	}
-                            
-                            countbase2 = 1;
-                            inSqlbase2 = "";
-                            
-                        } catch (SQLException e) {
-                        	countbase2 = 1;
-                            inSqlbase2 = "";
-                            System.out.println("Broken insert");
-                            e.printStackTrace();
-                        } 
-                    }
-                    break;
-                    
-            	case 3:
-            		date = new Date();
-                    nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-                    goodsC_date = Timestamp.valueOf(nowTime);
-                    
-                    BigDecimal voltage3 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
-                    BigDecimal maxvoltage3 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
-                    BigDecimal minvoltage3 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
-                    BigDecimal wmaxvoltage3 = new BigDecimal(((double)Integer.valueOf(wmaxvoltage.toString()))/10);
-                    BigDecimal wminvoltage3 = new BigDecimal(((double)Integer.valueOf(wminvoltage.toString()))/10);
-                    
-                    for(int a=0;a<listarray1.size();a+=3){
-                    	if(welderid == Integer.valueOf(listarray1.get(a))){
-                    		weldernum = listarray1.get(a+1);
-                    		welderins = listarray1.get(a+2);
-                    	}
-                    }
-                    
-                    for(int a=0;a<listarray3.size();a+=7){
-                    	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-                    		junctionnum = listarray3.get(a);
-                    		junctionins = listarray3.get(a+6);
-                    	}
-                    }
-                    
-                    for(int a=0;a<listarray2.size();a+=4){
-                    	if(gatherid == Integer.valueOf(listarray2.get(a))){
-                    		gathernum = listarray2.get(a+2);
-                    		weldnum = listarray2.get(a+1);
-                    		ins = listarray2.get(a+3);
-                    	}
-                    }
-                    
-                    if(ins == null || ins.equals("null")){
-                    	ins = "00";
-                    }else if(junctionins == null || junctionins.equals(null) || junctionins.equals("null")){
-                    	junctionins = "00";
-                    }else if(welderins == null || welderins.equals(null) || welderins.equals("null")){
-                    	welderins = "00";
-                    }
-                    
-                    if(countbase3==1){
-               	 		inSqlbase3 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage3 + "','" + wminvoltage3 + "','" + ceng + "','" + dao + "')";
-               	 	}else{
-               	 		inSqlbase3 = inSqlbase3 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage3 + "','" + wminvoltage3 + "','" + ceng + "','" + dao + "')";
-               	 	}
-                    
-                    countbase3++;
-                    
-                    if(countbase3 == 5){
-                    	
-                    	try {
-                    		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
-        		        	{
-        		        		try {
-        							Class.forName("com.mysql.jdbc.Driver");
-        							conn = DriverManager.getConnection(connet);
-        							stmt = conn.createStatement();
-        		        	    } catch (ClassNotFoundException e) {  
-        		                    System.out.println("Broken driver");
-        		                    e.printStackTrace();
-        		                    return;
-        		                } catch (SQLException e) {
-        		                    System.out.println("Broken conn");
-        		                    e.printStackTrace();
-        		                    return;
-        		                }  
-        		        	}
-                            stmt.executeUpdate(inSqlbase3);
-                            workbase = workbase + 1;
-                            if(workbase==5){
-                        		workbase = 1;
-                        	}
-                            
-                            countbase3 = 1;
-                            inSqlbase3 = "";
-                            
-                        } catch (SQLException e) {
-                        	countbase3 = 1;
-                            inSqlbase3 = "";
-                            System.out.println("Broken insert");
-                            e.printStackTrace();
-                        } 
-                    }
-                    break;
-                    
-            	case 4:
-            		date = new Date();
-                    nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-                    goodsC_date = Timestamp.valueOf(nowTime);
-                    
-                    BigDecimal voltage4 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
-                    BigDecimal maxvoltage4 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
-                    BigDecimal minvoltage4 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
-                    BigDecimal wmaxvoltage4 = new BigDecimal(((double)Integer.valueOf(wmaxvoltage.toString()))/10);
-                    BigDecimal wminvoltage4 = new BigDecimal(((double)Integer.valueOf(wminvoltage.toString()))/10);
-                    
-                    for(int a=0;a<listarray1.size();a+=3){
-                    	if(welderid == Integer.valueOf(listarray1.get(a))){
-                    		weldernum = listarray1.get(a+1);
-                    		welderins = listarray1.get(a+2);
-                    	}
-                    }
-                    
-                    for(int a=0;a<listarray3.size();a+=7){
-                    	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
-                    		junctionnum = listarray3.get(a);
-                    		junctionins = listarray3.get(a+6);
-                    	}
-                    }
-                    
-                    for(int a=0;a<listarray2.size();a+=4){
-                    	if(gatherid == Integer.valueOf(listarray2.get(a))){
-                    		gathernum = listarray2.get(a+2);
-                    		weldnum = listarray2.get(a+1);
-                    		ins = listarray2.get(a+3);
-                    	}
-                    }
-                    
-                    if(ins == null || ins.equals("null")){
-                    	ins = "00";
-                    }else if(junctionins == null || junctionins.equals(null) || junctionins.equals("null")){
-                    	junctionins = "00";
-                    }else if(welderins == null || welderins.equals(null) || welderins.equals("null")){
-                    	welderins = "00";
-                    }
-                    
-                    if(countbase4==1){
-               	 		inSqlbase4 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage4 + "','" + wminvoltage4 + "','" + ceng + "','" + dao + "')";
-               	 	}else{
-               	 		inSqlbase4 = inSqlbase4 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage4 + "','" + wminvoltage4 + "','" + ceng + "','" + dao + "')";
-               	 	}
-                    
-                    countbase4++;
-                    
-                    if(countbase4 == 5){
-                    	
-                    	try {
-                    		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
-        		        	{
-        		        		try {
-        							Class.forName("com.mysql.jdbc.Driver");
-        							conn = DriverManager.getConnection(connet);
-        							stmt = conn.createStatement();
-        		        	    } catch (ClassNotFoundException e) {  
-        		                    System.out.println("Broken driver");
-        		                    e.printStackTrace();
-        		                    return;
-        		                } catch (SQLException e) {
-        		                    System.out.println("Broken conn");
-        		                    e.printStackTrace();
-        		                    return;
-        		                }  
-        		        	}
-                            stmt.executeUpdate(inSqlbase4);
-                            workbase = workbase + 1;
-                            if(workbase==5){
-                        		workbase = 1;
-                        	}
-                            
-                            countbase4 = 1;
-                            inSqlbase4 = "";
-                            
-                        } catch (SQLException e) {
-                        	countbase4 = 1;
-                            inSqlbase4 = "";
-                            System.out.println("Broken insert");
-                            e.printStackTrace();
-                        } 
-                    }
-                    break;
+    	 	switch(Integer.valueOf(workbase)){
+        	case 1:
+        		date = new Date();
+                nowTime = DateTools.format("yyyy-MM-dd HH:mm:ss",date);
+                goodsC_date = Timestamp.valueOf(nowTime);
+                
+                BigDecimal voltage1 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+                BigDecimal maxvoltage1 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
+                BigDecimal minvoltage1 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
+                BigDecimal wmaxvoltage1 = new BigDecimal(((double)Integer.valueOf(wmaxvoltage.toString()))/10);
+                BigDecimal wminvoltage1 = new BigDecimal(((double)Integer.valueOf(wminvoltage.toString()))/10);
+                
+                for(int a=0;a<listarray1.size();a+=3){
+                	if(welderid == Integer.valueOf(listarray1.get(a))){
+                		weldernum = listarray1.get(a+1);
+                		welderins = listarray1.get(a+2);
+                		break;
+                	}
                 }
-    		}
+                
+                for(int a=0;a<listarray3.size();a+=7){
+                	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
+                		junctionnum = listarray3.get(a);
+                		junctionins = listarray3.get(a+6);
+                		break;
+                	}
+                }
+                
+                for(int a=0;a<listarray2.size();a+=4){
+                	if(gatherid == Integer.valueOf(listarray2.get(a))){
+                		gathernum = listarray2.get(a+2);
+                		weldnum = listarray2.get(a+1);
+                		ins = listarray2.get(a+3);
+                		break;
+                	}
+                }
+                
+                if(ins == null || ins.equals("null")){
+                	ins = "00";
+                }
+                if(junctionins == null || junctionins.equals(null) || junctionins.equals("null") ){
+                	junctionins = "00";
+                }
+                if(junctionins == null || welderins.equals(null) || welderins.equals("null")){
+                	welderins = "00";
+                }
+                
+                if(countbase1==1){
+           	 		inSqlbase1 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage1 + "','" + wminvoltage1 + "','" + ceng + "','" + dao + "')";
+           	 	}else{
+           	 		inSqlbase1 = inSqlbase1 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage1 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage1 + "','" + minvoltage1 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage1 + "','" + wminvoltage1 + "','" + ceng + "','" + dao + "')";
+           	 	}
+                
+                countbase1++;
+                
+                if(countbase1 == 100){
+                	
+                	try {
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+    		        	{
+    		        		try {
+    							Class.forName("com.mysql.jdbc.Driver");
+    							conn = DriverManager.getConnection(connet);
+    							stmt = conn.createStatement();
+    		        	    } catch (ClassNotFoundException e) {  
+    		                    //System.out.println("Broken driver");
+    		                    //e.printStackTrace();
+    		                    return;
+    		                } catch (SQLException e) {
+    		                    //System.out.println("Broken conn");
+    		                    //e.printStackTrace();
+    		                    return;
+    		                }  
+    		        	}
+                        stmt.executeUpdate(inSqlbase1);
+                        workbase = workbase + 1;
+                        if(workbase==5){
+                    		workbase = 1;
+                    	}
+                        
+                        countbase1 = 1;
+                        inSqlbase1 = "";
+                        
+                    } catch (SQLException e) {
+                    	countbase1 = 1;
+                        inSqlbase1 = "";
+                        //System.out.println("Broken insert");
+                        //e.printStackTrace();
+                    } 
+                }
+                break;
+                
+        	case 2:
+        		date = new Date();
+                nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+                goodsC_date = Timestamp.valueOf(nowTime);
+                
+                BigDecimal voltage2 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+                BigDecimal maxvoltage2 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
+                BigDecimal minvoltage2 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
+                BigDecimal wmaxvoltage2 = new BigDecimal(((double)Integer.valueOf(wmaxvoltage.toString()))/10);
+                BigDecimal wminvoltage2 = new BigDecimal(((double)Integer.valueOf(wminvoltage.toString()))/10);
+                
+                for(int a=0;a<listarray1.size();a+=3){
+                	if(welderid == Integer.valueOf(listarray1.get(a))){
+                		weldernum = listarray1.get(a+1);
+                		welderins = listarray1.get(a+2);
+                		break;
+                	}
+                }
+                
+                for(int a=0;a<listarray3.size();a+=7){
+                	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
+                		junctionnum = listarray3.get(a);
+                		junctionins = listarray3.get(a+6);
+                		break;
+                	}
+                }
+                
+                for(int a=0;a<listarray2.size();a+=4){
+                	if(gatherid == Integer.valueOf(listarray2.get(a))){
+                		gathernum = listarray2.get(a+2);
+                		weldnum = listarray2.get(a+1);
+                		ins = listarray2.get(a+3);
+                		break;
+                	}
+                }
+                
+                if(ins == null || ins.equals("null")){
+                	ins = "00";
+                }else if(junctionins == null || junctionins.equals(null) || junctionins.equals("null")){
+                	junctionins = "00";
+                }else if(welderins == null || welderins.equals(null) || welderins.equals("null")){
+                	welderins = "00";
+                }
+                
+                if(countbase2==1){
+           	 		inSqlbase2 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage2 + "','" + wminvoltage2 + "','" + ceng + "','" + dao + "')";
+           	 	}else{
+           	 		inSqlbase2 = inSqlbase2 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage2 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage2 + "','" + minvoltage2 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage2 + "','" + wminvoltage2 + "','" + ceng + "','" + dao + "')";
+           	 	}
+                
+                countbase2++;
+                
+                if(countbase2 == 100){
+                	
+                	try {
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+    		        	{
+    		        		try {
+    							Class.forName("com.mysql.jdbc.Driver");
+    							conn = DriverManager.getConnection(connet);
+    							stmt = conn.createStatement();
+    		        	    } catch (ClassNotFoundException e) {  
+    		                    //System.out.println("Broken driver");
+    		                    //e.printStackTrace();
+    		                    return;
+    		                } catch (SQLException e) {
+    		                    //System.out.println("Broken conn");
+    		                    //e.printStackTrace();
+    		                    return;
+    		                }  
+    		        	}
+                        stmt.executeUpdate(inSqlbase2);
+                        workbase = workbase + 1;
+                        if(workbase==5){
+                    		workbase = 1;
+                    	}
+                        
+                        countbase2 = 1;
+                        inSqlbase2 = "";
+                        
+                    } catch (SQLException e) {
+                    	countbase2 = 1;
+                        inSqlbase2 = "";
+                        //System.out.println("Broken insert");
+                        //e.printStackTrace();
+                    } 
+                }
+                break;
+                
+        	case 3:
+        		date = new Date();
+                nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+                goodsC_date = Timestamp.valueOf(nowTime);
+                
+                BigDecimal voltage3 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+                BigDecimal maxvoltage3 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
+                BigDecimal minvoltage3 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
+                BigDecimal wmaxvoltage3 = new BigDecimal(((double)Integer.valueOf(wmaxvoltage.toString()))/10);
+                BigDecimal wminvoltage3 = new BigDecimal(((double)Integer.valueOf(wminvoltage.toString()))/10);
+                
+                for(int a=0;a<listarray1.size();a+=3){
+                	if(welderid == Integer.valueOf(listarray1.get(a))){
+                		weldernum = listarray1.get(a+1);
+                		welderins = listarray1.get(a+2);
+                	}
+                }
+                
+                for(int a=0;a<listarray3.size();a+=7){
+                	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
+                		junctionnum = listarray3.get(a);
+                		junctionins = listarray3.get(a+6);
+                	}
+                }
+                
+                for(int a=0;a<listarray2.size();a+=4){
+                	if(gatherid == Integer.valueOf(listarray2.get(a))){
+                		gathernum = listarray2.get(a+2);
+                		weldnum = listarray2.get(a+1);
+                		ins = listarray2.get(a+3);
+                	}
+                }
+                
+                if(ins == null || ins.equals("null")){
+                	ins = "00";
+                }else if(junctionins == null || junctionins.equals(null) || junctionins.equals("null")){
+                	junctionins = "00";
+                }else if(welderins == null || welderins.equals(null) || welderins.equals("null")){
+                	welderins = "00";
+                }
+                
+                if(countbase3==1){
+           	 		inSqlbase3 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage3 + "','" + wminvoltage3 + "','" + ceng + "','" + dao + "')";
+           	 	}else{
+           	 		inSqlbase3 = inSqlbase3 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage3 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage3 + "','" + minvoltage3 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage3 + "','" + wminvoltage3 + "','" + ceng + "','" + dao + "')";
+           	 	}
+                
+                countbase3++;
+                
+                if(countbase3 == 100){
+                	
+                	try {
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+    		        	{
+    		        		try {
+    							Class.forName("com.mysql.jdbc.Driver");
+    							conn = DriverManager.getConnection(connet);
+    							stmt = conn.createStatement();
+    		        	    } catch (ClassNotFoundException e) {  
+    		                    //System.out.println("Broken driver");
+    		                    //e.printStackTrace();
+    		                    return;
+    		                } catch (SQLException e) {
+    		                    //System.out.println("Broken conn");
+    		                    //e.printStackTrace();
+    		                    return;
+    		                }  
+    		        	}
+                        stmt.executeUpdate(inSqlbase3);
+                        workbase = workbase + 1;
+                        if(workbase==5){
+                    		workbase = 1;
+                    	}
+                        
+                        countbase3 = 1;
+                        inSqlbase3 = "";
+                        
+                    } catch (SQLException e) {
+                    	countbase3 = 1;
+                        inSqlbase3 = "";
+                        //System.out.println("Broken insert");
+                        //e.printStackTrace();
+                    } 
+                }
+                break;
+                
+        	case 4:
+        		date = new Date();
+                nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+                goodsC_date = Timestamp.valueOf(nowTime);
+                
+                BigDecimal voltage4 = new BigDecimal(((double)Integer.valueOf(voltage.toString()))/10);
+                BigDecimal maxvoltage4 = new BigDecimal(((double)Integer.valueOf(maxvoltage.toString()))/10);
+                BigDecimal minvoltage4 = new BigDecimal(((double)Integer.valueOf(minvoltage.toString()))/10);
+                BigDecimal wmaxvoltage4 = new BigDecimal(((double)Integer.valueOf(wmaxvoltage.toString()))/10);
+                BigDecimal wminvoltage4 = new BigDecimal(((double)Integer.valueOf(wminvoltage.toString()))/10);
+                
+                for(int a=0;a<listarray1.size();a+=3){
+                	if(welderid == Integer.valueOf(listarray1.get(a))){
+                		weldernum = listarray1.get(a+1);
+                		welderins = listarray1.get(a+2);
+                	}
+                }
+                
+                for(int a=0;a<listarray3.size();a+=7){
+                	if(junctionid == Integer.valueOf(listarray3.get(a+5))){
+                		junctionnum = listarray3.get(a);
+                		junctionins = listarray3.get(a+6);
+                	}
+                }
+                
+                for(int a=0;a<listarray2.size();a+=4){
+                	if(gatherid == Integer.valueOf(listarray2.get(a))){
+                		gathernum = listarray2.get(a+2);
+                		weldnum = listarray2.get(a+1);
+                		ins = listarray2.get(a+3);
+                	}
+                }
+                
+                if(ins == null || ins.equals("null")){
+                	ins = "00";
+                }else if(junctionins == null || junctionins.equals(null) || junctionins.equals("null")){
+                	junctionins = "00";
+                }else if(welderins == null || welderins.equals(null) || welderins.equals("null")){
+                	welderins = "00";
+                }
+                
+                if(countbase4==1){
+           	 		inSqlbase4 = inSqlbase + "('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage4 + "','" + wminvoltage4 + "','" + ceng + "','" + dao + "')";
+           	 	}else{
+           	 		inSqlbase4 = inSqlbase4 + ",('"+ welderid +"','" + gathernum + "','"  + weldid + "','"  + junctionid + "','" + itemid + "','" + electricity + "','" + voltage4 + "','" + status + "','" + fwirefeedrate + "','" + goodsC_date + "','" + timesql + "','" + weldernum + "','" + junctionnum + "','" + weldnum + "','" + channel + "','" + maxelectricity + "','" + minelectricity + "','" + maxvoltage4 + "','" + minvoltage4 + "','" + welderins + "','" + junctionins + "','" + ins + "','" + weldmodel + "','" + fwirediameter + "','" + fmaterialgas + "','" + wmaxelectricity + "','" + wminelectricity + "','" + wmaxvoltage4 + "','" + wminvoltage4 + "','" + ceng + "','" + dao + "')";
+           	 	}
+                
+                countbase4++;
+                
+                if(countbase4 == 100){
+                	
+                	try {
+                		if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
+    		        	{
+    		        		try {
+    							Class.forName("com.mysql.jdbc.Driver");
+    							conn = DriverManager.getConnection(connet);
+    							stmt = conn.createStatement();
+    		        	    } catch (ClassNotFoundException e) {  
+    		                    //System.out.println("Broken driver");
+    		                    //e.printStackTrace();
+    		                    return;
+    		                } catch (SQLException e) {
+    		                    //System.out.println("Broken conn");
+    		                    //e.printStackTrace();
+    		                    return;
+    		                }  
+    		        	}
+                        stmt.executeUpdate(inSqlbase4);
+                        workbase = workbase + 1;
+                        if(workbase==5){
+                    		workbase = 1;
+                    	}
+                        
+                        countbase4 = 1;
+                        inSqlbase4 = "";
+                        
+                    } catch (SQLException e) {
+                    	countbase4 = 1;
+                        inSqlbase4 = "";
+                        //System.out.println("Broken insert");
+                        //e.printStackTrace();
+                    } 
+                }
+                break;
+            }
     	}
 	}
 	
@@ -514,12 +512,12 @@ public class DB_Connectionmysql {
         							conn = DriverManager.getConnection(connet);
         							stmt = conn.createStatement();
         		        	    } catch (ClassNotFoundException e) {  
-        		                    System.out.println("Broken driver");
-        		                    e.printStackTrace();
+        		                    //System.out.println("Broken driver");
+        		                    //e.printStackTrace();
         		                    return;
         		                } catch (SQLException e) {
-        		                    System.out.println("Broken conn");
-        		                    e.printStackTrace();
+        		                    //System.out.println("Broken conn");
+        		                    //e.printStackTrace();
         		                    return;
         		                }  
         		        	}
@@ -535,8 +533,8 @@ public class DB_Connectionmysql {
                         } catch (SQLException e) {
                         	count1 = 0;
                             inSql1 = "";
-                            System.out.println("Broken insert");
-                            e.printStackTrace();
+                            //System.out.println("Broken insert");
+                            //e.printStackTrace();
                         } 
                      }
                  }
@@ -593,12 +591,12 @@ public class DB_Connectionmysql {
         							conn = DriverManager.getConnection(connet);
         							stmt = conn.createStatement();
         		        	    } catch (ClassNotFoundException e) {  
-        		                    System.out.println("Broken driver");
-        		                    e.printStackTrace();
+        		                    //System.out.println("Broken driver");
+        		                    //e.printStackTrace();
         		                    return;
         		                } catch (SQLException e) {
-        		                    System.out.println("Broken conn");
-        		                    e.printStackTrace();
+        		                    //System.out.println("Broken conn");
+        		                    //e.printStackTrace();
         		                    return;
         		                }  
         		        	}
@@ -614,8 +612,8 @@ public class DB_Connectionmysql {
                         } catch (SQLException e) {
                         	count2 = 0;
                             inSql2 = "";
-                            System.out.println("Broken insert");
-                            e.printStackTrace();
+                            //System.out.println("Broken insert");
+                            //e.printStackTrace();
                         } 
                      }
                  }
@@ -672,12 +670,12 @@ public class DB_Connectionmysql {
         							conn = DriverManager.getConnection(connet);
         							stmt = conn.createStatement();
         		        	    } catch (ClassNotFoundException e) {  
-        		                    System.out.println("Broken driver");
-        		                    e.printStackTrace();
+        		                    //System.out.println("Broken driver");
+        		                    //e.printStackTrace();
         		                    return;
         		                } catch (SQLException e) {
-        		                    System.out.println("Broken conn");
-        		                    e.printStackTrace();
+        		                    //System.out.println("Broken conn");
+        		                    //e.printStackTrace();
         		                    return;
         		                }  
         		        	}
@@ -693,8 +691,8 @@ public class DB_Connectionmysql {
                         } catch (SQLException e) {
                         	count3 = 0;
                             inSql3 = "";
-                            System.out.println("Broken insert");
-                            e.printStackTrace();
+                            //System.out.println("Broken insert");
+                            //e.printStackTrace();
                         } 
                      }
                  }
@@ -751,12 +749,12 @@ public class DB_Connectionmysql {
         							conn = DriverManager.getConnection(connet);
         							stmt = conn.createStatement();
         		        	    } catch (ClassNotFoundException e) {  
-        		                    System.out.println("Broken driver");
-        		                    e.printStackTrace();
+        		                    //System.out.println("Broken driver");
+        		                    //e.printStackTrace();
         		                    return;
         		                } catch (SQLException e) {
-        		                    System.out.println("Broken conn");
-        		                    e.printStackTrace();
+        		                    //System.out.println("Broken conn");
+        		                    //e.printStackTrace();
         		                    return;
         		                }  
         		        	}
@@ -772,8 +770,8 @@ public class DB_Connectionmysql {
                         } catch (SQLException e) {
                         	count4 = 0;
                             inSql4 = "";
-                            System.out.println("Broken insert");
-                            e.printStackTrace();
+                            //System.out.println("Broken insert");
+                            //e.printStackTrace();
                         } 
                      }
                  }
@@ -790,7 +788,7 @@ public class DB_Connectionmysql {
 			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}*/
     

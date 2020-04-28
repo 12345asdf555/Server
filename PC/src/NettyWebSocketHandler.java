@@ -48,7 +48,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		// 添加
 		//group.add(ctx.channel());
-		//System.out.println("客户端与服务端连接开启：" + ctx.channel().remoteAddress().toString());
+		////System.out.println("客户端与服务端连接开启：" + ctx.channel().remoteAddress().toString());
 	}
 
 	/**
@@ -58,14 +58,14 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 		// 移除
 		//group.remove(ctx.channel());
-		//System.out.println("客户端与服务端连接关闭：" + ctx.channel().remoteAddress().toString());
+		////System.out.println("客户端与服务端连接关闭：" + ctx.channel().remoteAddress().toString());
 	}
 	/**
 	 * exception 异常 Caught 抓住 抓住异常，当发生异常的时候，可以做一些相应的处理，比如打印日志、关闭链接
 	 */
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-		cause.printStackTrace();
+		//cause.printStackTrace();
 		ctx.close();
 	}
 	@Override
@@ -217,7 +217,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 			handleHttpRequest(ctx, ((FullHttpRequest) msg));
 			// WebSocket接入
 		} else if (msg instanceof WebSocketFrame) {
-			System.out.println(handshaker.uri());
+			//System.out.println(handshaker.uri());
 			if("anzhuo".equals(ctx.attr(AttributeKey.valueOf("type")).get())){
 				handlerWebSocketFrame(ctx, (WebSocketFrame) msg);
 			}else{
@@ -228,7 +228,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 	/*private void handlerWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
 	// 判断是否关闭链路的指令
 		if (frame instanceof CloseWebSocketFrame) {
-			System.out.println(1);
+			//System.out.println(1);
 			handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
 			return;
 		}
@@ -239,13 +239,13 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 		}
 		// 本例程仅支持文本消息，不支持二进制消息
 		if (!(frame instanceof TextWebSocketFrame)) {
-			System.out.println("本例程仅支持文本消息，不支持二进制消息");
+			//System.out.println("本例程仅支持文本消息，不支持二进制消息");
 			throw new UnsupportedOperationException(
 			String.format("%s frame types not supported", frame.getClass().getName()));
 		}
 		// 返回应答消息
 		String request = ((TextWebSocketFrame) frame).text();
-		System.out.println("服务端收到：" + request);
+		//System.out.println("服务端收到：" + request);
 		if (logger.isLoggable(Level.FINE)) {
 			logger.fine(String.format("%s received %s", ctx.channel(), request));
 		}
@@ -269,13 +269,13 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 		}
 		// 本例程仅支持文本消息，不支持二进制消息
 		if (!(frame instanceof TextWebSocketFrame)) {
-			System.out.println("本例程仅支持文本消息，不支持二进制消息");
+			//System.out.println("本例程仅支持文本消息，不支持二进制消息");
 			throw new UnsupportedOperationException(
 			String.format("%s frame types not supported", frame.getClass().getName()));
 		}
 		// 返回应答消息
 		String request = ((TextWebSocketFrame) frame).text();
-		System.out.println("服务端2收到：" + request);
+		//System.out.println("服务端2收到：" + request);
 		if (logger.isLoggable(Level.FINE)) {
 			logger.fine(String.format("%s received %s", ctx.channel(), request));
 		}
@@ -297,7 +297,7 @@ public class NettyWebSocketHandler extends SimpleChannelInboundHandler<Object> {
 		String uri=req.getUri();
 		QueryStringDecoder queryStringDecoder = new QueryStringDecoder(uri);
 		Map<String, List<String>> parameters = queryStringDecoder.parameters();
-		System.out.println(parameters.get("request").get(0));
+		//System.out.println(parameters.get("request").get(0));
 		if(method==HttpMethod.GET&&"/webssss".equals(uri)){
 			//....处理
 			ctx.attr(AttributeKey.valueOf("type")).set("anzhuo");

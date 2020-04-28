@@ -34,7 +34,7 @@ public class Android {
 			b = str.getBytes("ISO-8859-1");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
          str="";
          for(int i=0;i<b.length;i++){
@@ -145,8 +145,8 @@ public class Android {
 	       	     
             	} catch (Exception e) {
         			str="";
-                    System.out.println("S: Error 2");  
-                    e.printStackTrace();  
+                    //System.out.println("S: Error 2");  
+                    //e.printStackTrace();  
                 }     
    	     	} 	
          
@@ -274,11 +274,11 @@ public class Android {
 							} catch (Exception e) {
 								str="";
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								//e.printStackTrace();
 							}
 
                	    	 }
- 	                    //System.out.println(str);
+ 	                    ////System.out.println(str);
                    	    str="";
                	     }
                	        			
@@ -299,7 +299,7 @@ public class Android {
    	        	}
    	        	else{
    	        		//��λ����FA
-   	        		System.out.println("11");
+   	        		//System.out.println("11");
    	        		System.out.print("���ݽ�����ĩλ����");
    	        		str="";
    	        	}
@@ -348,7 +348,7 @@ public class Android {
 	       	         }
 		       	     else{
 		       	    	 //��λ����FE
-		       	    	System.out.println("12");
+		       	    	//System.out.println("12");
 		   	        	 System.out.print("���ݽ�����ĩλ����");
 		   	        	 str="";
 		       	     }
@@ -362,8 +362,8 @@ public class Android {
             
 		} catch (Exception e) {
 			str="";
-            System.out.println("S: Error 2");  
-            e.printStackTrace();  
+            //System.out.println("S: Error 2");  
+            //e.printStackTrace();  
         }  
 		
 	}*/

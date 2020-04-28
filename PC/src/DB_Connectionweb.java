@@ -58,9 +58,9 @@ public class DB_Connectionweb {
 
         } catch (ClassNotFoundException e) {  
 
-            System.out.println("Broken driver");
+            //System.out.println("Broken driver");
 
-            e.printStackTrace();  
+            //e.printStackTrace();  
 
         }  
 
@@ -74,9 +74,9 @@ public class DB_Connectionweb {
 
         } catch (SQLException e) {
 
-            System.out.println("Broken conn");
+            //System.out.println("Broken conn");
 
-            e.printStackTrace();
+            //e.printStackTrace();
 
         }
 
@@ -119,9 +119,9 @@ public class DB_Connectionweb {
 
         } catch (SQLException e) {
 
-            System.out.println("Broken insert");
+            //System.out.println("Broken insert");
 
-            e.printStackTrace();
+            //e.printStackTrace();
 
         } 
 
@@ -133,9 +133,9 @@ public class DB_Connectionweb {
 
         } catch (SQLException e) {
 
-            System.out.println("Broken close");
+            //System.out.println("Broken close");
 
-            e.printStackTrace();
+            //e.printStackTrace();
 
         }  
 */

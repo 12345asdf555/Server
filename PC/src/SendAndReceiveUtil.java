@@ -17,15 +17,15 @@ public class SendAndReceiveUtil {
                 bb.flip();        
                 msg.append(charset.decode(bb).toString()); 
                 //msg.append(decoder.decode(bb).toString());  
-                //System.out.println(msg.toString());  
+                ////System.out.println(msg.toString());  
       
                 bb.clear();  
             }  
             return msg.toString();  
         } catch (IOException e) {  
             // TODO Auto-generated catch block  
-        	System.out.println("5-ÖØÆô");
-            e.printStackTrace();  
+        	//System.out.println("5-ï¿½ï¿½ï¿½ï¿½");
+            //e.printStackTrace();  
         }  
         return null;  
     }  
@@ -35,7 +35,7 @@ public class SendAndReceiveUtil {
             socketChannel.write(ByteBuffer.wrap(msg.getBytes()));  
         } catch (IOException e) {  
             // TODO Auto-generated catch block  
-            e.printStackTrace();  
+            //e.printStackTrace();  
         }  
     }  
 }  

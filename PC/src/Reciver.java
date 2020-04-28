@@ -68,20 +68,20 @@ public class Reciver {
 		             sc.register(selector, SelectionKey.OP_READ);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						System.out.println("1-����");
-						e.printStackTrace();
+						//System.out.println("1-����");
+						//e.printStackTrace();
 					}  
 		         } 
 			 }
 		 } finally{  
 	            try {
-	            	System.out.println("2-����");
+	            	//System.out.println("2-����");
 					selector.close(); 
 					ssc.close();
 	            } catch (IOException e) {
 					// TODO Auto-generated catch block
-	            	System.out.println("2-����");
-					e.printStackTrace();
+	            	//System.out.println("2-����");
+					//e.printStackTrace();
 				} 
 	     }
 		
@@ -117,7 +117,7 @@ public class Reciver {
 		                                    
 		                                /* if(msg != null && !msg.equals("")) {  
 		                                	 
-		                                         System.out.println(msg);  
+		                                         //System.out.println(msg);  
 		                                         SendAndReceiveUtil.sendData(sc,msg);  
 		                                         sc.shutdownOutput(); 
 		                                 }  */
@@ -140,15 +140,15 @@ public class Reciver {
 		                                	}
 		                                }
 		                                }catch(Exception e){  
-		                                	System.out.println("4-����");
-		                                	e.printStackTrace();  
+		                                	//System.out.println("4-����");
+		                                	//e.printStackTrace();  
 		                                	readyKey.cancel();
 		                                	/*try {
 		            							sc.socket().close();
 		            							sc.close();
 		            	                	} catch (IOException e1) {
 		            							// TODO Auto-generated catch block
-		            	                		System.out.println("5");
+		            	                		//System.out.println("5");
 		            							e1.printStackTrace();
 		            						}*/
 		            	                	return;
@@ -172,8 +172,8 @@ public class Reciver {
 	                                		it.remove(); 
 	                                	}catch (Exception e) {  
 	                	                    // TODO Auto-generated catch block
-	                                		System.out.println("6-����");
-	                	                    e.printStackTrace();  
+	                                		//System.out.println("6-����");
+	                	                    //e.printStackTrace();  
 	                	                } 
 	                                }  
 	  
@@ -182,9 +182,9 @@ public class Reciver {
 		                    }  
 		                } catch (IOException e) {  
 		                    // TODO Auto-generated catch block 
-		                	System.out.println("3-����");
+		                	//System.out.println("3-����");
 		                	readyKey.cancel();
-		                	//e.printStackTrace();  
+		                	////e.printStackTrace();  
 		                } 
                 	}
                 }   

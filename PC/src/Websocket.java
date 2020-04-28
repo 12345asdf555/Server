@@ -22,7 +22,8 @@ public class Websocket {
 	Timestamp timesql3;
 	private String limit;
 	private String connet;
-	private String strsend="";
+	public String strsend="";
+	public String strsendpan="";
 	private String strdata;
 	private SocketChannel chweb;
 	private String websocketfail;
@@ -33,6 +34,8 @@ public class Websocket {
 	private HashMap<String, Socket> websocket;
 	private HashMap<String, SocketChannel> websocketlist = null;
 	public ArrayList<String> dbdata = new ArrayList<String>();
+	public int count = 0;
+	public MyMqttClient mqtt;
 
 	public void Websocketbase(String str, ArrayList<String> listarray2, ArrayList<String> listarray3,HashMap<String, SocketChannel> websocketlist) {
 		// TODO Auto-generated method stub
@@ -146,7 +149,7 @@ public class Websocket {
 							timesql = new Timestamp(time.getTime());
 						} catch (ParseException e) {
 							// TODO Auto-generated catch block
-							e.printStackTrace();
+							//e.printStackTrace();
 						}
 	      	    		
 	      	    		String channel = Integer.valueOf(str.subSequence(100+a, 102+a).toString(),16).toString();
@@ -292,7 +295,9 @@ public class Websocket {
 		                
 						strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel + wmaxelectricity + wminelectricity + wmaxvoltage + wminvoltage;
 	      	    	}
-	      	    	synchronized (websocketlist) {
+	      	    	mqtt.publishMessage("weldmes-realdata", strsend, 0);
+					strsend = "";
+	      	    	/*synchronized (websocketlist) {
                         
                         ArrayList<String> listarraybuf = new ArrayList<String>();
         	        	boolean ifdo= false;
@@ -316,7 +321,7 @@ public class Websocket {
 		                    }
                         }
       	                strsend = "";
-	      	    	}
+	      	    	}*/
 	      	    }
 			}else if(str.length() == 124){  //松下
 	      	    String check1 =str.substring(0,2);
@@ -418,7 +423,7 @@ public class Websocket {
 						timesql = new Timestamp(time.getTime());
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
       	    		
       	    		String channel = Integer.valueOf(str.subSequence(100, 102).toString(),16).toString();
@@ -560,34 +565,48 @@ public class Websocket {
 	                if(welderins.equals(null) || welderins.equals("null")){
 	                	welderins = "0000";
 	                }
+	                synchronized (this) {
+	                	count++;
+	                }
 	                
-					strsend = strsend + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel+ wmaxelectricity + wminelectricity + wmaxvoltage + wminvoltage;
+                	strsendpan = strsendpan + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel+ wmaxelectricity + wminelectricity + wmaxvoltage + wminvoltage;
+                	
+                	mqtt.publishMessage("weldmes-realdata", strsendpan, 0);
+					strsendpan = "";
+	                
+//	                	ArrayList<String> listarraybuf = new ArrayList<String>();
+//        	        	boolean ifdo= false;
+//                        
+//                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
+//                        while(webiter.hasNext()){
+//	      	                try{
+//		      	                Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+//		      	                websocketfail = entry.getKey();
+//		      	                SocketChannel websocketcon = entry.getValue();
+//		      	                if(websocketcon.isActive() && websocketcon.isOpen() && websocketcon.isWritable()){
+//			      	                websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
+//		      	                }else{
+//		      	                	listarraybuf.add(websocketfail);
+//		      	                }
+//	      	                }catch (Exception e) {
+//		      	                listarraybuf.add(websocketfail);
+//		      	                ifdo = true;
+//	      	                }
+//                        }
+//                      
+//                        if(ifdo){
+//		                    for(int i=0;i<listarraybuf.size();i++){
+//		                    	websocketlist.remove(listarraybuf.get(i));
+//		                    }
+//                        }
+//      	                strsend = "";
+      	              
+					
       	    	
-	      	    	synchronized (websocketlist) {
-                        
-                        ArrayList<String> listarraybuf = new ArrayList<String>();
-        	        	boolean ifdo= false;
-                        
-                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
-                        while(webiter.hasNext()){
-	      	                try{
-		      	                Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-		      	                websocketfail = entry.getKey();
-		      	                SocketChannel websocketcon = entry.getValue();
-		      	                websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
-	      	                }catch (Exception e) {
-		      	                listarraybuf.add(websocketfail);
-		      	                ifdo = true;
-	      	                }
-                        }
-                      
-                        if(ifdo){
-		                    for(int i=0;i<listarraybuf.size();i++){
-		                    	websocketlist.remove(listarraybuf.get(i));
-		                    }
-                        }
-      	                strsend = "";
-	      	    	}
+//	      	    	synchronized (strsend) {
+//                        
+//                       
+//	      	    	}
 	      	    }
 			}
 		}
@@ -601,7 +620,7 @@ public class Websocket {
 		// TODO Auto-generated constructor stub
 
         this.strdata = str;
-		//System.out.println("1:"+str);
+		////System.out.println("1:"+str);
         
         try {
 			
@@ -637,7 +656,7 @@ public class Websocket {
 	               	     String check6 = str.substring(164,166);
 	               	     if(check5.equals(check6)){
 
-	               	    	 //System.out.println("2");
+	               	    	 ////System.out.println("2");
 	               	    	 
 		               	     strdata=str;
 		               	     //String weldname = strdata.substring(10,14);
@@ -796,7 +815,7 @@ public class Websocket {
 	       					
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 	                        
 	       				 
@@ -922,7 +941,7 @@ public class Websocket {
 	       					
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 		       				 
 	       				 
@@ -1045,10 +1064,10 @@ public class Websocket {
 	       					timesql3 = new Timestamp(time3.getTime());
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 		       				 
-	                        //System.out.println("3");
+	                        ////System.out.println("3");
 	                        
                         try{
                         	
@@ -1063,7 +1082,7 @@ public class Websocket {
 	                       		 }
 	                       	 }
 	                       	 
-	                       	//System.out.println("4");
+	                       	////System.out.println("4");
 	                       	 
 	                       	 /*String worktime = "";
 		                   	 String totaltime = "";
@@ -1082,7 +1101,7 @@ public class Websocket {
 		                   		 
 		                   		 if(weldname.equals(fgather_no)){
 		                   			 
-		                   			 //System.out.println("5");
+		                   			 ////System.out.println("5");
 		                   			 
 		                   			 /*for(int j=0;j<dbdata.size();j+=3){
 		                       			 if(dbdata.get(j).equals(fequipment_no)){
@@ -1143,7 +1162,7 @@ public class Websocket {
 		               		        }
 		               		         totaltime1 = workhour2 + workminute2 + worksecond2;*/
 	
-		               		      //System.out.println("6");
+		               		      ////System.out.println("6");
 		                   			try{
 		                   				
 			                   			if(fequipment_no.length()!=4){
@@ -1199,7 +1218,7 @@ public class Websocket {
 		                   			 }
 		                   		 }*/
 	               		         
-	               		         //System.out.println("f:"+strsend);
+	               		         ////System.out.println("f:"+strsend);
 	               		         
 		   	                     /*else{
 		   	                    	if(finsframework_id==null || finsframework_id==""){
@@ -1243,15 +1262,15 @@ public class Websocket {
 	                       						 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
 	       	                    	}
 	       	                     }*/
-	                       		 //System.out.println("2");
+	                       		 ////System.out.println("2");
 	                       	 }
 
-	                       	 //System.out.println(strsend);
+	                       	 ////System.out.println(strsend);
                        	 
                         }catch (Exception e) {
        						// TODO Auto-generated catch block
-	                       	System.out.println("数据库读取错误");
-	                        e.printStackTrace();
+	                       	//System.out.println("数据库读取错误");
+	                        //e.printStackTrace();
        					}
            
                         datawritetype = true;
@@ -1262,7 +1281,7 @@ public class Websocket {
     							chweb.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
     						} catch (InterruptedException e) {
     							// TODO Auto-generated catch block
-    							e.printStackTrace();
+    							//e.printStackTrace();
     						}
     			        	
     			        }*/
@@ -1292,7 +1311,7 @@ public class Websocket {
       	                      websocketfail = entry.getKey();
       	                      SocketChannel websocketcon = entry.getValue();
       	                      websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
-      	                      //System.out.println(strsend);
+      	                      ////System.out.println(strsend);
       	                  }catch (Exception e) {
       	                    
       	                    listarraybuf.add(websocketfail);
@@ -1328,20 +1347,20 @@ public class Websocket {
                         
 	               	     }	
 	               	     else{
-	               	    	 System.out.println("校验位错误");
+	               	    	 //System.out.println("校验位错误");
 	               	    	 str="";
 	               	     }
 	                               
 	           	     }
 	           	        		
 	           	     else{
-	           	    	 System.out.println("长度错误");
+	           	    	 //System.out.println("长度错误");
 	           	    	 str="";
 	           	     }
 	       	        		
 	   	        	}
 	   	        	else{
-	   	        		System.out.println("首末位错误");
+	   	        		//System.out.println("首末位错误");
 	   	        		str="";
 	   	        	}
                      
@@ -1375,7 +1394,7 @@ public class Websocket {
 	               	     String check6 = str.substring(104,106);
 	               	     if(check5.equals(check6)){
 
-	               	    	 //System.out.println("2");
+	               	    	 ////System.out.println("2");
 	               	    	 
 		               	     strdata=str;
 		               	     //String weldname = strdata.substring(10,14);
@@ -1486,7 +1505,7 @@ public class Websocket {
 	       					
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 	                        
 	       				 
@@ -1569,7 +1588,7 @@ public class Websocket {
 	       					
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 		       				 
 	       				 
@@ -1649,10 +1668,10 @@ public class Websocket {
 	       					timesql3 = new Timestamp(time3.getTime());
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 		       				 
-	                        //System.out.println("3");
+	                        ////System.out.println("3");
 	                        
                        try{
                        	
@@ -1667,7 +1686,7 @@ public class Websocket {
 	                       		 }
 	                       	 }
 	                       	 
-	                       	//System.out.println("4");
+	                       	////System.out.println("4");
 	                       	 
 	                       	 /*String worktime = "";
 		                   	 String totaltime = "";
@@ -1731,8 +1750,8 @@ public class Websocket {
 		                   	 }
                        }catch (Exception e) {
       						// TODO Auto-generated catch block
-	                       	System.out.println("数据库错误");
-	                        e.printStackTrace();
+	                       	//System.out.println("数据库错误");
+	                        //e.printStackTrace();
       					}
           
                        datawritetype = true;
@@ -1769,20 +1788,20 @@ public class Websocket {
                        strsend="";
 	               	  }	
 	               	     else{
-	               	    	 System.out.println("校验位错误");
+	               	    	 //System.out.println("校验位错误");
 	               	    	 str="";
 	               	     }
 	                               
 	           	     }
 	           	        		
 	           	     else{
-	           	    	 System.out.println("长度错误");
+	           	    	 //System.out.println("长度错误");
 	           	    	 str="";
 	           	     }
 	       	        		
 	   	        	}
 	   	        	else{
-	   	        		System.out.println("首末位错误");
+	   	        		//System.out.println("首末位错误");
 	   	        		str="";
 	   	        	}
 		    	
@@ -1799,7 +1818,7 @@ public class Websocket {
 			
 			if(datawritetype = true){
 				
-				e.printStackTrace();
+				//e.printStackTrace();
 				
 			}
 		}
@@ -1815,7 +1834,7 @@ public class Websocket {
 		// TODO Auto-generated constructor stub
 
         this.strdata = str;
-		//System.out.println("1:"+str);
+		////System.out.println("1:"+str);
         
         try {
 			
@@ -1853,7 +1872,7 @@ public class Websocket {
 	               	     String check6 = str.substring(104,106);
 	               	     if(check5.equals(check6)){
 
-	               	    	 //System.out.println("2");
+	               	    	 ////System.out.println("2");
 	               	    	 
 		               	     strdata=str;
 		       				 int weldname1 = Integer.valueOf(strdata.subSequence(10, 14).toString(),16);
@@ -1962,7 +1981,7 @@ public class Websocket {
 	       					
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 	                        
 	       				 
@@ -2045,7 +2064,7 @@ public class Websocket {
 	       					
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 		       				 
 	       				 
@@ -2125,10 +2144,10 @@ public class Websocket {
 	       					timesql3 = new Timestamp(time3.getTime());
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 		       				 
-	                        //System.out.println("3");
+	                        ////System.out.println("3");
 	                        
                         try{
                         	
@@ -2161,9 +2180,9 @@ public class Websocket {
 		                   		 
 		                   		 if(weldname.equals(fgather_no)){
 		                   			 
-	                   			 //System.out.println("5");
+	                   			 ////System.out.println("5");
 		                   			 
-		               		      //System.out.println("6");
+		               		      ////System.out.println("6");
 		               		         
 	               		         if(weldname.equals(fgather_no)){
 	                       			if(finsframework_id==null || finsframework_id==""){
@@ -2183,15 +2202,15 @@ public class Websocket {
 		   	                     
 	               		         }
 		                   	 }
-	                       		 //System.out.println("2");
+	                       		 ////System.out.println("2");
 	                       	 }
 
-	                       	 //System.out.println(strsend);
+	                       	 ////System.out.println(strsend);
                        	 
                         }catch (Exception e) {
        						// TODO Auto-generated catch block
-	                       	System.out.println("数据库读取数据错误");
-	                        e.printStackTrace();
+	                       	//System.out.println("数据库读取数据错误");
+	                        //e.printStackTrace();
        					}
            
                         datawritetype = true;
@@ -2217,7 +2236,7 @@ public class Websocket {
 	               	     }	
 	               	     else{
 	               	    	 //校验位错误
-	               	    	 System.out.println("数据接收校验位错误");
+	               	    	 //System.out.println("数据接收校验位错误");
 	               	    	 str="";
 	               	     }
 	                               
@@ -2225,14 +2244,14 @@ public class Websocket {
 	           	        		
 	           	     else{
 	           	    	 //长度错误
-	           	    	 System.out.println("数据接收长度错误");
+	           	    	 //System.out.println("数据接收长度错误");
 	           	    	 str="";
 	           	     }
 	       	        		
 	   	        	}
 	   	        	else{
 	   	        		//首位不是FE
-	   	        		System.out.println("数据接收首末位错误");
+	   	        		//System.out.println("数据接收首末位错误");
 	   	        		str="";
 	   	        	}
                      
@@ -2246,7 +2265,7 @@ public class Websocket {
 			
 			if(datawritetype = true){
 				
-				e.printStackTrace();
+				//e.printStackTrace();
 				
 			}
 		}
@@ -2401,7 +2420,7 @@ public class Websocket {
 	       					
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 	                        
 	       				 
@@ -2477,7 +2496,7 @@ public class Websocket {
 	       					
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 		       				 
 	       				 
@@ -2551,7 +2570,7 @@ public class Websocket {
 	       					timesql3 = new Timestamp(time3.getTime());
 	       				 } catch (ParseException e) {
 	       					// TODO Auto-generated catch block
-	       					e.printStackTrace();
+	       					//e.printStackTrace();
 	       				 }
 		       				 
                         try{
@@ -2714,15 +2733,15 @@ public class Websocket {
 	                       						 +"09"+finsframework_id+fequipment_no+"0000"+"0000"+"0000"+"000000000000000000000"+"000000000000";
 	       	                    	}
 	       	                     }*/
-	                       		 //System.out.println("2");
+	                       		 ////System.out.println("2");
 	                       	 }
 
-	                       	 //System.out.println(strsend);
+	                       	 ////System.out.println(strsend);
                        	 
                         }catch (Exception e) {
        						// TODO Auto-generated catch block
-	                       	System.out.println("数据库读取数据错误");
-	                        e.printStackTrace();
+	                       	//System.out.println("数据库读取数据错误");
+	                        //e.printStackTrace();
        					}
            
                         datawritetype = true;
@@ -2733,7 +2752,7 @@ public class Websocket {
     							chweb.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
     						} catch (InterruptedException e) {
     							// TODO Auto-generated catch block
-    							e.printStackTrace();
+    							//e.printStackTrace();
     						}
     			        	
     			        }*/
@@ -2785,7 +2804,7 @@ public class Websocket {
 	               	     }	
 	               	     else{
 	               	    	 //校验位错误
-	               	    	 System.out.println("数据接收校验位错误");
+	               	    	 //System.out.println("数据接收校验位错误");
 	               	    	 str="";
 	               	     }
 	                               
@@ -2793,14 +2812,14 @@ public class Websocket {
 	           	        		
 	           	     else{
 	           	    	 //长度错误
-	           	    	 System.out.println("数据接收长度错误");
+	           	    	 //System.out.println("数据接收长度错误");
 	           	    	 str="";
 	           	     }
 	       	        		
 	   	        	}
 	   	        	else{
 	   	        		//首位不是FE
-	   	        		System.out.println("数据接收首末位错误");
+	   	        		//System.out.println("数据接收首末位错误");
 	   	        		str="";
 	   	        	}
                      
@@ -2948,7 +2967,7 @@ public class Websocket {
 		       					
 		       				 } catch (ParseException e) {
 		       					// TODO Auto-generated catch block
-		       					e.printStackTrace();
+		       					//e.printStackTrace();
 		       				 }
 		                        
 		       				 
@@ -3009,7 +3028,7 @@ public class Websocket {
 		       					
 		       				 } catch (ParseException e) {
 		       					// TODO Auto-generated catch block
-		       					e.printStackTrace();
+		       					//e.printStackTrace();
 		       				 }
 		       				 
 		       				 
@@ -3068,7 +3087,7 @@ public class Websocket {
 		       					timesql3 = new Timestamp(time3.getTime());
 		       				 } catch (ParseException e) {
 		       					// TODO Auto-generated catch block
-		       					e.printStackTrace();
+		       					//e.printStackTrace();
 		       				 }
 		       				 
 		                        try{
@@ -3109,8 +3128,8 @@ public class Websocket {
 	
 		                        }catch (Exception e) {
 		       						// TODO Auto-generated catch block
-		                       	 System.out.println("数据库读取数据错误");
-		                       	 e.printStackTrace();
+		                       	 //System.out.println("数据库读取数据错误");
+		                       	 //e.printStackTrace();
 		       					 }
 		           
 		                        datawritetype = true;
@@ -3121,7 +3140,7 @@ public class Websocket {
 		    							chweb.writeAndFlush(new TextWebSocketFrame(str)).sync();
 		    						} catch (InterruptedException e) {
 		    							// TODO Auto-generated catch block
-		    							e.printStackTrace();
+		    							//e.printStackTrace();
 		    						}
 		    			        	
 		    			        }
@@ -3150,7 +3169,7 @@ public class Websocket {
 	               	     }	
 	               	     else{
 	               	    	 //校验位错误
-	               	    	 System.out.println("数据接收校验位错误");
+	               	    	 //System.out.println("数据接收校验位错误");
 	               	    	 str="";
 	               	     }
 	                               
@@ -3158,14 +3177,14 @@ public class Websocket {
 	           	        		
 	           	     else{
 	           	    	 //长度错误
-	           	    	 System.out.println("数据接收长度错误");
+	           	    	 //System.out.println("数据接收长度错误");
 	           	    	 str="";
 	           	     }
 	       	        		
 	   	        	}
 	   	        	else{
 	   	        		//首位不是FE
-	   	        		System.out.println("数据接收首末位错误");
+	   	        		//System.out.println("数据接收首末位错误");
 	   	        		str="";
 	   	        	}
                      
