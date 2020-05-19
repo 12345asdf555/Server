@@ -103,16 +103,19 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		        }
 		        
 				//瀛榳ebservice鏁版嵁
-				/*synchronized (listarray4) {
+				synchronized (listarray4) {
 					long gatherid = Integer.valueOf(str.substring(16, 20));
-					for(int i=0;i<listarray4.size();i+=23){
+					for(int i=0;i<listarray4.size();i+=26){
 						if(gatherid == Integer.valueOf(listarray4.get(i))){
 							String electricity = Integer.toString(Integer.valueOf(str.subSequence(56, 60).toString(),16));
 		                    String voltage = Integer.toString(Integer.valueOf(str.subSequence(60, 64).toString(),16)/10);
+		                    String speed = Integer.toString(Integer.valueOf(str.subSequence(64, 68).toString(),16)/10);
 		                    String electricity1 = Integer.toString(Integer.valueOf(str.subSequence(56+80, 60+80).toString(),16));
 		                    String voltage1 = Integer.toString(Integer.valueOf(str.subSequence(60+80, 64+80).toString(),16)/10);
+		                    String speed1 = Integer.toString(Integer.valueOf(str.subSequence(64+80, 68+80).toString(),16)/10);
 		                    String electricity2 = Integer.toString(Integer.valueOf(str.subSequence(56+80+80, 60+80+80).toString(),16));
 		                    String voltage2 = Integer.toString(Integer.valueOf(str.subSequence(60+80+80, 64+80+80).toString(),16)/10);
+		                    String speed2 = Integer.toString(Integer.valueOf(str.subSequence(64+80+80, 68+80+80).toString(),16)/10);
 		                    
 		                    String year = Integer.valueOf(str.subSequence(44, 46).toString(),16).toString();
 		      	    		String month = Integer.valueOf(str.subSequence(46, 48).toString(),16).toString();
@@ -190,12 +193,15 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		                    listarray4.set(i+20, setelectricity2);
 		                    listarray4.set(i+21, setvoltage2);
 		                    listarray4.set(i+22, warn2);
+		                    listarray4.set(i+23, speed);
+		                    listarray4.set(i+24, speed1);
+		                    listarray4.set(i+25, speed2);
 						}
 					}
 				}
 				
 				//瀛樺崕鍩熷搴攑lc鐒婂伐鏁版嵁
-				synchronized (listarrayplc) {
+				/*synchronized (listarrayplc) {
 					if(listarrayplc.size() == 0){
 						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(16, 20))));
 						listarrayplc.add(Integer.toString(Integer.valueOf(str.substring(40, 44))));
@@ -448,75 +454,78 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 					}
 				}
 	        	
-	        } else if(str.equals("SS")){  //娆у崕绾崕璋冪敤webservice鑾峰彇瀹炴椂鏁版嵁
-	        	
-	        	synchronized (listarray4) {
-	        	synchronized (socketlist) {
-	        	ArrayList<String> listarraybuf = new ArrayList<String>();
-	        	boolean ifdo = false;
-	        	
-	        	Iterator<Entry<String, SocketChannel>> iter = socketlist.entrySet().iterator();
-                while(iter.hasNext()){
-                	try{
-                    	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
-                    	
-                    	socketfail = entry.getKey();
-
-        				SocketChannel socketcon = entry.getValue();
-        				
-        				JSONArray ja = new JSONArray();
-        				JSONObject jo = new JSONObject();
-        				for(int i=0;i<listarray4.size();i+=23){
-        					if(listarray4.get(i+1) == null){
-            					jo.put("num", "0000");
-        					}else if(listarray4.get(i+1) != null){
-            					jo.put("num", listarray4.get(i+1));
-        					}
-        					jo.put("ele1", listarray4.get(i+2));
-        					jo.put("vol1", listarray4.get(i+3));
-        					jo.put("time1", listarray4.get(i+4));
-        					jo.put("status1", listarray4.get(i+5));
-        					jo.put("code1", listarray4.get(i+6));
-        					jo.put("speed1", listarray4.get(i+7));
-        					jo.put("airflow1", listarray4.get(i+8));
-        					jo.put("ele2", listarray4.get(i+9));
-        					jo.put("vol2", listarray4.get(i+10));
-        					jo.put("time2", listarray4.get(i+11));
-        					jo.put("status2", listarray4.get(i+12));
-        					jo.put("code2", listarray4.get(i+13));
-        					jo.put("speed2", listarray4.get(i+14));
-        					jo.put("airflow2", listarray4.get(i+15));
-        					jo.put("ele3", listarray4.get(i+16));
-        					jo.put("vol3", listarray4.get(i+17));
-        					jo.put("time3", listarray4.get(i+18));
-        					jo.put("status3", listarray4.get(i+19));
-        					jo.put("code3", listarray4.get(i+20));
-        					jo.put("speed3", listarray4.get(i+21));
-        					jo.put("airflow3", listarray4.get(i+22));
-        					ja.add(jo);
-        				}
-        				
-        				data = ja.toString();
-        				
-                    	socketcon.writeAndFlush(data).sync();
-                    	
-                	}catch (Exception e) {
-                		listarraybuf.add(socketfail);
-                		ifdo = true;
-   					 }
-                }
-	        	
-                if(ifdo){
-                	for(int i=0;i<listarraybuf.size();i++){
-                    	socketlist.remove(listarraybuf.get(i));
-                	}
-                }
-	        	}
-	        	}
-                
-	        }
+//	        } else if(str.equals("SS")){  //娆у崕绾崕璋冪敤webservice鑾峰彇瀹炴椂鏁版嵁
+//	        	
+//	        	synchronized (listarray4) {
+//	        	synchronized (socketlist) {
+//	        	ArrayList<String> listarraybuf = new ArrayList<String>();
+//	        	boolean ifdo = false;
+//	        	
+//	        	Iterator<Entry<String, SocketChannel>> iter = socketlist.entrySet().iterator();
+//                while(iter.hasNext()){
+//                	try{
+//                    	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
+//                    	
+//                    	socketfail = entry.getKey();
+//
+//        				SocketChannel socketcon = entry.getValue();
+//        				
+//        				JSONArray ja = new JSONArray();
+//        				JSONObject jo = new JSONObject();
+//        				for(int i=0;i<listarray4.size();i+=23){
+//        					if(listarray4.get(i+1) == null){
+//            					jo.put("num", "0000");
+//        					}else if(listarray4.get(i+1) != null){
+//            					jo.put("num", listarray4.get(i+1));
+//        					}
+//        					jo.put("ele1", listarray4.get(i+2));
+//        					jo.put("vol1", listarray4.get(i+3));
+//        					jo.put("time1", listarray4.get(i+4));
+//        					jo.put("status1", listarray4.get(i+5));
+//        					jo.put("code1", listarray4.get(i+6));
+//        					jo.put("speed1", listarray4.get(i+7));
+//        					jo.put("airflow1", listarray4.get(i+8));
+//        					jo.put("ele2", listarray4.get(i+9));
+//        					jo.put("vol2", listarray4.get(i+10));
+//        					jo.put("time2", listarray4.get(i+11));
+//        					jo.put("status2", listarray4.get(i+12));
+//        					jo.put("code2", listarray4.get(i+13));
+//        					jo.put("speed2", listarray4.get(i+14));
+//        					jo.put("airflow2", listarray4.get(i+15));
+//        					jo.put("ele3", listarray4.get(i+16));
+//        					jo.put("vol3", listarray4.get(i+17));
+//        					jo.put("time3", listarray4.get(i+18));
+//        					jo.put("status3", listarray4.get(i+19));
+//        					jo.put("code3", listarray4.get(i+20));
+//        					jo.put("speed3", listarray4.get(i+21));
+//        					jo.put("airflow3", listarray4.get(i+22));
+//        					jo.put("code3", listarray4.get(i+20));
+//        					jo.put("speed3", listarray4.get(i+21));
+//        					jo.put("airflow3", listarray4.get(i+22));
+//        					ja.add(jo);
+//        				}
+//        				
+//        				data = ja.toString();
+//        				
+//                    	socketcon.writeAndFlush(data).sync();
+//                    	
+//                	}catch (Exception e) {
+//                		listarraybuf.add(socketfail);
+//                		ifdo = true;
+//   					 }
+//                }
+//	        	
+//                if(ifdo){
+//                	for(int i=0;i<listarraybuf.size();i++){
+//                    	socketlist.remove(listarraybuf.get(i));
+//                	}
+//                }
+//	        	}
+//	        	}
+//                
+//	        }
 			//閲嶅伐webservice鑾峰彇瀹炴椂鏁版嵁
-			/*else if(str.equals("SS")){  
+	        }else if(str.equals("SS")){  
 	        	
 	        	synchronized (listarray4) {
 	        	synchronized (socketlist) {
@@ -534,7 +543,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
         				
         				JSONArray ja = new JSONArray();
         				JSONObject jo = new JSONObject();
-        				for(int i=0;i<listarray4.size();i+=23){
+        				for(int i=0;i<listarray4.size();i+=26){
         					if(listarray4.get(i+1) == null){
             					jo.put("num", "0000");
         					}else if(listarray4.get(i+1) != null){
@@ -561,6 +570,9 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
         					jo.put("setele3", listarray4.get(i+20));
         					jo.put("setvol3", listarray4.get(i+21));
         					jo.put("warn3", listarray4.get(i+22));
+        					jo.put("speed1", listarray4.get(i+23));
+        					jo.put("speed2", listarray4.get(i+24));
+        					jo.put("speed3", listarray4.get(i+25));
         					ja.add(jo);
         				}
         				
@@ -582,7 +594,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 	        	}
 	        	}
                 
-	        }*/
+	        }
 			//澶勭悊鐒婃満涓嬪彂鍜屼笂浼�
 	        else{    
 	        	
