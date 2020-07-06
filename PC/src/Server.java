@@ -399,15 +399,15 @@ public class Server implements Runnable {
         
         //工作线程
         new Thread(socketstart).start();
-		//new Thread(websocketstart).start();
+		new Thread(websocketstart).start();
 		//new Thread(sockettran).start();
     	//new Email();
 		//new UpReport();
         
-        mqtt.init("");
-		NS.mqtt = mqtt;
-		NS.websocket.mqtt = mqtt;
-		mqtt.subTopic("weldmes-webdatadown");
+//        mqtt.init("");
+//		NS.mqtt = mqtt;
+//		NS.websocket.mqtt = mqtt;
+//		mqtt.subTopic("weldmes-webdatadown");
 
     }  
     
@@ -432,8 +432,8 @@ public class Server implements Runnable {
 	                @Override
 	                public void initChannel(SocketChannel chsoc) throws Exception {
 	                	synchronized (socketlist) {
-	                	chsoc.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
-	                	chsoc.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
+	                	//chsoc.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));    
+	                	//chsoc.pipeline().addLast("frameEncoder", new LengthFieldPrepender(4));    
 	                	chsoc.pipeline().addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));    
 	                	chsoc.pipeline().addLast("encoder", new StringEncoder(CharsetUtil.UTF_8)); 
 	                	chsoc.pipeline().addLast(
@@ -443,9 +443,9 @@ public class Server implements Runnable {
 	                	socketcount++;
 						socketlist.put(Integer.toString(socketcount),chsoc);
 						NS.socketlist = socketlist;
-						NWS.socketlist = socketlist;
+						//NWS.socketlist = socketlist;
 						client.handler.socketlist = socketlist;
-						mqtt.socketlist = socketlist;
+						//mqtt.socketlist = socketlist;
 	                	}
 	                }
 	            });

@@ -571,42 +571,37 @@ public class Websocket {
 	                
                 	strsendpan = strsendpan + welderid + weldid + gatherid + junctionid + welderins + junctionins + ins + itemins + weldmodel + status + electricity + voltage + setelectricity + setvoltage + timesql + maxelectricity + minelectricity + maxvoltage + minvoltage + channel+ wmaxelectricity + wminelectricity + wmaxvoltage + wminvoltage;
                 	
-                	mqtt.publishMessage("weldmes-realdata", strsendpan, 0);
-					strsendpan = "";
+//                	mqtt.publishMessage("weldmes-realdata", strsendpan, 0);
+//					strsendpan = "";
 	                
-//	                	ArrayList<String> listarraybuf = new ArrayList<String>();
-//        	        	boolean ifdo= false;
-//                        
-//                        Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
-//                        while(webiter.hasNext()){
-//	      	                try{
-//		      	                Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-//		      	                websocketfail = entry.getKey();
-//		      	                SocketChannel websocketcon = entry.getValue();
-//		      	                if(websocketcon.isActive() && websocketcon.isOpen() && websocketcon.isWritable()){
-//			      	                websocketcon.writeAndFlush(new TextWebSocketFrame(strsend)).sync();
-//		      	                }else{
-//		      	                	listarraybuf.add(websocketfail);
-//		      	                }
-//	      	                }catch (Exception e) {
-//		      	                listarraybuf.add(websocketfail);
-//		      	                ifdo = true;
-//	      	                }
-//                        }
-//                      
-//                        if(ifdo){
-//		                    for(int i=0;i<listarraybuf.size();i++){
-//		                    	websocketlist.remove(listarraybuf.get(i));
-//		                    }
-//                        }
-//      	                strsend = "";
+                	ArrayList<String> listarraybuf = new ArrayList<String>();
+    	        	boolean ifdo= false;
+                    
+                    Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
+                    while(webiter.hasNext()){
+      	                try{
+	      	                Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+	      	                websocketfail = entry.getKey();
+	      	                SocketChannel websocketcon = entry.getValue();
+	      	                if(websocketcon.isActive() && websocketcon.isOpen() && websocketcon.isWritable()){
+		      	                websocketcon.writeAndFlush(new TextWebSocketFrame(strsendpan)).sync();
+	      	                }else{
+	      	                	listarraybuf.add(websocketfail);
+	      	                }
+      	                }catch (Exception e) {
+	      	                listarraybuf.add(websocketfail);
+	      	                ifdo = true;
+      	                }
+                    }
+                  
+                    if(ifdo){
+	                    for(int i=0;i<listarraybuf.size();i++){
+	                    	websocketlist.remove(listarraybuf.get(i));
+	                    }
+                    }
+  	                strsend = "";
       	              
 					
-      	    	
-//	      	    	synchronized (strsend) {
-//                        
-//                       
-//	      	    	}
 	      	    }
 			}
 		}

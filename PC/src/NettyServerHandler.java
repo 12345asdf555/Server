@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
@@ -49,7 +52,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		String str = "";
 		try{
 			str = (String) msg;
-			Workspace ws = new Workspace(str);
+			Workspace ws = new Workspace(str,ctx);
 			workThread = new Thread(ws);
 			workThread.setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 				@Override
@@ -61,7 +64,7 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 
 			//Thread.sleep(1000);
 			//workThread.interrupt();
-			
+
 			ReferenceCountUtil.release(msg);
 			ReferenceCountUtil.release(str);
 		}catch(Exception e){
@@ -77,237 +80,423 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 		public byte[] req;
 		private String socketfail;
 		private String websocketfail;
+		private ChannelHandlerContext ctx;
 
-		public Workspace(String str) {
+		public Workspace(String str, ChannelHandlerContext ctx) {
 			// TODO Auto-generated constructor stub
 
 			this.str=str;
+			this.ctx=ctx;
 
 		}
 
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			try{
-				if(str.substring(0,2).equals("7E") && (str.substring(10,12).equals("22")) && (str.length()==284 || str.length()==124)){
-	
-					mysql.Mysqlbase(str);
-					websocket.Websocketbase(str,listarray2,listarray3,websocketlist);
-					//System.gc();
-					/*if(socketchannel!=null){
-						synchronized (socketchannel) {
-							try {
-								socketchannel.writeAndFlush(str).sync();
-							} catch (Exception e) {
-								try {
-									socketchannel.close().sync();
-								} catch (InterruptedException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+			synchronized (this) {
+				try{
+					if(!str.substring(0,2).equals("7E")){
+						JSONObject strjson = JSONObject.parseObject(str);
+
+						if(strjson.getString("type").equals("wpsdown")){
+							String mach = Integer.toHexString(Integer.valueOf(strjson.getString("mach")));
+							if(mach.length() != 4){
+								int count = mach.length();
+								for(int i=0;i<4-count;i++){
+									mach = "0" + mach;
 								}
-								socketchannel = null;
-								//e.printStackTrace();
+							}
+							int wpstype = Integer.valueOf(strjson.getString("machinetype"));
+							JSONArray strarray = JSONArray.parseArray(strjson.getString("data"));
+							for(int i=0;i<strarray.size();i++){
+								String channel = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("channel")));
+								if (channel.length() < 2)
+								{
+									int count = 2 - channel.length();
+									for (int i1 = 0; i1 < count; i1++)
+									{
+										channel = "0" + channel;
+									}
+								}
+								String ele = Integer.toHexString(Double.valueOf(strarray.getJSONObject(i).getString("ele")).intValue());
+								if (ele.length() < 4)
+								{
+									int count = 4 - ele.length();
+									for (int i1 = 0; i1 < count; i1++)
+									{
+										ele = "0" + ele;
+									}
+								}
+								String vol = Integer.toHexString(Double.valueOf(strarray.getJSONObject(i).getString("vol")).intValue());
+								if (vol.length() < 4)
+								{
+									int count = 4 - vol.length();
+									for (int i1 = 0; i1 < count; i1++)
+									{
+										vol = "0" + vol;
+									}
+								}
+								String eletuny = Integer.toHexString(Double.valueOf(strarray.getJSONObject(i).getString("eletuny")).intValue());
+								if (eletuny.length() < 2)
+								{
+									int count = 2 - eletuny.length();
+									for (int i1 = 0; i1 < count; i1++)
+									{
+										eletuny = "0" + eletuny;
+									}
+								}
+								String voltuny = Integer.toHexString(Double.valueOf(strarray.getJSONObject(i).getString("voltuny")).intValue());
+								if (voltuny.length() < 2)
+								{
+									int count = 2 - voltuny.length();
+									for (int i1 = 0; i1 < count; i1++)
+									{
+										voltuny = "0" + voltuny;
+									}
+								}
+								String eleup = Integer.toHexString(Double.valueOf(strarray.getJSONObject(i).getString("ele")).intValue()+Double.valueOf(strarray.getJSONObject(i).getString("eletuny")).intValue());
+								if (eleup.length() < 4)
+								{
+									int count = 4 - eleup.length();
+									for (int i1 = 0; i1 < count; i1++)
+									{
+										eleup = "0" + eleup;
+									}
+								}
+								String eledown = Integer.toHexString(Double.valueOf(strarray.getJSONObject(i).getString("ele")).intValue()-Double.valueOf(strarray.getJSONObject(i).getString("eletuny")).intValue());
+								if (eledown.length() < 4)
+								{
+									int count = 4 - eledown.length();
+									for (int i1 = 0; i1 < count; i1++)
+									{
+										eledown = "0" + eledown;
+									}
+								}
+								String volup = Integer.toHexString(Double.valueOf(strarray.getJSONObject(i).getString("vol")).intValue()+Double.valueOf(strarray.getJSONObject(i).getString("voltuny")).intValue());
+								if (volup.length() < 4)
+								{
+									int count = 4 - volup.length();
+									for (int i1 = 0; i1 < count; i1++)
+									{
+										volup = "0" + volup;
+									}
+								}
+								String voldown = Integer.toHexString(Double.valueOf(strarray.getJSONObject(i).getString("vol")).intValue()-Double.valueOf(strarray.getJSONObject(i).getString("voltuny")).intValue());
+								if (voldown.length() < 4)
+								{
+									int count = 4 - voldown.length();
+									for (int i1 = 0; i1 < count; i1++)
+									{
+										voldown = "0" + voldown;
+									}
+								}
+
+
+								if(wpstype == 1 ){
+									if(Integer.valueOf(strarray.getJSONObject(i).getString("channel")) < 10){
+										String material = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("material")));
+										if (material.length() < 2)
+										{
+											int count = 2 - material.length();
+											for (int i1 = 0; i1 < count; i1++)
+											{
+												material = "0" + material;
+											}
+										}
+										String diameter = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("diameter")));
+										if (diameter.length() < 2)
+										{
+											int count = 2 - diameter.length();
+											for (int i1 = 0; i1 < count; i1++)
+											{
+												diameter = "0" + diameter;
+											}
+										}
+										String gas = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("gas")));
+										if (gas.length() < 2)
+										{
+											int count = 2 - gas.length();
+											for (int i1 = 0; i1 < count; i1++)
+											{
+												gas = "0" + gas;
+											}
+										}
+										String control = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("control")));
+										if (control.length() < 2)
+										{
+											int count = 2 - control.length();
+											for (int i1 = 0; i1 < count; i1++)
+											{
+												control = "0" + control;
+											}
+										}
+										String pulse = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("pulse")));
+										if (pulse.length() < 2)
+										{
+											int count = 2 - pulse.length();
+											for (int i1 = 0; i1 < count; i1++)
+											{
+												pulse = "0" + pulse;
+											}
+										}
+										
+										String wpsstr = "FE5AA5006e" + mach + "0000000000000000000000001f021102" + channel + "0000" + eleup + volup + eledown + voldown + "00a000be008c00b4008c00be007800b4" + material + diameter + gas + control + pulse + "000a000000000004d204d204d204d204d204d20a0a00a000dc007800a004d2153804d2153804d2153804d2153814147b007b7b7b7b6400";
+										String wpsreturn = "{type:\"wpsreturn\",result:\"0\"}";
+										synchronized (socketlist) {
+											ArrayList<String> listarraybuf = new ArrayList<String>();
+											boolean ifdo= false;
+	
+											Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
+											while(webiter.hasNext()){
+												try{
+													Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+													websocketfail = entry.getKey();
+													SocketChannel websocketcon = entry.getValue();
+													if(websocketcon.remoteAddress().equals(ctx.channel().remoteAddress())) {
+														websocketcon.writeAndFlush(wpsstr).sync();
+														Thread.sleep(1000);
+														websocketcon.writeAndFlush(wpsreturn).sync();
+													}else {
+														Thread.sleep(1000);
+														websocketcon.writeAndFlush(wpsstr).sync();
+													}
+												}catch (Exception e) {
+													listarraybuf.add(websocketfail);
+													ifdo = true;
+												}
+											}
+	
+											if(ifdo){
+												for(int i1=0;i1<listarraybuf.size();i1++){
+													socketlist.remove(listarraybuf.get(i1));
+												}
+											}
+										}
+									}
+								}else{
+									String material = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("material")));
+									if (material.length() < 2)
+									{
+										int count = 2 - material.length();
+										for (int i1 = 0; i1 < count; i1++)
+										{
+											material = "0" + material;
+										}
+									}
+									String diameter = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("diameter")));
+									if (diameter.length() < 2)
+									{
+										int count = 2 - diameter.length();
+										for (int i1 = 0; i1 < count; i1++)
+										{
+											diameter = "0" + diameter;
+										}
+									}
+									String gas = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("gas")));
+									if (gas.length() < 2)
+									{
+										int count = 2 - gas.length();
+										for (int i1 = 0; i1 < count; i1++)
+										{
+											gas = "0" + gas;
+										}
+									}
+									String control = "0040";
+									Integer controlbuf = Integer.valueOf(strarray.getJSONObject(i).getString("control"));
+									if (controlbuf == 0)
+									{
+										control = "0040";
+									}else if(controlbuf == 1){
+										control = "0042";
+									}
+									
+									String wpsstr = "7E3501010152" + mach + channel + "001e0001006400be0000" + ele + vol + "0000006400be000000010000" + gas + diameter + material + "00" + control + eletuny + voltuny + "00000000000000000000247D";
+									String wpsreturn = "{type:\"wpsreturn\",result:\"0\"}";
+									synchronized (socketlist) {
+										ArrayList<String> listarraybuf = new ArrayList<String>();
+										boolean ifdo= false;
+
+										Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
+										while(webiter.hasNext()){
+											try{
+												Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+												websocketfail = entry.getKey();
+												SocketChannel websocketcon = entry.getValue();
+												if(websocketcon.remoteAddress().equals(ctx.channel().remoteAddress())) {
+													websocketcon.writeAndFlush(wpsstr).sync();
+													Thread.sleep(1000);
+													websocketcon.writeAndFlush(wpsreturn).sync();
+												}else {
+													Thread.sleep(1000);
+													websocketcon.writeAndFlush(wpsstr).sync();
+												}
+											}catch (Exception e) {
+												listarraybuf.add(websocketfail);
+												ifdo = true;
+											}
+										}
+
+										if(ifdo){
+											for(int i1=0;i1<listarraybuf.size();i1++){
+												socketlist.remove(listarraybuf.get(i1));
+											}
+										}
+									}
+								}
+
+								Thread.sleep(500);
+							}
+
+						}else if(strjson.getString("type").equals("taskdown")){
+							String wpsstr = "";
+							String junctionsend = "";
+							String cengdao = "";
+							int cengdaocount = 0;
+
+							String mach = Integer.toHexString(Integer.valueOf(strjson.getString("mach")));
+							if(mach.length() != 4){
+								int count = mach.length();
+								for(int i=0;i<4-count;i++){
+									mach = "0" + mach;
+								}
+							}
+
+							String task = strjson.getString("task");
+
+							String taskstatus = strjson.getString("taskstatus");
+							if(taskstatus.length() != 2){
+								int count = taskstatus.length();
+								for(int i=0;i<2-count;i++){
+									taskstatus = "0" + taskstatus;
+								}
+							}
+
+							//层道信息
+							JSONArray strarray = JSONArray.parseArray(strjson.getString("data"));
+							for(int i=0;i<strarray.size();i++){
+								String layer = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("layer")));
+								if(layer.length()!=2){
+									layer = "0" + layer;
+								}
+								String avenue = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("avenue")));
+								if(avenue.length()!=2){
+									avenue = "0" + avenue;
+								}
+								cengdao = cengdao + layer + avenue;
+								cengdaocount++;
+							}
+
+							if(cengdao.length() != 200){
+								int count = cengdao.length();
+								for(int i=0;i<200-count;i++){
+									cengdao = cengdao + "0";
+								}
+							}
+
+							String cdcount = Integer.toHexString(cengdaocount);
+							if(cdcount.length() != 4){
+								int count = cdcount.length();
+								for(int i=0;i<4-count;i++){
+									cdcount = "0" + cdcount;
+								}
+							}
+
+							//任务名转换char
+							char[] buf = task.toCharArray();
+							for(int i=0;i<buf.length;i++){
+								int buf1 = buf[i];
+								junctionsend = junctionsend + Integer.toString(buf1,16);
+							}
+
+
+							if(junctionsend.length() != 60){
+								int count = junctionsend.length();
+								for(int i=0;i<60-count;i++){
+									junctionsend = junctionsend + "0";
+								}
+							}
+
+							String taskstr = "7E8D01010102" + mach + "00" + junctionsend + cengdao + cdcount + "017D";
+							String taskreturn = "{type:\"taskreturn\",result:\"0\"}";
+
+							synchronized (socketlist) {
+								ArrayList<String> listarraybuf = new ArrayList<String>();
+								boolean ifdo= false;
+
+								Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
+								while(webiter.hasNext()){
+									try{
+										Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+										websocketfail = entry.getKey();
+										SocketChannel websocketcon = entry.getValue();
+										if(websocketcon.remoteAddress().equals(ctx.channel().remoteAddress())) {
+											websocketcon.writeAndFlush(taskstr).sync();
+											Thread.sleep(1000);
+											websocketcon.writeAndFlush(taskreturn).sync();
+										}else {
+											Thread.sleep(1000);
+											websocketcon.writeAndFlush(taskstr).sync();
+										}
+									}catch (Exception e) {
+										listarraybuf.add(websocketfail);
+										ifdo = true;
+									}
+								}
+
+								if(ifdo){
+									for(int i1=0;i1<listarraybuf.size();i1++){
+										socketlist.remove(listarraybuf.get(i1));
+									}
+								}
 							}
 						}
-					}*/
-	
-				}else if(str.substring(0,2).equals("FA")){  //处理实时数据
-	
-					mysql.Mysqlrun(str);
-					websocket.Websocketrun(str,listarray2,listarray3,websocketlist);
-					if(socketchannel!=null){
-						try {
-							socketchannel.writeAndFlush(str).sync();
-						} catch (Exception e) {
-							socketchannel = null;
+
+					}else if(str.substring(0,2).equals("7E") && (str.length()==38)){
+						String mach = Integer.toString(Integer.valueOf(str.substring(12,16), 16));
+						String status = Integer.toString(Integer.valueOf(str.substring(16,18), 16));
+						String layer = Integer.toString(Integer.valueOf(str.substring(18,20), 16));
+						String avenue = Integer.toString(Integer.valueOf(str.substring(20,22), 16));
+
+						String wpsstr = "{mach:\""+mach+"\",type:\"statusup\",status:\""+status+"\",layer:\""+layer+"\",avenue:\""+avenue+"\"}";
+
+						try{
+							synchronized (socketlist) {
+								ArrayList<String> listarraybuf = new ArrayList<String>();
+								boolean ifdo= false;
+
+								Iterator<Entry<String, SocketChannel>> webiter = socketlist.entrySet().iterator();
+								while(webiter.hasNext()){
+									try{
+										Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
+										websocketfail = entry.getKey();
+										SocketChannel websocketcon = entry.getValue();
+
+										if(websocketcon.remoteAddress().equals(ctx.channel().remoteAddress())) {
+										}else {
+											Thread.sleep(1000);
+											websocketcon.writeAndFlush(wpsstr).sync();
+										}
+									}catch (Exception e) {
+										listarraybuf.add(websocketfail);
+										ifdo = true;
+									}
+								}
+
+								if(ifdo){
+									for(int i1=0;i1<listarraybuf.size();i1++){
+										socketlist.remove(listarraybuf.get(i1));
+									}
+								}
+							}
+						}catch(Exception e){
 							//e.printStackTrace();
 						}
 					}
-	
-				}else if(str.substring(0,2).equals("þ")){   //处理android数据
-	
-					android.Androidrun(str);
-	
-				}else if(str.substring(0,2).equals("JN")){  //江南任务派发 任务号、焊工、焊机、状态
-		        	String[] datainf = str.split(",");
-	
-					String datasend = "";
-		        	String junction = "";
-		        	String cengdao = "";
-		            String gather = "";
-		        	int cengdaocount = 0;
-		        	
-		        	try{
-						if(stmt==null || stmt.isClosed()==true || !conn.isValid(1))
-						{
-							try {
-								Class.forName("com.mysql.jdbc.Driver");
-								conn = DriverManager.getConnection(connet);
-								stmt = conn.createStatement();
-							} catch (ClassNotFoundException e) {  
-								//System.out.println("Broken driver");
-								//e.printStackTrace();
-								return;
-							} catch (SQLException e) {
-								//System.out.println("Broken conn");
-								//e.printStackTrace();
-								return;
-							}  
-						}
-						
-						String inSql = "SELECT tb_welded_junction.fwelded_junction_no,tb_specification.fsolder_layer,tb_specification.fweld_bead FROM tb_welded_junction INNER JOIN tb_specification ON tb_welded_junction.fwpslib_id = tb_specification.fwpslib_id WHERE tb_welded_junction.fid = '" + datainf[1] + "' ORDER BY tb_specification.fweld_bead asc";
-						ResultSet rs =stmt.executeQuery(inSql);
-			            
-			            while (rs.next()) {
-			            	junction = rs.getString("tb_welded_junction.fwelded_junction_no");
-			            	String ceng = Integer.toString(Integer.valueOf(rs.getString("tb_specification.fsolder_layer"),16));
-			            	if(ceng.length()!=2){
-		            			ceng = "0" + ceng;
-			            	}
-			            	String dao = Integer.toString(Integer.valueOf(rs.getString("tb_specification.fweld_bead"),16));
-			            	if(dao.length()!=2){
-			            		dao = "0" + dao;
-			            	}
-			            	cengdao = cengdao + ceng + dao;
-			            	cengdaocount++;
-			            }
-			            
-			            String inSql1 = "SELECT fgather_no FROM tb_gather INNER JOIN tb_welding_machine ON tb_gather.fid = tb_welding_machine.fgather_id WHERE tb_welding_machine.fid = '" + datainf[3] + "'";
-						ResultSet rs1 =stmt.executeQuery(inSql1);
-						while (rs1.next()) {
-			            	gather = Integer.toString(Integer.valueOf(rs.getString("fgather_no"),16));
-			            	if(gather.length()!=4){
-			            		for(int i=0;i<4-gather.length();i++){
-			            			gather = "0" + gather;
-			            		}
-			            	}
-			            }
-						
-		        	}catch (Exception e){
-		        		e.getStackTrace();
-		        	}
-	
-		            if(cengdao.length() != 100){
-		            	for(int i=0;i<100-cengdao.length();i++){
-		            		cengdao = cengdao + "0";
-		            	}
-		            }
-		            
-		            if(junction.length() != 30){
-		            	for(int i=0;i<30-junction.length();i++){
-		            		cengdao = cengdao + "0";
-		            	}
-		            }
-		            
-		            String cdcount = Integer.toString(cengdaocount);
-		            if(cdcount.length() != 4){
-		            	for(int i=0;i<4-cdcount.length();i++){
-		            		cdcount = cdcount + "0";
-		            	}
-		            }
-		            
-					if(datainf[4].equals("0")){
-			            datasend = "7E0001010122" + gather + "00" + junction + cengdao + cdcount + "017D";
-		            }else if(datainf[4].equals("1")){
-			            datasend = "7E0001010122" + gather + "01" + junction + cengdao + cdcount + "017D";
-		            }
-		            
-		        	synchronized (socketlist) {
-		        	ArrayList<String> listarraybuf = new ArrayList<String>();
-		        	boolean ifdo = false;
-		        	
-		        	Iterator<Entry<String, SocketChannel>> iter = socketlist.entrySet().iterator();
-	                while(iter.hasNext()){
-	                	try{
-	                    	Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) iter.next();
-	                    	
-	                    	//System.out.println(entry);
-	                    	
-	                    	socketfail = entry.getKey();
-	
-	        				SocketChannel socketcon = entry.getValue();
-	                    	socketcon.writeAndFlush(str).sync();
-	                    	socketcon.writeAndFlush(datasend).sync();
-	                    	
-	                	}catch (Exception e) {
-	                		//e.printStackTrace();
-	                		listarraybuf.add(socketfail);
-	                		ifdo = true;
-	   					 }
-	                }
-		        	
-	                if(ifdo){
-	                	for(int i=0;i<listarraybuf.size();i++){
-	                    	socketlist.remove(listarraybuf.get(i));
-	                	}
-	                }
-		        	}
-	                
-		        
-		        } else if(str.length()==38 && str.substring(10,12).equals("01")){    //处理焊层焊道信息
-					mysql.db.ceng = Integer.valueOf(str.substring(18, 20),16);
-					mysql.db.dao = Integer.valueOf(str.substring(20, 22),16);
-					mysql.db.weldstatus = Integer.valueOf(str.substring(16, 18),16);
-					if(socketchannel!=null){
-						try {
-							socketchannel.writeAndFlush(str).sync();
-						} catch (Exception e) {
-							socketchannel = null;
-							//e.printStackTrace();
-						}
-					}
-				} else if(str.substring(0,2).equals("fe") && str.substring(str.length()-2, str.length()).equals("fe")){  //华域PLC
-					////System.out.println("1");
-					//System.out.println("接收数据:"+str);
-					if(socketchannel!=null){
-						////System.out.println(socketchannel);
-						synchronized (socketchannel) {
-							try {
-								socketchannel.writeAndFlush(str).sync();
-								//System.out.println("发送成功:"+str);
-							} catch (Exception e) {
-								try {
-									socketchannel.close().sync();
-								} catch (InterruptedException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-								socketchannel = null;
-								//e.printStackTrace();
-							}
-						}
-					}
-	
-				} else{    //处理焊机下发和上传
-					mqtt.publishMessage("weldmes-webdataup", str, 0);
-					/*synchronized (websocketlist) {
-						ArrayList<String> listarraybuf = new ArrayList<String>();
-						boolean ifdo = false;
-	
-						Iterator<Entry<String, SocketChannel>> webiter = websocketlist.entrySet().iterator();
-						while(webiter.hasNext()){
-							try{
-								Entry<String, SocketChannel> entry = (Entry<String, SocketChannel>) webiter.next();
-								websocketfail = entry.getKey();
-								SocketChannel websocketcon = entry.getValue();
-								websocketcon.writeAndFlush(new TextWebSocketFrame(str)).sync();
-							}catch (Exception e) {
-	
-								listarraybuf.add(websocketfail);
-								ifdo = true;
-							}
-						}
-	
-						if(ifdo){
-							for(int i=0;i<listarraybuf.size();i++){
-								websocketlist.remove(listarraybuf.get(i));
-							}
-						}
-					}*/
+
+				} catch(Exception e1) {
+					// TODO Auto-generated catch block
+					//e1.printStackTrace();
 				}
-			} catch(Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
 		}
 	}
