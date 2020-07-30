@@ -194,50 +194,80 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 
 								if(wpstype == 1 ){
 									if(Integer.valueOf(strarray.getJSONObject(i).getString("channel")) < 10){
-										String material = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("material")));
-										if (material.length() < 2)
-										{
-											int count = 2 - material.length();
-											for (int i1 = 0; i1 < count; i1++)
+										
+										String material = "00";
+										try{
+											material = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("material")));
+											if (material.length() < 2)
 											{
-												material = "0" + material;
+												int count = 2 - material.length();
+												for (int i1 = 0; i1 < count; i1++)
+												{
+													material = "0" + material;
+												}
 											}
+										}catch(Exception e){
+											System.out.println("材质赋值有误！");
 										}
-										String diameter = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("diameter")));
-										if (diameter.length() < 2)
-										{
-											int count = 2 - diameter.length();
-											for (int i1 = 0; i1 < count; i1++)
+										
+										String diameter = "00";
+										try{
+											diameter = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("diameter")));
+											if (diameter.length() < 2)
 											{
-												diameter = "0" + diameter;
+												int count = 2 - diameter.length();
+												for (int i1 = 0; i1 < count; i1++)
+												{
+													diameter = "0" + diameter;
+												}
 											}
+										}catch(Exception e){
+											System.out.println("丝径赋值有误！");
 										}
-										String gas = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("gas")));
-										if (gas.length() < 2)
-										{
-											int count = 2 - gas.length();
-											for (int i1 = 0; i1 < count; i1++)
+										
+										String gas = "00";
+										try{
+											gas = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("gas")));
+											if (gas.length() < 2)
 											{
-												gas = "0" + gas;
+												int count = 2 - gas.length();
+												for (int i1 = 0; i1 < count; i1++)
+												{
+													gas = "0" + gas;
+												}
 											}
+										}catch(Exception e){
+											System.out.println("气体赋值有误！");
 										}
-										String control = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("control")));
-										if (control.length() < 2)
-										{
-											int count = 2 - control.length();
-											for (int i1 = 0; i1 < count; i1++)
+										
+										String control = "01";
+										try{
+											control = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("control")));
+											if (control.length() < 2)
 											{
-												control = "0" + control;
+												int count = 2 - control.length();
+												for (int i1 = 0; i1 < count; i1++)
+												{
+													control = "0" + control;
+												}
 											}
+										}catch(Exception e){
+											System.out.println("控制方式赋值有误！");
 										}
-										String pulse = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("pulse")));
-										if (pulse.length() < 2)
-										{
-											int count = 2 - pulse.length();
-											for (int i1 = 0; i1 < count; i1++)
+										
+										String pulse = "00";
+										try{
+											pulse = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("pulse")));
+											if (pulse.length() < 2)
 											{
-												pulse = "0" + pulse;
+												int count = 2 - pulse.length();
+												for (int i1 = 0; i1 < count; i1++)
+												{
+													pulse = "0" + pulse;
+												}
 											}
+										}catch(Exception e){
+											System.out.println("脉冲赋值有误！");
 										}
 										
 										String wpsstr = "FE5AA5006e" + mach + "0000000000000000000000001f021102" + channel + "0000" + eleup + volup + eledown + voldown + "00a000be008c00b4008c00be007800b4" + material + diameter + gas + control + pulse + "000a000000000004d204d204d204d204d204d20a0a00a000dc007800a004d2153804d2153804d2153804d2153814147b007b7b7b7b6400";
@@ -274,41 +304,64 @@ public class NettyServerHandler extends ChannelHandlerAdapter{
 										}
 									}
 								}else{
-									String material = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("material")));
-									if (material.length() < 2)
-									{
-										int count = 2 - material.length();
-										for (int i1 = 0; i1 < count; i1++)
+									String material = "00";
+									try{
+										material = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("material")));
+										if (material.length() < 2)
 										{
-											material = "0" + material;
+											int count = 2 - material.length();
+											for (int i1 = 0; i1 < count; i1++)
+											{
+												material = "0" + material;
+											}
 										}
+									}catch(Exception e){
+										System.out.println("材质赋值有误！");
 									}
-									String diameter = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("diameter")));
-									if (diameter.length() < 2)
-									{
-										int count = 2 - diameter.length();
-										for (int i1 = 0; i1 < count; i1++)
+									
+									String diameter = "10";
+									try{
+										diameter = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("diameter")));
+										if (diameter.length() < 2)
 										{
-											diameter = "0" + diameter;
+											int count = 2 - diameter.length();
+											for (int i1 = 0; i1 < count; i1++)
+											{
+												diameter = "0" + diameter;
+											}
 										}
+									}catch(Exception e){
+										System.out.println("丝径赋值有误！");
 									}
-									String gas = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("gas")));
-									if (gas.length() < 2)
-									{
-										int count = 2 - gas.length();
-										for (int i1 = 0; i1 < count; i1++)
+									
+									String gas = "00";
+									try{
+										gas = Integer.toHexString(Integer.valueOf(strarray.getJSONObject(i).getString("gas")));
+										if (gas.length() < 2)
 										{
-											gas = "0" + gas;
+											int count = 2 - gas.length();
+											for (int i1 = 0; i1 < count; i1++)
+											{
+												gas = "0" + gas;
+											}
 										}
+									}catch(Exception e){
+										System.out.println("气体赋值有误！");
 									}
+									
 									String control = "0040";
-									Integer controlbuf = Integer.valueOf(strarray.getJSONObject(i).getString("control"));
-									if (controlbuf == 0)
-									{
-										control = "0040";
-									}else if(controlbuf == 1){
-										control = "0042";
+									try{
+										Integer controlbuf = Integer.valueOf(strarray.getJSONObject(i).getString("control"));
+										if (controlbuf == 0)
+										{
+											control = "0040";
+										}else if(controlbuf == 1){
+											control = "0042";
+										}
+									}catch(Exception e){
+										System.out.println("控制方式赋值有误！");
 									}
+									
 									
 									String wpsstr = "7E3501010152" + mach + channel + "001e0001006400be0000" + ele + vol + "0000006400be000000010000" + gas + diameter + material + "00" + control + eletuny + voltuny + "00000000000000000000247D";
 									String wpsreturn = "{type:\"wpsreturn\",result:\"0\"}";
